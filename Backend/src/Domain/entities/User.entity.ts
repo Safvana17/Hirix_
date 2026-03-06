@@ -1,0 +1,62 @@
+import userRole from "../enums/userRole.enum";
+
+export default class UserEntity {
+    id?: string;
+    protected name: string;
+    protected email: string;
+    protected password: string
+    protected role?: userRole
+    protected isVerified: boolean;
+    protected googleId?: string;
+    protected refreshTokens?: string[]
+
+
+    protected constructor(name: string, email: string, password: string, isVerified: boolean, id?: string, role?: userRole, googleId?: string, refreshToken: string[] = []){
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.isVerified = isVerified;
+        this.googleId = googleId;
+        this.refreshTokens = refreshToken
+    }
+
+    public getId(): string | undefined {
+        return this.id;
+    }
+
+    public getEmail(): string {
+        return this.email;
+    }
+
+    public getPassword(): string {
+        return this.password;
+    }
+
+    public getRole(): userRole {
+        return this.role!
+    }
+
+    public getName(): string {
+        return this.name;
+    }
+
+    public isUserVerified(): boolean {
+        return this.isVerified;
+    }
+
+    public markAsVerified(): void {
+        this.isVerified = true;
+    }
+    public getGoogleId(): string | undefined{
+        return this.googleId;
+    }
+    public getRefreshToken(): string[] | undefined {
+        return this.refreshTokens? [...this.refreshTokens]: undefined
+    }
+
+    public hasRefreshToken(token: string): boolean {
+        return this.refreshTokens? this.refreshTokens.includes(token) : false
+    }
+}

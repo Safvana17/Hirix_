@@ -1,0 +1,67 @@
+import CompanyEntity from "../../../Domain/entities/company.entity";
+import userRole from "../../../Domain/enums/userRole.enum";
+import { AppError } from "../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
+import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../Shared/Enumes/statusCode";
+import { logger } from "../../../utils/logging/loger";
+import { IGoogleAuthService } from "../../interface/service/IGoogleAuthService";
+import { IHashService } from "../../interface/service/IHashService";
+import { ITokenService } from "../../interface/service/ITokenService";
+import { LoginCompanyOutputDTO } from "../dtos/login.company.dto";
+import { ICompanyGoogleLoginUsecase } from "../interfaces/auth/ICompanyGoogleLoginUsecase";
+
+export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
+    constructor(
+        private _companyRepository: ICompanyRepository,
+        private _tokenService: ITokenService,
+        private _hashService: IHashService,
+        private _googleAuthService: IGoogleAuthService
+    ) {}
+
+    async execute(token: string, role: userRole): Promise<LoginCompanyOutputDTO> {
+
+        logger.info(`user role: ${role}`)
+        const googleCompanyInfo = await this._googleAuthService.getUserInfo(token)
+        let company = await this._companyRepository.findByEmail(googleCompanyInfo.email)
+
+        if(!company){
+            const newCompany = new CompanyEntity(
+                googleCompanyInfo.name,
+                googleCompanyInfo.email,
+                "",
+                googleCompanyInfo.isVerified,
+                undefined,
+                googleCompanyInfo.googleId
+            )
+
+            company = await this._companyRepository.create(newCompany)
+        }else{
+            if(!company.getGoogleId()){
+                company = await this._companyRepository.updateGoogleId(googleCompanyInfo.email, googleCompanyInfo.googleId) || company
+            }else if(company.getGoogleId() !== googleCompanyInfo.googleId){
+                throw new AppError(authMessages.error.INVALID_GOOGLE_ID, statusCode.BAD_REQUEST)
+            }
+        }
+
+        const id = company.getId()
+        const companyId = id!
+
+        const refreshToken = this._tokenService.generateRefreshToken({id: companyId, role: company.getRole()})
+        const accessToken = this._tokenService.generateAccessToken({id: companyId, email: company.getEmail(), role: company.getRole()})
+
+        const hashedRefreshToken = this._hashService.hashToken(refreshToken)
+        await this._companyRepository.updateToken(companyId, hashedRefreshToken)
+
+        return {
+            refreshToken,
+            accessToken,
+            company: {
+                id: companyId,
+                email: company.getEmail(),
+                name: company.getName(),
+                role: company.getRole()
+            }
+        }
+    }
+}

@@ -1,0 +1,73 @@
+import { z } from 'zod'
+
+export const registerSchema = z.object({
+    name: z
+        .string()
+        .trim()
+        .min(2, "Name must be atleast 2 characters")
+        .max(50, "Name must be atmost 50 characters")
+        .regex(/^[A-Za-z]+( [A-Za-z]+)*$/),
+    email: z
+        .string()
+        .trim()
+        .min(1, "Email is required")
+        .email('Invalid email address'),
+    password: z
+        .string()
+        .trim()
+        .min(6, 'Password must contain atleast 6 characters')
+        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/),
+    confirmPassword: z
+        .string()
+})
+.refine(data => data.password === data.confirmPassword, {
+    message: 'Password do not match',
+    path: ['confirmPassword']
+})
+
+export const otpSchema = z.object({
+    email: z
+        .string()
+        .trim()
+        .min(1, 'Email is required'),
+    otp: z
+        .string()
+        .trim()
+        .regex(/^\d{6}$/, 'OTP must contain only numbers')
+        .min(6, "OTP must be exactly 6 digit")
+})
+
+export const resendOtpSchema = z.object({
+    email: z 
+         .string()
+         .min(1, 'Email is required')
+         .email('Invalid email')
+})
+
+export const forgotPasswordSchema = z.object({
+    email: z
+          .string()
+          .trim()
+          .min(1, 'Email is required')
+          .email('Invalid email')
+})
+
+export const resetPasswordSchema = z.object({
+    email: z
+         .string()
+         .trim()
+         .min(1, 'Email is required')
+         .email('Invalid email'),
+    otp: z
+         .string()
+         .trim()
+         .regex(/^\d{6}$/, 'OTP must contain only numbers')
+         .min(6, 'OTP must be exactly 6 gigits'),
+    newPassword: z
+          .string()
+          .trim()
+          .min(6, 'Password must contain atleast 6 characters')
+          .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%&*?])[a-zA-Z\d!@$%&*?]{6,}$/),
+    confirmPassword: z
+          .string()
+})
