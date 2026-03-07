@@ -104,7 +104,7 @@ export class CompanyAuthController {
             // const hashedRefreshToken = this._hashService.hashToken(refreshToken)
             // await this._companyRepository.updateToken(company.id,hashedRefreshToken)
 
-            res.cookie('refershToken', refreshToken, {
+            res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
