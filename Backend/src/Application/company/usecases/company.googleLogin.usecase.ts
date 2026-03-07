@@ -27,11 +27,12 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
 
         if(!company){
             const newCompany = new CompanyEntity(
+                "",
                 googleCompanyInfo.name,
                 googleCompanyInfo.email,
                 "",
                 googleCompanyInfo.isVerified,
-                undefined,
+                false,
                 googleCompanyInfo.googleId
             )
 
@@ -44,6 +45,10 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
             }
         }
 
+        if(!company || !company.getId() || !company.getRole()){
+             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
+        }
+        
         const id = company.getId()
         const companyId = id!
 

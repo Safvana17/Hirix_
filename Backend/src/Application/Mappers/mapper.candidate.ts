@@ -4,11 +4,12 @@ import { ICandidate } from "../../Infrastructure/database/Model/candidate";
 export class candidateMapper {
     static toEntity(doc: ICandidate): CandidateEntity {
         const candidate = new CandidateEntity(
+            doc._id.toString(),
             doc.name,
             doc.email,
             doc.password,
             doc.isVerified,
-            doc._id.toString(),
+            doc.isBlocked,
             doc.googleId,
             doc.refreshToken ?? []
         )

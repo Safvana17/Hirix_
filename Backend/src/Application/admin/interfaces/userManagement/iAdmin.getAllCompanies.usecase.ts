@@ -1,5 +1,5 @@
-import CompanyEntity from "../../../../Domain/entities/company.entity";
+import { GetAllCompaniesOutputDTO } from "../../dtos/userManagement/getAllCompanies.admin.dto";
 
 export interface IAdminGetAllCompaniesUsecase{
-    exexute(): Promise<CompanyEntity[]>
+    exexute(): Promise<GetAllCompaniesOutputDTO[]>
 }

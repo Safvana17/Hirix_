@@ -4,6 +4,7 @@ import { CandidateAuthController } from "./candidate/authController";
 import { CompanyAuthController } from "./company/authController";
 import { AdminAuthController } from "./admin/authController";
 import { UnifiedAuthController } from "./common/unifiedAuthController";
+import { UserManagementController } from "./admin/userManagementController";
 
 //use case
 import { RegisterCandidateUsecase } from "../../../Application/candidate/useCases/auth/register.candidate.usecase";
@@ -22,7 +23,8 @@ import { CandidateGoogleLoginUsecase } from "../../../Application/candidate/useC
 import { CompanyGoogleLoginUsecase } from "../../../Application/company/usecases/company.googleLogin.usecase";
 import { UnifiedGetMeUsecase } from "../../../Application/common/usecases/unified.getme.usecase";
 import { UnifiedRefreshTokenUsecase } from "../../../Application/common/usecases/unified.refreshToken.usecase";
-
+import { AdminGetAllCompaniesUsecase } from "../../../Application/admin/usecases/userManagement/admin.getAllCompanies.usecase";
+import { AdminGetAllCandidates } from "../../../Application/admin/usecases/userManagement/admin.getAllCandidates";
 
 
 
@@ -59,6 +61,7 @@ const iMailService = new MailService()
 const iGoogleAuthService = new GoogleAuthService()
 
 
+//candidates
 const iVerifyRegisterCandidate = new VerifyRegisterCandidateOtpUsecase(
     iCandidateRepository,
     iOtpRepository,
@@ -100,17 +103,6 @@ const iResetPassword = new ResetPasswordUsecase(
     iHashService
 )
 
-// const iRefreshToken = new RefreshTokenUsecase (
-//     iTokenService,
-//     iCandidateRepository,
-//     iHashService
-// )
-
-// const iLogoutCandidate = new CandidateLogoutUsecase(
-//     iCandidateRepository,
-//     iHashService
-// )
-
 const iCandidateGoogleLogin = new CandidateGoogleLoginUsecase(
     iCandidateRepository,
     iTokenService,
@@ -120,7 +112,6 @@ const iCandidateGoogleLogin = new CandidateGoogleLoginUsecase(
 
 
 //company
-
 const iRegisterCompany = new RegisterCompanyUsecase(
       iCompanyRepository,
       iOtpService,
@@ -162,17 +153,6 @@ const iCompanyResetPassword = new CompanyResetPasswordUsecase(
     iHashService
 )
 
-// const iCompanyRefreshToken = new CompanyRefreshTokenUsecase(
-//     iCompanyRepository,
-//     iTokenService,
-//     iHashService
-// )
-
-// const iLogoutCompany = new CompanyLogoutUsecase(
-//     iCompanyRepository,
-//     iHashService
-// )
-
 const iCompanyGoogleLogin = new CompanyGoogleLoginUsecase(
     iCompanyRepository,
     iTokenService,
@@ -182,28 +162,14 @@ const iCompanyGoogleLogin = new CompanyGoogleLoginUsecase(
 
 
 //admin
-
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
     iHashService,
     iTokenService
 )
 
-// const iLogoutAdmin = new AdminLogoutUsecase(
-//     iAdminRepository,
-//     iHashService
-// )
-
-// const iAdminRefreshToken = new AdminRefreshTokenUsecase(
-//     iAdminRepository,
-//     iTokenService,
-//     iHashService
-// )
-
-
 
 //unified
-
 const repositoryRegistry = new Map<userRole, IBaseRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
     [userRole.Company, iCompanyRepository],
@@ -224,6 +190,16 @@ const iUnifiedLogout = new UnifiedLogoutUsecase(
     repositoryRegistry,
     iHashService,
     iTokenService
+)
+
+//userManagement
+
+const iGetAllCompanies = new AdminGetAllCompaniesUsecase(
+    iCompanyRepository
+)
+
+const iGetAllCandidates = new AdminGetAllCandidates(
+    iCandidateRepository
 )
 
 //controller
@@ -256,4 +232,9 @@ export const iCompanyAuthController = new CompanyAuthController(
 
 export const iAdminAuthController = new AdminAuthController(
     iLoginAdmin,
+)
+
+export const IUserManagementController = new UserManagementController(
+    iGetAllCompanies,
+    iGetAllCandidates
 )

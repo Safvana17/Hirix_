@@ -27,11 +27,12 @@ export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
 
         if(!candidate){
             const newCandidate = new CandidateEntity(
+                "",
                 googleCandidateInfo.name,
                 googleCandidateInfo.email,
                 "",
                 googleCandidateInfo.isVerified,
-                undefined,
+                false,
                 googleCandidateInfo.googleId
             )
 
@@ -44,7 +45,7 @@ export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
             }
         }
 
-        if(!candidate || !candidate.getId() || candidate.getRole()){
+        if(!candidate || !candidate.getId() || !candidate.getRole()){
             throw new AppError(authMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 

@@ -4,11 +4,12 @@ import { IAdmin } from "../../Infrastructure/database/Model/admin";
 export class AdminMapper {
     static toEntity(doc: IAdmin): AdminEntity {
         const admin = new AdminEntity(
+            doc._id.toString(),
             doc.name,
             doc.email,
             doc.password,
             doc.isVerified,
-            doc._id.toString(),
+            false,
             "",
             doc.refreshTokens ?? []
         )

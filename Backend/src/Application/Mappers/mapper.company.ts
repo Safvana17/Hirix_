@@ -4,11 +4,12 @@ import { ICompany } from "../../Infrastructure/database/Model/company";
 export class CompanyMapper {
     static toEntity(doc: ICompany): CompanyEntity {
         const company = new CompanyEntity (
+            doc._id.toString(),
             doc.name,
             doc.email,
             doc.password,
             doc.isVerified,
-            doc._id.toString(),
+            doc.isBlocked,
             doc.googleId,
             doc.refreshToken ?? []
         )

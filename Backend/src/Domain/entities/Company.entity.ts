@@ -16,8 +16,8 @@ export default class CompanyEntity extends UserEntity{
 
     subscriptionId?: string;
 
-    constructor(name: string, email: string, password: string, isVerified: boolean ,id?: string, googleId?: string, refreshTokens: string[] = []){
-        super(name, email, password, isVerified, id, userRole.Company, googleId, refreshTokens)
+    constructor(id: string, name: string, email: string, password: string, isVerified: boolean ,isBlocked: boolean, googleId?: string, refreshTokens: string[] = []){
+        super(id, name, email, password, isVerified, isBlocked, userRole.Company, googleId, refreshTokens)
     }
 
 }

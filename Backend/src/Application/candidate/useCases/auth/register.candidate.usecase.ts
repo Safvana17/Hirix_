@@ -28,7 +28,7 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
         }
 
         const hashedPassword = await this.hashService.hash(request.password)
-        const candidate = new candidateEntity(request.name, request.email, hashedPassword, false)
+        const candidate = new candidateEntity("",request.name, request.email, hashedPassword, false, false)
 
         const savedCandidate = await this.candidateRepository.create(candidate)
 
