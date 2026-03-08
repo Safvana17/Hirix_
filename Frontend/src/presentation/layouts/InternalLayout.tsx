@@ -15,7 +15,7 @@ const InternalLayout: React.FC<InternalLayoutProps>= ({title, sidebarItems, chil
         <div className='flex-1 flex flex-col min-w-0'>
             <InternalHeader />
             <main className='flex-1 overflow-y-auto p-4 md:p-8'>
-                <h1>{title}</h1>
+                <h1 className='text-3xl tracking-wide font-bayon mb-2'>{title}</h1>
                 <div className='max-w-7xl mx-auto space-y-8'>
                     {children}
                 </div>

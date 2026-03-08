@@ -16,6 +16,7 @@ import AdminDashboard from '../presentation/pages/admin/AdminDashboard'
 import PublicRoute from '../components/auth/PublicRoute'
 import RoleRoute from '../components/auth/RoleRoute'
 import { ROLES } from '../constants/role'
+import AdminCompanies from '../presentation/pages/admin/AdminCompanies'
 
 const App = () => {
 
@@ -63,6 +64,12 @@ const App = () => {
           <Route path='/admin/dashboard' element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminDashboard /> 
+            </RoleRoute>
+          } />
+          
+          <Route path='/admin/companies' element={
+            <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+              <AdminCompanies />
             </RoleRoute>
           } />
           
