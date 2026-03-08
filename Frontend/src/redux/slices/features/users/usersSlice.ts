@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import type { Company } from "../../../../types/company";
+import type { Candidate } from "../../../../types/candidate";
 
 interface usersState {
     loading: boolean;
@@ -35,6 +36,24 @@ void,
     }
 })
 
+export const fetchCandidates = createAsyncThunk<
+{candidates: Candidate[]},
+void,
+{rejectValue: string}
+>('admin/fetchCandidates', async(_, {rejectWithValue}) => {
+    try {
+        const response = await api.get(`/admin/getallcandidates`)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data?.message || 'Failed to fetch candidates')
+    }
+})
+
 const userSlice = createSlice({
     name: 'userSlice',
     initialState,
@@ -55,6 +74,18 @@ const userSlice = createSlice({
           .addCase(fetchCompanies.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'FAILED TO FETCH COMPANIES'
+          })
+          .addCase(fetchCandidates.pending, (state) => {
+            state.loading = true
+            state.error = null
+          })
+          .addCase(fetchCandidates.fulfilled, (state, action) => {
+            state.loading = false
+            state.candidates = action.payload.candidates
+          })
+          .addCase(fetchCandidates.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to fetch companies'
           })
     }
 })

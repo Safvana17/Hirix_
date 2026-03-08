@@ -14,7 +14,7 @@
   export const adminSidebarItems = [
     {label: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard'},
     {label: 'Companies', icon: Building2, path: '/admin/companies'},
-    {label: 'Users', icon: Users, path: '/admin/users'},
+    {label: 'Users', icon: Users, path: '/admin/candidates'},
     {label: 'Categories', icon: FolderTree, path: 'admin/categories'},
     {label: 'Questions', icon: HelpCircle, path: 'admin/questions'},
     {label: 'Practice Library', icon: Library, path: 'admin/practicelibrary'},

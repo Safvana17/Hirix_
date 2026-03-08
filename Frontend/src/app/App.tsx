@@ -17,6 +17,7 @@ import PublicRoute from '../components/auth/PublicRoute'
 import RoleRoute from '../components/auth/RoleRoute'
 import { ROLES } from '../constants/role'
 import AdminCompanies from '../presentation/pages/admin/AdminCompanies'
+import AdminCandidates from '../presentation/pages/admin/AdminCandidates'
 
 const App = () => {
 
@@ -70,6 +71,12 @@ const App = () => {
           <Route path='/admin/companies' element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminCompanies />
+            </RoleRoute>
+          } />
+
+          <Route path='/admin/candidates' element={
+            <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+              <AdminCandidates />
             </RoleRoute>
           } />
           
