@@ -8,3 +8,16 @@ export interface GetAllCompaniesOutputDTO {
     status: userStatus;
     lastActive: Date;
 }
+
+export interface AdminCompanyQueryDTO {
+    search?: string;
+    status?: string;
+    page: number;
+    limit: number
+}
+
+export interface AdminPaginatedCompanyDTO {
+    companies: GetAllCompaniesOutputDTO[];
+    totalPages: number;
+    totalCount: number
+}

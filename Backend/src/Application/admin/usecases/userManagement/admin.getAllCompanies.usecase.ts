@@ -1,6 +1,6 @@
 import { userStatus } from "../../../../Domain/enums/userStatus.enum";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
-import { GetAllCompaniesOutputDTO } from "../../dtos/userManagement/getAllCompanies.admin.dto";
+import { AdminCompanyQueryDTO, AdminPaginatedCompanyDTO } from "../../dtos/userManagement/getAllCompanies.admin.dto";
 import { IAdminGetAllCompaniesUsecase } from "../../interfaces/userManagement/iAdmin.getAllCompanies.usecase";
 
 export class AdminGetAllCompaniesUsecase implements IAdminGetAllCompaniesUsecase{
@@ -8,15 +8,19 @@ export class AdminGetAllCompaniesUsecase implements IAdminGetAllCompaniesUsecase
         private _companyRepository: ICompanyRepository
     ) {}
 
-    async exexute(): Promise<GetAllCompaniesOutputDTO[]> {
-        const companies = await this._companyRepository.findAll()
-
-        return companies.map(c => ({
-            id: c.getId(),
-            name: c.getName(),
-            email: c.getEmail(),
-            status: c.getIsBlocked() ? userStatus.Blocked : userStatus.Active,
-            lastActive: new Date()
-        }))
+    async exexute(query: AdminCompanyQueryDTO): Promise<AdminPaginatedCompanyDTO> {
+        // const companies = await this._companyRepository.findAll()
+        const {data, totalPages, totalCount} = await this._companyRepository.findAllFiltered(query)
+        return{ 
+            companies: data.map(c => ({
+                id: c.getId(),
+                name: c.getName(),
+                email: c.getEmail(),
+                status: c.getIsBlocked() ? userStatus.Blocked : userStatus.Active,
+                lastActive: new Date()
+            })),
+            totalPages,
+            totalCount
+        }
     }
 }

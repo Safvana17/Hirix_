@@ -1,5 +1,5 @@
-import { GetAllCompaniesOutputDTO } from "../../dtos/userManagement/getAllCompanies.admin.dto";
+import { AdminPaginatedCompanyDTO, AdminCompanyQueryDTO } from "../../dtos/userManagement/getAllCompanies.admin.dto";
 
 export interface IAdminGetAllCompaniesUsecase{
-    exexute(): Promise<GetAllCompaniesOutputDTO[]>
+    exexute(query: AdminCompanyQueryDTO): Promise<AdminPaginatedCompanyDTO>
 }

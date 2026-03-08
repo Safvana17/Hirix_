@@ -15,14 +15,14 @@ export const errorHandler: ErrorRequestHandler = (
 
 
     if(error instanceof AppError){
-        logger.error(error.stack)
+        logger.error(`Message: ${error.message} Stack: ${error.stack}`)
         res.status(error.statusCode).json({
             success: false,
             message: error.message
         })
         return
     }else if(error instanceof ZodError){
-        logger.error(error.stack)
+        logger.error(`Message: ${error.message} Stack: ${error.stack}`)
         const errorMessage = error.issues.map((err) => err.message)[0]
 
         res.status(statusCode.BAD_REQUEST).json({
@@ -31,7 +31,7 @@ export const errorHandler: ErrorRequestHandler = (
         })
         return
     }else{
-      logger.error(error)
+      logger.error({Message: 'Unknown error', error})
       res.status(500).json({
         success: false,
         message: authMessages.error.INTERNAL_SERVER_ERROR

@@ -7,4 +7,5 @@ export default interface ICompanyRepository extends IBaseRepository <CompanyEnti
     // updateToken(id: string, token: string): Promise<void>
     updateGoogleId(email: string, googleId: string): Promise<CompanyEntity | null>
     // revokeRefreshToken(hashedToken: string): Promise<void>
+     findAllFiltered(query: {search?: string, status?: string, page: number, limit: number}): Promise<{data: CompanyEntity[], totalPages: number, totalCount: number}>
 }

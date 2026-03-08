@@ -3,6 +3,7 @@ import CompanyEntity from "../../Domain/entities/company.entity";
 import ICompanyRepository from "../../Domain/repositoryInterface/iCompany.repository";
 import { companyModel, ICompany } from "../database/Model/company";
 import { BaseRepository } from "./base.repository";
+import type { QueryFilter } from "mongoose";
 
 export class CompanyRepository extends BaseRepository<CompanyEntity, ICompany> implements ICompanyRepository {
 
@@ -36,6 +37,34 @@ export class CompanyRepository extends BaseRepository<CompanyEntity, ICompany> i
 
         if(!document) return null
         return this.mapToEntity(document)
+    }
+
+    async findAllFiltered(query: { search?: string; status?: string; page: number; limit: number; }): Promise<{ data: CompanyEntity[]; totalPages: number; totalCount: number; }> {
+        const filter: QueryFilter<ICompany> = {}
+        if(query.search){
+            filter.$or = [
+                {name: {$regex: query.search, $options: 'i'} },
+                {email: {$regex: query.search, $options: 'i'} }
+            ]
+        }
+        if(query.status){
+            filter.isBlocked = query.status === 'Blocked'
+        }
+
+        const skip = (query.page - 1) * query.limit
+        const totalCount = await this._model.countDocuments(filter)
+        const totalPages =Math.ceil(totalCount / query.limit)
+
+        const documents = await this._model.find(filter)
+              .skip(skip)
+              .limit(query.limit)
+              .sort({createdAt: -1})
+
+        return {
+            data: documents.map(doc => this.mapToEntity(doc)),
+            totalPages,
+            totalCount
+        }
     }
 
     // async revokeRefreshToken(hashedToken: string): Promise<void> {
