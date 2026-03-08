@@ -44,6 +44,10 @@ const companySchema: Schema<ICompany> = new Schema({
         default: userRole.Company,
         enum: Object.values(userRole)
     },
+    isBlocked: {
+       type: Boolean,
+       default: false
+    },
     googleId: {
         type: String
     },

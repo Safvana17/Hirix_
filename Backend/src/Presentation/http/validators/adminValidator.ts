@@ -8,3 +8,8 @@ export const QuerySchema = z.object({
     page: z.coerce.number().default(1),
     limit: z.coerce.number().default(10)
 })
+
+export const updateStatusSchema = z.object({
+    id: z.string().regex(/^[0-9a-fA-F]{24}$/),
+    status: z.nativeEnum(userStatus)
+})

@@ -2,16 +2,21 @@ import { NextFunction, Request, Response } from "express";
 import { IAdminGetAllCandidates } from "../../../../Application/admin/interfaces/userManagement/iAdmin.getAllCandidates.usecase";
 import { IAdminGetAllCompaniesUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.getAllCompanies.usecase";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
-import { QuerySchema } from "../../validators/adminValidator";
+import { QuerySchema, updateStatusSchema } from "../../validators/adminValidator";
 import { logger } from "../../../../utils/logging/loger";
 import { AdminCompanyQueryDTO } from "../../../../Application/admin/dtos/userManagement/getAllCompanies.admin.dto";
 import { IAdminGetCompanyUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.getCompany.usecase";
+import { UpdataStatusInputDTO } from "../../../../Application/admin/dtos/userManagement/updateStatus.admin.dto";
+import { IAdminUpdateCompanyStatusUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.updateCompanyStatus.usecase";
+import { success } from "zod";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 
 export class UserManagementController {
     constructor(
        private _getAllCompaniesUsecase: IAdminGetAllCompaniesUsecase,
        private _getAllCandidatesUsecase: IAdminGetAllCandidates,
-       private _getCompanyUsecase: IAdminGetCompanyUsecase
+       private _getCompanyUsecase: IAdminGetCompanyUsecase,
+       private _updateCompanyStatus: IAdminUpdateCompanyStatusUsecase
     ) { }
     
     getAllCompanies = async(req: Request, res: Response, next: NextFunction) => {
@@ -19,10 +24,12 @@ export class UserManagementController {
             logger.info({Query: req.query})
             const parsed: AdminCompanyQueryDTO = QuerySchema.parse(req.query)
             logger.info({parsed: parsed})
-            const companies = await this._getAllCompaniesUsecase.exexute(parsed)
+            const {companies, totalPages, totalCount} = await this._getAllCompaniesUsecase.exexute(parsed)
             return res.status(statusCode.OK).json({
                 success: true,
-                companies
+                companies,
+                totalCount,
+                totalPages
             })
         } catch (error) {
             next(error)
@@ -49,6 +56,25 @@ export class UserManagementController {
                 success: true,
                 company
             })
+        } catch (error) {
+            next(error)
+        }
+    }
+    updateCompanyStatus = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id
+            const parsed = updateStatusSchema.parse({id,status: req.body.status})
+            const payload: UpdataStatusInputDTO = {
+                id: parsed.id,
+                status: parsed.status
+            }
+
+            await this._updateCompanyStatus.execute(payload)
+            return res.status(statusCode.OK).json({
+                success: true,
+                message: 'Status updated successfully'
+            })
+
         } catch (error) {
             next(error)
         }

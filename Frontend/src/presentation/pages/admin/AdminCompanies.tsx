@@ -14,7 +14,7 @@ const AdminCompanies : React.FC = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
-    const { companies, loading } = useSelector((state: RootState) => state.userSlice)
+    const { companies = [], loading } = useSelector((state: RootState) => state.userSlice)
 
     useEffect(() => {
         dispatch(fetchCompanies())

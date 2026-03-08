@@ -1,0 +1,27 @@
+import { AppError } from "../../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { UpdataStatusInputDTO, UpdateStatusOutputDTO } from "../../dtos/userManagement/updateStatus.admin.dto";
+import { IAdminUpdateCompanyStatusUsecase } from "../../interfaces/userManagement/iAdmin.updateCompanyStatus.usecase";
+
+export class AdminUpdateCompanyStatus implements IAdminUpdateCompanyStatusUsecase {
+    constructor (
+        private _companyRepository: ICompanyRepository
+    ) {}
+
+    async execute(request: UpdataStatusInputDTO): Promise<UpdateStatusOutputDTO> {
+        const company = await this._companyRepository.findById(request.id)
+        if(!company){
+            throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
+        }
+
+        const isBlocked = request.status === 'Blocked'
+        company.setBlocked(isBlocked)
+        await this._companyRepository.update(request.id, company)
+
+        return {
+            success: true
+        }
+    }
+}

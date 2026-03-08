@@ -1,30 +1,41 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import api from "../../../../lib/axios";
-import type { Company } from "../../../../types/company";
+import type { Company, FetchCompaniesParams, FetchCompaniesResponse } from "../../../../types/company";
 import type { Candidate } from "../../../../types/candidate";
 
 interface usersState {
     loading: boolean;
     error: string | null;
-    candidates: Company[];
-    companies: Company[]
+    candidates: Candidate[];
+    companies: Company[];
+    selectedCompany: Company | null;
+    pagination: {
+        companies: {
+            totalPages: number;
+            totalCount: number
+        }
+    }
 }
 
 const initialState: usersState = {
     loading: false,
     error: null,
     candidates: [],
-    companies: []
+    companies: [],
+    selectedCompany: null,
+    pagination: {
+        companies: {totalPages: 0, totalCount: 0}
+    }
 }
 
 export const fetchCompanies = createAsyncThunk<
-{companies: Company[]},
-void,
+FetchCompaniesResponse,
+FetchCompaniesParams | undefined,
 {rejectValue: string}
->('admin/fetchCompanies', async(_, {rejectWithValue}) => {
+>('admin/fetchCompanies', async(params: {search?: string; status?: string; page?: number; limit?: number} | undefined, {rejectWithValue}) => {
     try {
-        const response = await api.get(`/admin/getallcompanies`)
+        const response = await api.get(`/admin/getallcompanies`, {params})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -70,6 +81,8 @@ const userSlice = createSlice({
           .addCase(fetchCompanies.fulfilled, (state, action) => {
             state.loading = false
             state.companies = action.payload.companies
+            state.pagination.companies.totalPages = action.payload.totalPages
+            state.pagination.companies.totalCount = action.payload.totalCount
           })
           .addCase(fetchCompanies.rejected, (state, action) => {
             state.loading = false

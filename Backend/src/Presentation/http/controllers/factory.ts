@@ -47,6 +47,7 @@ import UserEntity from "../../../Domain/entities/user.entity";
 import { IBaseRepository } from "../../../Domain/repositoryInterface/iBase.repository";
 import { UnifiedLogoutUsecase } from "../../../Application/common/usecases/unified.logout.usecase";
 import { AdminGetCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.getCompany.usecase";
+import { AdminUpdateCompanyStatus } from "../../../Application/admin/usecases/userManagement/admin.updateCompanyStatus.usecase";
 
 
 
@@ -207,6 +208,10 @@ const iGetCompany = new AdminGetCompanyUsecase(
     iCompanyRepository
 )
 
+const iUpdateCompanyStatus = new AdminUpdateCompanyStatus(
+    iCompanyRepository
+)
+
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,
@@ -242,5 +247,6 @@ export const iAdminAuthController = new AdminAuthController(
 export const IUserManagementController = new UserManagementController(
     iGetAllCompanies,
     iGetAllCandidates,
-    iGetCompany
+    iGetCompany,
+    iUpdateCompanyStatus
 )

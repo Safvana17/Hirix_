@@ -65,4 +65,7 @@ export default class UserEntity {
     public getIsBlocked():boolean {
         return this.isBlocked
     }
+    public setBlocked(blocked: boolean):void {
+        this.isBlocked = blocked
+    }
 }
