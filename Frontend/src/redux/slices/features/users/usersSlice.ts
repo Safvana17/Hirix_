@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import api from "../../../../lib/axios";
-import type { Company, FetchCompaniesParams, FetchCompaniesResponse } from "../../../../types/company";
+import { type UpdateStatusArgs, type Company, type FetchCompaniesParams, type FetchCompaniesResponse, type UpdateStatusPayload } from "../../../../types/company";
 import type { Candidate } from "../../../../types/candidate";
 
 interface usersState {
@@ -65,6 +65,27 @@ void,
     }
 })
 
+export const updateUserStatus = createAsyncThunk<
+UpdateStatusPayload,
+UpdateStatusArgs,
+{rejectValue: string}
+>('/admin/updatestatus', async(UpdateStatusArgs, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(`/admin/${UpdateStatusArgs.role}/updatestatus/${UpdateStatusArgs.id}`,{ status: UpdateStatusArgs.status})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return {
+            id: response.data.updatedCompany.id,
+            status: response.data.updatedCompany.status,
+            role: response.data.updatedCompany.role
+        }
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data?.message || 'Failed to fetch candidates')       
+    }
+})
+
 const userSlice = createSlice({
     name: 'userSlice',
     initialState,
@@ -99,6 +120,19 @@ const userSlice = createSlice({
           .addCase(fetchCandidates.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to fetch companies'
+          })
+          .addCase(updateUserStatus.pending, (state) => {
+            state.loading = true
+            state.error = null
+          })
+          .addCase(updateUserStatus.fulfilled, (state, action) => {
+            state.loading = false
+            const {id, status, role } = action.payload
+            console.log('from user slice: ', id, role, status)
+            if(role === 'Company'){
+                const company = state.companies.find(c => c.id === id)
+                if(company) company.status = status
+            }
           })
     }
 })

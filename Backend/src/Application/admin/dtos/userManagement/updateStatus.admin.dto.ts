@@ -1,3 +1,4 @@
+import userRole from "../../../../Domain/enums/userRole.enum";
 import { userStatus } from "../../../../Domain/enums/userStatus.enum"
 
 export interface UpdataStatusInputDTO {
@@ -6,5 +7,7 @@ export interface UpdataStatusInputDTO {
 }
 
 export interface UpdateStatusOutputDTO {
-    success: boolean
+        id: string;
+        status: userStatus;
+        role: userRole
 }

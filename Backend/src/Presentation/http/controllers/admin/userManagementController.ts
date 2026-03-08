@@ -8,8 +8,7 @@ import { AdminCompanyQueryDTO } from "../../../../Application/admin/dtos/userMan
 import { IAdminGetCompanyUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.getCompany.usecase";
 import { UpdataStatusInputDTO } from "../../../../Application/admin/dtos/userManagement/updateStatus.admin.dto";
 import { IAdminUpdateCompanyStatusUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.updateCompanyStatus.usecase";
-import { success } from "zod";
-import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+
 
 export class UserManagementController {
     constructor(
@@ -62,6 +61,7 @@ export class UserManagementController {
     }
     updateCompanyStatus = async(req: Request, res: Response, next: NextFunction) => {
         try {
+            logger.info({Query: req.params, body: req.body})
             const id = req.params.id
             const parsed = updateStatusSchema.parse({id,status: req.body.status})
             const payload: UpdataStatusInputDTO = {
@@ -69,10 +69,12 @@ export class UserManagementController {
                 status: parsed.status
             }
 
-            await this._updateCompanyStatus.execute(payload)
+            const updatedCompany = await this._updateCompanyStatus.execute(payload)
+            logger.info({updatedCompany: updatedCompany})
             return res.status(statusCode.OK).json({
                 success: true,
-                message: 'Status updated successfully'
+                message: 'Status updated successfully',
+                updatedCompany
             })
 
         } catch (error) {

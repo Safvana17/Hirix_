@@ -22,7 +22,7 @@ const InternalSidebar: React.FC<InternalSidebarProps> = ({items}) => {
                         key={item.path}
                         to={item.path}
                         className={({isActive}) => 
-                            `flex items-center gap-4 py-3 rounded-lg transition-all duration-200 group ${isActive 
+                            `flex items-center gap-4 py-3 px-3 rounded-lg transition-all duration-200 group ${isActive 
                                 ? 'bg-white text-[#6B4705] shadow-inner'
                                 : 'hover:bg-white hover:text-[#6B4705]'
                             }`

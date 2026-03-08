@@ -1,3 +1,4 @@
+import { userStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
@@ -21,7 +22,9 @@ export class AdminUpdateCompanyStatus implements IAdminUpdateCompanyStatusUsecas
         await this._companyRepository.update(request.id, company)
 
         return {
-            success: true
+                id: company.getId(),
+                status: isBlocked ? userStatus.Blocked : userStatus.Active,
+                role: company.getRole()
         }
     }
 }
