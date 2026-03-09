@@ -84,7 +84,7 @@ const VerifyOtp: React.FC = () => {
         }else{
             const result = await dispatch(verifyOtp({role, otp:otpValue, email}))
             if(verifyOtp.fulfilled.match(result)){
-               navigate(`/login`)
+               navigate(`/${role}/login`)
             }
         }
     }
@@ -132,7 +132,7 @@ const VerifyOtp: React.FC = () => {
             <p className='text-gray-300'>Remaining Time: <span className='text-white font-bold text-xl'>{formatTime(timeLeft)}</span></p>
         </div>
 
-        {error && <p className='text-red-600 text-sm '>{error}</p>}
+        {error && <p className='text-[#FBBEBE] text-sm '>{error}</p>}
         <div className='text-center'> 
         <button type='submit' disabled={loading || otp.join('').length < 6} className='w-30 bg-[#E9C788] hover:bg-[#6B4705] text-white font-bold py-4 rounded-xl transition duration-200'>
             {loading ? 'Verifying...' : 'Verify OTP'}

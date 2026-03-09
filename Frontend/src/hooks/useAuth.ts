@@ -7,6 +7,7 @@ import type { LoginData, RegisterData } from "../types/user"
 export const useAuth = () => {
     const dispatch = useDispatch<AppDispatch>()
     const { user, isAuthenticated, loading, error } = useSelector((state: RootState) => state.auth)
+    // const { admin, isAdminAuthenticated } = useSelector((state: RootState) => state.adminAuth)
 
     const handleError = () => dispatch(clearError())
 
@@ -36,8 +37,8 @@ export const useAuth = () => {
         login,
         logout,
         checkAuth,
-        isAdmin: user?.role === 'admin',
-        isCandidate: user?.role === 'candidate',
-        isCompany: user?.role === 'company'
+        isAdmin: user?.role === 'Admin',
+        isCandidate: user?.role === 'Candidate',
+        isCompany: user?.role === 'Company'
     }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import type { AppDispatch, RootState } from '../../../redux/store'
@@ -9,6 +9,7 @@ import DataTable from '../../components/ui/DataTable'
 import type { Column } from '../../../types/table'
 import type { Company } from '../../../types/company'
 import { Ban, CheckCircle, Eye, Filter, Search } from 'lucide-react'
+import { useDebounce } from '../../../hooks/useDebounce'
 
 const AdminCompanies : React.FC = () => {
 
@@ -18,23 +19,24 @@ const AdminCompanies : React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
+    const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
 
     useEffect(() => {
-        dispatch(fetchCompanies({search: searchTerm, status: statusFilter, page: currentPage, limit: 10}))
-    }, [dispatch, searchTerm, statusFilter, currentPage])
+        dispatch(fetchCompanies({search: debouncedSearchTerm, status: statusFilter, page: currentPage, limit: 10}))
+    }, [dispatch, debouncedSearchTerm, statusFilter, currentPage])
 
-    const handleSearchChange = (val: string) => {
+    const handleSearchChange = useCallback((val: string) => {
         setSearchTerm(val)
         setCurrentPage(1)
-    }
+    },[])
 
-    const handleStatusChange = (val: string) => {
+    const handleStatusChange = useCallback((val: string) => {
         setStatusFilter(val)
         setCurrentPage(1)
-    }
+    },[])
 
-    const columns: Column<Company>[] = [
+    const columns: Column<Company>[] = useMemo(() =>[
         {header: 'Company Name', key: 'name', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
         {header: 'Email Address', key: 'email', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
         {header: 'Status', key: 'status', render: (val) => (
@@ -57,7 +59,7 @@ const AdminCompanies : React.FC = () => {
                             id,
                             status: 'Blocked',
                             role: 'company',
-                            queryParams: {search: searchTerm, status: statusFilter, page: currentPage, limit: 10}
+                            // queryParams: {search: searchTerm, status: statusFilter, page: currentPage, limit: 10}
                         }))}
                         title='Block company'
                         role='company'
@@ -71,7 +73,7 @@ const AdminCompanies : React.FC = () => {
                             id,
                             status: 'Active',
                             role: 'company',
-                            queryParams: {search: searchTerm, status: statusFilter, page: currentPage, limit: 10}
+                            // queryParams: {search: searchTerm, status: statusFilter, page: currentPage, limit: 10}
                         }))}
                         title='Unblock company'
                         role='company'
@@ -82,7 +84,9 @@ const AdminCompanies : React.FC = () => {
                 )}
             </div>
         )}
-    ]
+    ],[dispatch, navigate])
+
+    
   return (
     <InternalLayout title='Companies' subTitle='Manage all registered Companies' sidebarItems={adminSidebarItems}>
         <div className="bg-white p-7 rounded-3xl border border-gray-100 shadow-sm">

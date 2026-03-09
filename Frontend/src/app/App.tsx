@@ -1,24 +1,26 @@
-import { Suspense, useEffect } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Suspense, useEffect, lazy } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { getMe } from '../redux/slices/features/auth/authSlice'
 import type { AppDispatch } from '../redux/store'
-import Home from '../presentation/pages/home/Home'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import AuthGatewayPage from '../presentation/pages/auth/AuthGatewayPage'
-import VerifyOtp from '../presentation/pages/auth/VerifyOtp'
-import CompanyDashboard from '../presentation/pages/company/CompanyDashboard'
-import CandidateDashboard from '../presentation/pages/candidate/CandidateDashboard'
-import ForgotPassword from '../presentation/pages/auth/ForgotPassword'
-import ResetPassword from '../presentation/pages/auth/ResetPassword'
-import AdminLogin from '../presentation/pages/auth/AdminLogin'
-import AdminDashboard from '../presentation/pages/admin/AdminDashboard'
 import PublicRoute from '../components/auth/PublicRoute'
 import RoleRoute from '../components/auth/RoleRoute'
 import { ROLES } from '../constants/role'
-import AdminCompanies from '../presentation/pages/admin/AdminCompanies'
-import AdminCandidates from '../presentation/pages/admin/AdminCandidates'
-import AdminCompanyDetailPage from '../presentation/pages/admin/AdminCompanyDetailPage'
+
+const Home = lazy(() => import( '../presentation/pages/home/Home'))
+const AuthGatewayPage = lazy(() => import('../presentation/pages/auth/AuthGatewayPage'))
+const VerifyOtp = lazy(() =>import('../presentation/pages/auth/VerifyOtp'))
+const CompanyDashboard = lazy(() => import('../presentation/pages/company/CompanyDashboard'))
+const CandidateDashboard = lazy(() => import( '../presentation/pages/candidate/CandidateDashboard'))
+const ForgotPassword = lazy(() => import ( '../presentation/pages/auth/ForgotPassword'))
+const ResetPassword = lazy(() => import('../presentation/pages/auth/ResetPassword'))
+const AdminLogin = lazy(() => import ( '../presentation/pages/auth/AdminLogin'))
+const AdminDashboard  = lazy(() => import('../presentation/pages/admin/AdminDashboard'))
+const AdminCompanies = lazy(() => import( '../presentation/pages/admin/AdminCompanies'))
+const AdminCandidates = lazy(() => import( '../presentation/pages/admin/AdminCandidates'))
+const AdminCompanyDetailPage = lazy(() => import('../presentation/pages/admin/AdminCompanyDetailPage'))
+
 
 const App = () => {
 

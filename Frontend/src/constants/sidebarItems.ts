@@ -8,7 +8,9 @@
   DollarSign,
   Users,
   Settings,
-  BarChart3
+  BarChart3,
+  ClipboardCheck,
+  Briefcase
 } from 'lucide-react'
   
   export const adminSidebarItems = [
@@ -21,5 +23,15 @@
     {label: 'Subscriptions', icon: CreditCard, path: 'admin/subscriptions'},
     {label: 'Revenue', icon: DollarSign, path: 'admin/revenue'},
     {label: 'Reports', icon: BarChart3, path: 'admin/report'},
+    {label: 'Settings', icon: Settings, path: 'admin/settings'},
+  ]
+
+  export const companySidebarItems = [
+    {label: 'Dashboard', icon: LayoutDashboard, path: 'admin/dashboard'},
+    {label: 'Job Roles', icon: Briefcase, path: 'admin/companies'},
+    {label: 'Tests', icon: ClipboardCheck, path: 'admin/users'},
+    {label: 'Questions', icon: HelpCircle, path: 'admin/questions'},
+    {label: 'Interviews', icon: Library, path: 'admin/practicelibrary'},
+    {label: 'Subscriptions', icon: CreditCard, path: 'admin/subscriptions'},
     {label: 'Settings', icon: Settings, path: 'admin/settings'},
   ]

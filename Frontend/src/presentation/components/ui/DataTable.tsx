@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { Column } from '../../../types/table'
 import type { Pagination } from '../../../types/pagination';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -22,7 +23,6 @@ const DataTable =  <T extends {id: string | number }>({
  return (
   <div className="w-full">
 
-    {/* TABLE CONTAINER */}
     <div className="overflow-x-auto bg-white rounded-xl mt-5 shadow-sm">
       <table className="w-full text-left border-collapse">
         <thead>
@@ -69,7 +69,6 @@ const DataTable =  <T extends {id: string | number }>({
       </table>
     </div>
 
-    {/* PAGINATION CONTAINER */}
     {pagination && pagination.totalPages > 1 && (
       <div className="mt-4 px-6 py-4 flex border-none items-center justify-between rounded-xl">
 
@@ -136,4 +135,4 @@ const DataTable =  <T extends {id: string | number }>({
 )
 }
 
-export default DataTable
+export default memo(DataTable) as typeof DataTable

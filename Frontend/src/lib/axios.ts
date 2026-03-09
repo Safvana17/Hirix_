@@ -2,6 +2,7 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 // import { store } from "../redux/store";
 // import { logoutUser } from "../redux/slices/authSlice";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ? `${import.meta.env.VITE_BACKEND_URL}/api/v1` : 'http://localhost:4000/api/v1'
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     _retry: boolean
@@ -13,7 +14,7 @@ export const setLogoutHandler = (handler: () => void) => {
 }
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_URL,
+    baseURL: BACKEND_URL,
     withCredentials: true
 })
 

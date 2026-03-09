@@ -84,7 +84,7 @@ UpdateStatusArgs,
         }
     } catch (error) {
         const err = error as AxiosError<{message: string}>
-        return rejectWithValue(err.response?.data?.message || 'Failed to fetch candidates')       
+        return rejectWithValue(err.response?.data?.message || 'Failed update status')       
     }
 })
 
@@ -101,7 +101,7 @@ export const getCompanyDetail = createAsyncThunk<
      return response.data
    } catch (error) {
         const err = error as AxiosError<{message: string}>
-        return rejectWithValue(err.response?.data?.message || 'Failed to fetch candidates')       
+        return rejectWithValue(err.response?.data?.message || 'Failed to fetch company')       
     }
 })
 

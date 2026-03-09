@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { UserRole } from '../../../../constants/role'
 import type { AuthState, LoginPayload, User, RegisterPayload, ResetPasswordPayload } from "../../../../types/user";
 import api from "../../../../lib/axios";
+import type { AxiosError } from "axios";
 
 
 
@@ -32,16 +33,13 @@ export const registerUser = createAsyncThunk<
             message: string;
         }>(`/auth/${role}/register`, data)
 
-        // const user = response.data.candidate || response.data.company || response.data.admin
-        // if(!user){
-        //     return rejectWithValue('Invalid registration response')
-        // }
         if(!response.data.success){
             return rejectWithValue('Registration failed')
         }
         return {role, email: data.email}
     } catch (error) {
-        return rejectWithValue(`Registration failed: ${error}`)
+       const err = error as AxiosError<{ message: string }>
+       return rejectWithValue(err.response?.data?.message || 'Failed to register')
     }
 })
 
@@ -66,7 +64,8 @@ export const loginUser = createAsyncThunk<
 
         return {user, role}
     } catch (error) {
-        return rejectWithValue(`login failed: ${error}`)
+       const err = error as AxiosError<{ message: string }>
+       return rejectWithValue(err.response?.data?.message || 'Failed to login')
     }
 })
 
@@ -86,7 +85,8 @@ export const googleLogin = createAsyncThunk<
 
         return {user, role}
     } catch (error) {
-        return rejectWithValue(`failed to goole login: ${error}`)
+       const err = error as AxiosError<{ message: string }>
+       return rejectWithValue(err.response?.data?.message || 'Google login failed')
     }
 })
 
@@ -98,7 +98,8 @@ void,
     try {
         await api.post(`/auth/logout`)
     } catch (error) {
-        return rejectWithValue(`Logout failed: ${error}`)
+       const err = error as AxiosError<{ message: string }>
+       return rejectWithValue(err.response?.data?.message || 'logout failed')
     }
 })
 
@@ -107,12 +108,6 @@ export const getMe = createAsyncThunk <
         void,
         { rejectValue: string}
         > ('auth/getMe', async(_, {rejectWithValue}) => {
-
-            // const role = localStorage.getItem('userRole') as UserRole | null
-
-            // if(!role) {
-            //     return rejectWithValue('Norole found')
-            // }
 
             try {
                 const response = await api.get<
@@ -130,7 +125,8 @@ export const getMe = createAsyncThunk <
                 
                 return {user}
             } catch (error) {
-                return rejectWithValue(`session expired: ${error}`)
+                const err = error as AxiosError<{ message: string }>
+                return rejectWithValue(err.response?.data?.message || 'Getme failed')
             }
 })
 
@@ -153,7 +149,8 @@ export const verifyOtp = createAsyncThunk<
 
      return {role, user}
    } catch (error) {
-     return rejectWithValue(`Verification failed: ${error}`)
+       const err = error as AxiosError<{ message: string }>
+       return rejectWithValue(err.response?.data?.message || 'Failed to verify otp')
    }
 }) 
 
@@ -167,7 +164,8 @@ export const resendOtp = createAsyncThunk<
      }
     return {email, role}
    } catch (error) {
-    return rejectWithValue(`Failed to resend otp ${error}`)
+       const err = error as AxiosError<{ message: string }>
+       return rejectWithValue(err.response?.data?.message || 'Failed to resend otp')
    }
 })
 
@@ -183,7 +181,8 @@ export const forgotPassword = createAsyncThunk<
  
      return {email, role}
    } catch (error) {
-    return rejectWithValue(`failed to send otp for forgot password, ${error}`)
+       const err = error as AxiosError<{ message: string }>
+       return rejectWithValue(err.response?.data?.message || 'Failed in forgot password')
    }
 })
 
@@ -197,7 +196,8 @@ void, ResetPasswordPayload, {rejectValue: string}
         }
         return
     } catch (error) {
-        return rejectWithValue(`failed to reset password: ${error}`)
+       const err = error as AxiosError<{ message: string }>
+       return rejectWithValue(err.response?.data?.message || 'Failed to reset password')
     }
 })
 

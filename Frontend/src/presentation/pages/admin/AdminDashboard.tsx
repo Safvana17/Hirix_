@@ -5,7 +5,7 @@ import InternalLayout from '../../layouts/InternalLayout'
 
 const AdminDashboard: React.FC= () => {
   return (
-     <InternalLayout title="Dashboard" sidebarItems={adminSidebarItems}>
+     <InternalLayout title="Dashboard" subTitle='' sidebarItems={adminSidebarItems}>
       <p>Welcome</p>
      </InternalLayout>
   )

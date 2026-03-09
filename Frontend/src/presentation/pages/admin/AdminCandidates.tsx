@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import InternalLayout from '../../layouts/InternalLayout'
@@ -8,6 +8,7 @@ import type { Column } from '../../../types/table'
 import { Ban, CheckCircle, Search, Filter } from 'lucide-react'
 import { fetchCandidates, updateUserStatus } from '../../../redux/slices/features/users/usersSlice'
 import type { Candidate } from '../../../types/candidate'
+import { useDebounce } from '../../../hooks/useDebounce'
 
 const AdminCandidates : React.FC = () => {
 
@@ -16,22 +17,23 @@ const AdminCandidates : React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const dispatch = useDispatch<AppDispatch>()
     const { candidates, loading, pagination } = useSelector((state: RootState) => state.userSlice)
+    const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
     useEffect(() => {
-        dispatch(fetchCandidates({search: searchTerm, status: statusFilter, page: currentPage, limit: 4}))
-    }, [dispatch, searchTerm, statusFilter, currentPage])
+        dispatch(fetchCandidates({search: debouncedSearchTerm, status: statusFilter, page: currentPage, limit: 4}))
+    }, [dispatch, debouncedSearchTerm, statusFilter, currentPage])
 
-    const handleSearchChange = (val: string) => {
+    const handleSearchChange = useCallback((val: string) => {
         setSearchTerm(val)
         setCurrentPage(1)
-    }
+    }, [])
 
-    const handleStatusChange = (val: string) => {
+    const handleStatusChange = useCallback((val: string) => {
         setStatusFilter(val)
         setCurrentPage(1)
-    }
+    },[])
 
-const columns: Column<Candidate>[] = [
+const columns: Column<Candidate>[] =  [
     {header: 'Name', key: 'name', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
     {header: 'Email Address', key: 'email', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
     {header: 'Status', key: 'status', render: (val) => (
@@ -47,7 +49,7 @@ const columns: Column<Candidate>[] = [
                             id,
                             status: 'Blocked',
                             role: 'candidate',
-                            queryParams: {search: searchTerm, status: statusFilter, page: currentPage, limit: 4}
+                            
                         }))}
                         title='Block candidate'
                         role='candidate'
@@ -61,7 +63,6 @@ const columns: Column<Candidate>[] = [
                             id,
                             status: 'Active',
                             role: 'candidate',
-                            queryParams: {search: searchTerm, status: statusFilter, page: currentPage, limit: 4}
                         }))}
                         title='Unblock candidate'
                         role='candidate'
@@ -73,6 +74,7 @@ const columns: Column<Candidate>[] = [
         </div>
     )}
 ]
+
   return (
     <InternalLayout title='Users' subTitle='Manage platform users' sidebarItems={adminSidebarItems}>
         <div>

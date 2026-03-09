@@ -6,7 +6,7 @@ export const registerSchema = z.object({
         .trim()
         .min(2, "Name must be atleast 2 characters")
         .max(50, "Name must be atmost 50 characters")
-        .regex(/^[A-Za-z]+( [A-Za-z]+)*$/),
+        .regex(/^[A-Za-z]+( [A-Za-z]+)*$/, "Name must contain uppercase and lowercase letters"),
     email: z
         .string()
         .trim()
@@ -16,7 +16,7 @@ export const registerSchema = z.object({
         .string()
         .trim()
         .min(6, 'Password must contain atleast 6 characters')
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/),
+        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/, "Password must contain uppercase, lowercase, number and special character"),
     confirmPassword: z
         .string()
 })
@@ -35,7 +35,7 @@ export const loginSchema = z.object({
          .string()
          .trim()
         .min(6, 'Password must contain atleast 6 characters')
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/)
+        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/, "Password must contain uppercase, lowercase, number and special character")
 })
 
 export const otpSchema = z.object({

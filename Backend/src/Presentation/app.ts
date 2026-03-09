@@ -31,7 +31,7 @@ app.get('/test', (req, res) => {
     logger.info('I am from app.ts')
     res.status(200).json({status: "OK"});
 });
-app.use('/', routes)
+app.use('/api', routes)
 app.use(errorHandler)
 
 export default app;
