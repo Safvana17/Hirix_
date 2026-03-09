@@ -3,6 +3,7 @@ import type { UserRole } from '../../../../constants/role'
 import type { AuthState, LoginPayload, User, RegisterPayload, ResetPasswordPayload } from "../../../../types/user";
 import api from "../../../../lib/axios";
 import type { AxiosError } from "axios";
+import type { AdminLoginPayload } from "../../../../types/admin";
 
 
 
@@ -66,6 +67,27 @@ export const loginUser = createAsyncThunk<
     } catch (error) {
        const err = error as AxiosError<{ message: string }>
        return rejectWithValue(err.response?.data?.message || 'Failed to login')
+    }
+})
+
+export const adminLogin = createAsyncThunk <
+{admin: User}, AdminLoginPayload, {rejectValue: string}
+>('admin/login', async({email, password}, {rejectWithValue}) => {
+    try {
+        const response = await api.post<{
+            admin?: User
+        }>(`/auth/admin/login`,{email, password})
+
+        console.log('response: ', response.data)
+        const admin = response.data.admin
+        console.log("admin: ", admin)
+        if(!admin){
+            return rejectWithValue('Invalid response')
+        }
+
+        return {admin}
+    } catch (error) {
+        return rejectWithValue(`failed admin login: ${error}`)
     }
 })
 
@@ -242,6 +264,19 @@ const authSlice = createSlice({
         .addCase(loginUser.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload || 'Login error'
+        })
+        .addCase(adminLogin.pending, (state) => {
+            state.loading = true;
+            state.error = null
+        })
+        .addCase(adminLogin.fulfilled, (state, action) => {
+            state.loading = false;
+            state.isAuthenticated = true
+            state.user= action.payload.admin
+        })
+        .addCase(adminLogin.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Admin login error'
         })
         .addCase(logoutUser.pending, (state) => {
             state.loading = true;

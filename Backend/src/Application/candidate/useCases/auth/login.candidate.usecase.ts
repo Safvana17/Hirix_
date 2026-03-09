@@ -25,6 +25,10 @@ export class LoginCandidateUsecase {
             throw new AppError(authMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
+        if(candidate.getIsBlocked()){
+            throw new AppError(authMessages.error.CANDIDATE_BLOCKED, statusCode.FORBIDDEN)
+        }
+
         const isValidPassword = await this._hashService.compare(request.password, candidate.getPassword())
         if(!isValidPassword){
             throw new AppError(authMessages.error.INVALID_PASSWORD, statusCode.UNAUTHORIZED)

@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import { loginSchema } from '../../../lib/validation/authValidation'
 import { ZodError } from 'zod'
-import { adminLogin } from '../../../redux/slices/features/auth/adminAuthSlice'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { adminLogin } from '../../../redux/slices/features/auth/authSlice'
 
 const AdminLogin: React.FC= () => {
 
@@ -17,7 +17,7 @@ const AdminLogin: React.FC= () => {
     })
     const [error, setError] = useState<Record<string, string>>({})
 
-    const { loading } = useSelector((state: RootState) => state.adminAuth)
+    const { loading } = useSelector((state: RootState) => state.auth)
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
 

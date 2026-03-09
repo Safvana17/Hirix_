@@ -39,6 +39,7 @@ export const authMessages = {
         //candidate
         CANDIDATE_ID_NOT_FOUND: 'Candidate id not found',
         CANDIDATE_ALREADY_EXISTS: 'Candidate with this email already exists',
+        CANDIDATE_BLOCKED: 'Candidate is blocked by Admin',
 
 
         //company
