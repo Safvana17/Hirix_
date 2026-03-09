@@ -17,6 +17,7 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
         }
         return {
+            id: company.getId(),
             name: company.getName(),
             email: company.getEmail(),
             status: company.getIsBlocked() ? userStatus.Blocked : userStatus.Active

@@ -88,6 +88,23 @@ UpdateStatusArgs,
     }
 })
 
+export const getCompanyDetail = createAsyncThunk<
+{company: Company},
+{id: string},
+{rejectValue: string}
+>('/admin/getCompanyDetails', async({id}, {rejectWithValue}) => {
+   try {
+     const response = await api.get(`/admin/company/${id}`)
+     if(!response){
+         return rejectWithValue('Invalid response')
+     }
+     return response.data
+   } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data?.message || 'Failed to fetch candidates')       
+    }
+})
+
 const userSlice = createSlice({
     name: 'userSlice',
     initialState,
@@ -136,10 +153,26 @@ const userSlice = createSlice({
             if(role === 'Company'){
                 const company = state.companies.find(c => c.id === id)
                 if(company) company.status = status
+                if(state.selectedCompany && state.selectedCompany.id === id){
+                    state.selectedCompany.status = status
+                }
             }else if(role === 'Candidate'){
                 const candidate = state.candidates.find(c => c.id === id)
                 if(candidate) candidate.status = status
             }
+          })
+          .addCase(getCompanyDetail.pending, (state) => {
+            state.loading = true
+            state.error = null
+          })
+          .addCase(getCompanyDetail.fulfilled, (state, action) => {
+            // console.log('selected company is: ',state.selectedCompany)
+            state.loading = false
+            state.selectedCompany = action.payload.company
+          })
+          .addCase(getCompanyDetail.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to view company profile'
           })
     }
 })

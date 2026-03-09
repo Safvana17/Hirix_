@@ -57,6 +57,7 @@ export class UserManagementController {
         try {
             const id = req.params.id
             const company = await this._getCompanyUsecase.execute({id: id})
+            logger.info({company: company})
             return res.status(statusCode.OK).json({
                 success: true,
                 company

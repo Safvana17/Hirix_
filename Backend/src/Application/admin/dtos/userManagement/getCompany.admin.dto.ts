@@ -5,6 +5,7 @@ export interface AdminGetCompanyInputDTO {
 }
 
 export interface AdminGetCompanyOutputDTO {
+     id: string
      name: string
      email: string
      status: userStatus
