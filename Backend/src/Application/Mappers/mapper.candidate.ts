@@ -24,7 +24,8 @@ export class candidateMapper {
             role: entity.getRole(),
             googleId: entity.getGoogleId?.(),
             isVerified: entity.isUserVerified(),
-            refreshTokens: entity.getRefreshToken()
+            refreshTokens: entity.getRefreshToken(),
+            isBlocked: entity.getIsBlocked()
         }
     }
 }

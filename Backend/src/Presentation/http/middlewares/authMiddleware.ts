@@ -9,12 +9,12 @@ export function authHandler(tokenService: ITokenService) {
     return (req: Request, res: Response, next: NextFunction) => {
 
         let token = req.cookies.accessToken 
-        if(!token){
-            const authHeader = req.headers['authorization']
-            if(authHeader && authHeader.startsWith('Bearer')){
-                token = authHeader.split(' ')[1]
-            }
-        }
+        // if(!token){
+        //     const authHeader = req.headers['authorization']
+        //     if(authHeader && authHeader.startsWith('Bearer')){
+        //         token = authHeader.split(' ')[1]
+        //     }
+        // }
         if(!token){
             return next(new AppError(authMessages.error.UNAUTHORIZED, statusCode.UNAUTHORIZED))
         }

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import HirixLogo from '../../../assets/images/Logo.jpeg'
-import { LogOut, ChevronDown } from 'lucide-react'
+import { LogOut, ChevronDown, Star } from 'lucide-react'
 import { FaUserCircle } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
@@ -33,6 +33,11 @@ const CandidateHeader: React.FC= () => {
         </div> 
 
         <div className='flex items-center gap-6 right-0'>
+            <button 
+            className='flex items-center bg-white px-2 py-2 rounded-xl gap-2 font-bold'>
+                <Star className='w-5 h-5 bg-black rounded-xl text-white' />
+              Upgrade to Pro
+            </button>
 
             <div className='relative' ref={dropDownRef}>
                <button

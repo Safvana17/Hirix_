@@ -85,38 +85,38 @@ const AdminCompanies : React.FC = () => {
     ]
   return (
     <InternalLayout title='Companies' subTitle='Manage all registered Companies' sidebarItems={adminSidebarItems}>
-<div className="bg-white p-7 rounded-3xl border border-gray-100 shadow-sm">
-  <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-    
-    {/* Search Box */}
-    <div className="relative w-full md:w-2/3 lg:w-1/2 group">
-      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
-      <input
-        type="text"
-        placeholder="Search companies by name or email..."
-        className="w-full pl-12 pr-4 py-3.5 bg-[#9A6605] text-white border border-transparent rounded-2xl outline-none text-md transition-all focus:ring-2 focus:ring-[#9A6605] focus:ring-opacity-50"
-        value={searchTerm}
-        onChange={(e) => handleSearchChange(e.target.value)}
-      />
-    </div>
+        <div className="bg-white p-7 rounded-3xl border border-gray-100 shadow-sm">
+        <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+            
+            {/* Search Box */}
+            <div className="relative w-full md:w-2/3 lg:w-1/2 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
+            <input
+                type="text"
+                placeholder="Search companies by name or email..."
+                className="w-full pl-12 pr-4 py-3.5 bg-[#9A6605] text-white border border-transparent rounded-2xl outline-none text-md transition-all focus:ring-2 focus:ring-[#9A6605] focus:ring-opacity-50"
+                value={searchTerm}
+                onChange={(e) => handleSearchChange(e.target.value)}
+            />
+            </div>
 
-    {/* Filter Dropdown */}
-    <div className="flex items-center gap-3 w-full md:w-auto">
-      <div className="relative w-full md:w-48">
-        <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9A6605]" />
-        <select
-          className="w-full pl-10 pr-4 py-3.5 bg-white text-[#9A6605] border border-[#9A6605] rounded-2xl outline-none text-md transition-all appearance-none cursor-pointer "
-          value={statusFilter}
-          onChange={(e) => handleStatusChange(e.target.value)}
-        >
-          <option value="">All Status</option>
-          <option value="Active">Active</option>
-          <option value="Blocked">Blocked</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
+            {/* Filter Dropdown */}
+            <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="relative w-full md:w-48">
+                <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9A6605]" />
+                <select
+                className="w-full pl-10 pr-4 py-3.5 bg-white text-[#9A6605] border border-[#9A6605] rounded-2xl outline-none text-md transition-all appearance-none cursor-pointer "
+                value={statusFilter}
+                onChange={(e) => handleStatusChange(e.target.value)}
+                >
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Blocked">Blocked</option>
+                </select>
+            </div>
+            </div>
+        </div>
+        </div>
             <DataTable 
                columns={columns}
                isLoading={loading}

@@ -8,4 +8,5 @@ export default interface ICandidateRepository extends IBaseRepository <Candidate
     // updateToken(id: string, token: string): Promise<void>;
     updateGoogleId(email: string, googleId: string): Promise<CandidateEntity | null>
     // revokeRefreshToken(hashedToken: string): Promise<void>
+    findAllFiltered(query: {search?: string, status?: string, page: number, limit: number}): Promise<{data: CandidateEntity[], totalPages: number, totalCount: number}>
 }

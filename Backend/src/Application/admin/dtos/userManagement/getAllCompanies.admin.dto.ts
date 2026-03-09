@@ -6,7 +6,6 @@ export interface GetAllCompaniesOutputDTO {
     email: string;
     name: string;
     status: userStatus;
-    lastActive: Date;
 }
 
 export interface AdminCompanyQueryDTO {

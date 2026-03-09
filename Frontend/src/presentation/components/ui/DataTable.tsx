@@ -20,7 +20,7 @@ const DataTable =  <T extends {id: string | number }>({
 }: DataTableProps<T>) => {
     // const { loading } = useSelector((state: RootState) => state.userSlice)
   return (
-    <div className="overflow-x-auto bg-white rounded-3xl border border-gray-100 shadow-sm">
+    <div className="overflow-x-auto bg-white rounded-xl border border-white shadow-sm">
       <table className="w-full text-left border-collapse">
         <thead>
             <tr className='bg-[#E7D4B0]'>
@@ -66,7 +66,7 @@ const DataTable =  <T extends {id: string | number }>({
         </tbody>
       </table>
             {pagination && pagination.totalPages > 1 && (
-                <div className="px-6 py-4 flex items-center justify-between border-t border-gray-100 bg-gray-50/30">
+                <div className="mt-3 px-6 py-4 flex items-center justify-between border-t border-gray-100 bg-gray-50/30">
                     <div className="text-sm text-gray-500 font-medium">
                         Page <span className="text-amber-600">{pagination.currentPage}</span> of {pagination.totalPages}
                     </div>

@@ -17,7 +17,6 @@ export class AdminGetAllCompaniesUsecase implements IAdminGetAllCompaniesUsecase
                 name: c.getName(),
                 email: c.getEmail(),
                 status: c.getIsBlocked() ? userStatus.Blocked : userStatus.Active,
-                lastActive: new Date()
             })),
             totalPages,
             totalCount

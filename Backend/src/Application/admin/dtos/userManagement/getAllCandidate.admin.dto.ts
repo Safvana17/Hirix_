@@ -5,5 +5,17 @@ export interface GetAllCandidatesOutputDTO {
     name: string;
     email: string;
     status: userStatus;
-    lastActive: Date;
+}
+
+export interface AdminCandidateQueryDTO {
+    search?: string;
+    status?: string;
+    page: number;
+    limit: number
+}
+
+export interface AdminPaginatedCandidateDTO {
+    candidates: GetAllCandidatesOutputDTO[];
+    totalPages: number;
+    totalCount: number
 }

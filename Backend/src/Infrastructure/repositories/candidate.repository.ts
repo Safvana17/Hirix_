@@ -4,7 +4,7 @@ import { candidateMapper } from "../../Application/Mappers/mapper.candidate";
 import { candidateModel, ICandidate } from "../database/Model/candidate";
 import { BaseRepository } from "./base.repository";
 import { logger } from "../../utils/logging/loger";
-import mongoose from "mongoose";
+import mongoose, { QueryFilter } from "mongoose";
 
 export class CandidateRepository extends BaseRepository <CandidateEntity, ICandidate> implements ICandidateRepository {
 
@@ -48,6 +48,34 @@ export class CandidateRepository extends BaseRepository <CandidateEntity, ICandi
     //         {$pull: {refreshToken: hashedToken}}
     //     )
     // }
+
+    async findAllFiltered(query: { search?: string; status?: string; page: number; limit: number; }): Promise<{ data: CandidateEntity[]; totalPages: number; totalCount: number; }> {
+        const filter: QueryFilter<ICandidate> = {}
+        if(query.search){
+            filter.$or = [
+                {name: { $regex: query.search, $options: 'i' } },
+                { email: { $regex: query.search, $options: 'i' } }
+            ]
+        }
+        if(query.status){
+            filter.isBlocked = query.status === 'Blocked'
+        }
+
+        const skip = (query.page - 1) * query.limit
+        const totalCount = await this._model.countDocuments(filter)
+        const totalPages = Math.ceil(totalCount / query.limit)
+
+        const document = await this._model.find(filter)
+              .skip(skip)
+              .limit(query.limit)
+              .sort({createdAt: -1})
+
+        return {
+            data: document.map(doc => this.mapToEntity(doc)),
+            totalCount,
+            totalPages
+        }
+    }
     
     protected mapToEntity(doc: ICandidate): CandidateEntity {
         return candidateMapper.toEntity(doc)
@@ -56,30 +84,4 @@ export class CandidateRepository extends BaseRepository <CandidateEntity, ICandi
     protected mapToPersistance(entity: CandidateEntity): Partial<ICandidate> {
         return candidateMapper.toDocument(entity)
     }
-
-    // async findById(id: string): Promise<CandidateEntity | null> {
-    //     const candidate = await candidateModel.findById({id})
-    //     if(!candidate) return null
-    //     return candidateMapper.toEntity(candidate)
-    // }
-
-    // async save(candidate: CandidateEntity): Promise<CandidateEntity | null> {
-    //     const candidateData = candidateMapper.toDocument(candidate)
-
-    //     const updatedCandidate = await candidateModel.findByIdAndUpdate(
-    //         candidate.getId(),
-    //         candidateData,
-    //         {new: true}
-    //     )
-
-    //     if(!updatedCandidate){
-    //         throw new Error ('Candidate not found')
-    //     }
-    // }
-
- // async createCandidate(candidate: CandidateEntity): Promise<CandidateEntity> {
-    //     const candidateData = candidateMapper.toDocument(candidate)
-    //     const savedCandidate = await candidateModel.create(candidateData)
-    //     return candidateMapper.toEntity(savedCandidate)
-    // }
 }

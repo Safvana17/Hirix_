@@ -1,5 +1,5 @@
-import { GetAllCandidatesOutputDTO } from "../../dtos/userManagement/getAllCandidate.admin.dto";
+import { AdminCandidateQueryDTO, AdminPaginatedCandidateDTO } from "../../dtos/userManagement/getAllCandidate.admin.dto";
 
 export interface IAdminGetAllCandidates {
-    execute(): Promise<GetAllCandidatesOutputDTO[]>
+    execute(query: AdminCandidateQueryDTO): Promise<AdminPaginatedCandidateDTO>
 }

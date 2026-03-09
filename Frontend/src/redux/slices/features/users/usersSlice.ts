@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { type UpdateStatusArgs, type Company, type FetchCompaniesParams, type FetchCompaniesResponse, type UpdateStatusPayload } from "../../../../types/company";
-import type { Candidate } from "../../../../types/candidate";
+import type { Candidate, FetchCandidatesParams, FetchCandidatesResponse } from "../../../../types/candidate";
 
 interface usersState {
     loading: boolean;
@@ -48,12 +48,12 @@ FetchCompaniesParams | undefined,
 })
 
 export const fetchCandidates = createAsyncThunk<
-{candidates: Candidate[]},
-void,
+FetchCandidatesResponse,
+FetchCandidatesParams,
 {rejectValue: string}
->('admin/fetchCandidates', async(_, {rejectWithValue}) => {
+>('admin/fetchCandidates', async(params: {search?: string; status?: string; page?: number; limit?: number} | undefined, {rejectWithValue}) => {
     try {
-        const response = await api.get(`/admin/getallcandidates`)
+        const response = await api.get(`/admin/getallcandidates`, {params})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -75,10 +75,12 @@ UpdateStatusArgs,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
+        console.log(response.data)
+        const updatedUser = response.data.updatedCompany || response.data.updatedCandidate
         return {
-            id: response.data.updatedCompany.id,
-            status: response.data.updatedCompany.status,
-            role: response.data.updatedCompany.role
+            id: updatedUser.id,
+            status: updatedUser.status,
+            role: updatedUser.role
         }
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -116,6 +118,8 @@ const userSlice = createSlice({
           .addCase(fetchCandidates.fulfilled, (state, action) => {
             state.loading = false
             state.candidates = action.payload.candidates
+            state.pagination.companies.totalPages = action.payload.totalPages
+            state.pagination.companies.totalCount = action.payload.totalCount
           })
           .addCase(fetchCandidates.rejected, (state, action) => {
             state.loading = false
@@ -132,6 +136,9 @@ const userSlice = createSlice({
             if(role === 'Company'){
                 const company = state.companies.find(c => c.id === id)
                 if(company) company.status = status
+            }else if(role === 'Candidate'){
+                const candidate = state.candidates.find(c => c.id === id)
+                if(candidate) candidate.status = status
             }
           })
     }
