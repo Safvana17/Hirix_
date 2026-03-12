@@ -10,6 +10,7 @@ import type { Column } from '../../../types/table'
 import type { Company } from '../../../types/company'
 import { Ban, CheckCircle, Eye, Filter, Search } from 'lucide-react'
 import { useDebounce } from '../../../hooks/useDebounce'
+import ConfirmationModal from '../../components/modal/ConfirmationModal'
 
 const AdminCompanies : React.FC = () => {
 
@@ -21,10 +22,31 @@ const AdminCompanies : React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: boolean;
+        title: string;
+        message: string;
+        onConfirm: () => void;
+        type: 'danger' | 'warning' | 'info';
+    }>({
+        isOpen: false,
+        title: '',
+        message: '',
+        onConfirm: () => { },
+        type: 'warning'
+    })
 
     useEffect(() => {
         dispatch(fetchCompanies({search: debouncedSearchTerm, status: statusFilter, page: currentPage, limit: 10}))
     }, [dispatch, debouncedSearchTerm, statusFilter, currentPage])
+
+    const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+        setModalConfig({...config, isOpen: true})
+    }
+
+    const closeModal = () => {
+        setModalConfig(prev => ({...prev, isOpen: false}))
+    }
 
     const handleSearchChange = useCallback((val: string) => {
         setSearchTerm(val)
@@ -35,6 +57,21 @@ const AdminCompanies : React.FC = () => {
         setStatusFilter(val)
         setCurrentPage(1)
     },[])
+
+    const handleUpdateStatus = (id: string, currentStatus: string) => {
+        const newStatus = currentStatus === 'Active' ? 'Blocked' : 'Active'
+        const actionText = newStatus === 'Blocked' ? 'Block' : 'Unblock'
+
+        openModal({
+            title: `${actionText} Company`,
+            message: `Are you sure you want to ${actionText.toLowerCase()} this company? This will ${newStatus === 'Blocked' ? 'prevent them from accessing' : 'restore their access to'} the platform.`,
+            type: newStatus === 'Blocked' ? 'danger' : 'warning',
+            onConfirm: () => {
+                dispatch(updateUserStatus({id, status: newStatus, role: 'company'}));
+                closeModal();
+            }
+        })
+    }
 
     const columns: Column<Company>[] = useMemo(() =>[
         {header: 'Company Name', key: 'name', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
@@ -53,38 +90,20 @@ const AdminCompanies : React.FC = () => {
                 >
                     <Eye className='w-4 h-4' />
                 </button>
-                {item.status === 'Active' ? (
-                    <button
-                        onClick={() => dispatch(updateUserStatus({
-                            id,
-                            status: 'Blocked',
-                            role: 'company',
-                            // queryParams: {search: searchTerm, status: statusFilter, page: currentPage, limit: 10}
-                        }))}
-                        title='Block company'
-                        role='company'
-                        className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors border border-transparent hover:border-red-100"
-                    >
-                        <Ban className='w-4 h-4' />
-                    </button>
-                ) : (
-                    <button
-                        onClick={() => dispatch(updateUserStatus({
-                            id,
-                            status: 'Active',
-                            role: 'company',
-                            // queryParams: {search: searchTerm, status: statusFilter, page: currentPage, limit: 10}
-                        }))}
-                        title='Unblock company'
-                        role='company'
-                        className="p-2 hover:bg-green-50 text-green-600 rounded-lg transition-colors border border-transparent hover:border-green-100"
-                    >
-                        <CheckCircle className="w-4 h-4" />
-                    </button>
-                )}
+
+                <button
+                  onClick={() => handleUpdateStatus(id, item.status)}
+                  title={item.status === 'Active' ? 'Block Company' : 'Unblock Company'}
+                  className={`p-2 rounded-lg transition-colors border border-transparent ${item.status === 'Active' 
+                     ?'hover:bg-red-50 text-red-600 hover:border-red-100'
+                     : 'hover:bg-green-50 text-green-600 hover:border-green-100'
+                  }`}
+                >
+                   {item.status === 'Active' ? <Ban className='w-4 h-4'/> : <CheckCircle className='w-4 h-4' />} 
+                </button>
             </div>
         )}
-    ],[dispatch, navigate])
+    ],[dispatch, navigate, handleUpdateStatus])
 
     
   return (
@@ -128,11 +147,19 @@ const AdminCompanies : React.FC = () => {
                emptyMessage='No companies found matching your criteria'
                pagination={{
                 currentPage,
-                totalPages: pagination.companies.totalPages,
+                totalPages: pagination.users.totalPages,
                 onPageChange: (page) => setCurrentPage(page)
                }}
             >
             </DataTable>
+            <ConfirmationModal 
+               isOpen={modalConfig.isOpen}
+               onClose={closeModal}
+               onConfirm={modalConfig.onConfirm}
+               title={modalConfig.title}
+               message={modalConfig.message}
+               type={modalConfig.type}
+            />
     </InternalLayout>
   )
 }

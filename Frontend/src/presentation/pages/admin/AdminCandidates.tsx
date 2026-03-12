@@ -9,6 +9,7 @@ import { Ban, CheckCircle, Search, Filter } from 'lucide-react'
 import { fetchCandidates, updateUserStatus } from '../../../redux/slices/features/users/usersSlice'
 import type { Candidate } from '../../../types/candidate'
 import { useDebounce } from '../../../hooks/useDebounce'
+import ConfirmationModal from '../../components/modal/ConfirmationModal'
 
 const AdminCandidates : React.FC = () => {
 
@@ -19,9 +20,31 @@ const AdminCandidates : React.FC = () => {
     const { candidates, loading, pagination } = useSelector((state: RootState) => state.userSlice)
     const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: boolean;
+        title: string;
+        message: string;
+        onConfirm: () => void;
+        type: 'danger' | 'warning' | 'info';
+    }>({
+        isOpen: false,
+        title: '',
+        message: '',
+        onConfirm: () => { },
+        type: 'warning'
+    })
+
     useEffect(() => {
         dispatch(fetchCandidates({search: debouncedSearchTerm, status: statusFilter, page: currentPage, limit: 4}))
     }, [dispatch, debouncedSearchTerm, statusFilter, currentPage])
+
+    const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+        setModalConfig({...config, isOpen: true})
+    }
+
+    const closeModal = () => {
+        setModalConfig(prev => ({...prev, isOpen: false}))
+    }
 
     const handleSearchChange = useCallback((val: string) => {
         setSearchTerm(val)
@@ -33,47 +56,44 @@ const AdminCandidates : React.FC = () => {
         setCurrentPage(1)
     },[])
 
-const columns: Column<Candidate>[] =  [
-    {header: 'Name', key: 'name', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
-    {header: 'Email Address', key: 'email', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
-    {header: 'Status', key: 'status', render: (val) => (
-        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${val === 'Active' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
-            {val}
-        </span>
-    )},
-    {header: 'Actions', key: 'id', render:(id, item) => (
-        <div>
-              {item.status === 'Active' ? (
-                    <button
-                        onClick={() => dispatch(updateUserStatus({
-                            id,
-                            status: 'Blocked',
-                            role: 'candidate',
-                            
-                        }))}
-                        title='Block candidate'
-                        role='candidate'
-                        className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors border border-transparent hover:border-red-100"
-                    >
-                        <Ban className='w-4 h-4' />
-                    </button>
-                ) : (
-                    <button
-                        onClick={() => dispatch(updateUserStatus({
-                            id,
-                            status: 'Active',
-                            role: 'candidate',
-                        }))}
-                        title='Unblock candidate'
-                        role='candidate'
-                        className="p-2 hover:bg-green-50 text-green-600 rounded-lg transition-colors border border-transparent hover:border-green-100"
-                    >
-                        <CheckCircle className="w-4 h-4" />
-                    </button>
-                )}
-        </div>
-    )}
-]
+    const handleUpdateStatus = (id: string, currentStatus: string) => {
+        const newStatus = currentStatus === 'Active' ? 'Blocked' : 'Active'
+        const actionText = newStatus === 'Blocked' ? 'Block' : 'Unblock'
+
+        openModal({
+            title: `${actionText} Candidate`,
+            message: `Are you sure you want to ${actionText.toLowerCase()} this candidate? This will ${newStatus === 'Blocked' ? 'prevent them from accessing' : 'restore their access to'} the platform.`,
+            type: newStatus === 'Blocked' ? 'danger' : 'warning',
+            onConfirm: () => {
+                dispatch(updateUserStatus({id, status: newStatus, role: 'candidate'}));
+                closeModal();
+            }
+        })
+    }
+
+    const columns: Column<Candidate>[] =  [
+        {header: 'Name', key: 'name', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+        {header: 'Email Address', key: 'email', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+        {header: 'Status', key: 'status', render: (val) => (
+            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${val === 'Active' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
+                {val}
+            </span>
+        )},
+        {header: 'Actions', key: 'id', render:(id, item) => (
+            <div>
+                <button
+                  onClick={() => handleUpdateStatus(id, item.status)}
+                  title={item.status === 'Active' ? 'Block Candidate' : 'Unblock Candidate'}
+                  className={`p-2 rounded-lg transition-colors border border-transparent ${item.status === 'Active' 
+                     ?'hover:bg-red-50 text-red-600 hover:border-red-100'
+                     : 'hover:bg-green-50 text-green-600 hover:border-green-100'
+                  }`}
+                >
+                   {item.status === 'Active' ? <Ban className='w-4 h-4'/> : <CheckCircle className='w-4 h-4' />} 
+                </button>
+            </div>
+        )}
+    ]
 
   return (
     <InternalLayout title='Users' subTitle='Manage platform users' sidebarItems={adminSidebarItems}>
@@ -117,11 +137,19 @@ const columns: Column<Candidate>[] =  [
                emptyMessage='No companies found matching your criteria'
                pagination={{
                 currentPage,
-                totalPages: pagination.companies.totalPages,
+                totalPages: pagination.users.totalPages,
                 onPageChange: (page) => setCurrentPage(page)
                }}
             >
             </DataTable>
+            <ConfirmationModal 
+               isOpen={modalConfig.isOpen}
+               onClose={closeModal}
+               onConfirm={modalConfig.onConfirm}
+               title={modalConfig.title}
+               message={modalConfig.message}
+               type={modalConfig.type}
+            />
         </div>
     </InternalLayout>
   )

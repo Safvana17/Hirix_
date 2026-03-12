@@ -11,7 +11,7 @@ interface usersState {
     companies: Company[];
     selectedCompany: Company | null;
     pagination: {
-        companies: {
+        users: {
             totalPages: number;
             totalCount: number
         }
@@ -25,7 +25,7 @@ const initialState: usersState = {
     companies: [],
     selectedCompany: null,
     pagination: {
-        companies: {totalPages: 0, totalCount: 0}
+        users: {totalPages: 0, totalCount: 0}
     }
 }
 
@@ -121,8 +121,8 @@ const userSlice = createSlice({
           .addCase(fetchCompanies.fulfilled, (state, action) => {
             state.loading = false
             state.companies = action.payload.companies
-            state.pagination.companies.totalPages = action.payload.totalPages
-            state.pagination.companies.totalCount = action.payload.totalCount
+            state.pagination.users.totalPages = action.payload.totalPages
+            state.pagination.users.totalCount = action.payload.totalCount
           })
           .addCase(fetchCompanies.rejected, (state, action) => {
             state.loading = false
@@ -135,8 +135,8 @@ const userSlice = createSlice({
           .addCase(fetchCandidates.fulfilled, (state, action) => {
             state.loading = false
             state.candidates = action.payload.candidates
-            state.pagination.companies.totalPages = action.payload.totalPages
-            state.pagination.companies.totalCount = action.payload.totalCount
+            state.pagination.users.totalPages = action.payload.totalPages
+            state.pagination.users.totalCount = action.payload.totalCount
           })
           .addCase(fetchCandidates.rejected, (state, action) => {
             state.loading = false
