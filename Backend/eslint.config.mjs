@@ -109,7 +109,7 @@ export default [
       '@typescript-eslint/explicit-function-return-type': 'off',
 
       // Optional but useful for backend
-      'no-console': ['error', { allow: ['warn', 'error'] }],
+      'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
       'no-process-env': 'off',
     },
   },

@@ -5,7 +5,7 @@ import { env } from "../config/env";
 
 export class MailService implements IMailService{
     async sentOtp(email: string, otp: string): Promise<void> {
-       
+       console.log('from mail service')
         await mailTransporter.sendMail({
             from: `"Hirix" <${env.HIRIX_EMAIL}>`,
             to: email,

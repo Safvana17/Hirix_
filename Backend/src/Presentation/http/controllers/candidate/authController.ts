@@ -141,7 +141,8 @@ export class CandidateAuthController {
             const payload: ForgotPasswordInputDTO = {
                 email: parsed.email
             }
-
+            logger.info(`from forgot controller: ${payload}`)
+            console.log('from forgot controller')
             await this._forgotPasswordUsecase.execute(payload)
             
             return res.status(statusCode.OK).json({

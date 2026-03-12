@@ -84,7 +84,7 @@ const VerifyOtp: React.FC = () => {
         }else{
             const result = await dispatch(verifyOtp({role, otp:otpValue, email}))
             if(verifyOtp.fulfilled.match(result)){
-               navigate(`/${role}/login`)
+               navigate(`/login`)
             }
         }
     }
@@ -108,7 +108,7 @@ const VerifyOtp: React.FC = () => {
     }
 
     return (
-    <AuthLayout title='Verify OTP' subtitle={`Enter the email sent to ${email}`}>
+    <AuthLayout title='Verify OTP' subtitle={`Enter the OTP sent to ${email}`}>
      <div className='flex justify-center'>
       <form onSubmit={handleSubmit} className='p-10 text-white space-y-8'>
         <div className='flex justify-between gap-3'>
@@ -138,12 +138,14 @@ const VerifyOtp: React.FC = () => {
             {loading ? 'Verifying...' : 'Verify OTP'}
         </button>
         </div>
+        {timeLeft === 0 &&
             <div className="text-center text-sm text-gray-300">
                 Didn't receive the code?{' '}
-                <button type="button" onClick={handleResendOtp} className='text-white hover:underline font-medium'>
+                <button type="button" onClick={handleResendOtp} className='text-white hover:underline font-medium disabled:opacity-30' disabled={timeLeft > 0}>
                     Resend OTP
                 </button>
             </div>
+}
       </form>
       </div>
     </AuthLayout>

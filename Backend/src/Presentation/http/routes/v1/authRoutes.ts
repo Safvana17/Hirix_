@@ -15,7 +15,7 @@ router.post('/candidate/resendotp', iCandidateAuthController.resendOtp)
 router.post('/candidate/login', iCandidateAuthController.login)
 router.post('/candidate/forgotpassword', iCandidateAuthController.forgotPassword)
 router.post('/candidate/resetpassword', iCandidateAuthController.resetPassword)
-router.post('/candidate/google-login', iCandidateAuthController.googleLogin)
+router.post('/candidate/googlelogin', iCandidateAuthController.googleLogin)
 
 //company
 router.post('/company/register', iCompanyAuthController.register)
@@ -24,7 +24,7 @@ router.post('/company/resendotp', iCompanyAuthController.resendOtp)
 router.post('/company/login', iCompanyAuthController.login)
 router.post('/company/forgotpassword', iCompanyAuthController.forgotPassword)
 router.post('/company/resetpassword', iCompanyAuthController.resetPassword)
-router.post('/company/google-login', iCompanyAuthController.googleLogin)
+router.post('/company/googlelogin', iCompanyAuthController.googleLogin)
 
 
 //admin

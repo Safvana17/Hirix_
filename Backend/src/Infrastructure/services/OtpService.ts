@@ -5,7 +5,9 @@ import { env } from "../config/env";
 
 export class OtpService implements IOtpService{
     generate(): string {
+        console.log('from otp service')
         const otp = Math.floor(100000 + Math.random() * 900000)
+        console.log('your otp code is: ', otp)
         logger.info(`your otp is: ${otp}`)
         return otp.toString()
     }

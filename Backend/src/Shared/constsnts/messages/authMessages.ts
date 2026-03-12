@@ -1,50 +1,84 @@
 export const authMessages = {
     success: {
-        CANDIDATE_REGISTER_SUCCESS: 'Candidate registered successfully',
-        COMPANY_REGISTER_SUCCESS: 'Company registered successfully',
-        CANDIDATE_LOGIN_SUCCESS: 'Candidate logged in successfully',
-        COMPANY_LOGIN_SUCCESS: 'Company logges in successfully',
-        OTP_SEND_SUCCESS: 'OTP is sent to the email',
-        RESET_PASSWORD_OTP_sEND: 'Otp for reset password is send successfully',
-        PASSWORD_RESET: 'Password reset successfully',
-        TOKEN_REFRESHED: 'Token refreshed successfully',
-        ADMIN_LOGIN_SUCCESS: 'Admin logged in successfully',
-        ADMIN_LOGOUT_SUCCESS: 'Admin logged out successfully',
-        CANDIDATE_LOGGEDOUT_SUCCESS: 'Candidate logged out successfully',
-        COMPANY_LOGGEDOUT_SUCCESS: 'Company logged out successfully',
-        
+        CANDIDATE_REGISTER_SUCCESS: "Candidate registered successfully",
+        COMPANY_REGISTER_SUCCESS: "Company registered successfully",
+
+        CANDIDATE_LOGIN_SUCCESS: "Candidate logged in successfully",
+        COMPANY_LOGIN_SUCCESS: "Company logged in successfully", // typo fixed in message (logges -> logged)
+
+        ADMIN_LOGIN_SUCCESS: "Admin logged in successfully",
+
+        CANDIDATE_LOGGEDOUT_SUCCESS: "Candidate logged out successfully", 
+        COMPANY_LOGGEDOUT_SUCCESS: "Company logged out successfully",
+        ADMIN_LOGOUT_SUCCESS: "Admin logged out successfully",
+
+        OTP_SEND_SUCCESS: "OTP sent successfully to the email", 
+        // ideally: OTP_SENT_SUCCESS
+
+        RESET_PASSWORD_OTP_sEND: "OTP for password reset sent successfully",
+        // ideally rename constant → RESET_PASSWORD_OTP_SEND (fix casing)
+
+        PASSWORD_RESET: "Password reset successfully",
+
+        TOKEN_REFRESHED: "Token refreshed successfully"
     },
+
     error: {
-        CONFLICT: "Email already exist",
-        BAD_REQUEST: 'Invalid email or password',
-        INTERNAL_SERVER_ERROR: 'Internal server error',
-        INVALID_GOOGLE_ID: "Invalid google id",
-        CANDIDATE_NOT_FOUND: 'Candidate not found',
-        COMPANY_NOT_FOUND: 'Company not found',
-        ADMIN_NOT_FOUND: 'Admin not found',
-        UNAUTHORIZED: 'Unauthorized access',
-        INVALID_PASSWORD: 'Invalid passwod',
-        OTP_EXPIRED: 'Otp expired',
-        INVALID_OTP: 'Invalid otp',
-        EMAIL_NOT_FOUND: 'Email not found',
-        REFRESH_TOKEN_NOT_FOUND: 'Refresh token is missing',
-        INVALID_REFRESH_TOKEN: 'Invalid refresh token payload',
-        ACCESS_TOKEN_EXPIRED: 'Access token is expired',
-        ALREADY_VERIFIED: 'User already verified',
-        ENV_VALIDATION_FAILED: 'Env validation error',
-        REFRESH_TOKEN_SECRET_NOT_FOUND: 'Refresh token secret is not available',
-        ACCESS_TOKEN_SECRET_NOT_FOUND: 'Access token secret is not available',
-        INVALID_GOOGLE_TOKEN_PAYLOAD: 'Invalid google token payload',
-        GOOGLE_TOKEN_VERIFICATION_FAILURE: 'Failed to verify google token',
-        //candidate
-        CANDIDATE_ID_NOT_FOUND: 'Candidate id not found',
-        CANDIDATE_ALREADY_EXISTS: 'Candidate with this email already exists',
-        CANDIDATE_BLOCKED: 'Candidate is blocked by Admin',
+        INTERNAL_SERVER_ERROR: "Internal server error",
 
+        BAD_REQUEST: "Invalid email or password",
 
-        //company
-        COMPANY_ALREADY_EXISTS: 'Company with this email already exists',
-        COMPANY_ID_NOT_FOUND: 'Company id not found',
+        CONFLICT: "Email already exists",
 
+        UNAUTHORIZED: "Unauthorized access",
+
+        INVALID_PASSWORD: "Invalid password", // typo fixed (passwod)
+
+        EMAIL_NOT_FOUND: "Email not found",
+
+        OTP_EXPIRED: "OTP has expired",
+
+        INVALID_OTP: "Invalid OTP",
+
+        ALREADY_VERIFIED: "User is already verified",
+
+        ENV_VALIDATION_FAILED: "Environment validation failed",
+
+        ACCESS_TOKEN_EXPIRED: "Access token has expired",
+
+        REFRESH_TOKEN_NOT_FOUND: "Refresh token is missing",
+
+        INVALID_REFRESH_TOKEN: "Invalid refresh token payload",
+
+        REFRESH_TOKEN_SECRET_NOT_FOUND: "Refresh token secret is not available",
+
+        ACCESS_TOKEN_SECRET_NOT_FOUND: "Access token secret is not available",
+
+        INVALID_GOOGLE_ID: "Invalid Google ID",
+
+        INVALID_GOOGLE_TOKEN_PAYLOAD: "Invalid Google token payload",
+
+        GOOGLE_TOKEN_VERIFICATION_FAILURE: "Failed to verify Google token",
+
+        // Candidate Errors
+        CANDIDATE_NOT_FOUND: "Candidate not found",
+
+        CANDIDATE_ID_NOT_FOUND: "Candidate ID not found",
+
+        CANDIDATE_ALREADY_EXISTS: "Candidate with this email already exists",
+
+        CANDIDATE_BLOCKED: "Candidate is blocked by the admin",
+
+        // Company Errors
+        COMPANY_NOT_FOUND: "Company not found",
+
+        COMPANY_ID_NOT_FOUND: "Company ID not found",
+
+        COMPANY_ALREADY_EXISTS: "Company with this email already exists",
+
+        COMPANY_BLOCKED: "Company is blocked by the admin",
+
+        // Admin Errors
+        ADMIN_NOT_FOUND: "Admin not found"
     }
 }

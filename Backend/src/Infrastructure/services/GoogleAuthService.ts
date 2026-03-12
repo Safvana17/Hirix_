@@ -17,12 +17,14 @@ export class GoogleAuthService implements IGoogleAuthService{
 
     async getUserInfo(Token: string): Promise<GoogleAuthDTO> {
         try {
-            const ticket = await this.client.verifyIdToken({
-                idToken: Token,
-                audience: env.GOOGLE_CLIENT_ID
+            const response = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+                headers: {
+                    Authorization: `Bearer ${Token}`
+                }
             })
 
-            const payload = ticket.getPayload()
+            const payload = await response.json()
+
             if(!payload || !payload.email){
                 throw new AppError(authMessages.error.INVALID_GOOGLE_TOKEN_PAYLOAD, statusCode.UNAUTHORIZED)
             }

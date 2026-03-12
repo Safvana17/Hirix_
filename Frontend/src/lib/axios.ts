@@ -1,6 +1,4 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
-// import { store } from "../redux/store";
-// import { logoutUser } from "../redux/slices/authSlice";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ? `${import.meta.env.VITE_BACKEND_URL}/api/v1` : 'http://localhost:4000/api/v1'
 
@@ -41,11 +39,8 @@ api.interceptors.response.use(
     async (error: AxiosError) => {
         console.log("Interceptor caught error:", error.response?.status)
         const originalRequest = error.config as CustomAxiosRequestConfig
-        // const role = store.getState().auth.role
+
         if(error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes("/refresh")){
-            // if(!role){
-            //     return Promise.reject(error)
-            // }
             
             if(isRefreshing){
                 return new Promise((resolve, reject) => {
@@ -56,18 +51,12 @@ api.interceptors.response.use(
             originalRequest._retry = true
             isRefreshing = true
 
-            // let refreshUrl = ""
-            // if(role === 'candidate') refreshUrl = '/candidate/refresh';
-            // if(role === 'company') refreshUrl = '/company/refresh';
-            // if(role === 'admin') refreshUrl = '/admin/refresh';
-
             try {
                 await api.post('/auth/refresh')
                 processQueue(null)
                 return api(originalRequest)
             } catch (refreshError) {
                 processQueue(refreshError)
-                // store.dispatch(logoutUser(role))
                 if(logoutHandler){
                     logoutHandler()
                 }

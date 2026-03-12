@@ -101,9 +101,6 @@ export class CompanyAuthController {
 
             const {refreshToken, accessToken, company} = await this._loginCompanyUsecase.execute(payload)
 
-            // const hashedRefreshToken = this._hashService.hashToken(refreshToken)
-            // await this._companyRepository.updateToken(company.id,hashedRefreshToken)
-
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
@@ -167,69 +164,6 @@ export class CompanyAuthController {
             next(error)
         }
     }
-
-//     refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-//         try {
-//             const parsed = refreshTokenSchema.parse(req.body)
-//             const payload: CompanyRefreshTokenInputDTO = {
-//                 token: parsed.token
-//             }
-
-//             const tokens = this._companyRefreshTokenUsecase.execute(payload)
-
-//             res.cookie('refreshToken', (await tokens).refreshToken, {
-//                 httpOnly: true,
-//                 secure: process.env.NODE_ENV === 'production',
-//                 sameSite: process.env.NODE_ENV ==='production' ? 'none' : 'lax',
-//                 maxAge: env.REFRESH_TOKEN_MAX_AGE,
-//                 path: '/'
-//             })
-
-//             res.cookie('accessToken', (await tokens).accessToken, {
-//                 httpOnly: true,
-//                 secure: process.env.NODE_ENV === 'production',
-//                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-//                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
-//                 path: '/'
-//             })
-
-//             return res.status(statusCode.OK).json({
-//                 success: true,
-//                 message: authMessages.success.TOKEN_REFRESHED
-//             })
-
-//         } catch (error) {
-//             next(error)
-//         }
-//     }
-
-// logout = async (req: Request, res: Response, next: NextFunction) => {
-//         try {
-            
-//             const refreshToken = req.cookies.refershToken
-//             await this._companyLogoutUsecase.execute(refreshToken)
-
-//             res.clearCookie('refreshToken', {
-//                 httpOnly: true,
-//                 sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
-//                 secure: process.env.NODE_ENV === 'production'
-//             })
-
-//             res.clearCookie('accessToken', {
-//                 httpOnly: true,
-//                 sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
-//                 secure: process.env.NODE_ENV === 'production'
-//             })
-
-//             return res.status(statusCode.NO_CONTENT).json({
-//                 success: true,
-//                 message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
-//             })
-            
-//         } catch (error) {
-//             next(error)
-//         }
-//     }
 
     googleLogin = async (req: Request, res: Response, next: NextFunction) => {
         try {

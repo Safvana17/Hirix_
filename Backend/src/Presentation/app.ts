@@ -27,6 +27,7 @@ connectDB().catch((err) => {
     process.exit(1)
 });
 
+logger.info(`production: ${process.env.NODE_ENV}`)
 app.get('/test', (req, res) => {
     logger.info('I am from app.ts')
     res.status(200).json({status: "OK"});

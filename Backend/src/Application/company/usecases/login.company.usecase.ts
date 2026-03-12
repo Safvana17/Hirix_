@@ -20,6 +20,11 @@ export class LoginCompanyUsecase implements ILoginCompanyUsecase{
             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
+        if(company.getIsBlocked()){
+            throw new AppError(authMessages.error.COMPANY_BLOCKED, statusCode.FORBIDDEN)
+        }
+
+
         const isValidPassword = await this._hashService.compare(request.password, company.getPassword())
         if(!isValidPassword){
             throw new AppError(authMessages.error.INVALID_PASSWORD, statusCode.BAD_REQUEST)
