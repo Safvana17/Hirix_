@@ -1,6 +1,6 @@
-import { userStatus } from "../../../../Domain/enums/userStatus.enum";
+import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
-import { AdminCandidateQueryDTO, AdminPaginatedCandidateDTO, GetAllCandidatesOutputDTO } from "../../dtos/userManagement/getAllCandidate.admin.dto";
+import { AdminCandidateQueryDTO, AdminPaginatedCandidateDTO } from "../../dtos/userManagement/getAllCandidate.admin.dto";
 import { IAdminGetAllCandidates } from "../../interfaces/userManagement/iAdmin.getAllCandidates.usecase";
 
 export class AdminGetAllCandidates implements IAdminGetAllCandidates {
@@ -17,7 +17,7 @@ export class AdminGetAllCandidates implements IAdminGetAllCandidates {
                 id: c.getId(),
                 name: c.getName(),
                 email: c.getEmail(),
-                status: c.getIsBlocked() ? userStatus.Blocked : userStatus.Active ,
+                status: c.getIsBlocked() ? UserStatus.BLOCKED : UserStatus.ACTIVE ,
             })),
             totalCount,
             totalPages

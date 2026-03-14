@@ -47,8 +47,25 @@ export class CompanyRepository extends BaseRepository<CompanyEntity, ICompany> i
                 {email: {$regex: query.search, $options: 'i'} }
             ]
         }
-        if(query.status){
-            filter.isBlocked = query.status === 'Blocked'
+        if (query.status) {
+
+            if (query.status === "blocked") {
+            filter.isBlocked = true
+            }
+
+            else if (query.status === "active") {
+            filter.status = "active"
+            filter.isBlocked = false
+            }
+
+            else if (query.status === "pending") {
+            filter.status = "pending"
+            filter.isBlocked = false
+            }
+
+            else if (query.status === "rejected") {
+            filter.status = "rejected"
+            }
         }
 
         const skip = (query.page - 1) * query.limit

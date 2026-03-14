@@ -23,7 +23,7 @@ export class UnifiedRefreshTokenUsecase implements IUnifiedTokenRefreshUsecase{
         if(!request.token){
             throw new AppError(authMessages.error.REFRESH_TOKEN_NOT_FOUND, statusCode.UNAUTHORIZED)
         }
-        logger.info(`from usecase token is: ${request.token}`)
+        // logger.info(`from usecase token is: ${request.token}`)
 
         const payload = this._tokenService.verifyRefreshToken(request.token)
         const {id, role} = payload

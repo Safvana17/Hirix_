@@ -9,6 +9,7 @@ import { ICandidateRegisterUsecase } from "../../interfaces/auth/ICandidateRegis
 import { AppError } from "../../../../Domain/errors/app.error";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 
 export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
     constructor(
@@ -28,7 +29,7 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
         }
 
         const hashedPassword = await this.hashService.hash(request.password)
-        const candidate = new candidateEntity("",request.name, request.email, hashedPassword, false, false)
+        const candidate = new candidateEntity("",request.name, request.email, hashedPassword, false, false, UserStatus.PENDING)
 
         const savedCandidate = await this.candidateRepository.create(candidate)
 

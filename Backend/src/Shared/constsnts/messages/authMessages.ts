@@ -1,7 +1,8 @@
 export const authMessages = {
     success: {
         CANDIDATE_REGISTER_SUCCESS: "Candidate registered successfully",
-        COMPANY_REGISTER_SUCCESS: "Company registered successfully",
+        COMPANY_REGISTER_PENDING: 'Registration successful! Please wait for admin approval. You will receive an email once approved.',
+        COMPANY_REGISTER_SUCCESS: "Company registered successfully, ",
 
         CANDIDATE_LOGIN_SUCCESS: "Candidate logged in successfully",
         COMPANY_LOGIN_SUCCESS: "Company logged in successfully", // typo fixed in message (logges -> logged)
@@ -14,13 +15,16 @@ export const authMessages = {
 
         OTP_SEND_SUCCESS: "OTP sent successfully to the email", 
         // ideally: OTP_SENT_SUCCESS
+        COMPANY_EMAIL_VERIFIED: "Email verified successfully. You can now log in.",
 
         RESET_PASSWORD_OTP_sEND: "OTP for password reset sent successfully",
         // ideally rename constant → RESET_PASSWORD_OTP_SEND (fix casing)
 
         PASSWORD_RESET: "Password reset successfully",
 
-        TOKEN_REFRESHED: "Token refreshed successfully"
+        TOKEN_REFRESHED: "Token refreshed successfully",
+        ADMIN_APPROVED_COMPANY: "Company approved",
+        ADMIN_REJECTED_COMPANY: 'Company rejected and notification email sent'
     },
 
     error: {
@@ -77,6 +81,9 @@ export const authMessages = {
         COMPANY_ALREADY_EXISTS: "Company with this email already exists",
 
         COMPANY_BLOCKED: "Company is blocked by the admin",
+
+        COMPANY_REJECTED: 'Your account registration has been rejected by the admin.',
+        EMAIL_VERIFICATION_REQUIRED: 'Email verification required. A verification link has been sent to your email.',
 
         // Admin Errors
         ADMIN_NOT_FOUND: "Admin not found"

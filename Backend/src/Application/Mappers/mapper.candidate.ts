@@ -10,6 +10,7 @@ export class candidateMapper {
             doc.password,
             doc.isVerified,
             doc.isBlocked,
+            doc.status,
             doc.googleId,
             doc.refreshToken ?? []
         )
@@ -22,6 +23,7 @@ export class candidateMapper {
             email: entity.getEmail(),
             password: entity.getPassword(),
             role: entity.getRole(),
+            status: entity.getStatus(),
             googleId: entity.getGoogleId?.(),
             isVerified: entity.isUserVerified(),
             refreshTokens: entity.getRefreshToken(),

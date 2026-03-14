@@ -2,20 +2,21 @@ import { AppError } from "../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
-import { IOtpService } from "../../interface/service/IOtpService";
-import { IOtpStore } from "../../interface/service/IOtpStore";
+import { ITokenService } from "../../interface/service/ITokenService";
 import { VerifyCompanyInputDTO, VerifyCompanyOutputDTO } from "../dtos/verifyRegister.company.dto";
 import { IVerifyRegisterCompanyUsecase } from "../interfaces/auth/ICompanyVerifyRegisterUsecase";
 
 export class VerifyRegisterCompanyUsecase implements IVerifyRegisterCompanyUsecase{
      constructor(
-        private companyRepository: ICompanyRepository,
-        private otpService: IOtpService,
-        private otpStore: IOtpStore
+        private _companyRepository: ICompanyRepository,
+        private _tokenService: ITokenService
      ) {}
 
      async execute(request: VerifyCompanyInputDTO): Promise<VerifyCompanyOutputDTO> {
-        const company = await this.companyRepository.findByEmail(request.email)
+
+        const payload = this._tokenService.verifyAccessToken(request.token)
+        const company = await this._companyRepository.findById(payload.id)
+
         if(!company || !company.id){
             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
         }
@@ -25,19 +26,9 @@ export class VerifyRegisterCompanyUsecase implements IVerifyRegisterCompanyUseca
         }
 
         const id = company.id
-        const savedOtp = await this.otpStore.getOtp(id)
-        if(!savedOtp){
-            throw new AppError(authMessages.error.OTP_EXPIRED, statusCode.BAD_REQUEST)
-        }
-
-        const isValid = await this.otpService.compare(request.otp, savedOtp)
-        if(!isValid){
-            throw new AppError(authMessages.error.INVALID_OTP, statusCode.BAD_REQUEST)
-        }
 
         company.markAsVerified()
-        await this.companyRepository.update(id, company)
-        await this.otpStore.deleteOtp(id)
+        await this._companyRepository.update(id, company)
 
         return {
             company: {

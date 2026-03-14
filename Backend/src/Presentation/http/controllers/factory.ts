@@ -49,6 +49,8 @@ import { UnifiedLogoutUsecase } from "../../../Application/common/usecases/unifi
 import { AdminGetCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.getCompany.usecase";
 import { AdminUpdateCompanyStatus } from "../../../Application/admin/usecases/userManagement/admin.updateCompanyStatus.usecase";
 import { AdminUpdateCandidateStatus } from "../../../Application/admin/usecases/userManagement/admin.updateCandidateStatus.usecase";
+import { AdminApproveCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.approveCompany.usecase";
+import { AdminRejectCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.rejectCompany.usecase";
 
 
 
@@ -117,16 +119,7 @@ const iCandidateGoogleLogin = new CandidateGoogleLoginUsecase(
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
       iCompanyRepository,
-      iOtpService,
-      iOtpRepository,
-      iHashService,
-      iMailService
-)
-
-const iVerifyCompany = new VerifyRegisterCompanyUsecase(
-    iCompanyRepository,
-    iOtpService,
-    iOtpRepository
+      iHashService
 )
 
 const iResendOtpCompny = new ResendOtpCompanyUsecase(
@@ -139,7 +132,8 @@ const iResendOtpCompny = new ResendOtpCompanyUsecase(
 const iLoginCompany = new LoginCompanyUsecase(
     iCompanyRepository,
     iTokenService,
-    iHashService
+    iHashService,
+    iMailService
 )
 
 const iCompanyForgotPassword = new CompanyForgotPasswordUsecase(
@@ -161,6 +155,11 @@ const iCompanyGoogleLogin = new CompanyGoogleLoginUsecase(
     iTokenService,
     iHashService,
     iGoogleAuthService
+)
+
+const iVerifyRegisterCompany = new VerifyRegisterCompanyUsecase(
+    iCompanyRepository,
+    iTokenService
 )
 
 
@@ -217,6 +216,16 @@ const iUpdateCandidateStatus = new AdminUpdateCandidateStatus(
     iCandidateRepository
 )
 
+const iApproveCompany = new AdminApproveCompanyUsecase(
+    iCompanyRepository,
+    iMailService
+)
+
+const iRejectCompany = new AdminRejectCompanyUsecase(
+    iCompanyRepository,
+    iMailService
+)
+
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,
@@ -236,13 +245,12 @@ export const iCandidateAuthController = new CandidateAuthController(
 
 export const iCompanyAuthController = new CompanyAuthController(
     iRegisterCompany,
-    iVerifyCompany,
     iResendOtpCompny,
     iLoginCompany,
     iCompanyForgotPassword,
     iCompanyResetPassword,
     iCompanyGoogleLogin,
-  
+    iVerifyRegisterCompany
 )
 
 export const iAdminAuthController = new AdminAuthController(
@@ -254,5 +262,7 @@ export const IUserManagementController = new UserManagementController(
     iGetAllCandidates,
     iGetCompany,
     iUpdateCompanyStatus,
-    iUpdateCandidateStatus
+    iUpdateCandidateStatus,
+    iApproveCompany,
+    iRejectCompany
 )

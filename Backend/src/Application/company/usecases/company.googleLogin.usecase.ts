@@ -1,5 +1,6 @@
 import CompanyEntity from "../../../Domain/entities/company.entity";
 import userRole from "../../../Domain/enums/userRole.enum";
+import { UserStatus } from "../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
@@ -33,6 +34,8 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
                 "",
                 googleCompanyInfo.isVerified,
                 false,
+                false,
+                UserStatus.PENDING,
                 googleCompanyInfo.googleId
             )
 
@@ -47,6 +50,18 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
 
         if(!company || !company.getId() || !company.getRole()){
              throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
+        }
+        
+        if(company.getStatus() === UserStatus.PENDING){
+            throw new AppError(authMessages.success.COMPANY_REGISTER_PENDING, statusCode.FORBIDDEN)
+        }
+
+        if(company.getStatus() === UserStatus.BLOCKED){
+            throw new AppError(authMessages.error.COMPANY_BLOCKED, statusCode.FORBIDDEN)
+        }
+
+        if(company.getStatus() === UserStatus.REJECTED){
+            throw new AppError(authMessages.error.COMPANY_REJECTED, statusCode.FORBIDDEN)
         }
         
         const id = company.getId()

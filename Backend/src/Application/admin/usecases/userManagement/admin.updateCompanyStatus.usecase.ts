@@ -1,4 +1,4 @@
-import { userStatus } from "../../../../Domain/enums/userStatus.enum";
+import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
@@ -17,13 +17,13 @@ export class AdminUpdateCompanyStatus implements IAdminUpdateCompanyStatusUsecas
             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        const isBlocked = request.status === 'Blocked'
+        const isBlocked = request.status === 'blocked'
         company.setBlocked(isBlocked)
         await this._companyRepository.update(request.id, company)
 
         return {
                 id: company.getId(),
-                status: isBlocked ? userStatus.Blocked : userStatus.Active,
+                status: isBlocked ? UserStatus.BLOCKED : UserStatus.ACTIVE,
                 role: company.getRole()
         }
     }

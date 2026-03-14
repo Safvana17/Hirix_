@@ -1,5 +1,6 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import userRole from "../../../Domain/enums/userRole.enum";
+import { UserStatus } from "../../../Domain/enums/userStatus.enum";
 
 export interface ICompany extends Document {
     _id: Types.ObjectId;
@@ -7,6 +8,8 @@ export interface ICompany extends Document {
     email: string;
     password: string;
     role: userRole;
+    status: UserStatus;
+    isAdminVerified: boolean;
     googleId: string;
     isBlocked: boolean;
     domain: string;
@@ -43,6 +46,14 @@ const companySchema: Schema<ICompany> = new Schema({
         required: true,
         default: userRole.Company,
         enum: Object.values(userRole)
+    },
+    status: {
+       type: String,
+       default: UserStatus.PENDING
+    },
+    isAdminVerified: {
+        type: Boolean,
+        default: false
     },
     isBlocked: {
        type: Boolean,

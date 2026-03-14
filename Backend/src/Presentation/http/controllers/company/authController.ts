@@ -1,11 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ICompanyRegisterUsecase } from "../../../../Application/company/interfaces/auth/ICompanyRegisterUsecase";
-import { forgotPasswordSchema, otpSchema, registerSchema, resendOtpSchema, resetPasswordSchema } from "../../validators/registerValidator";
+import { forgotPasswordSchema, registerSchema, resendOtpSchema, resetPasswordSchema, verifyRegisterCompanySchema } from "../../validators/registerValidator";
 import { RegisterCompanyInputDTO } from "../../../../Application/company/dtos/register.company.dto";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
-import { IVerifyRegisterCompanyUsecase } from "../../../../Application/company/interfaces/auth/ICompanyVerifyRegisterUsecase";
-import { VerifyCompanyInputDTO } from "../../../../Application/company/dtos/verifyRegister.company.dto";
 import { ResendOtpCompanyInputDTO } from "../../../../Application/company/dtos/resendOtp.company.dto";
 import { IResendOtpCompanyUsecase } from "../../../../Application/company/interfaces/auth/IResendOtpUsecase";
 import { googleLoginSchema, loginSchema } from "../../validators/loginValidator";
@@ -18,16 +16,17 @@ import { CompanyResetPasswordInputDTO } from "../../../../Application/company/dt
 import { env } from "../../../../Infrastructure/config/env";
 import { ICompanyGoogleLoginUsecase } from "../../../../Application/company/interfaces/auth/ICompanyGoogleLoginUsecase";
 import userRole from "../../../../Domain/enums/userRole.enum";
+import { IVerifyRegisterCompanyUsecase } from "../../../../Application/company/interfaces/auth/ICompanyVerifyRegisterUsecase";
 
 export class CompanyAuthController {
     constructor(
         private _registerUsecase: ICompanyRegisterUsecase,
-        private _verifyCompanyUsecase: IVerifyRegisterCompanyUsecase,
         private _resendOtpCompanyUsecase: IResendOtpCompanyUsecase,
         private _loginCompanyUsecase: ILoginCompanyUsecase,
         private _companyForgotPasswordUsecase: ICompanyForgotPasswordUsecase,
         private _companyResetPasswordUsecase: ICompanyResetPasswordUsecase,
         private _companyGoogleLogin: ICompanyGoogleLoginUsecase,
+        private _verifyRegisterompany: IVerifyRegisterCompanyUsecase
     ) {}
 
     register = async (req: Request, res: Response, next: NextFunction) => {
@@ -42,7 +41,7 @@ export class CompanyAuthController {
             await this._registerUsecase.execute(payload)
             return res.status(statusCode.OK).json({
                 success: true,
-                message: authMessages.success.OTP_SEND_SUCCESS
+                message: authMessages.success.COMPANY_REGISTER_PENDING
             })
 
             
@@ -51,20 +50,16 @@ export class CompanyAuthController {
         }
     }
 
-    verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
+    verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const parsed = otpSchema.parse(req.body)
-            const payload: VerifyCompanyInputDTO = {
-                email: parsed.email,
-                otp: parsed.otp
-            }
+            const payload = verifyRegisterCompanySchema.parse({token: req.query.token})
 
-            const savedCompany = await this._verifyCompanyUsecase.execute(payload)
+            const savedCompany = await this._verifyRegisterompany.execute(payload)
 
             return res.status(statusCode.CREATED).json({
                 success: true,
                 company: savedCompany,
-                message: authMessages.success.COMPANY_REGISTER_SUCCESS
+                message: authMessages.success.COMPANY_EMAIL_VERIFIED
             })
 
         } catch (error) {

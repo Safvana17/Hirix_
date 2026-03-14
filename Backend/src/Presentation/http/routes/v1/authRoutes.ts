@@ -19,7 +19,7 @@ router.post('/candidate/googlelogin', iCandidateAuthController.googleLogin)
 
 //company
 router.post('/company/register', iCompanyAuthController.register)
-router.post('/company/verifyotp', iCompanyAuthController.verifyOtp)
+router.post('/company/verifyemail', iCompanyAuthController.verifyEmail)
 router.post('/company/resendotp', iCompanyAuthController.resendOtp)
 router.post('/company/login', iCompanyAuthController.login)
 router.post('/company/forgotpassword', iCompanyAuthController.forgotPassword)

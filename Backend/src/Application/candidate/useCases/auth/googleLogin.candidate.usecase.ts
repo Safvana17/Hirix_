@@ -1,5 +1,6 @@
 import CandidateEntity from "../../../../Domain/entities/candidate.entity";
 import userRole from "../../../../Domain/enums/userRole.enum";
+import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
@@ -33,6 +34,7 @@ export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
                 "",
                 googleCandidateInfo.isVerified,
                 false,
+                UserStatus.ACTIVE,
                 googleCandidateInfo.googleId
             )
 

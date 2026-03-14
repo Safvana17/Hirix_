@@ -71,3 +71,9 @@ export const resetPasswordSchema = z.object({
     confirmPassword: z
           .string()
 })
+export const verifyRegisterCompanySchema = z.object({
+    token: z
+        .string()
+        .trim()
+        .min(1, 'Token is missing')
+})

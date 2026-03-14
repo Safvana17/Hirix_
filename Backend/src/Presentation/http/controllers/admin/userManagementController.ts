@@ -2,14 +2,17 @@ import { NextFunction, Request, Response } from "express";
 import { IAdminGetAllCandidates } from "../../../../Application/admin/interfaces/userManagement/iAdmin.getAllCandidates.usecase";
 import { IAdminGetAllCompaniesUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.getAllCompanies.usecase";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
-import { QuerySchema, updateStatusSchema } from "../../validators/adminValidator";
+import { approveCompanySchema, QuerySchema, rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
 import { logger } from "../../../../utils/logging/loger";
 import { AdminCompanyQueryDTO } from "../../../../Application/admin/dtos/userManagement/getAllCompanies.admin.dto";
 import { IAdminGetCompanyUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.getCompany.usecase";
-import { UpdataStatusInputDTO } from "../../../../Application/admin/dtos/userManagement/updateStatus.admin.dto";
+import { AdminRejectCompanyInputDTO, UpdataStatusInputDTO } from "../../../../Application/admin/dtos/userManagement/updateStatus.admin.dto";
 import { IAdminUpdateCompanyStatusUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.updateCompanyStatus.usecase";
 import { AdminCandidateQueryDTO } from "../../../../Application/admin/dtos/userManagement/getAllCandidate.admin.dto";
 import { IAdminUpdateCandidateStatus } from "../../../../Application/admin/interfaces/userManagement/iAdmin.updateCandidateSttaus.usecase";
+import { IAdminApproveCompanyUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.approveCompany.usecase";
+import { IAdminRejectCompanyUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.rejectCompany.usecase";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 
 
 export class UserManagementController {
@@ -18,7 +21,9 @@ export class UserManagementController {
        private _getAllCandidatesUsecase: IAdminGetAllCandidates,
        private _getCompanyUsecase: IAdminGetCompanyUsecase,
        private _updateCompanyStatus: IAdminUpdateCompanyStatusUsecase,
-       private _updateCandidateStatus: IAdminUpdateCandidateStatus
+       private _updateCandidateStatus: IAdminUpdateCandidateStatus,
+       private _approveCompanyRegisterUsecase: IAdminApproveCompanyUsecase,
+       private _rejectCompanyRegisterUsecase: IAdminRejectCompanyUsecase
     ) { }
     
     getAllCompanies = async(req: Request, res: Response, next: NextFunction) => {
@@ -107,6 +112,44 @@ export class UserManagementController {
                 updatedCandidate
             })
 
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    approveCompany = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id
+            const parsed = approveCompanySchema.parse({id})
+            const company = await this._approveCompanyRegisterUsecase.execute(parsed)
+
+            return res.status(statusCode.OK).json({
+                success: true,
+                message: authMessages.success.ADMIN_APPROVED_COMPANY,
+                company
+            })
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    rejectCompany = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id
+            const parsed = rejectCompanySchema.parse({id, reason: req.body.reason})
+            const payload: AdminRejectCompanyInputDTO = {
+                id: parsed.id,
+                reason: parsed.reason
+            }
+            const company =  await this._rejectCompanyRegisterUsecase.execute(payload)
+
+            return res.status(statusCode.OK).json({
+                success: true,
+                message: authMessages.success.ADMIN_REJECTED_COMPANY,
+                company
+            })
+            
         } catch (error) {
             next(error)
         }

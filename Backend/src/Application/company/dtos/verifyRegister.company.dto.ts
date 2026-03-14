@@ -1,8 +1,7 @@
 import userRole from '../../../Domain/enums/userRole.enum'
 
 export interface VerifyCompanyInputDTO {
-    email: string
-    otp: string
+    token: string
 }
 
 export interface VerifyCompanyOutputDTO {

@@ -1,4 +1,3 @@
-import { userStatus } from "../../../../Domain/enums/userStatus.enum";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { AdminCompanyQueryDTO, AdminPaginatedCompanyDTO } from "../../dtos/userManagement/getAllCompanies.admin.dto";
 import { IAdminGetAllCompaniesUsecase } from "../../interfaces/userManagement/iAdmin.getAllCompanies.usecase";
@@ -16,7 +15,7 @@ export class AdminGetAllCompaniesUsecase implements IAdminGetAllCompaniesUsecase
                 id: c.getId(),
                 name: c.getName(),
                 email: c.getEmail(),
-                status: c.getIsBlocked() ? userStatus.Blocked : userStatus.Active,
+                status: c.getStatus()
             })),
             totalPages,
             totalCount

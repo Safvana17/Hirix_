@@ -15,5 +15,6 @@ export const envSchema = z.object({
     REFRESH_TOKEN_TTL: z.coerce.number(),
     ACCESS_TOKEN_TTL: z.coerce.number(),
     NODEMAILER_PORT: z.coerce.number(),
-    BCRYPT_sALT_ROUNDS: z.coerce.number().int().min(8).max(15)
+    BCRYPT_sALT_ROUNDS: z.coerce.number().int().min(8).max(15),
+    FRONTEND_URL:z.string().min(1)
 })

@@ -10,6 +10,7 @@ export default class UserEntity {
     protected googleId?: string;
     protected isBlocked: boolean;
     protected refreshTokens?: string[]
+    protected lastActive: Date;
 
 
     protected constructor(id: string, name: string, email: string, password: string, isVerified: boolean,isBlocked: boolean, role?: userRole, googleId?: string, refreshToken: string[] = []){
@@ -22,6 +23,7 @@ export default class UserEntity {
         this.isBlocked = isBlocked
         this.googleId = googleId;
         this.refreshTokens = refreshToken
+        this.lastActive = new Date()
     }
 
     public getId(): string {
@@ -67,5 +69,12 @@ export default class UserEntity {
     }
     public setBlocked(blocked: boolean):void {
         this.isBlocked = blocked
+    }
+    public getLastActive(): Date {
+        return this.lastActive
+    }
+
+    public setLastActive(date: Date): void {
+        this.lastActive = date
     }
 }

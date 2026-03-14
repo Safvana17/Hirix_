@@ -58,7 +58,7 @@ export class CandidateRepository extends BaseRepository <CandidateEntity, ICandi
             ]
         }
         if(query.status){
-            filter.isBlocked = query.status === 'Blocked'
+            filter.isBlocked = query.status === 'blocked'
         }
 
         const skip = (query.page - 1) * query.limit

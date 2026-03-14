@@ -1,5 +1,7 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import userRole from "../../../Domain/enums/userRole.enum";
+import { UserStatus } from "../../../Domain/enums/userStatus.enum";
+
 
 
 export interface ICandidate extends Document {
@@ -8,6 +10,7 @@ export interface ICandidate extends Document {
     email: string;
     password: string;
     role: userRole;
+    status: UserStatus;
     googleId: string;
     refreshToken: string[];
     isBlocked: boolean;
@@ -36,6 +39,10 @@ const candidateSchema: Schema<ICandidate> = new Schema ({
     },
     googleId: {
         type: String
+    },
+    status: {
+       type: String,
+       default: UserStatus.PENDING
     },
     isBlocked: {
         type: Boolean,

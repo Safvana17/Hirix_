@@ -9,5 +9,8 @@ router.get('/getallcandidates', authHandler(iTokenService), IUserManagementContr
 router.get('/company/:id',authHandler(iTokenService), IUserManagementController.getCompanyById)
 router.patch('/company/updatestatus/:id', authHandler(iTokenService), IUserManagementController.updateCompanyStatus)
 router.patch('/candidate/updatestatus/:id', authHandler(iTokenService), IUserManagementController.updateCandidateStatus)
+router.patch('/company/approve/:id', authHandler(iTokenService), IUserManagementController.approveCompany)
+router.patch('/company/reject/:id', authHandler(iTokenService), IUserManagementController.rejectCompany)
+
 
 export default router;

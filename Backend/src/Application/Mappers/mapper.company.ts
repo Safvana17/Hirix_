@@ -10,6 +10,8 @@ export class CompanyMapper {
             doc.password,
             doc.isVerified,
             doc.isBlocked,
+            doc.isAdminVerified,
+            doc.status,
             doc.googleId,
             doc.refreshToken ?? []
         )
@@ -22,6 +24,8 @@ export class CompanyMapper {
             name: entity.getName(),
             email: entity.getEmail(),
             role: entity.getRole(),
+            status: entity.getStatus(),
+            isAdminVerified: entity.getIsAdminVerified(),
             password: entity.getPassword(),
             googleId: entity.getGoogleId?.(),
             isVerified: entity.isUserVerified(),

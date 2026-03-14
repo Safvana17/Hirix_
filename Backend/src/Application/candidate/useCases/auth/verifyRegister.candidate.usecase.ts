@@ -7,6 +7,7 @@ import { ITokenService } from "../../../interface/service/ITokenService";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 
 export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandidate{
     constructor(
@@ -41,6 +42,8 @@ export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandida
         }
 
         candidate.markAsVerified()
+        candidate.setStatus(UserStatus.ACTIVE)
+        
         await this.candidateRepository.update(candidateId, candidate)
         await this.otpStore.deleteOtp(candidateId)
 

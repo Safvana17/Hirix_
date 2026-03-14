@@ -1,11 +1,11 @@
-import { userStatus } from "../../../../Domain/enums/userStatus.enum";
+import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 
 
 export interface GetAllCompaniesOutputDTO {
     id: string;
     email: string;
     name: string;
-    status: userStatus;
+    status: UserStatus;
 }
 
 export interface AdminCompanyQueryDTO {
