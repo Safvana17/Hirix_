@@ -2,7 +2,7 @@ export interface Candidate{
     id: string;
     name: string;
     email: string;
-    status: 'Active' | 'Blocked' | "";
+    status: 'active' | 'blocked' | 'rejected' | 'pending' | ""
 }
 
 export type FetchCandidatesParams = {

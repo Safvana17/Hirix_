@@ -223,6 +223,21 @@ void, ResetPasswordPayload, {rejectValue: string}
     }
 })
 
+export const verifyEmail = createAsyncThunk<
+string,{token: string}, {rejectValue: string}
+>('/company/verifyEmail', async({token}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(`/auth/company/verifyemail?token=${token}`)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.message
+    } catch (error) {
+       const err = error as AxiosError<{ message: string }>
+       return rejectWithValue(err.response?.data?.message || 'Failed to verify company email')
+    }
+})
+
 
 const authSlice = createSlice({
     name: 'auth',
@@ -369,6 +384,16 @@ const authSlice = createSlice({
         .addCase(resetPassword.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Reset password error'
+        })
+        .addCase(verifyEmail.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(verifyEmail.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(verifyEmail.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Verify email error'
         })
     }
 })

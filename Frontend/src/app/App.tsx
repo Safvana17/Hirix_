@@ -8,9 +8,11 @@ import PublicRoute from '../components/auth/PublicRoute'
 import RoleRoute from '../components/auth/RoleRoute'
 import { ROLES } from '../constants/role'
 
+
 const Home = lazy(() => import( '../presentation/pages/home/Home'))
 const AuthGatewayPage = lazy(() => import('../presentation/pages/auth/AuthGatewayPage'))
 const VerifyOtp = lazy(() =>import('../presentation/pages/auth/VerifyOtp'))
+const VerifyCompanyEmail = lazy(() => import('../presentation/pages/auth/VerifyEmail'))
 const CompanyDashboard = lazy(() => import('../presentation/pages/company/CompanyDashboard'))
 const CandidateDashboard = lazy(() => import( '../presentation/pages/candidate/CandidateDashboard'))
 const ForgotPassword = lazy(() => import ( '../presentation/pages/auth/ForgotPassword'))
@@ -44,7 +46,7 @@ const App = () => {
           <Route path='/login' element={<PublicRoute><AuthGatewayPage /></PublicRoute>}/>
           <Route path='/signup' element={<PublicRoute><AuthGatewayPage /> </PublicRoute>}/>
 
-          <Route path='/company/verifyotp' element={<VerifyOtp />} />
+          <Route path='/company/verifyemail' element={<VerifyCompanyEmail />} />
           <Route path='/company/forgotpassword' element={<ForgotPassword />} />
           <Route path='/company/resetpassword' element={<ResetPassword />} />
           <Route path='/company/dashboard' element={

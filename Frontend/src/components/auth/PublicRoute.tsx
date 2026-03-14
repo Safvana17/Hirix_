@@ -15,8 +15,8 @@ const PublicRoute: React.FC<PublicRouteProps>= ({children}) => {
 
     if(loading){
         return (
-            <div className="flex h-screen items-center justify-center">
-                <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-600"></div>
+            <div className="flex h-screen items-center justify-center bg-[#f5f0e8]">
+                <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-[#6B4705]"></div>
             </div>
         );       
     }

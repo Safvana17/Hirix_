@@ -4,7 +4,8 @@ export interface Company {
     id: string;
     name: string;
     email: string;
-    status: 'Active' | 'Blocked' | "",
+    isAdminVerified: boolean;
+    status: 'active' | 'blocked' | 'rejected' | 'pending' | ""
 }
 
 export type FetchCompaniesParams = {
@@ -22,13 +23,32 @@ export interface FetchCompaniesResponse{
 
 export type UpdateStatusPayload = {
   id: string
-  status: 'Active' | 'Blocked' | ""
+  status: 'active' | 'blocked' | 'rejected' | 'pending' | ""
   role: UserRole
 }
 
 export type UpdateStatusArgs = {
   id: string
-  status: 'Active' | 'Blocked' | ""
+  status: 'active' | 'blocked' | ""
   role: UserRole
+  queryParams?: FetchCompaniesParams
+}
+
+// export type VerifyCompanyPayload = {
+//   id: string
+//   action: "APPROVE" | "REJECT"
+//   reason?: string
+// }
+
+export type ApproveCompanyArgs = {
+  id: string
+  action: "APPROVE"
+  queryParams?: FetchCompaniesParams
+}
+
+export type RejectCompanyArgs = {
+  id: string
+  reason?: string
+  action: "REJECT"
   queryParams?: FetchCompaniesParams
 }

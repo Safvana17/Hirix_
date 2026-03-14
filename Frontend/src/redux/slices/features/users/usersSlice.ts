@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import api from "../../../../lib/axios";
-import { type UpdateStatusArgs, type Company, type FetchCompaniesParams, type FetchCompaniesResponse, type UpdateStatusPayload } from "../../../../types/company";
+import { type UpdateStatusArgs, type Company, type FetchCompaniesParams, type FetchCompaniesResponse, type UpdateStatusPayload, type ApproveCompanyArgs, type RejectCompanyArgs } from "../../../../types/company";
 import type { Candidate, FetchCandidatesParams, FetchCandidatesResponse } from "../../../../types/candidate";
 
 interface usersState {
@@ -85,6 +85,51 @@ UpdateStatusArgs,
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data?.message || 'Failed update status')       
+    }
+})
+
+export const approveCompany = createAsyncThunk<
+UpdateStatusPayload,
+ApproveCompanyArgs,
+{rejectValue: string}
+>('/admin/approve', async(ApproveCompanyArgs, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(`/admin/company/approve/${ApproveCompanyArgs.id}`)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log(response.data)
+        return {
+            id: response.data.company.id,
+            status: response.data.company.status,
+            role: response.data.company.role
+        }
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data?.message || 'Failed approve company')       
+    }
+})
+
+export const rejectCompany = createAsyncThunk<
+UpdateStatusPayload,
+RejectCompanyArgs,
+{rejectValue: string}
+>('/admin/reject', async(RejectCompanyArgs, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(`/admin/company/reject/${RejectCompanyArgs.id}`,{ reason: RejectCompanyArgs.reason})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log(response.data)
+       
+        return {
+            id: response.data.company.id,
+            status: response.data.company.status,
+            role: response.data.company.role
+        }
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data?.message || 'Failed Reject company')       
     }
 })
 
@@ -173,6 +218,47 @@ const userSlice = createSlice({
           .addCase(getCompanyDetail.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to view company profile'
+          })
+          .addCase(approveCompany.pending, (state) => {
+            state.loading = true
+            state.error = null
+          })
+          .addCase(approveCompany.fulfilled, (state, action) => {
+            state.loading = false
+            const {id, status} = action.payload
+            const company = state.companies.find(c => c.id === id)
+            if(company){
+                company.status = status
+                company.isAdminVerified = true
+            }
+            if(state.selectedCompany && state.selectedCompany.id === id){
+                state.selectedCompany.status = status
+                state.selectedCompany.isAdminVerified = true
+            }
+          })
+          .addCase(approveCompany.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to approve company'
+          })
+          .addCase(rejectCompany.pending, (state) => {
+            state.loading = true
+          })
+          .addCase(rejectCompany.fulfilled, (state, action) => {
+            state.loading = false
+            const {id, status} = action.payload
+            const company = state.companies.find(c => c.id === id)
+            if(company){
+                company.status = status
+                company.isAdminVerified = false
+            }
+            if(state.selectedCompany && state.selectedCompany.id === id){
+                state.selectedCompany.status = status
+                state.selectedCompany.isAdminVerified = false
+            }
+          })
+          .addCase(rejectCompany.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to approve company'
           })
     }
 })

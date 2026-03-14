@@ -2,15 +2,16 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { fetchCompanies, updateUserStatus } from '../../../redux/slices/features/users/usersSlice'
+import { approveCompany, fetchCompanies, rejectCompany, updateUserStatus } from '../../../redux/slices/features/users/usersSlice'
 import InternalLayout from '../../layouts/InternalLayout'
 import { adminSidebarItems } from '../../../constants/sidebarItems'
 import DataTable from '../../components/ui/DataTable'
 import type { Column } from '../../../types/table'
 import type { Company } from '../../../types/company'
-import { Ban, CheckCircle, Eye, Filter, Search } from 'lucide-react'
+import { Ban, CheckCircle, Eye, Filter, Search, XCircle } from 'lucide-react'
 import { useDebounce } from '../../../hooks/useDebounce'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
+
 
 const AdminCompanies : React.FC = () => {
 
@@ -59,15 +60,42 @@ const AdminCompanies : React.FC = () => {
     },[])
 
     const handleUpdateStatus = (id: string, currentStatus: string) => {
-        const newStatus = currentStatus === 'Active' ? 'Blocked' : 'Active'
-        const actionText = newStatus === 'Blocked' ? 'Block' : 'Unblock'
+        const newStatus = currentStatus === 'active' ? 'blocked' : 'active'
+        const actionText = newStatus === 'blocked' ? 'Block' : 'Unblock'
 
         openModal({
             title: `${actionText} Company`,
-            message: `Are you sure you want to ${actionText.toLowerCase()} this company? This will ${newStatus === 'Blocked' ? 'prevent them from accessing' : 'restore their access to'} the platform.`,
-            type: newStatus === 'Blocked' ? 'danger' : 'warning',
+            message: `Are you sure you want to ${actionText.toLowerCase()} this company? This will ${newStatus === 'blocked' ? 'prevent them from accessing' : 'restore their access to'} the platform.`,
+            type: newStatus === 'blocked' ? 'danger' : 'warning',
             onConfirm: () => {
                 dispatch(updateUserStatus({id, status: newStatus, role: 'company'}));
+                closeModal();
+            }
+        })
+    }
+
+    const handleApproveCompany = (id: string) => {
+        openModal({
+            title: `Approve Company`,
+            message: `Are you sure you want to approve this company? An email notification will be sent to them.`,
+            type: 'info',
+            onConfirm: () => {
+                dispatch(approveCompany({id, action: 'APPROVE'}));
+                closeModal();
+            }
+        })
+    }
+
+    const handleRejectCompany = (id: string) => {
+
+        const reason = prompt('Enter rejection reason: ')
+        if(reason === null) return
+        openModal({
+            title: `Reject Company`,
+            message: `Are you sure you want to reject this company? An email notification will be sent to them.`,
+            type: 'info',
+            onConfirm: () => {
+                dispatch(rejectCompany({id, reason, action: 'REJECT'}));
                 closeModal();
             }
         })
@@ -77,7 +105,12 @@ const AdminCompanies : React.FC = () => {
         {header: 'Company Name', key: 'name', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
         {header: 'Email Address', key: 'email', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
         {header: 'Status', key: 'status', render: (val) => (
-            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${val === 'Active' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
+            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
+                    val === 'active' ? 'bg-green-50 text-green-600 border-green-100' : 
+                    val === 'pending' ? 'bg-amber-50 text-amber-600 border-amber-100' :
+                    val === 'rejected' ? 'bg-orange-50 text-orange-600 border-orange-100' :
+                    'bg-red-50 text-red-600 border-red-100'
+                }`}>
                 {val}
             </span>
         )},
@@ -91,19 +124,41 @@ const AdminCompanies : React.FC = () => {
                     <Eye className='w-4 h-4' />
                 </button>
 
-                <button
-                  onClick={() => handleUpdateStatus(id, item.status)}
-                  title={item.status === 'Active' ? 'Block Company' : 'Unblock Company'}
-                  className={`p-2 rounded-lg transition-colors border border-transparent ${item.status === 'Active' 
-                     ?'hover:bg-red-50 text-red-600 hover:border-red-100'
-                     : 'hover:bg-green-50 text-green-600 hover:border-green-100'
-                  }`}
-                >
-                   {item.status === 'Active' ? <Ban className='w-4 h-4'/> : <CheckCircle className='w-4 h-4' />} 
-                </button>
+                { item.status === 'pending' && (
+                    <>
+                       <button
+                          onClick={() => handleApproveCompany(id)}
+                          title='Approve Company'
+                          className='p-2 hover:bg-green-50 text-green-600 rounded-lg transition-colors border border-transparent'
+                       >
+                         <CheckCircle className='w-4 h-4' />
+                       </button>
+
+                       <button
+                          onClick={() => handleRejectCompany(id)}
+                          title='Reject Company'
+                          className='p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors border border-transparent'
+                       >
+                         <XCircle className='w-4 h-4' />
+                       </button>
+                    </>
+                )}
+
+                {(item.status === 'active' || item.status === 'blocked') && (
+                    <button
+                        onClick={() => handleUpdateStatus(id, item.status)}
+                        title={item.status === 'active' ? 'Block Company' : 'Unblock Company'}
+                        className={`p-2 rounded-lg transition-colors border border-transparent ${item.status === 'active' 
+                            ?'hover:bg-red-50 text-red-600 hover:border-red-100'
+                            : 'hover:bg-green-50 text-green-600 hover:border-green-100'
+                        }`}
+                        >
+                        {item.status === 'active' ? <Ban className='w-4 h-4'/> : <CheckCircle className='w-4 h-4' />} 
+                    </button>
+                )}
             </div>
         )}
-    ],[dispatch, navigate, handleUpdateStatus])
+    ],[dispatch, navigate, handleUpdateStatus, handleApproveCompany, handleRejectCompany])
 
     
   return (
@@ -133,8 +188,10 @@ const AdminCompanies : React.FC = () => {
                 onChange={(e) => handleStatusChange(e.target.value)}
                 >
                 <option value="">All Status</option>
-                <option value="Active">Active</option>
-                <option value="Blocked">Blocked</option>
+                <option value="active">Active</option>
+                <option value="blocked">Blocked</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
                 </select>
             </div>
             </div>

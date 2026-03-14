@@ -75,8 +75,12 @@ const AuthForm: React.FC<AuthFormProps> = ({mode, role}) => {
             }))
 
             if(registerUser.fulfilled.match(result)){
-                toast.success('Registration successful. Please verify your OTP')
-                navigate(`/${role}/verifyotp`, {state: {email: formData.email, role}})
+                if(role === 'company') {
+                    toast.success('Registration submitted! Please wait for admin approval. You will get emil once approved.', {duration: 6000})
+                }else{
+                    toast.success('Registration successful. Please verify your OTP')
+                    navigate(`/${role}/verifyotp`, {state: {email: formData.email, role}})
+                }
             }else{
                 toast.error(result.payload || 'Registarion failed')
             }
@@ -93,7 +97,18 @@ const AuthForm: React.FC<AuthFormProps> = ({mode, role}) => {
                 toast.success('Welcome Back!')
                 navigate(`/${role}/dashboard`)
             }else{
-                toast.error(result.payload || 'Login failed')
+                    const errorMsg = result.payload as string;
+                if (errorMsg.includes('pending admin verification')) {
+                    toast.error('Your account is pending admin approval. We will notify you via email.', { icon: '⏳' });
+                } else if (errorMsg.includes('rejected')) {
+                    toast.error('Your registration was rejected by the admin.', { icon: '❌' });
+                } else if (errorMsg.includes('blocked')) {
+                    toast.error('Your account has been blocked. Please contact support.', { icon: '🚫' });
+                } else if (errorMsg.includes('Email verification required')) {
+                    toast.error('Email verification required. Check your inbox for the link.', { icon: '📧' });
+                } else {
+                    toast.error(errorMsg || 'Login failed');
+                }
             }
         }
     }
@@ -110,7 +125,18 @@ const AuthForm: React.FC<AuthFormProps> = ({mode, role}) => {
                 toast.success('Google Login Successfull')
                 navigate(`/${role}/dashboard`)
             }else{
-                toast.error(result.payload || 'Google Login Failed')
+                    const errorMsg = result.payload as string;
+                if (errorMsg.includes('pending admin verification')) {
+                    toast.error('Your account is pending admin approval. We will notify you via email.', { icon: '⏳' });
+                } else if (errorMsg.includes('rejected')) {
+                    toast.error('Your registration was rejected by the admin.', { icon: '❌' });
+                } else if (errorMsg.includes('blocked')) {
+                    toast.error('Your account has been blocked. Please contact support.', { icon: '🚫' });
+                } else if (errorMsg.includes('Email verification required')) {
+                    toast.error('Email verification required. Check your inbox for the link.', { icon: '📧' });
+                } else {
+                    toast.error(errorMsg || 'Login failed');
+                }
             }
         },
         onError: () => {
