@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { AccessTokenPayload, ITokenService, RefreshTokenPayload } from "../../Application/interface/service/ITokenService";
 import { AppError } from "../../Domain/errors/app.error";
 import { authMessages } from "../../Shared/constsnts/messages/authMessages";
@@ -24,6 +25,10 @@ export class TokenService implements ITokenService {
             throw new AppError(authMessages.error.ACCESS_TOKEN_SECRET_NOT_FOUND, statusCode.NOT_FOUND)
         }
         return jwt.sign(payload, accessSecret, {expiresIn: jwtConfig.accessToken.expiresIn})
+    }
+
+    generateCsrfToken(): string {
+        return crypto.randomBytes(32).toString("hex")
     }
 
     verifyRefreshToken(token: string): RefreshTokenPayload {

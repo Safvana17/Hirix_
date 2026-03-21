@@ -7,4 +7,5 @@ export interface UnifiedRefreshTokenOutputDTO {
     userId: string
     refreshToken: string
     accessToken: string
+    csrfToken: string
 }

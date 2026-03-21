@@ -64,6 +64,8 @@ export const authMessages = {
 
         GOOGLE_TOKEN_VERIFICATION_FAILURE: "Failed to verify Google token",
 
+        INVALID_CSRF_TOKEN: "CSRF Validation failed",
+
         // Candidate Errors
         CANDIDATE_NOT_FOUND: "Candidate not found",
 

@@ -6,6 +6,7 @@ export interface LoginCompanyInputDTO {
 export interface LoginCompanyOutputDTO {
     accessToken: string
     refreshToken: string
+    csrfToken: string
     company: {
         id: string,
         name: string,

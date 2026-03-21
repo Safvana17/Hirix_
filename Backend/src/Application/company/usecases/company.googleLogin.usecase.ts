@@ -69,6 +69,7 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
 
         const refreshToken = this._tokenService.generateRefreshToken({id: companyId, role: company.getRole()})
         const accessToken = this._tokenService.generateAccessToken({id: companyId, email: company.getEmail(), role: company.getRole()})
+        const csrfToken = this._tokenService.generateCsrfToken()
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)
         await this._companyRepository.updateToken(companyId, hashedRefreshToken)
@@ -76,6 +77,7 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
         return {
             refreshToken,
             accessToken,
+            csrfToken,
             company: {
                 id: companyId,
                 email: company.getEmail(),

@@ -55,12 +55,14 @@ export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
         const candidateId = id!
         const refreshToken = this._tokenService.generateRefreshToken({id: candidateId, role: candidate.getRole()})
         const accessToken = this._tokenService.generateAccessToken({id: candidateId, email: candidate.getEmail(), role: candidate.getRole()})
+        const csrfToken = this._tokenService.generateCsrfToken()
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)
         await this._candidateRepository.updateToken(candidateId, hashedRefreshToken)
         return {
            refreshToken,
            accessToken,
+           csrfToken,
            candidate: {
             id: candidateId,
             email: candidate.getEmail(),

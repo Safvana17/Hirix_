@@ -37,6 +37,7 @@ export class AdminLoginUsecase implements IAdminLoginUsecase {
 
         const refreshToken = this._tokenService.generateRefreshToken({id: id, role: admin.getRole()})
         const accessToken = this._tokenService.generateAccessToken({id: id, email: admin.getEmail(), role: admin.getRole()})
+        const csrfToken = this._tokenService.generateCsrfToken()
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)
         await this._adminRepository.updateToken(id, hashedRefreshToken)
@@ -44,6 +45,7 @@ export class AdminLoginUsecase implements IAdminLoginUsecase {
         return {
            accessToken,
            refreshToken,
+           csrfToken,
            admin: {
             id,
             email: admin.getEmail(),

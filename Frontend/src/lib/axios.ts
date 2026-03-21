@@ -11,6 +11,13 @@ export const setLogoutHandler = (handler: () => void) => {
     logoutHandler = handler
 }
 
+const getCsrfToken = () => {
+    return document.cookie
+       .split("; ")
+       .find((row) => row.startsWith("XSRF-TOKEN="))
+       ?.split("=")[1]
+}
+
 const api = axios.create({
     baseURL: BACKEND_URL,
     withCredentials: true
@@ -33,6 +40,15 @@ const processQueue = (error: unknown) => {
     })
     failedQueue = []
 }
+
+api.interceptors.request.use((config) => {
+    const csrfToken = getCsrfToken()
+
+    if(csrfToken){
+        config.headers["x-csrf-token"] = csrfToken
+    }
+    return config
+})
 
 api.interceptors.response.use(
     (response) => response,

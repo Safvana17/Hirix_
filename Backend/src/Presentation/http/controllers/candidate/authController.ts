@@ -103,12 +103,11 @@ export class CandidateAuthController {
     login = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const payload: LoginCandidateInputDTO = loginSchema.parse(req.body)
-            const {refreshToken, accessToken, candidate} = await this._loginUsecase.execute(payload)
+            const {refreshToken, accessToken,csrfToken, candidate} = await this._loginUsecase.execute(payload)
 
             // const hashedToken = this._hashService.hashToken(refreshToken)
             // await this._candidateRepository.updateToken(candidate.id, hashedToken)
 
-            logger.info(`env: ${process.env.NODE_ENV}`)
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
@@ -123,6 +122,12 @@ export class CandidateAuthController {
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
+            })
+            
+            res.cookie('XSRF-TOKEN', csrfToken, {
+                httpOnly: false,
+                secure: true,
+                sameSite: "lax"
             })
             
             return res.status(statusCode.OK).json({
@@ -175,69 +180,6 @@ export class CandidateAuthController {
         }
     }
 
-    // refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-    //     try {
-    //         const parsed = refreshTokenSchema.parse(req.body)
-    //         const payload: RefreshTokenInputDTO = {
-    //             token: parsed.token
-    //         }
-
-    //         const tokens = this._refreshTokenUsecase.execute(payload)
-        
-    //         res.cookie('refreshToken', (await tokens).refreshToken, {
-    //             httpOnly: true,
-    //             secure: process.env.NODE_ENV === 'production',
-    //             sameSite: process.env.NODE_ENV ==='production' ? 'none' : 'lax',
-    //             maxAge: env.REFRESH_TOKEN_MAX_AGE,
-    //             path: '/'
-    //         })
-
-    //         res.cookie('accessToken', (await tokens).accessToken, {
-    //             httpOnly: true,
-    //             secure: process.env.NODE_ENV === 'production',
-    //             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    //             maxAge: env.ACCESS_TOKEN_MAX_AGE,
-    //             path: '/'
-    //         })
-
-    //         return res.status(statusCode.OK).json({
-    //             success: true,
-    //             message: authMessages.success.TOKEN_REFRESHED
-    //         })
-
-
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
-
-    // logout = async (req: Request, res: Response, next: NextFunction) => {
-    //     try {
-            
-    //         const refreshToken = req.cookies.refershToken
-    //         await this._logoutUsecase.execute(refreshToken)
-
-    //         res.clearCookie('refreshToken', {
-    //             httpOnly: true,
-    //             sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
-    //             secure: process.env.NODE_ENV === 'production'
-    //         })
-
-    //         res.clearCookie('accessToken', {
-    //             httpOnly: true,
-    //             sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
-    //             secure: process.env.NODE_ENV === 'production'
-    //         })
-
-    //         return res.status(statusCode.NO_CONTENT).json({
-    //             success: true,
-    //             message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
-    //         })
-            
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
     googleLogin = async (req: Request, res: Response, next: NextFunction) =>{
         try {
            const parsed = googleLoginSchema.parse(req.body)

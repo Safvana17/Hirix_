@@ -20,11 +20,11 @@ export class AdminAuthController {
                 password: parsed.password
             }
 
-            const {refreshToken, accessToken, admin} = await this._loginUsecase.execute(payload)
+            const {refreshToken, accessToken, csrfToken, admin} = await this._loginUsecase.execute(payload)
 
             // const hashedToken = this.hashService.hashToken(refreshToken)
             // await this.adminRepository.updateToken(admin.id, hashedToken)
-
+            
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
@@ -39,6 +39,12 @@ export class AdminAuthController {
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
+            })
+
+            res.cookie("XSRF-TOKEN", csrfToken, {
+                httpOnly: false,
+                secure: true,
+                sameSite: "lax"
             })
 
             return res.status(statusCode.OK).json({

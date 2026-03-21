@@ -56,6 +56,7 @@ export class LoginCompanyUsecase implements ILoginCompanyUsecase{
 
         const refreshToken =  this._tokenService.generateRefreshToken({id: id, role: company.getRole()})
         const accessToken = this._tokenService.generateAccessToken({id: id, email: company.getEmail(), role: company.getRole()})
+        const csrfToken = this._tokenService.generateCsrfToken()
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)
         await this._companyRepository.updateToken(id, hashedRefreshToken)
@@ -63,6 +64,7 @@ export class LoginCompanyUsecase implements ILoginCompanyUsecase{
         return {
             accessToken,
             refreshToken,
+            csrfToken,
             company: {
                 id: id,
                 name: company.getName(),

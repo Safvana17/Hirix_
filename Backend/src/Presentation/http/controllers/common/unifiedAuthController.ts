@@ -44,9 +44,6 @@ export class UnifiedAuthController {
         try {
             // const parsed = refreshTokenSchema.parse(req.body)
             const refreshToken = req.cookies.refreshToken
-            // const payload: UnifiedRefreshTokenInputDTO = {
-            //     token: parsed.token
-            // }
             logger.info(`Refresh cookie:${req.cookies.refreshToken}`)
 
             const tokens = await this._unifiedRefreshTokenUsecase.execute({token: refreshToken})
@@ -65,6 +62,12 @@ export class UnifiedAuthController {
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
+            })
+
+            res.cookie("XSRF-TOKEN", tokens.csrfToken, {
+                httpOnly: false,
+                secure: true,
+                sameSite: "lax"
             })
 
             return res.status(statusCode.OK).json({

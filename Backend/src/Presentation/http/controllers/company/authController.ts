@@ -94,7 +94,7 @@ export class CompanyAuthController {
                 password: parsed.password
             }
 
-            const {refreshToken, accessToken, company} = await this._loginCompanyUsecase.execute(payload)
+            const {refreshToken, accessToken,csrfToken, company} = await this._loginCompanyUsecase.execute(payload)
 
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
@@ -110,6 +110,12 @@ export class CompanyAuthController {
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
+            })
+
+            res.cookie("XSRF-TOKEN", csrfToken, {
+                httpOnly: false,
+                sameSite: "lax",
+                secure: true
             })
             
             return res.status(statusCode.OK).json({

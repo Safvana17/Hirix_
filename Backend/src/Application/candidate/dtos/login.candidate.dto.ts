@@ -8,6 +8,7 @@ export interface LoginCandidateInputDTO {
 export interface LoginCandidateOutputDTO {
     accessToken: string
     refreshToken: string
+    csrfToken: string
     candidate: {
         id: string
         email: string

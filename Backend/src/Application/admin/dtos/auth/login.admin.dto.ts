@@ -8,6 +8,7 @@ export interface LoginAdminInputDto {
 export interface LoginAdminOutputDTO {
     accessToken: string
     refreshToken: string
+    csrfToken: string
     admin: {
         id: string
         email: string

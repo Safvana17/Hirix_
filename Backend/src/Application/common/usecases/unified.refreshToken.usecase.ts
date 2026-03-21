@@ -51,13 +51,16 @@ export class UnifiedRefreshTokenUsecase implements IUnifiedTokenRefreshUsecase{
 
         const newRefereshToken = this._tokenService.generateRefreshToken({id: user.id!, role: user.getRole()})
         const hashedRefreshToken = await this._hashService.hashToken(newRefereshToken)
+        const csrfToken = this._tokenService.generateCsrfToken()
+
         await repository.updateToken(user.id!, hashedRefreshToken)
    
 
         return {
             userId: user.id!,
             accessToken: newAccessToken,
-            refreshToken: newRefereshToken
+            refreshToken: newRefereshToken,
+            csrfToken
         }
     }
 }

@@ -8,6 +8,8 @@ import { TokenExpiredError } from "jsonwebtoken";
 export function authHandler(tokenService: ITokenService) {
     return (req: Request, res: Response, next: NextFunction) => {
 
+        console.log("Auth middleware running");
+
         let token = req.cookies.accessToken 
         // if(!token){
         //     const authHeader = req.headers['authorization']
@@ -22,6 +24,7 @@ export function authHandler(tokenService: ITokenService) {
         try {
             const user: AccessTokenPayload = tokenService.verifyAccessToken(token)
             req.user = user
+            console.log("Decoded user:", user);
             next()
 
         } catch (error) {
