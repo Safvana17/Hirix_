@@ -3,7 +3,7 @@ import CandidateEntity from "../../../Domain/entities/candidate.entity";
 import CompanyEntity from "../../../Domain/entities/company.entity";
 import userRole from "../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../Domain/errors/app.error";
-import { IBaseRepository } from "../../../Domain/repositoryInterface/iBase.repository";
+import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { logger } from "../../../utils/logging/loger";
@@ -14,7 +14,7 @@ import { IUnifiedTokenRefreshUsecase } from "../interfaces/IUnifiedTokenRefreshU
 
 export class UnifiedRefreshTokenUsecase implements IUnifiedTokenRefreshUsecase{
     constructor(
-        private _repositoryRegistry: Map<userRole, IBaseRepository<CandidateEntity | CompanyEntity | AdminEntity>>,
+        private _repositoryRegistry: Map<userRole, IAuthRepository<CandidateEntity | CompanyEntity | AdminEntity>>,
         private _tokenService: ITokenService,
         private _hashService: IHashService
     ) {}
@@ -27,7 +27,7 @@ export class UnifiedRefreshTokenUsecase implements IUnifiedTokenRefreshUsecase{
 
         const payload = this._tokenService.verifyRefreshToken(request.token)
         const {id, role} = payload
-        logger.info(`role: ${role}, id: ${id}`)
+        logger.info({role: role, id: id}, 'From refresh token')
 
         if(!id || !role){
             throw new AppError(authMessages.error.INVALID_REFRESH_TOKEN, statusCode.UNAUTHORIZED)
@@ -52,6 +52,7 @@ export class UnifiedRefreshTokenUsecase implements IUnifiedTokenRefreshUsecase{
         const newRefereshToken = this._tokenService.generateRefreshToken({id: user.id!, role: user.getRole()})
         const hashedRefreshToken = await this._hashService.hashToken(newRefereshToken)
         await repository.updateToken(user.id!, hashedRefreshToken)
+   
 
         return {
             userId: user.id!,

@@ -27,6 +27,9 @@ export class UnifiedGetMeUsecase implements IUnifiedGetMeUsecase{
             throw new AppError(authMessages.error.UNAUTHORIZED, statusCode.UNAUTHORIZED)
         }
 
+        if(user.getIsBlocked()){
+            throw new AppError(authMessages.error.COMPANY_BLOCKED, statusCode.FORBIDDEN)
+        }
         const id = user.id
         const userId = id!
         return {

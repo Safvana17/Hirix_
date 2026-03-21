@@ -9,5 +9,5 @@ redisClient.on("connect", () => {
 });
 
 redisClient.on("error", (err) => {
-  logger.error('Redis error', err)
+  logger.error({error: err}, 'Redis connection error')
 });

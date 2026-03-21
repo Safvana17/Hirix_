@@ -39,7 +39,7 @@ const VerifyCompanyEmail: React.FC = () => {
 
     return (
         <AuthLayout title="Email Verification" subtitle="Securing your Hirix account">
-            <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-8 text-center space-y-6">
+            <div className="rounded-3xl p-8 text-center space-y-6">
                 {status === 'loading' && (
                     <div className="flex flex-col items-center gap-4">
                         <Loader2 className="w-12 h-12 text-indigo-500 animate-spin" />
@@ -54,7 +54,7 @@ const VerifyCompanyEmail: React.FC = () => {
                         <p className="text-gray-400">{message}</p>
                         <Link 
                             to="/login" 
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition mt-4 inline-block"
+                            className="w-full bg-[#E9C788] hover:bg-[#6B4705] text-white font-bold py-3 rounded-xl transition mt-4 inline-block"
                         >
                             Back to Login
                         </Link>
@@ -68,7 +68,7 @@ const VerifyCompanyEmail: React.FC = () => {
                         <p className="text-gray-400">{message}</p>
                         <Link 
                             to="/login" 
-                            className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition mt-4 inline-block"
+                            className="w-full bg-[#65051C] hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition mt-4 inline-block"
                         >
                             Back to Login
                         </Link>

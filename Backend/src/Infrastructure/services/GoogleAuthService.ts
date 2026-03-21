@@ -36,7 +36,7 @@ export class GoogleAuthService implements IGoogleAuthService{
                 name: payload.name || 'unknown user'
             }
         } catch (error) {
-            logger.error(`failed to verify google token: ${error}`)
+            logger.error({error: error}, 'Failed to verify google token')
             throw new AppError(authMessages.error.GOOGLE_TOKEN_VERIFICATION_FAILURE, statusCode.UNAUTHORIZED)
         }
     }

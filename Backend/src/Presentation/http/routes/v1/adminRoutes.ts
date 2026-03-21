@@ -1,16 +1,22 @@
 import  Express  from "express";
 import { iTokenService, IUserManagementController } from "../../controllers/factory";
 import { authHandler } from "../../middlewares/authMiddleware";
+import { ROUTES } from "../../../../Shared/constsnts/routes";
 
 const router = Express.Router()
 
-router.get('/getallcompanies',authHandler(iTokenService), IUserManagementController.getAllCompanies)
-router.get('/getallcandidates', authHandler(iTokenService), IUserManagementController.getAllCandidates)
-router.get('/company/:id',authHandler(iTokenService), IUserManagementController.getCompanyById)
-router.patch('/company/updatestatus/:id', authHandler(iTokenService), IUserManagementController.updateCompanyStatus)
-router.patch('/candidate/updatestatus/:id', authHandler(iTokenService), IUserManagementController.updateCandidateStatus)
-router.patch('/company/approve/:id', authHandler(iTokenService), IUserManagementController.approveCompany)
-router.patch('/company/reject/:id', authHandler(iTokenService), IUserManagementController.rejectCompany)
+//User management
+
+//company
+router.get(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.BASE,authHandler(iTokenService), IUserManagementController.getAllCompanies)
+router.get(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.BY_ID,authHandler(iTokenService), IUserManagementController.getCompanyById)
+router.patch(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.STATUS, authHandler(iTokenService), IUserManagementController.updateCompanyStatus)
+router.patch(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.APPROVE, authHandler(iTokenService), IUserManagementController.approveCompany)
+router.patch(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.REJECT, authHandler(iTokenService), IUserManagementController.rejectCompany)
+
+//candidate
+router.get(ROUTES.ADMIN.USER_MANAGEMENT.CANDIDATES.BASE, authHandler(iTokenService), IUserManagementController.getAllCandidates)
+router.patch(ROUTES.ADMIN.USER_MANAGEMENT.CANDIDATES.STATUS, authHandler(iTokenService), IUserManagementController.updateCandidateStatus)
 
 
-export default router;
+export default router;               

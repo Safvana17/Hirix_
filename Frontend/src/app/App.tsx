@@ -7,6 +7,7 @@ import type { AppDispatch } from '../redux/store'
 import PublicRoute from '../components/auth/PublicRoute'
 import RoleRoute from '../components/auth/RoleRoute'
 import { ROLES } from '../constants/role'
+import { ROUTES } from '../constants/routes'
 
 
 const Home = lazy(() => import( '../presentation/pages/home/Home'))
@@ -42,50 +43,50 @@ const App = () => {
         </div>
        }>
         <Routes>
-          <Route path='/' element={<PublicRoute><Home /></PublicRoute>} />
-          <Route path='/login' element={<PublicRoute><AuthGatewayPage /></PublicRoute>}/>
-          <Route path='/signup' element={<PublicRoute><AuthGatewayPage /> </PublicRoute>}/>
+          <Route path={ROUTES.PUBLIC.HOME} element={<PublicRoute><Home /></PublicRoute>} />
+          <Route path={ROUTES.PUBLIC.LOGIN} element={<PublicRoute><AuthGatewayPage /></PublicRoute>}/>
+          <Route path={ROUTES.PUBLIC.SIGNUP} element={<PublicRoute><AuthGatewayPage /> </PublicRoute>}/>
 
-          <Route path='/company/verifyemail' element={<VerifyCompanyEmail />} />
-          <Route path='/company/forgotpassword' element={<ForgotPassword />} />
-          <Route path='/company/resetpassword' element={<ResetPassword />} />
-          <Route path='/company/dashboard' element={
+          <Route path={ROUTES.COMPANY.VERIFY_EMAIL} element={<VerifyCompanyEmail />} />
+          <Route path={ROUTES.COMPANY.FORGOT_PASSWORD} element={<ForgotPassword />} />
+          <Route path={ROUTES.COMPANY.RESET_PASSWORD} element={<ResetPassword />} />
+          <Route path={ROUTES.COMPANY.DASHBOARD} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <CompanyDashboard />
             </RoleRoute>
           } />
 
 
-          <Route path='/candidate/verifyotp' element={<VerifyOtp />} />
-          <Route path='/candidate/forgotpassword' element={<ForgotPassword />} />
-          <Route path='/candidate/resetpassword' element={<ResetPassword /> } />
-          <Route path='/candidate/dashboard' element={
+          <Route path={ROUTES.CANDIDATE.VERIFY_OTP} element={<VerifyOtp />} />
+          <Route path={ROUTES.CANDIDATE.FORGOT_PASSWORD} element={<ForgotPassword />} />
+          <Route path={ROUTES.CANDIDATE.RESET_PASSWORD} element={<ResetPassword /> } />
+          <Route path={ROUTES.CANDIDATE.DASHBOARD} element={
             <RoleRoute allowedRoles={[ROLES.CANDIDATE]}>
               <CandidateDashboard />
             </RoleRoute>
           } />
 
 
-          <Route path='/admin/login' element={<PublicRoute><AdminLogin /></PublicRoute>} />
-          <Route path='/admin/dashboard' element={
+          <Route path={ROUTES.ADMIN.LOGIN} element={<PublicRoute><AdminLogin /></PublicRoute>} />
+          <Route path={ROUTES.ADMIN.DASHBOARD} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminDashboard /> 
             </RoleRoute>
           } />
           
-          <Route path='/admin/companies' element={
+          <Route path={ROUTES.ADMIN.COMPANIES} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminCompanies />
             </RoleRoute>
           } />
 
-          <Route path='/admin/candidates' element={
+          <Route path={ROUTES.ADMIN.CANDIDATES} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminCandidates />
             </RoleRoute>
           } />
 
-          <Route path='/admin/company/:id' element={
+          <Route path={ROUTES.ADMIN.COMPANY_DETAIL} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminCompanyDetailPage />
             </RoleRoute>

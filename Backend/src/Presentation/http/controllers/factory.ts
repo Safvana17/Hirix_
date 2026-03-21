@@ -44,13 +44,13 @@ import { MailService } from "../../../Infrastructure/services/MailService";
 import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthService";
 import userRole from "../../../Domain/enums/userRole.enum";
 import UserEntity from "../../../Domain/entities/user.entity";
-import { IBaseRepository } from "../../../Domain/repositoryInterface/iBase.repository";
 import { UnifiedLogoutUsecase } from "../../../Application/common/usecases/unified.logout.usecase";
 import { AdminGetCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.getCompany.usecase";
 import { AdminUpdateCompanyStatus } from "../../../Application/admin/usecases/userManagement/admin.updateCompanyStatus.usecase";
 import { AdminUpdateCandidateStatus } from "../../../Application/admin/usecases/userManagement/admin.updateCandidateStatus.usecase";
 import { AdminApproveCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.approveCompany.usecase";
 import { AdminRejectCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.rejectCompany.usecase";
+import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
 
 
 
@@ -172,7 +172,7 @@ const iLoginAdmin = new AdminLoginUsecase(
 
 
 //unified
-const repositoryRegistry = new Map<userRole, IBaseRepository<UserEntity>>([
+const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
     [userRole.Company, iCompanyRepository],
     [userRole.Admin, iAdminRepository]

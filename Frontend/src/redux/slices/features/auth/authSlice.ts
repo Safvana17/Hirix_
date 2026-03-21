@@ -4,6 +4,7 @@ import type { AuthState, LoginPayload, User, RegisterPayload, ResetPasswordPaylo
 import api from "../../../../lib/axios";
 import type { AxiosError } from "axios";
 import type { AdminLoginPayload } from "../../../../types/admin";
+import { API_ROUTES } from "../../../../constants/api.routes";
 
 
 
@@ -32,7 +33,7 @@ export const registerUser = createAsyncThunk<
         {
             success: boolean;
             message: string;
-        }>(`/auth/${role}/register`, data)
+        }>(API_ROUTES.AUTH.REGISTER(role), data)
 
         if(!response.data.success){
             return rejectWithValue('Registration failed')
@@ -53,7 +54,7 @@ export const loginUser = createAsyncThunk<
                     candidate?: User;
                     company?: User;
                     admin?: User
-                }>(`/auth/${role}/login`, data);
+                }>(API_ROUTES.AUTH.LOGIN(role), data);
 
         const user = response.data.candidate ||
                      response.data.company ||
@@ -76,7 +77,7 @@ export const adminLogin = createAsyncThunk <
     try {
         const response = await api.post<{
             admin?: User
-        }>(`/auth/admin/login`,{email, password})
+        }>(API_ROUTES.ADMIN.LOGIN,{email, password})
 
         console.log('response: ', response.data)
         const admin = response.data.admin
@@ -98,7 +99,7 @@ export const googleLogin = createAsyncThunk<
         const response = await api.post<{
             candidate?: User,
             company?: User
-        }>(`/auth/${role}/googlelogin`, {role, token})
+        }>(API_ROUTES.AUTH.GOOGLE_LOGIN(role), {role, token})
 
         const user = response.data.candidate || response.data.company
         if(!user){
@@ -118,7 +119,7 @@ void,
 {rejectValue: string}
 > ('auth/logout', async(_, {rejectWithValue}) => {
     try {
-        await api.post(`/auth/logout`)
+        await api.post(API_ROUTES.AUTH.LOGOUT)
     } catch (error) {
        const err = error as AxiosError<{ message: string }>
        return rejectWithValue(err.response?.data?.message || 'logout failed')
@@ -136,7 +137,7 @@ export const getMe = createAsyncThunk <
                 {
                     user?: User;
 
-                }>(`/auth/me`)
+                }>(API_ROUTES.AUTH.ME)
 
                 console.log('from get me: ', response.data)
                 const user = response.data.user
@@ -162,7 +163,7 @@ export const verifyOtp = createAsyncThunk<
         candidate?: User;
         company?: User;
         admin?: User
-     }>(`/auth/${role}/verifyotp`, {email, otp})
+     }>(API_ROUTES.AUTH.VERIFY_OTP(role), {email, otp})
  
      const user = response.data.candidate || response.data.company || response.data.admin
      if(!user){
@@ -180,7 +181,7 @@ export const resendOtp = createAsyncThunk<
 {role: UserRole, email: string}, {role: UserRole,email: string},{rejectValue: string}
 >('auth/resendotp', async({role, email}, {rejectWithValue}) => {
    try {
-     const response = await api.post(`/auth/${role}/resendotp`, {email})
+     const response = await api.post(API_ROUTES.AUTH.RESEND_OTP(role), {email})
      if(!response.data.success){
         return rejectWithValue('Invalid response')
      }
@@ -196,7 +197,7 @@ export const forgotPassword = createAsyncThunk<
 {role: UserRole, email: string},{role: UserRole, email: string}, {rejectValue: string} 
 >('auth/forgotpassword', async({role, email}, {rejectWithValue}) => {
    try {
-     const response = await api.post(`/auth/${role}/forgotpassword`, {email})
+     const response = await api.post(API_ROUTES.AUTH.FORGOT_PASSWORD(role), {email})
      if(!response.data.success){
          return rejectWithValue('Invalid response')
      }
@@ -212,7 +213,7 @@ export const resetPassword = createAsyncThunk<
 void, ResetPasswordPayload, {rejectValue: string}
 >('auth/resetpassword', async({role, email,otp,  newPassword, confirmPassword}, {rejectWithValue}) => {
     try {
-        const response = await api.post(`/auth/${role}/resetpassword`, {email, otp, newPassword, confirmPassword})
+        const response = await api.post(API_ROUTES.AUTH.RESET_PASSWORD(role), {email, otp, newPassword, confirmPassword})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -227,7 +228,7 @@ export const verifyEmail = createAsyncThunk<
 string,{token: string}, {rejectValue: string}
 >('/company/verifyEmail', async({token}, {rejectWithValue}) => {
     try {
-        const response = await api.post(`/auth/company/verifyemail?token=${token}`)
+        const response = await api.post(API_ROUTES.COMPANY.VERIFY_EMAIL(token))
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }

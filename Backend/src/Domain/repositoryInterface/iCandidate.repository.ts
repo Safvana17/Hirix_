@@ -1,7 +1,8 @@
 import CandidateEntity from "../entities/candidate.entity";
-import { IBaseRepository } from "./iBase.repository";
+import { IAuthRepository } from "./iAuth.repository";
 
-export default interface ICandidateRepository extends IBaseRepository <CandidateEntity> {
+
+export default interface ICandidateRepository extends IAuthRepository <CandidateEntity> {
     findByEmail(email: string): Promise<CandidateEntity | null>;
     // save(candidate: CandidateEntity): Promise<void>
     updatePassword(id: string, hashedPassword: string): Promise<void>;

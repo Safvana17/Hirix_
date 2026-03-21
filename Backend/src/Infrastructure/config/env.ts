@@ -9,7 +9,7 @@ dotenv.config()
 const parsedEnv = envSchema.safeParse(process.env)
 
 if(!parsedEnv.success){
-    logger.error(`${authMessages.error.ENV_VALIDATION_FAILED}`, parsedEnv.error.format())
+    logger.error({error: parsedEnv.error.format()},authMessages.error.ENV_VALIDATION_FAILED)
     process.exit(1)
 }
 

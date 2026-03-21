@@ -10,5 +10,5 @@ const PORT = env.PORT || 4000;
 
 
 app.listen(PORT, () => {
-    logger.info(`Server is started at port ${PORT}`)
+    logger.info({port: PORT}, 'Server connected.')
 })

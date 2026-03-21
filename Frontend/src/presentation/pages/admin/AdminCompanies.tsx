@@ -11,6 +11,7 @@ import type { Company } from '../../../types/company'
 import { Ban, CheckCircle, Eye, Filter, Search, XCircle } from 'lucide-react'
 import { useDebounce } from '../../../hooks/useDebounce'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
+import { ROLES } from '../../../constants/role'
 
 
 const AdminCompanies : React.FC = () => {
@@ -68,7 +69,7 @@ const AdminCompanies : React.FC = () => {
             message: `Are you sure you want to ${actionText.toLowerCase()} this company? This will ${newStatus === 'blocked' ? 'prevent them from accessing' : 'restore their access to'} the platform.`,
             type: newStatus === 'blocked' ? 'danger' : 'warning',
             onConfirm: () => {
-                dispatch(updateUserStatus({id, status: newStatus, role: 'company'}));
+                dispatch(updateUserStatus({id, status: newStatus, role: ROLES.COMPANY}));
                 closeModal();
             }
         })

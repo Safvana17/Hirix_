@@ -30,11 +30,11 @@ export class CandidateRepository extends BaseRepository <CandidateEntity, ICandi
         )
     }
 
-    // async updateToken(id: string, token: string): Promise<void> {
-    //     await this._model.findByIdAndUpdate(id,
-    //         {$push: {refreshToken: token}}
-    //     )
-    // }
+    async updateToken(id: string, token: string): Promise<void> {
+        await this._model.findByIdAndUpdate(id,
+            {$push: {refreshToken: token}}
+        )
+    }
 
     async updateGoogleId(email: string, googleId: string): Promise<CandidateEntity | null> {
        const document = await this._model.findOneAndUpdate({email}, {googleId})
@@ -42,12 +42,12 @@ export class CandidateRepository extends BaseRepository <CandidateEntity, ICandi
        return this.mapToEntity(document)
     }
 
-    // async revokeRefreshToken(hashedToken: string): Promise<void> {
-    //     await this._model.findOneAndUpdate(
-    //         {refreshToken: hashedToken},
-    //         {$pull: {refreshToken: hashedToken}}
-    //     )
-    // }
+    async revokeRefreshToken(hashedToken: string): Promise<void> {
+        await this._model.findOneAndUpdate(
+            {refreshToken: hashedToken},
+            {$pull: {refreshToken: hashedToken}}
+        )
+    }
 
     async findAllFiltered(query: { search?: string; status?: string; page: number; limit: number; }): Promise<{ data: CandidateEntity[]; totalPages: number; totalCount: number; }> {
         const filter: QueryFilter<ICandidate> = {}

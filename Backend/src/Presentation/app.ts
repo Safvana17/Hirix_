@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
+import pinoHttp from 'pino-http';
 import { connectDB } from '../Infrastructure/config/mongo.config';
 import routes from './http/routes/index'
 import { logger } from '../utils/logging/loger';
@@ -9,10 +10,9 @@ import { errorHandler } from './http/middlewares/errorHandler';
 
 const app = express();
 
-app.use((req, res, next) => {
-    logger.info(`incoming request ${req.method} from ${req.url}`)
-    next()
-})
+app.use(
+    pinoHttp({logger})
+)
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -23,13 +23,13 @@ app.use(cookieParser())
 app.use(express.urlencoded({extended: true}))
 
 connectDB().catch((err) => {
-    logger.error('Database connection failed', err)
+    logger.error({err}, 'Database connection failed')
     process.exit(1)
 });
 
-logger.info(`production: ${process.env.NODE_ENV}`)
+// logger.info(`production: ${process.env.NODE_ENV}`)
 app.get('/test', (req, res) => {
-    logger.info('I am from app.ts')
+    req.log.info("Test route hit")
     res.status(200).json({status: "OK"});
 });
 app.use('/api', routes)

@@ -31,7 +31,7 @@ export class ForgotPasswordUsecase implements IForgotPasswordUsecase{
 
         const otp = this._otpService.generate()
         logger.info({otp: otp})
-        logger.info(`your otp is: ${otp}`)
+        logger.info({OTP: otp}, 'Your forgot password otp')
         const hashedOtp = await this._otpService.hash(otp)
 
         await this._otpStore.saveOtp(candidateId, hashedOtp, 120)

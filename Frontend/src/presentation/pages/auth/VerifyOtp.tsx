@@ -84,6 +84,7 @@ const VerifyOtp: React.FC = () => {
         }else{
             const result = await dispatch(verifyOtp({role, otp:otpValue, email}))
             if(verifyOtp.fulfilled.match(result)){
+               toast.success('Your OTP has been verified successfully, Please login.')
                navigate(`/login`)
             }
         }
@@ -92,7 +93,7 @@ const VerifyOtp: React.FC = () => {
     const handleResendOtp = async() => {
         const result = await dispatch(resendOtp({role, email}))
         if(resendOtp.fulfilled.match(result)){
-            toast.success('OTP Sent successfully')
+            toast.success('OTP Sent successfully, Please check your Email.')
             setTimeLeft(120)
         }
     }

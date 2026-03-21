@@ -1,34 +1,35 @@
 import Express from 'express'
 import { iAdminAuthController, iCandidateAuthController, iCompanyAuthController, iUnifiedController, iTokenService } from '../../controllers/factory'
 import { authHandler } from '../../middlewares/authMiddleware'
+import { ROUTES } from '../../../../Shared/constsnts/routes'
 const router = Express.Router()
 
 
-router.get('/me', authHandler(iTokenService), iUnifiedController.getMe)
-router.post('/refresh', iUnifiedController.refreshToken)
-router.post('/logout', iUnifiedController.logout )
+router.get(ROUTES.AUTH.ME, authHandler(iTokenService), iUnifiedController.getMe)
+router.post(ROUTES.AUTH.REFRESH, iUnifiedController.refreshToken)
+router.post(ROUTES.AUTH.LOGOUT, iUnifiedController.logout )
 
 //candidate
-router.post('/candidate/register', iCandidateAuthController.register)
-router.post('/candidate/verifyotp', iCandidateAuthController.VerifyOtp)
-router.post('/candidate/resendotp', iCandidateAuthController.resendOtp)
-router.post('/candidate/login', iCandidateAuthController.login)
-router.post('/candidate/forgotpassword', iCandidateAuthController.forgotPassword)
-router.post('/candidate/resetpassword', iCandidateAuthController.resetPassword)
-router.post('/candidate/googlelogin', iCandidateAuthController.googleLogin)
+router.post(ROUTES.CANDIDATE.REGISTER, iCandidateAuthController.register)
+router.post(ROUTES.CANDIDATE.VERIFY_OTP, iCandidateAuthController.VerifyOtp)
+router.post(ROUTES.CANDIDATE.RESEND_OTP, iCandidateAuthController.resendOtp)
+router.post(ROUTES.CANDIDATE.LOGIN, iCandidateAuthController.login)
+router.post(ROUTES.CANDIDATE.FORGOT_PASSWORD, iCandidateAuthController.forgotPassword)
+router.post(ROUTES.CANDIDATE.RESET_PASSWORD, iCandidateAuthController.resetPassword)
+router.post(ROUTES.CANDIDATE.GOOGLE, iCandidateAuthController.googleLogin)
 
 //company
-router.post('/company/register', iCompanyAuthController.register)
-router.post('/company/verifyemail', iCompanyAuthController.verifyEmail)
-router.post('/company/resendotp', iCompanyAuthController.resendOtp)
-router.post('/company/login', iCompanyAuthController.login)
-router.post('/company/forgotpassword', iCompanyAuthController.forgotPassword)
-router.post('/company/resetpassword', iCompanyAuthController.resetPassword)
-router.post('/company/googlelogin', iCompanyAuthController.googleLogin)
+router.post(ROUTES.COMPANY.REGISTER, iCompanyAuthController.register)
+router.post(ROUTES.COMPANY.VERIFY_EMAIL, iCompanyAuthController.verifyEmail)
+router.post(ROUTES.COMPANY.RESEND_OTP, iCompanyAuthController.resendOtp)
+router.post(ROUTES.COMPANY.LOGIN, iCompanyAuthController.login)
+router.post(ROUTES.COMPANY.FORGOT_PASSWORD, iCompanyAuthController.forgotPassword)
+router.post(ROUTES.COMPANY.RESET_PASSWORD, iCompanyAuthController.resetPassword)
+router.post(ROUTES.COMPANY.GOOGLE, iCompanyAuthController.googleLogin)
 
 
 //admin
-router.post('/admin/login', iAdminAuthController.login)
+router.post(ROUTES.ADMIN.LOGIN, iAdminAuthController.login)
 
 
 

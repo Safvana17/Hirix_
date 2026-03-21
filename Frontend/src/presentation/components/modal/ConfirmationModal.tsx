@@ -46,13 +46,13 @@ const ConfirmationModal: React.FC<ConfirmationModalProps>= ({
       icon: AlertCircle,
       color: 'text-amber-600',
       bg: 'bg-amber-50',
-      button: 'bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-200'
+      button: 'bg-[#65051C] hover:bg-[#65051C] text-white shadow-lg shadow-amber-200'
     },
     info: {
       icon: Info,
       color: 'text-indigo-600',
       bg: 'bg-indigo-50',
-      button: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200'
+      button: 'bg-[#0B3358] hover:bg-[#0B3358] text-white shadow-lg shadow-indigo-200'
     }
   }
 

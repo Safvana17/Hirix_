@@ -10,6 +10,7 @@ import { fetchCandidates, updateUserStatus } from '../../../redux/slices/feature
 import type { Candidate } from '../../../types/candidate'
 import { useDebounce } from '../../../hooks/useDebounce'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
+import { ROLES } from '../../../constants/role'
 
 const AdminCandidates : React.FC = () => {
 
@@ -65,7 +66,7 @@ const AdminCandidates : React.FC = () => {
             message: `Are you sure you want to ${actionText.toLowerCase()} this candidate? This will ${newStatus === 'blocked' ? 'prevent them from accessing' : 'restore their access to'} the platform.`,
             type: newStatus === 'blocked' ? 'danger' : 'warning',
             onConfirm: () => {
-                dispatch(updateUserStatus({id, status: newStatus, role: 'candidate'}));
+                dispatch(updateUserStatus({id, status: newStatus, role: ROLES.CANDIDATE}));
                 closeModal();
             }
         })
@@ -134,7 +135,7 @@ const AdminCandidates : React.FC = () => {
                columns={columns}
                isLoading={loading}
                data={candidates}
-               emptyMessage='No companies found matching your criteria'
+               emptyMessage='No candidates found matching your criteria'
                pagination={{
                 currentPage,
                 totalPages: pagination.users.totalPages,

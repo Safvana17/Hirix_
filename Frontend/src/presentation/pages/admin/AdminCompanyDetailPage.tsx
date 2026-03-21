@@ -45,11 +45,11 @@ const AdminCompanyDetailPage: React.FC= () => {
                     className='cursor-pointer bg-[#6B4705] text-white px-4 py-3 font-bold rounded-lg hover:bg-[#4F3503]'
                     onClick={() => dispatch(updateUserStatus({
                       id: selectedCompany?.id,
-                      status: selectedCompany?.status === 'Active' ? 'Blocked' : 'Active',
+                      status: selectedCompany?.status === 'active' ? 'blocked' : 'active',
                       role: 'company'
                     }))}
                   >
-                    {selectedCompany?.status === 'Active' ? 'Block' : 'Unblock'}
+                    {selectedCompany?.status === 'active' ? 'Block' : 'Unblock'}
                   </button>
                 </div>
               </div>

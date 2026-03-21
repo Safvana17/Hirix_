@@ -44,7 +44,9 @@ export class UserManagementController {
     }
 
     getAllCandidates = async(req: Request, res: Response, next: NextFunction) => {
+        logger.info(`get all candidates hits11`)
         try {
+            logger.info(`get all candidates hits`)
             const parsed: AdminCandidateQueryDTO = QuerySchema.parse(req.query)
             const { candidates, totalPages, totalCount} = await this._getAllCandidatesUsecase.execute(parsed)
             return res.status(statusCode.OK).json({

@@ -1,22 +1,49 @@
-import winston from "winston";
-import 'winston-daily-rotate-file'
+// import winston from "winston";
+// import 'winston-daily-rotate-file'
+
+// const isProduction = process.env.NODE_ENV === 'production'
+// const transport = new winston.transports.DailyRotateFile({
+//     filename: 'logs/app-%DATE%-log',
+//     datePattern: 'YYYY-MM-DD',
+//     maxSize: '20m',
+//     maxFiles: '14d'
+// })
+
+// export const logger = winston.createLogger({
+//     level: isProduction ? 'info' : 'debug',
+//     format: winston.format.combine(
+//         winston.format.timestamp(),
+//         winston.format.json()
+//     ),
+//     transports: [
+//         transport,
+//         ...(isProduction ? [] : [new winston.transports.Console()])
+//     ]
+// })
+
+import pino from "pino";
+import fs from 'fs'
+import path from 'path'
 
 const isProduction = process.env.NODE_ENV === 'production'
-const transport = new winston.transports.DailyRotateFile({
-    filename: 'logs/app-%DATE%-log',
-    datePattern: 'YYYY-MM-DD',
-    maxSize: '20m',
-    maxFiles: '14d'
-})
 
-export const logger = winston.createLogger({
-    level: isProduction ? 'info' : 'debug',
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-    ),
-    transports: [
-        transport,
-        ...(isProduction ? [] : [new winston.transports.Console()])
-    ]
-})
+const logDir = path.join(process.cwd(), "logs")
+if(!fs.existsSync(logDir)){
+    fs.mkdirSync(logDir)
+}
+
+const logFile = path.join(logDir, "app.log")
+const fileStream = fs.createWriteStream(logFile, {flags: "a"})
+export const logger = pino(
+    {
+        level: isProduction ? 'info' : 'debug'
+    },
+    isProduction ? fileStream
+    : pino.transport({
+        target: "pino-pretty",
+        options: {
+            colorize : true,
+            translateTime: "SYS: standard"
+        },
+    })
+)

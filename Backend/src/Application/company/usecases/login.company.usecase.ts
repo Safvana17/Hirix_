@@ -51,7 +51,7 @@ export class LoginCompanyUsecase implements ILoginCompanyUsecase{
 
             const verificationLink = `${env.FRONTEND_URL}/company/verifyemail?token=${verificationToken}`
             await this._mailService.sendCompanyVerificationEmail(company.getEmail(), company.getName(), verificationLink)
-            throw new AppError(authMessages.error.EMAIL_VERIFICATION_REQUIRED, statusCode.UNAUTHORIZED)
+            throw new AppError(authMessages.error.EMAIL_VERIFICATION_REQUIRED, statusCode.FORBIDDEN)
         }
 
         const refreshToken =  this._tokenService.generateRefreshToken({id: id, role: company.getRole()})

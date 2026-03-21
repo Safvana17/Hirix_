@@ -25,20 +25,20 @@ export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandida
         }
 
         if(candidate.isUserVerified()){
-            throw new Error('User already verified')
+            throw new AppError(authMessages.error.ALREADY_VERIFIED, statusCode.BAD_REQUEST)
         }
 
         const Id = candidate.getId()
         const candidateId = Id!;
         const storedOtp = await this.otpStore.getOtp(candidateId)
         if(!storedOtp){
-            throw new Error("OTP expired or invalid")
+            throw new AppError(authMessages.error.OTP_EXPIRED, statusCode.BAD_REQUEST)
         }
 
         const isValid = await this.otpService.compare(request.otp, storedOtp)
 
         if(!isValid){
-            throw new Error('Invalid OTP')
+            throw new AppError(authMessages.error.INVALID_OTP, statusCode.BAD_REQUEST)
         }
 
         candidate.markAsVerified()

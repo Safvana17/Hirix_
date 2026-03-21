@@ -20,6 +20,7 @@ export class AdminUpdateCandidateStatus implements IAdminUpdateCandidateStatus {
 
         const isBlocked = request.status === 'blocked'
         candidate.setBlocked(isBlocked)
+        candidate.setStatus(isBlocked ? UserStatus.BLOCKED : UserStatus.ACTIVE)
         await this._candidateRepository.update(request.id, candidate)
 
         return {

@@ -19,6 +19,7 @@ export class AdminUpdateCompanyStatus implements IAdminUpdateCompanyStatusUsecas
 
         const isBlocked = request.status === 'blocked'
         company.setBlocked(isBlocked)
+        company.setStatus(isBlocked ? UserStatus.BLOCKED : UserStatus.ACTIVE)
         await this._companyRepository.update(request.id, company)
 
         return {

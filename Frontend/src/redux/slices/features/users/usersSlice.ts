@@ -3,6 +3,8 @@ import { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { type UpdateStatusArgs, type Company, type FetchCompaniesParams, type FetchCompaniesResponse, type UpdateStatusPayload, type ApproveCompanyArgs, type RejectCompanyArgs } from "../../../../types/company";
 import type { Candidate, FetchCandidatesParams, FetchCandidatesResponse } from "../../../../types/candidate";
+import { API_ROUTES } from "../../../../constants/api.routes";
+import { ROLES } from "../../../../constants/role";
 
 interface usersState {
     loading: boolean;
@@ -35,7 +37,7 @@ FetchCompaniesParams | undefined,
 {rejectValue: string}
 >('admin/fetchCompanies', async(params: {search?: string; status?: string; page?: number; limit?: number} | undefined, {rejectWithValue}) => {
     try {
-        const response = await api.get(`/admin/getallcompanies`, {params})
+        const response = await api.get(API_ROUTES.ADMIN.COMPANIES.GET_ALL, {params})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -53,7 +55,7 @@ FetchCandidatesParams,
 {rejectValue: string}
 >('admin/fetchCandidates', async(params: {search?: string; status?: string; page?: number; limit?: number} | undefined, {rejectWithValue}) => {
     try {
-        const response = await api.get(`/admin/getallcandidates`, {params})
+        const response = await api.get(API_ROUTES.ADMIN.CANDIDATES.GET_ALL, {params})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -71,7 +73,11 @@ UpdateStatusArgs,
 {rejectValue: string}
 >('/admin/updatestatus', async(UpdateStatusArgs, {rejectWithValue}) => {
     try {
-        const response = await api.patch(`/admin/${UpdateStatusArgs.role}/updatestatus/${UpdateStatusArgs.id}`,{ status: UpdateStatusArgs.status})
+        const route = UpdateStatusArgs.role === ROLES.COMPANY
+              ? API_ROUTES.ADMIN.COMPANIES.STATUS(UpdateStatusArgs.id)
+              : API_ROUTES.ADMIN.CANDIDATES.STATUS(UpdateStatusArgs.id)
+
+        const response = await api.patch(route,{ status: UpdateStatusArgs.status})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -94,7 +100,7 @@ ApproveCompanyArgs,
 {rejectValue: string}
 >('/admin/approve', async(ApproveCompanyArgs, {rejectWithValue}) => {
     try {
-        const response = await api.patch(`/admin/company/approve/${ApproveCompanyArgs.id}`)
+        const response = await api.patch(API_ROUTES.ADMIN.COMPANIES.APPROVE(ApproveCompanyArgs.id))
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -116,7 +122,7 @@ RejectCompanyArgs,
 {rejectValue: string}
 >('/admin/reject', async(RejectCompanyArgs, {rejectWithValue}) => {
     try {
-        const response = await api.patch(`/admin/company/reject/${RejectCompanyArgs.id}`,{ reason: RejectCompanyArgs.reason})
+        const response = await api.patch(API_ROUTES.ADMIN.COMPANIES.REJECT(RejectCompanyArgs.id),{ reason: RejectCompanyArgs.reason})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -139,7 +145,7 @@ export const getCompanyDetail = createAsyncThunk<
 {rejectValue: string}
 >('/admin/getCompanyDetails', async({id}, {rejectWithValue}) => {
    try {
-     const response = await api.get(`/admin/company/${id}`)
+     const response = await api.get(API_ROUTES.ADMIN.COMPANIES.BY_ID(id))
      if(!response){
          return rejectWithValue('Invalid response')
      }

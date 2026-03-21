@@ -35,19 +35,19 @@ D extends {_id: Types.ObjectId}
         return this.mapToEntity(updated)
     }
 
-    async updateToken(id: string, token: string): Promise<void> {
-        await this._model.findByIdAndUpdate(
-            id,
-            {$push: {refreshToken: token}}
-        )
-    }
+    // async updateToken(id: string, token: string): Promise<void> {
+    //     await this._model.findByIdAndUpdate(
+    //         id,
+    //         {$push: {refreshToken: token}}
+    //     )
+    // }
 
-    async revokeRefreshToken(hashedToken: string): Promise<void> {
-        await this._model.findOneAndUpdate(
-            {refreshToken: hashedToken},
-            {$pull: {refreshToken: hashedToken}}
-        )
-    }
+    // async revokeRefreshToken(hashedToken: string): Promise<void> {
+    //     await this._model.findOneAndUpdate(
+    //         {refreshToken: hashedToken},
+    //         {$pull: {refreshToken: hashedToken}}
+    //     )
+    // }
 
     protected abstract mapToEntity(doc: D): T
     protected abstract mapToPersistance(entity: Partial<T>): Partial<D>

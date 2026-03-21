@@ -3,7 +3,7 @@ import CandidateEntity from "../../../Domain/entities/candidate.entity";
 import CompanyEntity from "../../../Domain/entities/company.entity";
 import userRole from "../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../Domain/errors/app.error";
-import { IBaseRepository } from "../../../Domain/repositoryInterface/iBase.repository";
+import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { IHashService } from "../../interface/service/IHashService";
@@ -12,7 +12,7 @@ import { IUnifiedLogoutUsecase } from "../interfaces/IUnifiedLogoutUsecase";
 
 export class UnifiedLogoutUsecase implements IUnifiedLogoutUsecase{
     constructor(
-        private _repositoryRegistry: Map<userRole, IBaseRepository<CandidateEntity | CompanyEntity | AdminEntity>>,
+        private _repositoryRegistry: Map<userRole, IAuthRepository<CandidateEntity | CompanyEntity | AdminEntity>>,
         private _hashService: IHashService,
         private _tokenService: ITokenService
     ) {}
