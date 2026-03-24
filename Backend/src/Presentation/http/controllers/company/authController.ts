@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ICompanyRegisterUsecase } from "../../../../Application/company/interfaces/auth/ICompanyRegisterUsecase";
-import { forgotPasswordSchema, registerSchema, resendOtpSchema, resetPasswordSchema, verifyRegisterCompanySchema } from "../../validators/registerValidator";
+import { forgotPasswordSchema, otpSchema, registerSchema, resendOtpSchema, resetPasswordSchema, verifyRegisterCompanySchema } from "../../validators/registerValidator";
 import { RegisterCompanyInputDTO } from "../../../../Application/company/dtos/register.company.dto";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
@@ -17,6 +17,8 @@ import { env } from "../../../../Infrastructure/config/env";
 import { ICompanyGoogleLoginUsecase } from "../../../../Application/company/interfaces/auth/ICompanyGoogleLoginUsecase";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { IVerifyRegisterCompanyUsecase } from "../../../../Application/company/interfaces/auth/ICompanyVerifyRegisterUsecase";
+import { VerifyCompanyOtpForForgotPasswordInputDTO } from "../../../../Application/company/dtos/verifyOtpForForgotpassword.company.dto";
+import { ICompanyVerifyOtpForForgotPasswordUsease } from "../../../../Application/company/interfaces/auth/ICompany.verifyOtpForForgotpassword.usecase";
 
 export class CompanyAuthController {
     constructor(
@@ -24,6 +26,7 @@ export class CompanyAuthController {
         private _resendOtpCompanyUsecase: IResendOtpCompanyUsecase,
         private _loginCompanyUsecase: ILoginCompanyUsecase,
         private _companyForgotPasswordUsecase: ICompanyForgotPasswordUsecase,
+        private _verifyOtpForForgotPassword: ICompanyVerifyOtpForForgotPasswordUsease,
         private _companyResetPasswordUsecase: ICompanyResetPasswordUsecase,
         private _companyGoogleLogin: ICompanyGoogleLoginUsecase,
         private _verifyRegisterompany: IVerifyRegisterCompanyUsecase
@@ -146,14 +149,36 @@ export class CompanyAuthController {
         }
     }
 
+    VerifyOtpForForgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const parsed = otpSchema.parse(req.body)
+            const payload: VerifyCompanyOtpForForgotPasswordInputDTO = {
+                email: parsed.email,
+                otp: parsed.otp
+            }
+
+            const {resetToken, email}= await this._verifyOtpForForgotPassword.execute(payload)
+
+            return res.status(statusCode.OK).json({
+                success: true,
+                message: authMessages.success.OTP_VERIFIED,
+                resetToken,
+                email
+            })
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
     resetPassword = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const parsed = resetPasswordSchema.parse(req.body)
             const payload: CompanyResetPasswordInputDTO = {
                 email: parsed.email,
-                otp: parsed.otp,
                 newPassword: parsed.newPassword,
-                confirmPassword: parsed.confirmPassword 
+                confirmPassword: parsed.confirmPassword,
+                resetToken: parsed.resetToken
             }
 
             await this._companyResetPasswordUsecase.execute(payload)

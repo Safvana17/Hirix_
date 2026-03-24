@@ -47,7 +47,7 @@ export interface RegisterData {
 export interface ResetPasswordPayload {
     role: UserRole
     email: string
-    otp: string
     newPassword: string
     confirmPassword: string
+    resetToken: string
 }

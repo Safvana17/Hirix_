@@ -30,7 +30,6 @@ export class ForgotPasswordUsecase implements IForgotPasswordUsecase{
         const candidateId = id!;
 
         const otp = this._otpService.generate()
-        logger.info({otp: otp})
         logger.info({OTP: otp}, 'Your forgot password otp')
         const hashedOtp = await this._otpService.hash(otp)
 

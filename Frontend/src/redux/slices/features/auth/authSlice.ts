@@ -209,11 +209,32 @@ export const forgotPassword = createAsyncThunk<
    }
 })
 
+export const verifyOtpForForgotPassword = createAsyncThunk<
+{resetToken: string, email: string},
+{email: string, otp: string, role: UserRole},
+{rejectValue: string}
+>('auth/verifyOtpForReset', async({role, email, otp}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.AUTH.VERIFY_OTP_RESET(role), {email, otp})
+        if(!response.data.resetToken){
+            return rejectWithValue('Invalid Otp Response')
+        }
+
+        return {
+            resetToken: response.data.resetToken,
+            email
+        }
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data?.message || 'Failed to verify otp for forgot password')
+    }
+})
+
 export const resetPassword = createAsyncThunk<
 void, ResetPasswordPayload, {rejectValue: string}
->('auth/resetpassword', async({role, email,otp,  newPassword, confirmPassword}, {rejectWithValue}) => {
+>('auth/resetpassword', async({role, email,  newPassword, confirmPassword, resetToken}, {rejectWithValue}) => {
     try {
-        const response = await api.post(API_ROUTES.AUTH.RESET_PASSWORD(role), {email, otp, newPassword, confirmPassword})
+        const response = await api.post(API_ROUTES.AUTH.RESET_PASSWORD(role), {email, newPassword, confirmPassword, resetToken})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -374,6 +395,9 @@ const authSlice = createSlice({
         .addCase(forgotPassword.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Forgot password error'
+        })
+        .addCase(verifyOtpForForgotPassword.fulfilled, (state) => {
+            state.loading = false
         })
         .addCase(resetPassword.pending, (state) => {
             state.loading = true

@@ -9,6 +9,7 @@ export const API_ROUTES = {
     VERIFY_OTP: (role: string) => `/auth/${role}/verifyotp`,
     RESEND_OTP: (role: string) => `/auth/${role}/resendotp`,
     FORGOT_PASSWORD: (role: string) => `/auth/${role}/forgotpassword`,
+    VERIFY_OTP_RESET: (role: string) => `/auth/${role}/verifyotpforforgotpassword`,
     RESET_PASSWORD: (role: string) => `/auth/${role}/resetpassword`,
     GOOGLE_LOGIN: (role: string) => `/auth/${role}/googlelogin`,
   },

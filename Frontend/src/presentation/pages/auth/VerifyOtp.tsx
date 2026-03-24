@@ -3,7 +3,7 @@ import AuthLayout from '../../layouts/AuthLayout'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { clearError, resendOtp, verifyOtp } from '../../../redux/slices/features/auth/authSlice'
+import { clearError, resendOtp, verifyOtp, verifyOtpForForgotPassword } from '../../../redux/slices/features/auth/authSlice'
 import toast from 'react-hot-toast'
 
 const VerifyOtp: React.FC = () => {
@@ -79,13 +79,27 @@ const VerifyOtp: React.FC = () => {
     const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault()
         const otpValue = otp.join('')
+        
         if(type === 'forgotpassword'){
-            navigate(`/${role}/resetpassword`, {state: {email, otp: otpValue }})
+            const result = await dispatch(verifyOtpForForgotPassword({role, email, otp: otpValue}))
+            if(verifyOtpForForgotPassword.fulfilled.match(result)){
+                toast.success('OTP Verified, please reset your password')
+                navigate(`/${role}/resetpassword`, {
+                    state: {
+                        email: result.payload.email,
+                        resetToken: result.payload.resetToken
+                    }
+                })
+            }else{
+                toast.error(result.payload || 'Invalid OTP')
+            }
         }else{
-            const result = await dispatch(verifyOtp({role, otp:otpValue, email}))
+            const result = await dispatch(verifyOtp({role, otp: otpValue, email}))
             if(verifyOtp.fulfilled.match(result)){
                toast.success('Your OTP has been verified successfully, Please login.')
                navigate(`/login`)
+            }else{
+                toast.error(result.payload || 'Invalid OTP')
             }
         }
     }
@@ -135,7 +149,7 @@ const VerifyOtp: React.FC = () => {
 
         {error && <p className='text-[#FBBEBE] text-sm '>{error}</p>}
         <div className='text-center'> 
-        <button type='submit' disabled={loading || otp.join('').length < 6} className='w-30 bg-[#E9C788] hover:bg-[#6B4705] text-white font-bold py-4 rounded-xl transition duration-200'>
+        <button type='submit' disabled={loading || otp.join('').length < 6} className='w-30 bg-[#E9C788] disabled:bg-gray-500 hover:bg-[#6B4705] text-white font-bold py-4 rounded-xl transition duration-200'>
             {loading ? 'Verifying...' : 'Verify OTP'}
         </button>
         </div>

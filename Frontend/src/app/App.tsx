@@ -48,6 +48,7 @@ const App = () => {
           <Route path={ROUTES.PUBLIC.SIGNUP} element={<PublicRoute><AuthGatewayPage /> </PublicRoute>}/>
 
           <Route path={ROUTES.COMPANY.VERIFY_EMAIL} element={<VerifyCompanyEmail />} />
+          <Route path={ROUTES.COMPANY.VERIFY_OTP} element={<VerifyOtp />} />
           <Route path={ROUTES.COMPANY.FORGOT_PASSWORD} element={<ForgotPassword />} />
           <Route path={ROUTES.COMPANY.RESET_PASSWORD} element={<ResetPassword />} />
           <Route path={ROUTES.COMPANY.DASHBOARD} element={

@@ -8,10 +8,11 @@ import { adminSidebarItems } from '../../../constants/sidebarItems'
 import DataTable from '../../components/ui/DataTable'
 import type { Column } from '../../../types/table'
 import type { Company } from '../../../types/company'
-import { Ban, CheckCircle, Eye, Filter, Search, XCircle } from 'lucide-react'
+import { BadgeCheck, Ban, Building2, Eye, Filter, Search, Unlock, XOctagon } from 'lucide-react'
 import { useDebounce } from '../../../hooks/useDebounce'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
 import { ROLES } from '../../../constants/role'
+import SummeryCard from '../../components/layout/SummeryCard'
 
 
 const AdminCompanies : React.FC = () => {
@@ -132,7 +133,7 @@ const AdminCompanies : React.FC = () => {
                           title='Approve Company'
                           className='p-2 hover:bg-green-50 text-green-600 rounded-lg transition-colors border border-transparent'
                        >
-                         <CheckCircle className='w-4 h-4' />
+                         <BadgeCheck className='w-4 h-4' />
                        </button>
 
                        <button
@@ -140,9 +141,19 @@ const AdminCompanies : React.FC = () => {
                           title='Reject Company'
                           className='p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors border border-transparent'
                        >
-                         <XCircle className='w-4 h-4' />
+                         <XOctagon className='w-4 h-4' />
                        </button>
                     </>
+                )}
+
+                {(item.status === 'rejected') && (
+                       <button
+                          onClick={() => handleApproveCompany(id)}
+                          title='Approve Company'
+                          className='p-2 hover:bg-green-50 text-green-600 rounded-lg transition-colors border border-transparent'
+                       >
+                         <BadgeCheck className='w-4 h-4' />
+                       </button>
                 )}
 
                 {(item.status === 'active' || item.status === 'blocked') && (
@@ -154,7 +165,7 @@ const AdminCompanies : React.FC = () => {
                             : 'hover:bg-green-50 text-green-600 hover:border-green-100'
                         }`}
                         >
-                        {item.status === 'active' ? <Ban className='w-4 h-4'/> : <CheckCircle className='w-4 h-4' />} 
+                        {item.status === 'active' ? <Ban className='w-4 h-4'/> : <Unlock className='w-4 h-4' />} 
                     </button>
                 )}
             </div>
@@ -164,60 +175,64 @@ const AdminCompanies : React.FC = () => {
     
   return (
     <InternalLayout title='Companies' subTitle='Manage all registered Companies' sidebarItems={adminSidebarItems}>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
+                <SummeryCard label='Total Companies' value={pagination.users.totalCount} icon={Building2} color='text-[#4F3503]' bg='bg-[#E7D4B0]'/>
+            </div>
+        
         <div className="bg-white p-7 rounded-3xl border border-gray-100 shadow-sm">
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-            
-            {/* Search Box */}
-            <div className="relative w-full md:w-2/3 lg:w-1/2 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
-            <input
-                type="text"
-                placeholder="Search companies by name or email..."
-                className="w-full pl-12 pr-4 py-3.5 bg-[#9A6605] text-white border border-transparent rounded-2xl outline-none text-md transition-all focus:ring-2 focus:ring-[#9A6605] focus:ring-opacity-50"
-                value={searchTerm}
-                onChange={(e) => handleSearchChange(e.target.value)}
-            />
-            </div>
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+                
+                {/* Search Box */}
+                <div className="relative w-full md:w-2/3 lg:w-1/2 group">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
+                    <input
+                        type="text"
+                        placeholder="Search companies by name or email..."
+                        className="w-full pl-12 pr-4 py-3.5 bg-[#9A6605] text-white border border-transparent rounded-2xl outline-none text-md transition-all focus:ring-2 focus:ring-[#9A6605] focus:ring-opacity-50"
+                        value={searchTerm}
+                        onChange={(e) => handleSearchChange(e.target.value)}
+                    />
+                </div>
 
-            {/* Filter Dropdown */}
-            <div className="flex items-center gap-3 w-full md:w-auto">
-            <div className="relative w-full md:w-48">
-                <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9A6605]" />
-                <select
-                className="w-full pl-10 pr-4 py-3.5 bg-white text-[#9A6605] border border-[#9A6605] rounded-2xl outline-none text-md transition-all appearance-none cursor-pointer "
-                value={statusFilter}
-                onChange={(e) => handleStatusChange(e.target.value)}
-                >
-                <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="blocked">Blocked</option>
-                <option value="pending">Pending</option>
-                <option value="rejected">Rejected</option>
-                </select>
-            </div>
+                {/* Filter Dropdown */}
+                <div className="flex items-center gap-3 w-full md:w-auto">
+                    <div className="relative w-full md:w-48">
+                        <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9A6605]" />
+                        <select
+                          className="w-full pl-10 pr-4 py-3.5 bg-white text-[#9A6605] border border-[#9A6605] rounded-2xl outline-none text-md transition-all appearance-none cursor-pointer "
+                          value={statusFilter}
+                          onChange={(e) => handleStatusChange(e.target.value)}
+                        >
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="blocked">Blocked</option>
+                            <option value="pending">Pending</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
-        </div>
-            <DataTable 
-               columns={columns}
-               isLoading={loading}
-               data={companies}
-               emptyMessage='No companies found matching your criteria'
-               pagination={{
-                currentPage,
-                totalPages: pagination.users.totalPages,
-                onPageChange: (page) => setCurrentPage(page)
-               }}
-            >
-            </DataTable>
-            <ConfirmationModal 
-               isOpen={modalConfig.isOpen}
-               onClose={closeModal}
-               onConfirm={modalConfig.onConfirm}
-               title={modalConfig.title}
-               message={modalConfig.message}
-               type={modalConfig.type}
-            />
+        <DataTable 
+            columns={columns}
+            isLoading={loading}
+            data={companies}
+            emptyMessage='No companies found matching your criteria'
+            pagination={{
+            currentPage,
+            totalPages: pagination.users.totalPages,
+            onPageChange: (page) => setCurrentPage(page)
+            }}
+        >
+        </DataTable>
+        <ConfirmationModal 
+            isOpen={modalConfig.isOpen}
+            onClose={closeModal}
+            onConfirm={modalConfig.onConfirm}
+            title={modalConfig.title}
+            message={modalConfig.message}
+            type={modalConfig.type}
+        />
     </InternalLayout>
   )
 }

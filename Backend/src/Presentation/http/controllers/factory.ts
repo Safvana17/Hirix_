@@ -25,8 +25,8 @@ import { UnifiedGetMeUsecase } from "../../../Application/common/usecases/unifie
 import { UnifiedRefreshTokenUsecase } from "../../../Application/common/usecases/unified.refreshToken.usecase";
 import { AdminGetAllCompaniesUsecase } from "../../../Application/admin/usecases/userManagement/admin.getAllCompanies.usecase";
 import { AdminGetAllCandidates } from "../../../Application/admin/usecases/userManagement/admin.getAllCandidates";
-
-
+import { VerifyCandidateForgotPasswordOtpUsecase } from "../../../Application/candidate/useCases/auth/verifyForgotpasswordOtp.candidate.usecase";
+import { VerifyCompanyOtpForForgotPasswordUsecase } from "../../../Application/company/usecases/company.verifyOtpForForgotpassword.usecse";
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -101,11 +101,19 @@ const iForgotPassword = new ForgotPasswordUsecase(
     iMailService
 )
 
+const iVerifyCandidateForgotPasswordOtp = new VerifyCandidateForgotPasswordOtpUsecase(
+    iCandidateRepository,
+    iOtpService,
+    iOtpRepository,
+    iTokenService
+)
+
 const iResetPassword = new ResetPasswordUsecase(
     iCandidateRepository,
     iOtpService,
     iOtpRepository,
-    iHashService
+    iHashService,
+    iTokenService
 )
 
 const iCandidateGoogleLogin = new CandidateGoogleLoginUsecase(
@@ -141,6 +149,13 @@ const iCompanyForgotPassword = new CompanyForgotPasswordUsecase(
     iMailService,
     iOtpService,
     iOtpRepository
+)
+
+const iCompanyVerifyOtpForForgotPassword = new VerifyCompanyOtpForForgotPasswordUsecase(
+    iCompanyRepository,
+    iOtpService,
+    iOtpRepository,
+    iTokenService
 )
 
 const iCompanyResetPassword = new CompanyResetPasswordUsecase(
@@ -239,6 +254,7 @@ export const iCandidateAuthController = new CandidateAuthController(
     iResendOtp,
     iLoginCandidate,
     iForgotPassword,
+    iVerifyCandidateForgotPasswordOtp,
     iResetPassword,
     iCandidateGoogleLogin,
 )
@@ -248,6 +264,7 @@ export const iCompanyAuthController = new CompanyAuthController(
     iResendOtpCompny,
     iLoginCompany,
     iCompanyForgotPassword,
+    iCompanyVerifyOtpForForgotPassword,
     iCompanyResetPassword,
     iCompanyGoogleLogin,
     iVerifyRegisterCompany

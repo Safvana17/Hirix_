@@ -16,20 +16,21 @@ const ResetPassword: React.FC = () => {
   const { loading } = useSelector((state: RootState) => state.auth)
 
   const email = location.state?.email
-  const otp = location.state?.otp
+  const resetToken = location.state?.resetToken
   const role = location.pathname.includes('candidate') ? 'candidate' : 'company'
 
   const [formData, setFormData] = useState({
     email: email,
-    otp: otp,
     newPassword: '',
-    confirmPassword: '' 
+    confirmPassword: '' ,
+    resetToken: resetToken
   })
   const [localError, setLocalError] = useState<Record<string, string>>({})
 
   useEffect(() => {
-    if(!email || !otp){
-      navigate(`/${role}/login`)
+    if(!email || !resetToken){
+      toast.error('Session expired, please try again')
+      navigate(`/${role}/forgotpassword`)
     }
     return () => {
       dispatch(clearError())
@@ -58,19 +59,32 @@ const ResetPassword: React.FC = () => {
 
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault()
-    if(!validate()) return
-    if(!formData.email || !formData.otp){
+    console.log('submit clicked')
+    if(!validate()){
+      console.log('VALIDATION FAILED', localError)
+       return
+    } 
+
+    if(!formData.email ){
       toast.error('Session Expired, please try again')
       navigate(`/${role}/forgotpassword`)
       return
     }
 
     console.log('email: ', formData.email)
-    console.log('otp: ', formData.otp)
-    const result = await dispatch(resetPassword({role, email: formData.email, otp: formData.otp, newPassword: formData.newPassword, confirmPassword: formData.confirmPassword}))
+    // console.log('otp: ', formData.otp)
+    console.log('SENDING DATA:', {
+  resetToken,
+  newPassword: formData.newPassword,
+  confirmPassword: formData.confirmPassword
+})
+    const result = await dispatch(resetPassword({role, email: formData.email, newPassword: formData.newPassword, confirmPassword: formData.confirmPassword, resetToken}))
     if(resetPassword.fulfilled.match(result)){
       toast('Your password reset successful. PLease login to continue.')
       navigate(`/login`)
+    }else{
+      console.log(result.error.message)
+      toast.error(result.error.message || 'Failed to reset password')
     }
   }
 

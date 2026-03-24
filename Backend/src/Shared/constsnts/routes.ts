@@ -15,6 +15,7 @@ export const ROUTES = {
       FORGOT_PASSWORD: '/company/forgotpassword',
       RESET_PASSWORD: '/company/resetpassword',
       VERIFY_EMAIL: "/company/verifyemail",
+      VERIFY_OTP_RESET: '/company/verifyotpforforgotpassword'
     },
 
     CANDIDATE: {
@@ -25,7 +26,8 @@ export const ROUTES = {
         RESEND_OTP: "/candidate/resendotp",
         FORGOT_PASSWORD: '/candidate/forgotpassword',
         RESET_PASSWORD: '/candidate/resetpassword',
-        VERIFY_OTP: "/candidate/verifyotp"
+        VERIFY_OTP: "/candidate/verifyotp",
+        VERIFY_OTP_RESET: '/candidate/verifyotpforforgotpassword'
     },
 
     ADMIN: {
@@ -34,7 +36,7 @@ export const ROUTES = {
         USER_MANAGEMENT: {
             COMPANIES: {
                 BASE: '/companies',
-                BY_ID: '/companies/:id',
+                BY_ID: '/company/:id',
                 STATUS: '/company/:id/status',
                 APPROVE: '/company/:id/approve',
                 REJECT: '/company/:id/reject'

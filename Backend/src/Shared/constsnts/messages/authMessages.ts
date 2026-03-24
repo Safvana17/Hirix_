@@ -21,6 +21,8 @@ export const authMessages = {
         // ideally rename constant → RESET_PASSWORD_OTP_SEND (fix casing)
 
         PASSWORD_RESET: "Password reset successfully",
+        OTP_VERIFIED: 'Otp verified successfully',
+        
 
         TOKEN_REFRESHED: "Token refreshed successfully",
         ADMIN_APPROVED_COMPANY: "Company approved",
@@ -65,6 +67,8 @@ export const authMessages = {
         GOOGLE_TOKEN_VERIFICATION_FAILURE: "Failed to verify Google token",
 
         INVALID_CSRF_TOKEN: "CSRF Validation failed",
+        INVALID_TOKEN_PURPOSE: 'Invalid token purpose',
+        INVALID_RESET_TOKEN: 'Reset token validation failed',
 
         // Candidate Errors
         CANDIDATE_NOT_FOUND: "Candidate not found",

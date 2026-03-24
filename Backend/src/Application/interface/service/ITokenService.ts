@@ -11,11 +11,18 @@ export interface RefreshTokenPayload {
     role: userRole
 }
 
+export interface ResetTokenPayload {
+    email: string
+    purpose: string
+}
+
 
 export interface ITokenService {
     generateAccessToken(payload: AccessTokenPayload): string
     generateRefreshToken(payload: RefreshTokenPayload): string
     generateCsrfToken(): string
+    generateResetTokenForForgotPassword(email: string): string
     verifyAccessToken(token: string): AccessTokenPayload
     verifyRefreshToken(token: string): RefreshTokenPayload
+    verifyResetTokenForForgotPassword(token: string): ResetTokenPayload
 }

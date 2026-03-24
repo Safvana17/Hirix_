@@ -23,16 +23,11 @@ export class CompanyResetPasswordUsecase implements ICompanyResetPasswordUsecase
         }
 
         const id = comapny.id
-        const hashedOtp = await this.otpStore.getOtp(id)
-        const isValid = await this.otpService.compare(request.otp, hashedOtp!)
-        if(!isValid){
-            throw new AppError(authMessages.error.INVALID_PASSWORD, statusCode.BAD_REQUEST)
-        }
+       
 
         const changedPassword = await this.hashService.hash(request.newPassword)
         await this.companyRepository.updatePassword(id,changedPassword)
 
-        await this.otpStore.deleteOtp(id)
 
         return {success: true}
     }

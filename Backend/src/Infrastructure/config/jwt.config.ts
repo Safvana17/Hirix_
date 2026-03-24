@@ -8,5 +8,9 @@ export const jwtConfig = {
     refreshToken: {
         secret: env.JWT_REFRESH_SECRET,
         expiresIn: env.REFRESH_TOKEN_TTL
+    },
+    resetTokenForForgotPassword: {
+        secret: env.RESET_TOKEN_SECRET,
+        expiresIn: env.REFRESH_TOKEN_TTL
     }
 }

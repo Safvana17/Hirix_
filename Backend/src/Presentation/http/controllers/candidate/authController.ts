@@ -19,6 +19,7 @@ import { env } from "../../../../Infrastructure/config/env";
 import { IGoogleLoginUsecase } from "../../../../Application/candidate/interfaces/auth/IGoogleLoginUsecase";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { logger } from "../../../../utils/logging/loger";
+import { ICandidateVerifyOtpForForgotPassswordUsecase } from "../../../../Application/candidate/interfaces/auth/IVerifyOtpForForgotPassword";
 
 
 
@@ -29,6 +30,7 @@ export class CandidateAuthController {
         private _resendOtpUsecase: IResendOtpUsecase,
         private _loginUsecase: ICandidateLoginUsecase,
         private _forgotPasswordUsecase: IForgotPasswordUsecase,
+        private _verifyOtpForForgotPassword: ICandidateVerifyOtpForForgotPassswordUsecase,
         private _resetPasswordUsecase: IResetPasswordUsecase,
         private _gooleLoginUsecase: IGoogleLoginUsecase,
     ) {}
@@ -159,15 +161,36 @@ export class CandidateAuthController {
             next(error)
         }
     }
+    VerifyOtpForForgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const parsed = otpSchema.parse(req.body)
+            const payload: verifyRegisterCandidateOtpInputDTO = {
+                email: parsed.email,
+                otp: parsed.otp
+            }
+
+            const {resetToken, email}= await this._verifyOtpForForgotPassword.execute(payload)
+
+            return res.status(statusCode.OK).json({
+                success: true,
+                message: authMessages.success.OTP_VERIFIED,
+                resetToken,
+                email
+            })
+
+        } catch (error) {
+            next(error)
+        }
+    }
 
     resetPassword = async ( req: Request, res: Response, next: NextFunction) => {
         try {
             const parsed = resetPasswordSchema.parse(req.body)
             const payload: ResetPasswordInputDTO = {
                 email: parsed.email,
-                otp: parsed.otp,
                 newPassword: parsed.newPassword,
-                confirmPassword: parsed.confirmPassword 
+                confirmPassword: parsed.confirmPassword,
+                resetToken: parsed.resetToken
             }
 
             await this._resetPasswordUsecase.execute(payload)

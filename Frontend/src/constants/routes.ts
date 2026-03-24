@@ -7,6 +7,7 @@ export const ROUTES = {
 
   COMPANY: {
     VERIFY_EMAIL: '/company/verifyemail',
+    VERIFY_OTP: '/company/verifyotp',
     FORGOT_PASSWORD: '/company/forgotpassword',
     RESET_PASSWORD: '/company/resetpassword',
     DASHBOARD: '/company/dashboard',

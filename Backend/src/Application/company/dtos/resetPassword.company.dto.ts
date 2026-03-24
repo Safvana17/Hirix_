@@ -1,8 +1,8 @@
 export interface CompanyResetPasswordInputDTO {
     email: string;
-    otp: string;
     newPassword: string;
     confirmPassword: string;
+    resetToken: string
 }
 
 export interface CompanyResetPasswordOutputDTO {
