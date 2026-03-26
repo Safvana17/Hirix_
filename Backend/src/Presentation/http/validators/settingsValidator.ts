@@ -69,3 +69,7 @@ export const updateProfileSchema = z.object({
     .email('Invalid email')
     .optional(),
 })
+
+export const getCompanySchema = z.object({
+  id: z.string().regex(/^[0-9a-fA-F]{24}$/),
+})

@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { z } from 'zod'
 import { updateProfileSchema } from '../../../lib/validation/settingsValidator'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { updateProfile } from '../../../redux/slices/features/settingsSlice.ts/companySettingsSlice'
+import { getCompanyProfile, updateProfile } from '../../../redux/slices/features/settingsSlice.ts/companySettingsSlice'
 import { Building2, Upload } from 'lucide-react'
 import toast from 'react-hot-toast'
+
 
 
 type ProfileFormValues = z.infer<typeof updateProfileSchema>
@@ -16,23 +17,50 @@ type ProfileFormValues = z.infer<typeof updateProfileSchema>
 const ProfileTab: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
 
+
   const { company } = useSelector((state: RootState) => state.companySettings)
   const { user } = useSelector((state: RootState) => state.auth)
+ 
+  useEffect(() => {
+  if (user?.id) {
+    console.log('Fetching company...')
+    dispatch(getCompanyProfile({id: user.id}))
+  }
+}, [user, dispatch])
 
-  const profileData = useMemo(() => ({
-    ...company,
-    name: company?.name || user?.name || '',
-    email: company?.email || user?.email || '',
-  }), [company, user]) 
+const profileData = useMemo(() => ({
+  name: company?.name || user?.name || '',
+  email: company?.email || user?.email || '',
+  legalName: company?.legalName || '',
+  website: company?.website || '',
+  domain: company?.domain || '',
+  teamSize: company?.teamSize || undefined,
+  about: company?.about || '',
+  streetName: company?.streetName || '',
+  city: company?.city || '',
+  state: company?.state || '',
+  country: company?.country || '',
+  pinCode: company?.pinCode || '',
+  primaryContactName: company?.primaryContactName || '',
+  billingEmail: company?.billingEmail || '',
+  phoneNumber: company?.phoneNumber || '',
+  status: company?.status || 'Active'
+}), [company, user])
 
-  const { register, handleSubmit, reset, formState: {errors} } = useForm<ProfileFormValues>({
+  const { register, handleSubmit,reset, formState: {errors} } = useForm<ProfileFormValues>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: profileData
   })
 
   useEffect(() => {
-    reset(profileData)
-  }, [profileData, reset])
+    console.log('company: ', company)
+    console.log('user: ', user)
+  })
+  useEffect(() => {
+    if(company || user){
+      reset(profileData)
+    }
+  }, [profileData, reset, company, user])
 
   const onSubmit = (data: ProfileFormValues) => {
     if (!user?.id) return

@@ -6,6 +6,7 @@ import { verifyCsrf } from "../../middlewares/csrfVerify";
 
 const router = Express.Router()
 
+router.get(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), iCompanySettingsController.getCompanyProfile)
 router.put(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), verifyCsrf, iCompanySettingsController.updateProfile)
 
 export default router;

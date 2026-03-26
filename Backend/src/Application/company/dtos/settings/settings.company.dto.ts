@@ -24,6 +24,13 @@ export interface UpdateCompanyProfileOutputDTO {
     company: CompanyEntity
 }
 
+export interface getCompanyProfileInputDTO {
+    id: string
+}
+
+export interface getCompanyProfileOutputDTO {
+    company: CompanyEntity
+}
 
 export interface CompanyChangePasswordInputDTO {
     id: string

@@ -2,6 +2,7 @@ import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import userRole from "../../../Domain/enums/userRole.enum";
 import { UserStatus } from "../../../Domain/enums/userStatus.enum";
 
+
 export interface ICompany extends Document {
     _id: Types.ObjectId;
     name: string;
@@ -87,6 +88,9 @@ const companySchema: Schema<ICompany> = new Schema({
         type: String
     },
     streetName: {
+        type: String
+    },
+    country: {
         type: String
     },
     state: {

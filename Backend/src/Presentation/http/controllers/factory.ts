@@ -27,6 +27,8 @@ import { AdminGetAllCompaniesUsecase } from "../../../Application/admin/usecases
 import { AdminGetAllCandidates } from "../../../Application/admin/usecases/userManagement/admin.getAllCandidates";
 import { VerifyCandidateForgotPasswordOtpUsecase } from "../../../Application/candidate/useCases/auth/verifyForgotpasswordOtp.candidate.usecase";
 import { VerifyCompanyOtpForForgotPasswordUsecase } from "../../../Application/company/usecases/auth/company.verifyOtpForForgotpassword.usecse";
+import { GetCompanyProfileUsecase } from "../../../Application/company/usecases/settings/company.getProfile.usecase";
+
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -183,7 +185,9 @@ const iVerifyRegisterCompany = new VerifyRegisterCompanyUsecase(
 const iUpdateCompanyProfile = new UpdateCompanyProfileUsecase(
     iCompanyRepository
 )
-
+const iGetCompanyProfle = new GetCompanyProfileUsecase(
+    iCompanyRepository
+)
 
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
@@ -292,5 +296,6 @@ export const IUserManagementController = new UserManagementController(
 )
 
 export const iCompanySettingsController = new CompanySettingsController(
-    iUpdateCompanyProfile
+    iUpdateCompanyProfile,
+    iGetCompanyProfle
 )

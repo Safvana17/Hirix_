@@ -35,6 +35,24 @@ export const updateProfile = createAsyncThunk<
    }
 })
 
+export const getCompanyProfile = createAsyncThunk<
+{company: CompanySettings},
+{id: string},
+{rejectValue: string}
+>('settings/getProfile', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.PROFILE(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log('API RESPONSE:', response.data)
+        return {company: response.data.company}
+    } catch (error) {
+       const err = error as AxiosError<{message: string}>
+       return rejectWithValue(err.response?.data?.message || 'Failed to get company profile')        
+    }
+})
+
 const CompanySettingsSlice = createSlice({
     name: 'companySettings',
     initialState,
@@ -55,6 +73,17 @@ const CompanySettingsSlice = createSlice({
           .addCase(updateProfile.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to update profile'
+          })
+          .addCase(getCompanyProfile.pending, (state) => {
+            state.loading = true
+          })
+          .addCase(getCompanyProfile.fulfilled, (state, action) => {
+            state.loading = false
+            state.company = action.payload.company
+          })
+          .addCase(getCompanyProfile.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to load company profile'
           })
     }
 })

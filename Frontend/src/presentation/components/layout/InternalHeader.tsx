@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { logoutUser } from '../../../redux/slices/features/auth/authSlice'
+import { ROUTES } from '../../../constants/routes'
 
 const InternalHeader: React.FC= () => {
     const [isDropDown, setIsDropDown] = useState(false)
@@ -80,6 +81,7 @@ const InternalHeader: React.FC= () => {
                             <button
                                 onClick={() => {
                                     /* Handle profile navigate */
+                                    navigate(ROUTES.COMPANY.SETTINGS)
                                     setIsDropDown(false);
                                 }}
                                 className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-[#f5f0e8] hover:text-[#7c5a1a] transition-colors"

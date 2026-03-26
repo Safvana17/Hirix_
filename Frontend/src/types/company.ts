@@ -21,7 +21,7 @@ export interface CompanySettings extends Company {
   state?: string
   city?: string
   pinCode?: string
-  PrimaryContactName?: string
+  primaryContactName?: string
   billingEmail?: string
   subscriptionPlan?: string
   maxCandidates?: number
