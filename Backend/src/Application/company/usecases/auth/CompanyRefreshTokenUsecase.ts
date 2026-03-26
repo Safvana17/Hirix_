@@ -1,11 +1,11 @@
-import { AppError } from "../../../Domain/errors/app.error";
-import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
-import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
-import { statusCode } from "../../../Shared/Enumes/statusCode";
-import { IHashService } from "../../interface/service/IHashService";
-import { ITokenService } from "../../interface/service/ITokenService";
-import { CompanyRefreshTokenInputDTO, CompanyRefreshTokenOutputDTO } from "../dtos/CompanyRefreshTokenDTO";
-import { ICompanyRefreshTokenUsecase } from "../interfaces/auth/ICompanyRefreshTokenUsecase";
+import { AppError } from "../../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IHashService } from "../../../interface/service/IHashService";
+import { ITokenService } from "../../../interface/service/ITokenService";
+import { CompanyRefreshTokenInputDTO, CompanyRefreshTokenOutputDTO } from "../../dtos/auth/CompanyRefreshTokenDTO";
+import { ICompanyRefreshTokenUsecase } from "../../interfaces/auth/ICompanyRefreshTokenUsecase";
 
 export class CompanyRefreshTokenUsecase implements ICompanyRefreshTokenUsecase{
     constructor(

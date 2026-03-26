@@ -13,8 +13,22 @@ export class CompanyMapper {
             doc.isAdminVerified,
             doc.status,
             doc.googleId,
-            doc.refreshToken ?? []
+            doc.refreshToken ?? [],
         )
+
+        company.legalName = doc.legalName
+        company.domain = doc.domain
+        company.website = doc.website
+        company.teamSize = doc.teamSize
+        company.about = doc.about
+        company.phoneNumber = doc.phoneNumber
+        company.streetName = doc.streetName
+        company.country = doc.country
+        company.state = doc.state
+        company.city = doc.city
+        company.pinCode = doc.pinCode
+        company.primaryContactName = doc.primaryContactName
+        company.billingEmail = doc.billingEmail
 
         return company
     }
@@ -30,7 +44,20 @@ export class CompanyMapper {
             googleId: entity.getGoogleId?.(),
             isVerified: entity.isUserVerified(),
             refreshToken: entity.getRefreshToken(),
-            isBlocked: entity.getIsBlocked()
+            isBlocked: entity.getIsBlocked(),
+            legalName: entity.legalName,
+            domain: entity.domain,
+            website: entity.website,
+            teamSize: entity.teamSize,
+            about: entity.about,
+            streetName: entity.streetName,
+            city: entity.city,
+            state: entity.state,
+            country: entity.country,
+            pinCode: entity.pinCode,
+            primaryContactName: entity.primaryContactName,
+            billingEmail: entity.billingEmail,
+            phoneNumber: entity.phoneNumber
         }
     }
 }

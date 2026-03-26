@@ -5,6 +5,7 @@ import { UserStatus } from "../../../Domain/enums/userStatus.enum";
 export interface ICompany extends Document {
     _id: Types.ObjectId;
     name: string;
+    legalName: string;
     email: string;
     password: string;
     role: userRole;
@@ -12,10 +13,11 @@ export interface ICompany extends Document {
     isAdminVerified: boolean;
     googleId: string;
     isBlocked: boolean;
+    profileLogo: string
     domain: string;
     teamSize: number;
     about: string;
-    phone: string;
+    phoneNumber: string;
     streetName: string;
     country: string;
     state: string;
@@ -23,6 +25,10 @@ export interface ICompany extends Document {
     refreshToken: string[];
     isVerified: boolean;
     pinCode: string;
+    lastActive: Date;
+    website: string;
+    primaryContactName: string;
+    billingEmail: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -31,6 +37,9 @@ const companySchema: Schema<ICompany> = new Schema({
     name: {
         type: String,
         required: true,
+    },
+    legalName: {
+        type: String
     },
     email: {
         type: String,
@@ -62,6 +71,9 @@ const companySchema: Schema<ICompany> = new Schema({
     googleId: {
         type: String
     },
+    profileLogo: {
+       type: String
+    },
     domain: {
         type: String
     },
@@ -71,7 +83,7 @@ const companySchema: Schema<ICompany> = new Schema({
     about: {
         type: String
     },
-    phone: {
+    phoneNumber: {
         type: String
     },
     streetName: {
@@ -81,6 +93,15 @@ const companySchema: Schema<ICompany> = new Schema({
         type: String
     },
     city: {
+        type: String
+    },
+    website: {
+        type: String
+    },
+    primaryContactName: {
+        type: String
+    },
+    billingEmail: {
         type: String
     },
     pinCode: {
@@ -93,6 +114,10 @@ const companySchema: Schema<ICompany> = new Schema({
     isVerified: {
         type: Boolean,
         default: false
+    },
+    lastActive: {
+        type: Date,
+        default: Date.now
     }
 }, {
     timestamps: true

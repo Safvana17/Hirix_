@@ -15,7 +15,10 @@ export const ROUTES = {
       FORGOT_PASSWORD: '/company/forgotpassword',
       RESET_PASSWORD: '/company/resetpassword',
       VERIFY_EMAIL: "/company/verifyemail",
-      VERIFY_OTP_RESET: '/company/verifyotpforforgotpassword'
+      VERIFY_OTP_RESET: '/company/verifyotpforforgotpassword',
+      SETTINGS: {
+        PROFILE: '/settings/:id/profile'
+      }
     },
 
     CANDIDATE: {

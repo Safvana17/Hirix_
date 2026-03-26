@@ -34,6 +34,10 @@ export default class UserEntity {
         return this.email;
     }
 
+    public setEmail(email: string): void {
+        this.email = email
+    }
+
     public getPassword(): string {
         return this.password;
     }
@@ -45,6 +49,9 @@ export default class UserEntity {
     public getName(): string {
         return this.name;
     }
+    public setName(name: string):void {
+        this.name = name
+    } 
 
     public isUserVerified(): boolean {
         return this.isVerified;

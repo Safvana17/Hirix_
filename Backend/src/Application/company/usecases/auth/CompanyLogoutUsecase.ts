@@ -1,6 +1,6 @@
-import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
-import { IHashService } from "../../interface/service/IHashService";
-import { ICompanyLogoutUsecase } from "../interfaces/auth/ICompanyLogoutUsecase";
+import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
+import { IHashService } from "../../../interface/service/IHashService";
+import { ICompanyLogoutUsecase } from "../../interfaces/auth/ICompanyLogoutUsecase";
 
 export class CompanyLogoutUsecase implements ICompanyLogoutUsecase {
       constructor(

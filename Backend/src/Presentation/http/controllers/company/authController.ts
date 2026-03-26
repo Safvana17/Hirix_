@@ -1,23 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 import { ICompanyRegisterUsecase } from "../../../../Application/company/interfaces/auth/ICompanyRegisterUsecase";
 import { forgotPasswordSchema, otpSchema, registerSchema, resendOtpSchema, resetPasswordSchema, verifyRegisterCompanySchema } from "../../validators/registerValidator";
-import { RegisterCompanyInputDTO } from "../../../../Application/company/dtos/register.company.dto";
+import { RegisterCompanyInputDTO } from "../../../../Application/company/dtos/auth/register.company.dto";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
-import { ResendOtpCompanyInputDTO } from "../../../../Application/company/dtos/resendOtp.company.dto";
+import { ResendOtpCompanyInputDTO } from "../../../../Application/company/dtos/auth/resendOtp.company.dto";
 import { IResendOtpCompanyUsecase } from "../../../../Application/company/interfaces/auth/IResendOtpUsecase";
 import { googleLoginSchema, loginSchema } from "../../validators/loginValidator";
-import { LoginCompanyInputDTO } from "../../../../Application/company/dtos/login.company.dto";
+import { LoginCompanyInputDTO } from "../../../../Application/company/dtos/auth/login.company.dto";
 import { ILoginCompanyUsecase } from "../../../../Application/company/interfaces/auth/ILoginCompanyUsecase";
 import { ICompanyForgotPasswordUsecase } from "../../../../Application/company/interfaces/auth/ICompanyForgotPasswordUsecase";
 import { ICompanyResetPasswordUsecase } from "../../../../Application/company/interfaces/auth/ICompanyResetPasswordUsecase";
-import { CompanyForgotPasswordInputDTO } from "../../../../Application/company/dtos/forgotPassword.company.dto";
-import { CompanyResetPasswordInputDTO } from "../../../../Application/company/dtos/resetPassword.company.dto";
+import { CompanyForgotPasswordInputDTO } from "../../../../Application/company/dtos/auth/forgotPassword.company.dto";
+import { CompanyResetPasswordInputDTO } from "../../../../Application/company/dtos/auth/resetPassword.company.dto";
 import { env } from "../../../../Infrastructure/config/env";
 import { ICompanyGoogleLoginUsecase } from "../../../../Application/company/interfaces/auth/ICompanyGoogleLoginUsecase";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { IVerifyRegisterCompanyUsecase } from "../../../../Application/company/interfaces/auth/ICompanyVerifyRegisterUsecase";
-import { VerifyCompanyOtpForForgotPasswordInputDTO } from "../../../../Application/company/dtos/verifyOtpForForgotpassword.company.dto";
+import { VerifyCompanyOtpForForgotPasswordInputDTO } from "../../../../Application/company/dtos/auth/verifyOtpForForgotpassword.company.dto";
 import { ICompanyVerifyOtpForForgotPasswordUsease } from "../../../../Application/company/interfaces/auth/ICompany.verifyOtpForForgotpassword.usecase";
 
 export class CompanyAuthController {

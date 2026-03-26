@@ -13,20 +13,20 @@ import { ForgotPasswordUsecase  } from "../../../Application/candidate/useCases/
 import { ResetPasswordUsecase } from "../../../Application/candidate/useCases/auth/resetPassword.candidate.usecase";
 import { LoginCandidateUsecase } from "../../../Application/candidate/useCases/auth/login.candidate.usecase";
 import { ResendOtpUsecase } from "../../../Application/candidate/useCases/auth/resendOtp.candidate.usecase";
-import { RegisterCompanyUsecase } from "../../../Application/company/usecases/register.company.usecase";
-import { VerifyRegisterCompanyUsecase } from "../../../Application/company/usecases/verifyRegister.company.usecase";
-import { ResendOtpCompanyUsecase } from "../../../Application/company/usecases/resendOtp.company.usecase";
-import { LoginCompanyUsecase } from "../../../Application/company/usecases/login.company.usecase";
-import { CompanyForgotPasswordUsecase } from "../../../Application/company/usecases/forgotPassword.company.usecase";
-import { CompanyResetPasswordUsecase } from "../../../Application/company/usecases/resetPassword.company.usecase";
+import { RegisterCompanyUsecase } from "../../../Application/company/usecases/auth/register.company.usecase";
+import { VerifyRegisterCompanyUsecase } from "../../../Application/company/usecases/auth/verifyRegister.company.usecase";
+import { ResendOtpCompanyUsecase } from "../../../Application/company/usecases/auth/resendOtp.company.usecase";
+import { LoginCompanyUsecase } from "../../../Application/company/usecases/auth/login.company.usecase";
+import { CompanyForgotPasswordUsecase } from "../../../Application/company/usecases/auth/forgotPassword.company.usecase";
+import { CompanyResetPasswordUsecase } from "../../../Application/company/usecases/auth/resetPassword.company.usecase";
 import { CandidateGoogleLoginUsecase } from "../../../Application/candidate/useCases/auth/googleLogin.candidate.usecase";
-import { CompanyGoogleLoginUsecase } from "../../../Application/company/usecases/company.googleLogin.usecase";
+import { CompanyGoogleLoginUsecase } from "../../../Application/company/usecases/auth/company.googleLogin.usecase";
 import { UnifiedGetMeUsecase } from "../../../Application/common/usecases/unified.getme.usecase";
 import { UnifiedRefreshTokenUsecase } from "../../../Application/common/usecases/unified.refreshToken.usecase";
 import { AdminGetAllCompaniesUsecase } from "../../../Application/admin/usecases/userManagement/admin.getAllCompanies.usecase";
 import { AdminGetAllCandidates } from "../../../Application/admin/usecases/userManagement/admin.getAllCandidates";
 import { VerifyCandidateForgotPasswordOtpUsecase } from "../../../Application/candidate/useCases/auth/verifyForgotpasswordOtp.candidate.usecase";
-import { VerifyCompanyOtpForForgotPasswordUsecase } from "../../../Application/company/usecases/company.verifyOtpForForgotpassword.usecse";
+import { VerifyCompanyOtpForForgotPasswordUsecase } from "../../../Application/company/usecases/auth/company.verifyOtpForForgotpassword.usecse";
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -51,6 +51,8 @@ import { AdminUpdateCandidateStatus } from "../../../Application/admin/usecases/
 import { AdminApproveCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.approveCompany.usecase";
 import { AdminRejectCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.rejectCompany.usecase";
 import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
+import { CompanySettingsController } from "./company/companySettingsController";
+import { UpdateCompanyProfileUsecase } from "../../../Application/company/usecases/settings/updateProfile.company.usecase";
 
 
 
@@ -177,6 +179,11 @@ const iVerifyRegisterCompany = new VerifyRegisterCompanyUsecase(
     iTokenService
 )
 
+//company settings
+const iUpdateCompanyProfile = new UpdateCompanyProfileUsecase(
+    iCompanyRepository
+)
+
 
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
@@ -282,4 +289,8 @@ export const IUserManagementController = new UserManagementController(
     iUpdateCandidateStatus,
     iApproveCompany,
     iRejectCompany
+)
+
+export const iCompanySettingsController = new CompanySettingsController(
+    iUpdateCompanyProfile
 )

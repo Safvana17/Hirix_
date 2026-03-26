@@ -1,12 +1,12 @@
-import { AppError } from "../../../Domain/errors/app.error";
-import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
-import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
-import { statusCode } from "../../../Shared/Enumes/statusCode";
-import { IOtpService } from "../../interface/service/IOtpService";
-import { IOtpStore } from "../../interface/service/IOtpStore";
-import { ITokenService } from "../../interface/service/ITokenService";
-import { VerifyCompanyOtpForForgotPasswordInputDTO, VerifyCompanyOtpForForgotPasswordOutputDTO } from "../dtos/verifyOtpForForgotpassword.company.dto";
-import { ICompanyVerifyOtpForForgotPasswordUsease } from "../interfaces/auth/ICompany.verifyOtpForForgotpassword.usecase";
+import { AppError } from "../../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IOtpService } from "../../../interface/service/IOtpService";
+import { IOtpStore } from "../../../interface/service/IOtpStore";
+import { ITokenService } from "../../../interface/service/ITokenService";
+import { VerifyCompanyOtpForForgotPasswordInputDTO, VerifyCompanyOtpForForgotPasswordOutputDTO } from "../../dtos/auth/verifyOtpForForgotpassword.company.dto";
+import { ICompanyVerifyOtpForForgotPasswordUsease } from "../../interfaces/auth/ICompany.verifyOtpForForgotpassword.usecase";
 
 export class VerifyCompanyOtpForForgotPasswordUsecase implements ICompanyVerifyOtpForForgotPasswordUsease {
     constructor(

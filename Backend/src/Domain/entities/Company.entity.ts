@@ -3,8 +3,10 @@ import { UserStatus } from "../enums/userStatus.enum";
 import UserEntity from "./user.entity";
 
 export default class CompanyEntity extends UserEntity{
+    profileLogo?: string
     legalName?: string;
     domain?: string;
+    website?: string;
     teamSize?: number;
     about?: string;
 
@@ -14,6 +16,8 @@ export default class CompanyEntity extends UserEntity{
     state?: string;
     city?: string;
     pinCode?: string;
+    primaryContactName?: string;
+    billingEmail?: string;
 
     subscriptionId?: string;
     isAdminVerified: boolean;

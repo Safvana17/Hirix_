@@ -1,12 +1,12 @@
-import { AppError } from "../../../Domain/errors/app.error";
-import { CompanyRepository } from "../../../Infrastructure/repositories/companyRepository";
-import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
-import { statusCode } from "../../../Shared/Enumes/statusCode";
-import { IMailService } from "../../interface/service/IMailService";
-import { IOtpService } from "../../interface/service/IOtpService";
-import { IOtpStore } from "../../interface/service/IOtpStore";
-import { ResendOtpCompanyInputDTO, ResendOtpCompanyOutputDTO } from "../dtos/resendOtp.company.dto";
-import { IResendOtpCompanyUsecase } from "../interfaces/auth/IResendOtpUsecase";
+import { AppError } from "../../../../Domain/errors/app.error";
+import { CompanyRepository } from "../../../../Infrastructure/repositories/companyRepository";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IMailService } from "../../../interface/service/IMailService";
+import { IOtpService } from "../../../interface/service/IOtpService";
+import { IOtpStore } from "../../../interface/service/IOtpStore";
+import { ResendOtpCompanyInputDTO, ResendOtpCompanyOutputDTO } from "../../dtos/auth/resendOtp.company.dto";
+import { IResendOtpCompanyUsecase } from "../../interfaces/auth/IResendOtpUsecase";
 
 export class ResendOtpCompanyUsecase implements IResendOtpCompanyUsecase{
     constructor(

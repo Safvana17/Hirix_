@@ -1,10 +1,10 @@
-import { AppError } from "../../../Domain/errors/app.error";
-import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
-import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
-import { statusCode } from "../../../Shared/Enumes/statusCode";
-import { ITokenService } from "../../interface/service/ITokenService";
-import { VerifyCompanyInputDTO, VerifyCompanyOutputDTO } from "../dtos/verifyRegister.company.dto";
-import { IVerifyRegisterCompanyUsecase } from "../interfaces/auth/ICompanyVerifyRegisterUsecase";
+import { AppError } from "../../../../Domain/errors/app.error";
+import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
+import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { ITokenService } from "../../../interface/service/ITokenService";
+import { VerifyCompanyInputDTO, VerifyCompanyOutputDTO } from "../../dtos/auth/verifyRegister.company.dto";
+import { IVerifyRegisterCompanyUsecase } from "../../interfaces/auth/ICompanyVerifyRegisterUsecase";
 
 export class VerifyRegisterCompanyUsecase implements IVerifyRegisterCompanyUsecase{
      constructor(
