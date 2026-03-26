@@ -27,11 +27,11 @@
   ]
 
   export const companySidebarItems = [
-    {label: 'Dashboard', icon: LayoutDashboard, path: 'admin/dashboard'},
-    {label: 'Job Roles', icon: Briefcase, path: 'admin/companies'},
-    {label: 'Tests', icon: ClipboardCheck, path: 'admin/users'},
-    {label: 'Questions', icon: HelpCircle, path: 'admin/questions'},
-    {label: 'Interviews', icon: Library, path: 'admin/practicelibrary'},
-    {label: 'Subscriptions', icon: CreditCard, path: 'admin/subscriptions'},
-    {label: 'Settings', icon: Settings, path: 'admin/settings'},
+    {label: 'Dashboard', icon: LayoutDashboard, path: '/company/dashboard'},
+    {label: 'Job Roles', icon: Briefcase, path: '/company/jobroles'},
+    {label: 'Tests', icon: ClipboardCheck, path: '/company/tests'},
+    {label: 'Questions', icon: HelpCircle, path: '/company/questions'},
+    {label: 'Interviews', icon: Library, path: '/company/interviews'},
+    {label: 'Subscriptions', icon: CreditCard, path: '/company/subscriptions'},
+    {label: 'Settings', icon: Settings, path: '/company/settings'},
   ]

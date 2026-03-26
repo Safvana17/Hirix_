@@ -17,6 +17,8 @@ export const API_ROUTES = {
   COMPANY: {
     VERIFY_EMAIL: (token: string) =>
       `/auth/company/verifyemail?token=${token}`,
+    PROFILE: (id: string) => 
+      `/company/settings/${id}/profile`
   },
 
   ADMIN: {

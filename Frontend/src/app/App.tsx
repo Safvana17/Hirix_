@@ -10,6 +10,7 @@ import { ROLES } from '../constants/role'
 import { ROUTES } from '../constants/routes'
 
 
+
 const Home = lazy(() => import( '../presentation/pages/home/Home'))
 const AuthGatewayPage = lazy(() => import('../presentation/pages/auth/AuthGatewayPage'))
 const VerifyOtp = lazy(() =>import('../presentation/pages/auth/VerifyOtp'))
@@ -23,6 +24,7 @@ const AdminDashboard  = lazy(() => import('../presentation/pages/admin/AdminDash
 const AdminCompanies = lazy(() => import( '../presentation/pages/admin/AdminCompanies'))
 const AdminCandidates = lazy(() => import( '../presentation/pages/admin/AdminCandidates'))
 const AdminCompanyDetailPage = lazy(() => import('../presentation/pages/admin/AdminCompanyDetailPage'))
+const CompanySettings = lazy(() => import('../presentation/pages/company/CompanySettings'))
 
 
 const App = () => {
@@ -56,7 +58,11 @@ const App = () => {
               <CompanyDashboard />
             </RoleRoute>
           } />
-
+          <Route path={ROUTES.COMPANY.SETTINGS} element={
+             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <CompanySettings />
+             </RoleRoute>
+          } />
 
           <Route path={ROUTES.CANDIDATE.VERIFY_OTP} element={<VerifyOtp />} />
           <Route path={ROUTES.CANDIDATE.FORGOT_PASSWORD} element={<ForgotPassword />} />

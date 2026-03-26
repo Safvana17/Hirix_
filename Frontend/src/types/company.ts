@@ -8,6 +8,26 @@ export interface Company {
     status: 'active' | 'blocked' | 'rejected' | 'pending' | ""
 }
 
+export interface CompanySettings extends Company {
+  legalName?: string
+  profileLogo?: string
+  domain?: string
+  website?: string
+  teamSize?: number
+  about?: string
+  phoneNumber?: string
+  streetName?: string
+  country?: string
+  state?: string
+  city?: string
+  pinCode?: string
+  PrimaryContactName?: string
+  billingEmail?: string
+  subscriptionPlan?: string
+  maxCandidates?: number
+  maxTestPerMonth?: string
+}
+
 export type FetchCompaniesParams = {
   search?: string
   status?: string
@@ -52,3 +72,8 @@ export type RejectCompanyArgs = {
   action: "REJECT"
   queryParams?: FetchCompaniesParams
 }
+
+export type UpdateCompanyProfilePayload = Omit<
+  CompanySettings,
+  'id' | 'email' | 'isAdminVerified' | 'status'
+>
