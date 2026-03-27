@@ -45,12 +45,35 @@ export const getCompanyProfile = createAsyncThunk<
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('API RESPONSE:', response.data)
         return {company: response.data.company}
     } catch (error) {
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to get company profile')        
     }
+})
+
+export const uploadProfileImage = createAsyncThunk<
+{company: CompanySettings},
+{id: string, formData: FormData},
+{rejectValue: string}
+>('settings/uploadImage', async({id, formData}, {rejectWithValue}) => {
+   try {
+     const response = await api.put(API_ROUTES.COMPANY.PROFILE_LOGO(id), 
+        formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+     if(!response.data.success){
+       return rejectWithValue('Invalid response')
+     }
+ 
+     return { company: response.data.company}
+   } catch (error) {
+       const err = error as AxiosError<{message: string}>
+       return rejectWithValue(err.response?.data?.message || 'Failed to upload profile logo')     
+   }
 })
 
 const CompanySettingsSlice = createSlice({
@@ -84,6 +107,17 @@ const CompanySettingsSlice = createSlice({
           .addCase(getCompanyProfile.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to load company profile'
+          })
+          .addCase(uploadProfileImage.pending, (state) => {
+            state.loading = true
+          })
+          .addCase(uploadProfileImage.fulfilled, (state, action) => {
+            state.loading = false
+            state.company = action.payload.company
+          })
+          .addCase(uploadProfileImage.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to upload image'
           })
     }
 })

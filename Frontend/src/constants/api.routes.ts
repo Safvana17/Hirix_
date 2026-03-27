@@ -19,6 +19,8 @@ export const API_ROUTES = {
       `/auth/company/verifyemail?token=${token}`,
     PROFILE: (id: string) => 
       `/company/settings/${id}/profile`,
+    PROFILE_LOGO: (id: string) => 
+      `/company/settings/${id}/profileimage`
   },
 
   ADMIN: {

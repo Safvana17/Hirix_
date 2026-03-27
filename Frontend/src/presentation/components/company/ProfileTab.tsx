@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { z } from 'zod'
 import { updateProfileSchema } from '../../../lib/validation/settingsValidator'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { getCompanyProfile, updateProfile } from '../../../redux/slices/features/settingsSlice.ts/companySettingsSlice'
+import { getCompanyProfile, updateProfile, uploadProfileImage } from '../../../redux/slices/features/settingsSlice.ts/companySettingsSlice'
 import { Building2, Upload } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -44,7 +44,8 @@ const profileData = useMemo(() => ({
   primaryContactName: company?.primaryContactName || '',
   billingEmail: company?.billingEmail || '',
   phoneNumber: company?.phoneNumber || '',
-  status: company?.status || 'Active'
+  status: company?.status || 'Active',
+  profileLogo: company?.profileLogo || ''
 }), [company, user])
 
   const { register, handleSubmit,reset, formState: {errors} } = useForm<ProfileFormValues>({
@@ -52,10 +53,6 @@ const profileData = useMemo(() => ({
     defaultValues: profileData
   })
 
-  useEffect(() => {
-    console.log('company: ', company)
-    console.log('user: ', user)
-  })
   useEffect(() => {
     if(company || user){
       reset(profileData)
@@ -67,6 +64,22 @@ const profileData = useMemo(() => ({
     const result = dispatch(updateProfile({ id: user.id, company: data }))
     if(updateProfile.fulfilled.match(result)){
         toast.success('Profile updatedSuccessfully')
+    }
+  }
+
+  const handleImageChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if(!file || !user?.id) return
+
+    const formData = new FormData()
+    formData.append('profileLogo', file)
+
+    try {
+      await dispatch(uploadProfileImage({id: user.id, formData})).unwrap()
+      toast.success('Profile image uploaded successfully')
+    } catch (error: unknown) {
+      if(typeof error === 'string')
+         toast.error('failed to upload image') 
     }
   }
 
@@ -91,7 +104,7 @@ const profileData = useMemo(() => ({
             )}
 
             <label className="absolute bottom-0 right-0 bg-[#C89A44] text-white p-2 rounded-full cursor-pointer hover:bg-[#634815]">
-              <input type="file" accept="image/*" className="hidden" />
+              <input type="file" accept="image/*" className="hidden" onChange={handleImageChange}/>
                <Upload className='w-3 h-3' />
             </label>
           </div>
