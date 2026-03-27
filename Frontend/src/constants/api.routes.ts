@@ -20,7 +20,9 @@ export const API_ROUTES = {
     PROFILE: (id: string) => 
       `/company/settings/${id}/profile`,
     PROFILE_LOGO: (id: string) => 
-      `/company/settings/${id}/profileimage`
+      `/company/settings/${id}/profileimage`,
+    PASSWORD: (id: string) => 
+      `/company/settings/${id}/password`
   },
 
   ADMIN: {

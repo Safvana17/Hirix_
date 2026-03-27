@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { CompanySettings, UpdateCompanyProfilePayload } from "../../../../types/company";
+import type { changePasswordPayload, CompanySettings, UpdateCompanyProfilePayload } from "../../../../types/company";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -76,6 +76,24 @@ export const uploadProfileImage = createAsyncThunk<
    }
 })
 
+export const changePassword = createAsyncThunk<
+void,
+changePasswordPayload,
+{rejectValue: string}
+>('settings/changePasssword', async({id, oldPassword, newPassword, confirmPassword}, {rejectWithValue}) => {
+  try {
+    const response = await api.put(API_ROUTES.COMPANY.PASSWORD(id), {oldPassword, newPassword, confirmPassword})
+    if(!response.data.success){
+      return rejectWithValue('Invalid response')
+    }
+
+    return
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>
+    return rejectWithValue(err.response?.data?.message || 'Failed to change password')
+  }
+})
+
 const CompanySettingsSlice = createSlice({
     name: 'companySettings',
     initialState,
@@ -118,6 +136,16 @@ const CompanySettingsSlice = createSlice({
           .addCase(uploadProfileImage.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to upload image'
+          })
+          .addCase(changePassword.pending, (state) => {
+            state.loading = true
+          })
+          .addCase(changePassword.fulfilled, (state) => {
+            state.loading = false
+          })
+          .addCase(changePassword.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to change password'
           })
     }
 })

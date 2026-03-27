@@ -8,6 +8,7 @@ import PublicRoute from '../components/auth/PublicRoute'
 import RoleRoute from '../components/auth/RoleRoute'
 import { ROLES } from '../constants/role'
 import { ROUTES } from '../constants/routes'
+import ChangePassword from '../presentation/components/company/ChangePassword'
 
 
 
@@ -62,6 +63,11 @@ const App = () => {
              <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <CompanySettings />
              </RoleRoute>
+          } />
+          <Route path={ROUTES.COMPANY.PASSWORD} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <ChangePassword />
+            </RoleRoute>
           } />
 
           <Route path={ROUTES.CANDIDATE.VERIFY_OTP} element={<VerifyOtp />} />

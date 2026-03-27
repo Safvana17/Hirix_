@@ -1,45 +1,32 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import AuthLayout from '../../layouts/AuthLayout'
-import ForgotPasswordImage from '../../../assets/images/forgotpassword.jpg'
-import { useLocation, useNavigate } from 'react-router-dom'
+import changePassswordImage from '../../../assets/images/changePassword.jpg'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { clearError, resetPassword } from '../../../redux/slices/features/auth/authSlice'
-import { resetPasswordSchema } from '../../../lib/validation/authValidation'
-import { ZodError } from 'zod'
 import toast from 'react-hot-toast'
+import { changePassword } from '../../../redux/slices/features/settingsSlice.ts/companySettingsSlice'
+import { changePasswordSchema } from '../../../lib/validation/settingsValidator'
+import { ZodError } from 'zod'
 
-const ResetPassword: React.FC = () => {
+
+const ChangePassword: React.FC= () => {
+
   const dispatch = useDispatch<AppDispatch>()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { loading } = useSelector((state: RootState) => state.auth)
+  const { loading} = useSelector((state: RootState) => state.companySettings)
+  const {user} = useSelector((state: RootState) => state.auth)
+  const id = user?.id
 
-  const email = location.state?.email
-  const resetToken = location.state?.resetToken
-  const role = location.pathname.includes('candidate') ? 'candidate' : 'company'
 
   const [formData, setFormData] = useState({
-    email: email,
+    oldPassword: '',
     newPassword: '',
-    confirmPassword: '' ,
-    resetToken: resetToken
+    confirmPassword: '' 
   })
   const [localError, setLocalError] = useState<Record<string, string>>({})
 
-  useEffect(() => {
-    if(!email || !resetToken){
-      toast.error('Session expired, please try again')
-      navigate(`/${role}/forgotpassword`)
-    }
-    return () => {
-      dispatch(clearError())
-    }
-  })
-
   const validate = () => {
     try {
-      resetPasswordSchema.parse(formData)
+      changePasswordSchema.parse(formData)
       setLocalError({})
       return true
 
@@ -64,33 +51,46 @@ const ResetPassword: React.FC = () => {
       console.log('VALIDATION FAILED', localError)
        return
     } 
-
-    if(!formData.email ){
-      toast.error('Session Expired, please try again')
-      navigate(`/${role}/forgotpassword`)
-      return
+    if(!id){
+        toast.error('Company not found')
+        return
     }
 
-    console.log('email: ', formData.email)
-    const result = await dispatch(resetPassword({role, email: formData.email, newPassword: formData.newPassword, confirmPassword: formData.confirmPassword, resetToken}))
-    if(resetPassword.fulfilled.match(result)){
-      toast('Your password reset successful. PLease login to continue.')
-      navigate(`/login`)
+    const result = await dispatch(changePassword({id, oldPassword: formData.oldPassword, newPassword: formData.newPassword, confirmPassword: formData.confirmPassword}))
+    if(changePassword.fulfilled.match(result)){
+      toast('Your password changed successfully.')
+      setFormData({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      })
+
     }else{
       console.log(result.error.message)
-      toast.error(result.error.message || 'Failed to reset password')
+      toast.error(result.payload || 'Failed to change password')
     }
   }
 
   return (
-    <AuthLayout title='Reset Passwrd' subtitle='Enter your nw password'>
+    <AuthLayout title='Change Passwrd' subtitle='Enter your new password'>
       <div className='grid grid-cols-1 md:grid-cols-2 min-h-[600px]'>
        <div className='relative h-full'>
-         <img src={ForgotPasswordImage} alt="Auth image" className='w-full h-full object-cover'/>
+         <img src={changePassswordImage} alt="Auth image" className='w-full h-full object-cover'/>
          <div className="absolute inset-0 bg-[#9A6605] opacity-50" />
        </div>
         <div className='bg-[#9A6605] p-8 md:p-12 flex flex-col justify-center'>
           <form onSubmit={handleSubmit} className='space-y-4'>
+              <div>
+                <label className='block text-sm text-white font-medium mb-1'>Current Password</label>
+                <input 
+                    type='password'
+                    placeholder='••••••••'
+                    required
+                    className='w-full bg-[#EDE0E0] rounded-xl px-4 py-3 text-black outline-none'
+                    onChange={(e) => setFormData({...formData, oldPassword: e.target.value }) }
+                />
+                {localError.oldPassword && <p className='text-[#FBBEBE] text-sm'>{localError.oldPassword}</p>}
+              </div>
               <div>
                 <label className='block text-sm text-white font-medium mb-1'>New Password</label>
                 <input 
@@ -117,10 +117,10 @@ const ResetPassword: React.FC = () => {
 
               <button
                 type='submit'
-                disabled={loading}
+                disabled={loading || !id}
                 className='cursor-pointer w-full bg-[#E9C788] hover:bg-[#6B4705] py-3 mt-3 rounded-xl text-white font-bold'
               >
-                {loading ? 'Resetting...' : 'Reset Password'}
+                {loading ? 'Changing...' : 'Change Password'}
               </button>
           </form>
         </div>
@@ -130,4 +130,4 @@ const ResetPassword: React.FC = () => {
   )
 }
 
-export default ResetPassword
+export default ChangePassword

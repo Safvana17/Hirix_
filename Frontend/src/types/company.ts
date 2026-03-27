@@ -41,6 +41,13 @@ export interface FetchCompaniesResponse{
     totalCount: number
 }
 
+export interface changePasswordPayload {
+  id: string
+  oldPassword: string
+  newPassword: string
+  confirmPassword: string
+}
+
 export type UpdateStatusPayload = {
   id: string
   status: 'active' | 'blocked' | 'rejected' | 'pending' | ""
