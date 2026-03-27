@@ -17,7 +17,8 @@ export const ROUTES = {
       VERIFY_EMAIL: "/company/verifyemail",
       VERIFY_OTP_RESET: '/company/verifyotpforforgotpassword',
       SETTINGS: {
-        PROFILE: '/settings/:id/profile'
+        PROFILE: '/settings/:id/profile',
+        PROFILE_IMAGE: '/settings/:id/profileimage'
       }
     },
 

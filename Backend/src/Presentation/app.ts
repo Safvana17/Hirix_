@@ -21,6 +21,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser())
 app.use(express.urlencoded({extended: true}))
+app.use('/uploads', express.static('uploads'))
 
 connectDB().catch((err) => {
     logger.error({err}, 'Database connection failed')

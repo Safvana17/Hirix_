@@ -73,3 +73,7 @@ export const updateProfileSchema = z.object({
 export const getCompanySchema = z.object({
   id: z.string().regex(/^[0-9a-fA-F]{24}$/),
 })
+
+export const uploadProfileImageSchema = z.object({
+  id: z.string().regex(/^[0-9a-fA-F]{24}$/), 
+})

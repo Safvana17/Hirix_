@@ -29,6 +29,8 @@ export class CompanyMapper {
         company.pinCode = doc.pinCode
         company.primaryContactName = doc.primaryContactName
         company.billingEmail = doc.billingEmail
+        company.profileLogo = doc.profileLogo
+
 
         return company
     }
@@ -57,7 +59,8 @@ export class CompanyMapper {
             pinCode: entity.pinCode,
             primaryContactName: entity.primaryContactName,
             billingEmail: entity.billingEmail,
-            phoneNumber: entity.phoneNumber
+            phoneNumber: entity.phoneNumber,
+            profileLogo: entity.profileLogo
         }
     }
 }

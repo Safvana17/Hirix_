@@ -1,4 +1,6 @@
+import { Express } from 'express'
 import CompanyEntity from "../../../../Domain/entities/company.entity"
+import { FileUpload } from '../../../../Shared/types/fileUpload.type'
 
 export interface UpdateCompanyProfileInputDTO {
   id: string
@@ -36,4 +38,12 @@ export interface CompanyChangePasswordInputDTO {
     id: string
     oldPassword: string
     newPassword: string
+}
+
+export interface UploadProfileImageInputDTO {
+    id: string,
+    file: FileUpload
+}
+export interface UploadProfileImageOutputDTO {
+    company: CompanyEntity
 }

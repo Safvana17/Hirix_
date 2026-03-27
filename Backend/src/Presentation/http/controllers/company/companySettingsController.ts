@@ -1,15 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import { ICompanyUpdateProfileUsecase } from "../../../../Application/company/interfaces/settings/iCompany.updateProfile.usecase";
-import { getCompanySchema, updateProfileSchema } from "../../validators/settingsValidator";
+import { getCompanySchema, updateProfileSchema, uploadProfileImageSchema } from "../../validators/settingsValidator";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { logger } from "../../../../utils/logging/loger";
 import { IGetCompanyProfileUsecase } from "../../../../Application/company/interfaces/settings/iCompany.getCompany.usecase";
+import { IUploadCompanyProfileImage } from "../../../../Application/company/interfaces/settings/iCompany.uploadProfileImage.usecase";
+import { AppError } from "../../../../Domain/errors/app.error";
+import { FileUpload } from "../../../../Shared/types/fileUpload.type";
 
 export class CompanySettingsController {
     constructor(
         private _updateCompanyProfileUsecase: ICompanyUpdateProfileUsecase,
-        private _getCompanyProfileUsecase: IGetCompanyProfileUsecase
+        private _getCompanyProfileUsecase: IGetCompanyProfileUsecase,
+        private _uploadCompanyProfileImage: IUploadCompanyProfileImage
 
     ) {}
 
@@ -43,6 +47,36 @@ export class CompanySettingsController {
                 company: result.company
             })
 
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    uploadProfileImage = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id
+            const multerFile = req.file
+
+            const parsed = uploadProfileImageSchema.parse({id})
+
+            if(!multerFile){
+                throw new AppError(settingsMessages.error.IMAGE_REQUIRED, statusCode.BAD_REQUEST)
+            }
+
+            const file: FileUpload = {
+                filename: multerFile.filename,
+                mimetype: multerFile.mimetype,
+                size: multerFile.size,
+                path: multerFile.path
+            }
+
+            const updatedCompany = await this._uploadCompanyProfileImage.execute({id: parsed.id, file})
+
+            return res.status(statusCode.OK).json({
+                success: true,
+                message: settingsMessages.success.COMPANY_PROFILE_UPDATED,
+                company: updatedCompany.company
+            })
         } catch (error) {
             next(error)
         }
