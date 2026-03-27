@@ -18,7 +18,8 @@ export const ROUTES = {
       VERIFY_OTP_RESET: '/company/verifyotpforforgotpassword',
       SETTINGS: {
         PROFILE: '/settings/:id/profile',
-        PROFILE_IMAGE: '/settings/:id/profileimage'
+        PROFILE_IMAGE: '/settings/:id/profileimage',
+        PASSWORD: '/settings/:id/password',
       }
     },
 

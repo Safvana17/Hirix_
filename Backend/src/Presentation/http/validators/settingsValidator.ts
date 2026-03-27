@@ -77,3 +77,22 @@ export const getCompanySchema = z.object({
 export const uploadProfileImageSchema = z.object({
   id: z.string().regex(/^[0-9a-fA-F]{24}$/), 
 })
+
+export const changePasswordSchema = z.object({
+  oldPassword: z
+    .string()
+    .trim()
+    .min(6, 'Password must contain atleast 6 characters')
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/, "Password must contain uppercase, lowercase, number and special character"),
+  newPassword: z
+    .string()
+    .trim()
+    .min(6, 'Password must contain atleast 6 characters')
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/, "Password must contain uppercase, lowercase, number and special character"),
+  confirmPassword: z
+    .string()
+})
+.refine(data => data.newPassword === data.confirmPassword, {
+    message: 'Password do not match',
+    path: ['confirmPassword']
+})
