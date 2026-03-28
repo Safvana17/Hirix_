@@ -4,8 +4,7 @@ import { authMessages } from "../../../../Shared/constsnts/messages/authMessages
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IHashService } from "../../../interface/service/IHashService";
-import { CompanyChangePasswordOutputDTO } from "../../dtos/settings/changePassword.company.dto";
-import { CompanyChangePasswordInputDTO } from "../../dtos/settings/settings.company.dto";
+import { CompanyChangePasswordInputDTO, CompanyChangePasswordOutputDTO } from "../../dtos/settings/changePassword.company.dto";
 import { ICompanyChangePasswordUsecase } from "../../interfaces/settings/iCompany.changePassword.usecase";
 
 export class CompanyChangePasswordUsecase implements ICompanyChangePasswordUsecase{

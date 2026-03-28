@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ICompanyUpdateProfileUsecase } from "../../../../Application/company/interfaces/settings/iCompany.updateProfile.usecase";
-import { changePasswordSchema, getCompanySchema, updateProfileSchema, uploadProfileImageSchema } from "../../validators/settingsValidator";
+import { changePasswordSchema, deleteAccountSchema, getCompanySchema, updateProfileSchema, uploadProfileImageSchema } from "../../validators/settingsValidator";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { logger } from "../../../../utils/logging/loger";
@@ -8,8 +8,10 @@ import { IGetCompanyProfileUsecase } from "../../../../Application/company/inter
 import { IUploadCompanyProfileImage } from "../../../../Application/company/interfaces/settings/iCompany.uploadProfileImage.usecase";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { FileUpload } from "../../../../Shared/types/fileUpload.type";
-import { CompanyChangePasswordInputDTO } from "../../../../Application/company/dtos/settings/settings.company.dto";
 import { ICompanyChangePasswordUsecase } from "../../../../Application/company/interfaces/settings/iCompany.changePassword.usecase";
+import { CompanyChangePasswordInputDTO } from "../../../../Application/company/dtos/settings/changePassword.company.dto";
+import { DeleteAccountInputDTO } from "../../../../Application/company/dtos/settings/deleteAccount.company.dto";
+import { IDeleteAccountUsecase } from "../../../../Application/company/interfaces/settings/iCompany.deleteAccount.usecase";
 
 
 export class CompanySettingsController {
@@ -18,6 +20,7 @@ export class CompanySettingsController {
         private _getCompanyProfileUsecase: IGetCompanyProfileUsecase,
         private _uploadCompanyProfileImage: IUploadCompanyProfileImage,
         private _companyChangePassword: ICompanyChangePasswordUsecase,
+        private _deleteAccount: IDeleteAccountUsecase,
 
     ) {}
 
@@ -103,6 +106,30 @@ export class CompanySettingsController {
                 message: settingsMessages.success.PASSWORD_CHANGED_SUCCESSFULYY
             })
                     
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    deleteAccount = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = Array.isArray(req.params.id) 
+                  ? req.params.id[0]
+                  : req.params.id
+            const parsed = deleteAccountSchema.parse(req.body)
+            const payload: DeleteAccountInputDTO = {
+                id: id,
+                reason: parsed.reason,
+                feedback: parsed.reason,
+                password: parsed.password
+            }
+            await this._deleteAccount.execute(payload)
+
+            return res.status(statusCode.OK).json({
+                success: true,
+                message: settingsMessages.success.ACCOUNT_DELETED
+            })
+
         } catch (error) {
             next(error)
         }

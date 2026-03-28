@@ -11,4 +11,5 @@ router.get(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), iCompany
 router.put(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), verifyCsrf, iCompanySettingsController.updateProfile)
 router.put(ROUTES.COMPANY.SETTINGS.PROFILE_IMAGE, authHandler(iTokenService), verifyCsrf, upload.single('profileLogo'), iCompanySettingsController.uploadProfileImage)
 router.put(ROUTES.COMPANY.SETTINGS.PASSWORD, authHandler(iTokenService),verifyCsrf, iCompanySettingsController.changePassword)
+router.put(ROUTES.COMPANY.SETTINGS.ACCOUNT, authHandler(iTokenService), verifyCsrf, iCompanySettingsController.deleteAccount)
 export default router;

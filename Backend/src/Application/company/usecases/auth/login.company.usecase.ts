@@ -3,6 +3,7 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { env } from "../../../../Infrastructure/config/env";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IHashService } from "../../../interface/service/IHashService";
 import { IMailService } from "../../../interface/service/IMailService";
@@ -27,6 +28,21 @@ export class LoginCompanyUsecase implements ILoginCompanyUsecase{
         const isValidPassword = await this._hashService.compare(request.password, company.getPassword())
         if(!isValidPassword){
             throw new AppError(authMessages.error.INVALID_PASSWORD, statusCode.BAD_REQUEST)
+        }
+
+        if(company.isDeleted){
+            if(!company.deletedAt){
+                throw new AppError(settingsMessages.success.ACCOUNT_DELETED, statusCode.FORBIDDEN)
+            }
+
+            const now = new Date()
+            const diffInDays = (now.getTime() - company.deletedAt?.getTime()) / (1000 * 60 * 24)
+
+            if(diffInDays > 30){
+                throw new AppError(settingsMessages.error.DELETED_PERMENANTLY, statusCode.FORBIDDEN)
+            }
+
+            throw new AppError(settingsMessages.error.ACOUNT_DEACTIVATED, statusCode.FORBIDDEN)
         }
 
         if(company.getIsBlocked()){

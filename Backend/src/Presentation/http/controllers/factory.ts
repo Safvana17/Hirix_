@@ -30,7 +30,7 @@ import { VerifyCompanyOtpForForgotPasswordUsecase } from "../../../Application/c
 import { GetCompanyProfileUsecase } from "../../../Application/company/usecases/settings/company.getProfile.usecase";
 import { UploadCompanyProfileImageUsecase } from "../../../Application/company/usecases/settings/company.uploadProfileImage.usecase";
 import { CompanyChangePasswordUsecase } from "../../../Application/company/usecases/settings/company.changePassword.usecase";
-
+import { DeleteAccountUsecase } from "../../../Application/company/usecases/settings/company.deleteAccount.usecase";
 
 
 //repositories
@@ -198,6 +198,11 @@ const iChangeCompanyPassword = new CompanyChangePasswordUsecase (
     iCompanyRepository,
     iHashService
 )
+const iDeleteAccount = new DeleteAccountUsecase(
+    iCompanyRepository,
+    iHashService,
+    iMailService
+)
 
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
@@ -309,5 +314,6 @@ export const iCompanySettingsController = new CompanySettingsController(
     iUpdateCompanyProfile,
     iGetCompanyProfle,
     iUploadCompanyProfileImage,
-    iChangeCompanyPassword
+    iChangeCompanyPassword,
+    iDeleteAccount
 )

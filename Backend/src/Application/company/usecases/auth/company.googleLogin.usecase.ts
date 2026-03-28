@@ -4,6 +4,7 @@ import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
 import { IGoogleAuthService } from "../../../interface/service/IGoogleAuthService";
@@ -36,6 +37,7 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
                 false,
                 false,
                 UserStatus.PENDING,
+                false,
                 googleCompanyInfo.googleId
             )
 
@@ -50,6 +52,20 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
 
         if(!company || !company.getId() || !company.getRole()){
              throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
+        }
+        if(company.isDeleted){
+            if(!company.deletedAt){
+                throw new AppError(settingsMessages.success.ACCOUNT_DELETED, statusCode.FORBIDDEN)
+            }
+
+            const now = new Date()
+            const diffInDays = (now.getTime() - company.deletedAt?.getTime()) / (1000 * 60 * 24)
+
+            if(diffInDays > 30){
+                throw new AppError(settingsMessages.error.DELETED_PERMENANTLY, statusCode.FORBIDDEN)
+            }
+
+            throw new AppError(settingsMessages.error.ACOUNT_DEACTIVATED, statusCode.FORBIDDEN)
         }
         
         if(company.getStatus() === UserStatus.PENDING){

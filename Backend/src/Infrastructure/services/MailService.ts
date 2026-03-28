@@ -5,6 +5,7 @@ import { env } from "../config/env";
 import { CompanyRegisterApprovalEmailTemplate } from "../emailTemplates/CompanyRegisterApprovalTemplate";
 import { CompanyRegisterRejectionEmailTemplate } from "../emailTemplates/CompanyRegisterRejectionTemplate";
 import { CompanyVerificationLinkTemplate } from "../emailTemplates/CompanyVerificationTemplate";
+import { accountDeletionEmailTemplate } from "../emailTemplates/AccountDeleteionTemplate";
 
 export class MailService implements IMailService{
     async sentOtp(email: string, otp: string): Promise<void> {
@@ -41,6 +42,15 @@ export class MailService implements IMailService{
             to: email,
             subject: 'Email Verification - Hirix Login',
             html: CompanyVerificationLinkTemplate(companyName, verificationLink)
+        })
+    }
+
+    async sendAccountDeletionEmail(email: string, companyName: string): Promise<void> {
+        await mailTransporter.sendMail({
+            from: `"Hirix" <${env.HIRIX_EMAIL}>`,
+            to: email,
+            subject: 'Your Account is Scheduled for deletion',
+            html: accountDeletionEmailTemplate(companyName)
         })
     }
 }

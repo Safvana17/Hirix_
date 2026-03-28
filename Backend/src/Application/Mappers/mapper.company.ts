@@ -12,6 +12,7 @@ export class CompanyMapper {
             doc.isBlocked,
             doc.isAdminVerified,
             doc.status,
+            doc.isDeleted,
             doc.googleId,
             doc.refreshToken ?? [],
         )
@@ -30,6 +31,9 @@ export class CompanyMapper {
         company.primaryContactName = doc.primaryContactName
         company.billingEmail = doc.billingEmail
         company.profileLogo = doc.profileLogo
+        company.deletedAt = doc.deletedAt
+        company.deleteFeedback = doc.deleteFeedback
+        company.deleteReason = doc.deleteReason
 
 
         return company
@@ -60,7 +64,11 @@ export class CompanyMapper {
             primaryContactName: entity.primaryContactName,
             billingEmail: entity.billingEmail,
             phoneNumber: entity.phoneNumber,
-            profileLogo: entity.profileLogo
+            profileLogo: entity.profileLogo,
+            isDeleted: entity.isDeleted,
+            deletedAt: entity.deletedAt,
+            deleteReason: entity.deleteReason,
+            deleteFeedback: entity.deleteFeedback
         }
     }
 }

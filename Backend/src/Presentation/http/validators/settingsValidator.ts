@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { DeleteReason } from '../../../Domain/enums/deleteReason'
 
 export const updateProfileSchema = z.object({
   name: z
@@ -95,4 +96,14 @@ export const changePasswordSchema = z.object({
 .refine(data => data.newPassword === data.confirmPassword, {
     message: 'Password do not match',
     path: ['confirmPassword']
+})
+
+export const deleteAccountSchema = z.object({
+  reason: z.nativeEnum(DeleteReason),
+  feedback: z.string().optional(),
+  password: z
+    .string()
+    .trim()
+    .min(6, 'Password must contain atleast 6 characters')
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/, "Password must contain uppercase, lowercase, number and special character"),
 })

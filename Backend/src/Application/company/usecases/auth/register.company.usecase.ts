@@ -26,7 +26,7 @@ export class RegisterCompanyUsecase implements ICompanyRegisterUsecase {
         }
 
         const hashedPassword = await this.hasheService.hash(input.password)
-        const company = new CompanyEntity("", input.name, input.email, hashedPassword,false, false, false, UserStatus.PENDING)
+        const company = new CompanyEntity("", input.name, input.email, hashedPassword,false, false, false, UserStatus.PENDING, false)
 
         await this.companyRepository.create(company)
 

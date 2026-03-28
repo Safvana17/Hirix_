@@ -34,12 +34,6 @@ export interface getCompanyProfileOutputDTO {
     company: CompanyEntity
 }
 
-export interface CompanyChangePasswordInputDTO {
-    id: string
-    oldPassword: string
-    newPassword: string
-}
-
 export interface UploadProfileImageInputDTO {
     id: string,
     file: FileUpload

@@ -30,6 +30,10 @@ export interface ICompany extends Document {
     website: string;
     primaryContactName: string;
     billingEmail: string;
+    isDeleted: boolean;
+    deleteReason: string;
+    deleteFeedback: string;
+    deletedAt: Date;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -122,6 +126,19 @@ const companySchema: Schema<ICompany> = new Schema({
     lastActive: {
         type: Date,
         default: Date.now
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+    deleteFeedback: {
+        type: String
+    },
+    deleteReason: {
+        type: String
+    },
+    deletedAt: {
+        type: Date
     }
 }, {
     timestamps: true

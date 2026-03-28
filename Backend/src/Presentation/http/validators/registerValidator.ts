@@ -70,6 +70,11 @@ export const resetPasswordSchema = z.object({
           .trim()
           .min(1, 'Token is missing')
 })
+.refine(data => data.newPassword === data.confirmPassword, {
+    message: 'Password do not match',
+    path: ['confirmPassword']
+})
+
 export const verifyRegisterCompanySchema = z.object({
     token: z
         .string()
