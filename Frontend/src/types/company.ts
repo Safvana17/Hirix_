@@ -1,3 +1,4 @@
+import type { DeleteReason } from "../constants/deleteReasons";
 import type { UserRole } from "../constants/role";
 
 export interface Company {
@@ -46,6 +47,13 @@ export interface changePasswordPayload {
   oldPassword: string
   newPassword: string
   confirmPassword: string
+}
+
+export interface deleteAccountPayload {
+  id: string,
+  password: string
+  reason: DeleteReason
+  feedback: string
 }
 
 export type UpdateStatusPayload = {

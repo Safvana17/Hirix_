@@ -3,6 +3,7 @@ import InternalLayout from '../../layouts/InternalLayout'
 import { companySidebarItems } from '../../../constants/sidebarItems'
 import ProfileTab from '../../components/company/ProfileTab'
 import { useNavigate } from 'react-router-dom'
+import DeleteAccount from '../../components/company/DeleteAccount'
 
 
 
@@ -33,9 +34,9 @@ const CompanyProfile: React.FC = () => {
                 onClick={() => {
                   if(tab.id === 'change-Password'){
                     navigate('/company/password')
-                  }else{
-                    setActiveTab(tab.id)
                   }
+                    setActiveTab(tab.id)
+                  
                 }}
                 className={`px-4 py-2 rounded-xl transition ${activeTab === tab.id 
                   ? 'bg-[#6B4705] text-white font-bold'
@@ -47,6 +48,7 @@ const CompanyProfile: React.FC = () => {
             </div>
             <div className='p-8 mt-5'>
               {activeTab === 'profile' && <ProfileTab />}
+              {activeTab === 'delete-Account' && <DeleteAccount />}
             </div>
           </div>
      </InternalLayout>

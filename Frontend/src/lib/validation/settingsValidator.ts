@@ -88,3 +88,22 @@ export const changePasswordSchema = z.object({
     message: 'Password do not match',
     path: ['confirmPassword']
 })
+
+export const deleteAccountSchema = z.object({
+  reason: z.enum([
+    'TOO_EXPENSIVE',
+    'BUGS',
+    'NOT_USEFUL',
+    'SWITCHED_PLATFORM',
+    'OTHER'
+  ], {
+    message: 'Please select a reason'
+  }),
+
+  feedback: z.string().optional(),
+  password: z
+    .string()
+    .trim()
+    .min(6, 'Password must contain atleast 6 characters')
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/, "Password must contain uppercase, lowercase, number and special character"),
+})

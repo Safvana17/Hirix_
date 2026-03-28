@@ -22,7 +22,9 @@ export const API_ROUTES = {
     PROFILE_LOGO: (id: string) => 
       `/company/settings/${id}/profileimage`,
     PASSWORD: (id: string) => 
-      `/company/settings/${id}/password`
+      `/company/settings/${id}/password`,
+    ACCOUNT: (id: string) => 
+      `/company/settings/${id}/account`
   },
 
   ADMIN: {

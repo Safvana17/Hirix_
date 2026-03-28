@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { changePasswordPayload, CompanySettings, UpdateCompanyProfilePayload } from "../../../../types/company";
+import type { changePasswordPayload, CompanySettings, deleteAccountPayload, UpdateCompanyProfilePayload } from "../../../../types/company";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -94,6 +94,24 @@ changePasswordPayload,
   }
 })
 
+export const deleteAccount = createAsyncThunk<
+void,
+deleteAccountPayload,
+{rejectValue: string}
+>('settings/deleteAccount', async({id, reason, feedback, password}, {rejectWithValue}) => {
+  try {
+    const response = await api.put(API_ROUTES.COMPANY.ACCOUNT(id), {reason, feedback, password})
+    if(!response.data.success){
+      return rejectWithValue('Invalid response')
+    }
+
+    return
+  } catch (error) {
+    const err = error as AxiosError<{message: string}>
+    return rejectWithValue(err.response?.data.message || 'Failed to delete account')
+  }
+})
+
 const CompanySettingsSlice = createSlice({
     name: 'companySettings',
     initialState,
@@ -146,6 +164,16 @@ const CompanySettingsSlice = createSlice({
           .addCase(changePassword.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to change password'
+          })
+          .addCase(deleteAccount.pending, (state) => {
+            state.loading = true
+          })
+          .addCase(deleteAccount.fulfilled, (state) => {
+            state.loading = false
+          })
+          .addCase(deleteAccount.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to delete account'
           })
     }
 })
