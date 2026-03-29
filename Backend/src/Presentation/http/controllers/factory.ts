@@ -31,7 +31,7 @@ import { GetCompanyProfileUsecase } from "../../../Application/company/usecases/
 import { UploadCompanyProfileImageUsecase } from "../../../Application/company/usecases/settings/company.uploadProfileImage.usecase";
 import { CompanyChangePasswordUsecase } from "../../../Application/company/usecases/settings/company.changePassword.usecase";
 import { DeleteAccountUsecase } from "../../../Application/company/usecases/settings/company.deleteAccount.usecase";
-
+import { SendRestoreAccountEmailOutputDTO } from "../../../Application/company/dtos/settings/deleteAccount.company.dto";
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -58,6 +58,7 @@ import { AdminRejectCompanyUsecase } from "../../../Application/admin/usecases/u
 import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
 import { CompanySettingsController } from "./company/companySettingsController";
 import { UpdateCompanyProfileUsecase } from "../../../Application/company/usecases/settings/updateProfile.company.usecase";
+import { SendRestoreAccountEmailUsecase } from "../../../Application/company/usecases/settings/company.sendRestoreAccountEmail.usecase";
 
 
 
@@ -203,6 +204,11 @@ const iDeleteAccount = new DeleteAccountUsecase(
     iHashService,
     iMailService
 )
+const iSendRestoreAccountLink = new SendRestoreAccountEmailUsecase(
+    iCompanyRepository,
+    iMailService,
+    iTokenService
+)
 
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
@@ -315,5 +321,6 @@ export const iCompanySettingsController = new CompanySettingsController(
     iGetCompanyProfle,
     iUploadCompanyProfileImage,
     iChangeCompanyPassword,
-    iDeleteAccount
+    iDeleteAccount,
+    iSendRestoreAccountLink
 )

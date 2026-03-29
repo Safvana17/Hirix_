@@ -12,5 +12,9 @@ export const jwtConfig = {
     resetTokenForForgotPassword: {
         secret: env.RESET_TOKEN_SECRET,
         expiresIn: env.REFRESH_TOKEN_TTL
+    },
+    restoreAccountToken: {
+        secret: env.RESTORE_ACCOUNT_SECRET,
+        expiresIn: env.RESTORE_ACCOUNT_TTL
     }
 }

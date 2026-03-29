@@ -20,7 +20,8 @@ export const ROUTES = {
         PROFILE: '/settings/:id/profile',
         PROFILE_IMAGE: '/settings/:id/profileimage',
         PASSWORD: '/settings/:id/password',
-        ACCOUNT: '/settings/:id/account'
+        ACCOUNT: '/settings/:id/account',
+        RESTORE_LINK: '/settings/restore-email'
       }
     },
 

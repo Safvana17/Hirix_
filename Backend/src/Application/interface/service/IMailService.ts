@@ -4,4 +4,5 @@ export interface IMailService {
     sendRejectionEmail(email: string, companyName: string, reason: string): Promise<void>
     sendCompanyVerificationEmail(email: string, companyName: string, verificationLink: string): Promise<void>
     sendAccountDeletionEmail(email: string, companyName: string): Promise<void>
+    sendAccountRestoreEmail(email: string, companyName: string, restoreLink: string): Promise<void>
 }

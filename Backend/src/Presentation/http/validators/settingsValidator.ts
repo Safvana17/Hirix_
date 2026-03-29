@@ -1,5 +1,6 @@
-import { z } from 'zod'
+import { email, z } from 'zod'
 import { DeleteReason } from '../../../Domain/enums/deleteReason'
+import userRole from '../../../Domain/enums/userRole.enum'
 
 export const updateProfileSchema = z.object({
   name: z
@@ -106,4 +107,14 @@ export const deleteAccountSchema = z.object({
     .trim()
     .min(6, 'Password must contain atleast 6 characters')
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/, "Password must contain uppercase, lowercase, number and special character"),
+})
+
+export const sendRestoreLinkSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, 'Email is required')
+    .email('Invalid email'),
+  role: z
+    .nativeEnum(userRole)
 })

@@ -15,6 +15,7 @@ export const errorHandler: ErrorRequestHandler = (
 
 
     if(error instanceof AppError){
+        req.log.error({error: error.message}, 'AppError')
         res.status(error.statusCode).json({
             success: false,
             message: error.message

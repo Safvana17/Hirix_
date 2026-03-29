@@ -22,7 +22,9 @@ export interface ITokenService {
     generateRefreshToken(payload: RefreshTokenPayload): string
     generateCsrfToken(): string
     generateResetTokenForForgotPassword(email: string): string
+    generateRestoreAccountToken(email: string): string
     verifyAccessToken(token: string): AccessTokenPayload
     verifyRefreshToken(token: string): RefreshTokenPayload
     verifyResetTokenForForgotPassword(token: string): ResetTokenPayload
+
 }

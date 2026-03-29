@@ -65,7 +65,7 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
                 throw new AppError(settingsMessages.error.DELETED_PERMENANTLY, statusCode.FORBIDDEN)
             }
 
-            throw new AppError(settingsMessages.error.ACOUNT_DEACTIVATED, statusCode.FORBIDDEN)
+            throw new AppError(settingsMessages.error.ACCOUNT_DEACTIVATED, statusCode.FORBIDDEN)
         }
         
         if(company.getStatus() === UserStatus.PENDING){

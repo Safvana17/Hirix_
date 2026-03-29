@@ -5,6 +5,7 @@ import { env } from "../../../../Infrastructure/config/env";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { logger } from "../../../../utils/logging/loger";
 import { IHashService } from "../../../interface/service/IHashService";
 import { IMailService } from "../../../interface/service/IMailService";
 import { ITokenService } from "../../../interface/service/ITokenService";
@@ -36,13 +37,13 @@ export class LoginCompanyUsecase implements ILoginCompanyUsecase{
             }
 
             const now = new Date()
-            const diffInDays = (now.getTime() - company.deletedAt?.getTime()) / (1000 * 60 * 24)
-
+            const diffInDays = (now.getTime() - company.deletedAt?.getTime()) / (1000 * 60 * 60 * 24)
+            logger.info({days: diffInDays}, 'differences')
             if(diffInDays > 30){
                 throw new AppError(settingsMessages.error.DELETED_PERMENANTLY, statusCode.FORBIDDEN)
             }
 
-            throw new AppError(settingsMessages.error.ACOUNT_DEACTIVATED, statusCode.FORBIDDEN)
+            throw new AppError(settingsMessages.error.ACCOUNT_DEACTIVATED, statusCode.FORBIDDEN)
         }
 
         if(company.getIsBlocked()){

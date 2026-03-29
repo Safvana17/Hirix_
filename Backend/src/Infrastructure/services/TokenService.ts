@@ -41,8 +41,19 @@ export class TokenService implements ITokenService {
         resetTokenSecret,
         {
            expiresIn: jwtConfig.resetTokenForForgotPassword.expiresIn
-        }
-    )
+        })
+    }
+
+    generateRestoreAccountToken(email: string): string {
+        const resetTokenSecret = jwtConfig.restoreAccountToken.secret
+        return jwt.sign({
+            email,
+            purpose: 'restore-account'
+        },
+        resetTokenSecret,
+        {
+           expiresIn: jwtConfig.restoreAccountToken.expiresIn
+        })
     }
 
     verifyRefreshToken(token: string): RefreshTokenPayload {

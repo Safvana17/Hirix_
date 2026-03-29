@@ -1,4 +1,5 @@
 import { DeleteReason } from "../../../../Domain/enums/deleteReason";
+import userRole from "../../../../Domain/enums/userRole.enum";
 
 export interface DeleteAccountInputDTO{
     id: string;
@@ -8,5 +9,14 @@ export interface DeleteAccountInputDTO{
 }
 
 export interface DeleteAccountOutputDTO {
+    success: boolean
+}
+
+export interface SendRestoreAccountEmailInputDTO{
+    email: string
+    role: userRole
+}
+
+export interface SendRestoreAccountEmailOutputDTO {
     success: boolean
 }

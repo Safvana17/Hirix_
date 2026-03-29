@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ICompanyUpdateProfileUsecase } from "../../../../Application/company/interfaces/settings/iCompany.updateProfile.usecase";
-import { changePasswordSchema, deleteAccountSchema, getCompanySchema, updateProfileSchema, uploadProfileImageSchema } from "../../validators/settingsValidator";
+import { changePasswordSchema, deleteAccountSchema, getCompanySchema, sendRestoreLinkSchema, updateProfileSchema, uploadProfileImageSchema } from "../../validators/settingsValidator";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { logger } from "../../../../utils/logging/loger";
@@ -10,8 +10,9 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import { FileUpload } from "../../../../Shared/types/fileUpload.type";
 import { ICompanyChangePasswordUsecase } from "../../../../Application/company/interfaces/settings/iCompany.changePassword.usecase";
 import { CompanyChangePasswordInputDTO } from "../../../../Application/company/dtos/settings/changePassword.company.dto";
-import { DeleteAccountInputDTO } from "../../../../Application/company/dtos/settings/deleteAccount.company.dto";
+import { DeleteAccountInputDTO, SendRestoreAccountEmailInputDTO } from "../../../../Application/company/dtos/settings/deleteAccount.company.dto";
 import { IDeleteAccountUsecase } from "../../../../Application/company/interfaces/settings/iCompany.deleteAccount.usecase";
+import { ISendRestoreAccountEmailUsecase } from "../../../../Application/company/interfaces/settings/iCompany.sendRestoreAccountEmail.usecase";
 
 
 export class CompanySettingsController {
@@ -21,6 +22,7 @@ export class CompanySettingsController {
         private _uploadCompanyProfileImage: IUploadCompanyProfileImage,
         private _companyChangePassword: ICompanyChangePasswordUsecase,
         private _deleteAccount: IDeleteAccountUsecase,
+        private _sendRestoreAccountEmail: ISendRestoreAccountEmailUsecase
 
     ) {}
 
@@ -130,6 +132,24 @@ export class CompanySettingsController {
                 message: settingsMessages.success.ACCOUNT_DELETED
             })
 
+        } catch (error) {
+            next(error)
+        }
+    }
+    requestRestoreLink = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const parsed = sendRestoreLinkSchema.parse(req.body)
+            const payload: SendRestoreAccountEmailInputDTO = {
+                email: parsed.email,
+                role: parsed.role
+            }
+
+            await this._sendRestoreAccountEmail.execute(payload)
+
+            return res.status(statusCode.OK).json({
+                success: true,
+                message: settingsMessages.success.RESTORE_LINK_SEND_SUCCESSFULLY
+            })
         } catch (error) {
             next(error)
         }
