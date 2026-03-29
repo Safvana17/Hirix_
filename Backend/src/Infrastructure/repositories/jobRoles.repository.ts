@@ -4,15 +4,17 @@ import { IJobRepository } from "../../Domain/repositoryInterface/iJobRoles.repos
 import { IJobRoles, JobRolesModel } from "../database/Model/JobRoles";
 import { BaseRepository } from "./base.repository";
 
-export class JobRoles extends BaseRepository<JobRolesEntity, IJobRoles> implements IJobRepository {
+export class JobRolesRepository extends BaseRepository<JobRolesEntity, IJobRoles> implements IJobRepository {
     constructor(){
         super(JobRolesModel)
     }
 
     async findActiveByName(name: string): Promise<JobRolesEntity | null> {
-        const jobRole = await this._model.findOne(
-            {$and: [{$regex: name, $options: "i"}, {isActive: true}]}
-        )
+        const jobRole = await this._model.findOne({
+            name: {$regex: `^${name}$`, $options: "i"},
+            isActive: true,
+            isDeleted: false
+        })
         if(!jobRole) return null
         return this.mapToEntity(jobRole)
     }

@@ -24,6 +24,9 @@ export const ROUTES = {
         RESTORE_LINK: '/settings/restore-email',
         DETAILS: '/settings/deletedaccount-details',
         RESTORE: '/settings/restore'
+      },
+      JOBROLE: {
+        CREATE: '/jobrole'
       }
     },
 

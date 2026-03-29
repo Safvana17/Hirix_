@@ -35,7 +35,7 @@ import { GetDeletedAccountDetailsUsecase } from "../../../Application/company/us
 import { ConfirmRestoreAccountUsecase } from "../../../Application/company/usecases/settings/company.confirmRestoreAccount.usecase";
 import { UpdateCompanyProfileUsecase } from "../../../Application/company/usecases/settings/updateProfile.company.usecase";
 import { SendRestoreAccountEmailUsecase } from "../../../Application/company/usecases/settings/company.sendRestoreAccountEmail.usecase";
-
+import { CreateJobRolesUsecase } from "../../../Application/company/usecases/jobRoles/jobRoles.create.usecase";
 
 
 //repositories
@@ -44,7 +44,7 @@ import { OtpRepository } from "../../../Infrastructure/services/OtpStore";
 import { AdminLoginUsecase } from "../../../Application/admin/usecases/auth/AdminLoginUsecase";
 import { CompanyRepository } from "../../../Infrastructure/repositories/companyRepository";
 import { AdminRepository } from "../../../Infrastructure/repositories/admin.repository";
-
+import { JobRolesRepository } from "../../../Infrastructure/repositories/jobRoles.repository";
 
 //services
 import { HashService } from "../../../Infrastructure/services/HashService";
@@ -62,6 +62,7 @@ import { AdminApproveCompanyUsecase } from "../../../Application/admin/usecases/
 import { AdminRejectCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.rejectCompany.usecase";
 import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
 import { CompanySettingsController } from "./company/companySettingsController";
+import { JobRolesController } from "./company/jobRoleController";
 
 
 
@@ -69,6 +70,7 @@ const iCandidateRepository = new CandidateRepository()
 const iCompanyRepository = new CompanyRepository()
 const iAdminRepository = new AdminRepository()
 const iOtpRepository = new OtpRepository(redisClient)
+const iJobRoleRepository = new JobRolesRepository()
 
 const iHashService = new HashService()
 const iOtpService = new OtpService()
@@ -222,6 +224,11 @@ const iConfirmRestoreAccount = new ConfirmRestoreAccountUsecase(
     iHashService
 )
 
+//company job role
+const iCreateJobRole = new CreateJobRolesUsecase(
+    iJobRoleRepository
+)
+
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -337,4 +344,8 @@ export const iCompanySettingsController = new CompanySettingsController(
     iSendRestoreAccountLink,
     iGetDeletedAccount,
     iConfirmRestoreAccount
+)
+
+export const iJobRoleController = new JobRolesController(
+    iCreateJobRole
 )
