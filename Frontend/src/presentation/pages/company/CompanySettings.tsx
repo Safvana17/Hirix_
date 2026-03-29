@@ -4,6 +4,7 @@ import { companySidebarItems } from '../../../constants/sidebarItems'
 import ProfileTab from '../../components/company/ProfileTab'
 import { useNavigate } from 'react-router-dom'
 import DeleteAccount from '../../components/company/DeleteAccount'
+import NotificationTab from '../../components/company/NotificationTab'
 
 
 
@@ -49,6 +50,7 @@ const CompanyProfile: React.FC = () => {
             <div className='p-8 mt-5'>
               {activeTab === 'profile' && <ProfileTab />}
               {activeTab === 'delete-Account' && <DeleteAccount />}
+              {activeTab === 'notifications' && <NotificationTab />}
             </div>
           </div>
      </InternalLayout>
