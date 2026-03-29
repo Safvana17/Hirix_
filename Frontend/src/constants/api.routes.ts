@@ -25,7 +25,10 @@ export const API_ROUTES = {
       `/company/settings/${id}/password`,
     ACCOUNT: (id: string) => 
       `/company/settings/${id}/account`,
-    RESTORE: '/company/settings/restore',
+    RESTORE: (token: string) => 
+      `/company/settings/restore?token=${token}`,
+    DETAILS: (token: string) => 
+      `/company/settings/deletedaccount-details?token=${token}`,
     RESTORE_EMAIL: '/company/settings/restore-email'
   },
 

@@ -57,8 +57,7 @@ export interface deleteAccountPayload {
 }
 
 export interface restoreAccountPayload {
-  email: string
-  password: string
+  token: string
 }
 
 export type UpdateStatusPayload = {

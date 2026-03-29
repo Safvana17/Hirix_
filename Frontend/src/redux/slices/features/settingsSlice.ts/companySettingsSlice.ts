@@ -3,16 +3,24 @@ import type { changePasswordPayload, CompanySettings, deleteAccountPayload, rest
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
-import type { UserRole } from "../../../../constants/role";
+import { ROLES, type UserRole } from "../../../../constants/role";
+import type { User } from "../../../../types/user";
 
 interface settingsState {
     loading: boolean;
     error: string | null;
-    company: CompanySettings | null
+    company: CompanySettings | null;
+    restoredCompany: User | null
+    restorePreview: {
+      name: string,
+      email: string
+    } | null
 }
 
 const initialState: settingsState = {
     company: null,
+    restorePreview: null,
+    restoredCompany: null,
     loading: false,
     error: null
 }
@@ -131,18 +139,46 @@ void,
  }
 })
 
-export const restoreAccount = createAsyncThunk<
-void,
+export const getDeletedAccountDetails = createAsyncThunk<
+{email: string, name: string},
 restoreAccountPayload,
 {rejectValue: string}
->('settings/restoreAccount', async({email, password}, {rejectWithValue}) => {
+>('settings/getDetails', async({token}, {rejectWithValue}) => {
+  try {
+    const response = await api.get(API_ROUTES.COMPANY.DETAILS(token))
+    if(!response.data.success){
+      return rejectWithValue('Invalid Response')
+    }
+
+    // return {
+    //   email: response.data.company.email,
+    //   name: response.data.company.name
+    // }
+
+    return response.data.company
+  } catch (error) {
+    const err = error as AxiosError<{message: string}>
+    return rejectWithValue(err.response?.data.message || 'Failed to get details')     
+  }
+})
+
+export const restoreAccount = createAsyncThunk<
+{company: User, role: UserRole},
+restoreAccountPayload,
+{rejectValue: string}
+>('settings/restoreAccount', async({token}, {rejectWithValue}) => {
    try {
-    const response = await api.put(API_ROUTES.COMPANY.RESTORE, {password,email})
+    const response = await api.put(API_ROUTES.COMPANY.RESTORE(token))
     if(!response.data.success){
       return rejectWithValue('Invalid response')
     }
+    const company = response.data.company
+    if(!company){
+      return rejectWithValue('Invalid restore response')
+    }
 
-    return 
+    return {company, role: ROLES.COMPANY}
+
    } catch (error) {
     const err = error as AxiosError<{message: string}>
     return rejectWithValue(err.response?.data.message || 'Failed to restore account')   
@@ -224,11 +260,16 @@ const CompanySettingsSlice = createSlice({
             state.loading = false
             state.error = action.payload || 'Failed to send email'
           })
+          .addCase(getDeletedAccountDetails.fulfilled, (state, action) => {
+            state.loading = false
+            state.restorePreview = action.payload
+          })
           .addCase(restoreAccount.pending, (state) => {
             state.loading = true
           })
-          .addCase(restoreAccount.fulfilled, (state) => {
+          .addCase(restoreAccount.fulfilled, (state, action) => {
             state.loading = false
+            state.restoredCompany = action.payload.company
           })
           .addCase(restoreAccount.rejected, (state, action) => {
             state.loading = false
