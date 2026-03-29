@@ -118,3 +118,7 @@ export const sendRestoreLinkSchema = z.object({
   role: z
     .nativeEnum(userRole)
 })
+
+export const restoreAccountSchema = z.object({
+  token: z.string()
+})

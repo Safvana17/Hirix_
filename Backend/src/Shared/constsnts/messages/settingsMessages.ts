@@ -5,6 +5,7 @@ export const settingsMessages = {
       PASSWORD_CHANGED_SUCCESSFULYY: 'Changed password successfully',
       ACCOUNT_DELETED: 'Your account is deleted successfully',
       RESTORE_LINK_SEND_SUCCESSFULLY: 'Link to restore your account has been send successfully',
+      ACCOUNT_RESTORED_SUCCESSFULLY: 'Your company account has been restored successfully',
     },
     error: {
       UPDATE_COMPANY_FAILED: 'Failed to update company profile',

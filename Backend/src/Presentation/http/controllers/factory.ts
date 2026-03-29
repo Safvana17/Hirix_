@@ -31,7 +31,12 @@ import { GetCompanyProfileUsecase } from "../../../Application/company/usecases/
 import { UploadCompanyProfileImageUsecase } from "../../../Application/company/usecases/settings/company.uploadProfileImage.usecase";
 import { CompanyChangePasswordUsecase } from "../../../Application/company/usecases/settings/company.changePassword.usecase";
 import { DeleteAccountUsecase } from "../../../Application/company/usecases/settings/company.deleteAccount.usecase";
-import { SendRestoreAccountEmailOutputDTO } from "../../../Application/company/dtos/settings/deleteAccount.company.dto";
+import { GetDeletedAccountDetailsUsecase } from "../../../Application/company/usecases/settings/company.getDeletedAccountDetails.usecase";
+import { ConfirmRestoreAccountUsecase } from "../../../Application/company/usecases/settings/company.confirmRestoreAccount.usecase";
+import { UpdateCompanyProfileUsecase } from "../../../Application/company/usecases/settings/updateProfile.company.usecase";
+import { SendRestoreAccountEmailUsecase } from "../../../Application/company/usecases/settings/company.sendRestoreAccountEmail.usecase";
+
+
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -57,8 +62,6 @@ import { AdminApproveCompanyUsecase } from "../../../Application/admin/usecases/
 import { AdminRejectCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.rejectCompany.usecase";
 import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
 import { CompanySettingsController } from "./company/companySettingsController";
-import { UpdateCompanyProfileUsecase } from "../../../Application/company/usecases/settings/updateProfile.company.usecase";
-import { SendRestoreAccountEmailUsecase } from "../../../Application/company/usecases/settings/company.sendRestoreAccountEmail.usecase";
 
 
 
@@ -209,6 +212,15 @@ const iSendRestoreAccountLink = new SendRestoreAccountEmailUsecase(
     iMailService,
     iTokenService
 )
+const iGetDeletedAccount = new GetDeletedAccountDetailsUsecase(
+    iCompanyRepository,
+    iTokenService
+)
+const iConfirmRestoreAccount = new ConfirmRestoreAccountUsecase(
+    iCompanyRepository,
+    iTokenService,
+    iHashService
+)
 
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
@@ -322,5 +334,7 @@ export const iCompanySettingsController = new CompanySettingsController(
     iUploadCompanyProfileImage,
     iChangeCompanyPassword,
     iDeleteAccount,
-    iSendRestoreAccountLink
+    iSendRestoreAccountLink,
+    iGetDeletedAccount,
+    iConfirmRestoreAccount
 )

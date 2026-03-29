@@ -21,7 +21,9 @@ export const ROUTES = {
         PROFILE_IMAGE: '/settings/:id/profileimage',
         PASSWORD: '/settings/:id/password',
         ACCOUNT: '/settings/:id/account',
-        RESTORE_LINK: '/settings/restore-email'
+        RESTORE_LINK: '/settings/restore-email',
+        DETAILS: '/settings/deletedaccount-details',
+        RESTORE: '/settings/restore'
       }
     },
 

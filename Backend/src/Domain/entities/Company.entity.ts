@@ -25,7 +25,7 @@ export default class CompanyEntity extends UserEntity{
     deleteReason?: string;
     deleteFeedback?: string;
     status: UserStatus;
-    deletedAt?: Date;
+    deletedAt?: Date | null;
 
     constructor(id: string, name: string, email: string, password: string, isVerified: boolean ,isBlocked: boolean,isAdminVerified: boolean, status: UserStatus,isDeleted: boolean, googleId?: string, refreshTokens: string[] = []){
         super(id, name, email, password, isVerified, isBlocked, userRole.Company, googleId, refreshTokens)

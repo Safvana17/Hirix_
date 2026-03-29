@@ -33,7 +33,7 @@ export interface ICompany extends Document {
     isDeleted: boolean;
     deleteReason: string;
     deleteFeedback: string;
-    deletedAt: Date;
+    deletedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -138,7 +138,8 @@ const companySchema: Schema<ICompany> = new Schema({
         type: String
     },
     deletedAt: {
-        type: Date
+        type: Date,
+        default: null
     }
 }, {
     timestamps: true

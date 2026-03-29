@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { AccessTokenPayload, ITokenService, RefreshTokenPayload, ResetTokenPayload } from "../../Application/interface/service/ITokenService";
+import { AccessTokenPayload, ITokenService, RefreshTokenPayload, ResetTokenPayload, RestoreAccountTokenPayload } from "../../Application/interface/service/ITokenService";
 import { AppError } from "../../Domain/errors/app.error";
 import { authMessages } from "../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../Shared/Enumes/statusCode";
@@ -45,12 +45,12 @@ export class TokenService implements ITokenService {
     }
 
     generateRestoreAccountToken(email: string): string {
-        const resetTokenSecret = jwtConfig.restoreAccountToken.secret
+        const restoreTokenSecret = jwtConfig.restoreAccountToken.secret
         return jwt.sign({
             email,
             purpose: 'restore-account'
         },
-        resetTokenSecret,
+        restoreTokenSecret,
         {
            expiresIn: jwtConfig.restoreAccountToken.expiresIn
         })
@@ -75,6 +75,16 @@ export class TokenService implements ITokenService {
         const resetTokenSecret = jwtConfig.resetTokenForForgotPassword.secret
         const decoded =  jwt.verify(token, resetTokenSecret) as ResetTokenPayload
         if(decoded.purpose !== 'password-reset'){
+            throw new AppError(authMessages.error.INVALID_TOKEN_PURPOSE, statusCode.BAD_REQUEST)
+        }
+
+        return {email: decoded.email, purpose: decoded.purpose}
+    }
+
+    verifyRestoreAccountToken(token: string): RestoreAccountTokenPayload {
+        const restoreAccountTokenSecret = jwtConfig.restoreAccountToken.secret
+        const decoded =  jwt.verify(token, restoreAccountTokenSecret) as RestoreAccountTokenPayload
+        if(decoded.purpose !== 'restore-account'){
             throw new AppError(authMessages.error.INVALID_TOKEN_PURPOSE, statusCode.BAD_REQUEST)
         }
 

@@ -16,6 +16,11 @@ export interface ResetTokenPayload {
     purpose: string
 }
 
+export interface RestoreAccountTokenPayload {
+    email: string
+    purpose: string
+}
+
 
 export interface ITokenService {
     generateAccessToken(payload: AccessTokenPayload): string
@@ -26,5 +31,6 @@ export interface ITokenService {
     verifyAccessToken(token: string): AccessTokenPayload
     verifyRefreshToken(token: string): RefreshTokenPayload
     verifyResetTokenForForgotPassword(token: string): ResetTokenPayload
+    verifyRestoreAccountToken(token: string): RestoreAccountTokenPayload
 
 }

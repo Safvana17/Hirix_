@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ICompanyUpdateProfileUsecase } from "../../../../Application/company/interfaces/settings/iCompany.updateProfile.usecase";
-import { changePasswordSchema, deleteAccountSchema, getCompanySchema, sendRestoreLinkSchema, updateProfileSchema, uploadProfileImageSchema } from "../../validators/settingsValidator";
+import { changePasswordSchema, deleteAccountSchema, getCompanySchema, restoreAccountSchema, sendRestoreLinkSchema, updateProfileSchema, uploadProfileImageSchema } from "../../validators/settingsValidator";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { logger } from "../../../../utils/logging/loger";
@@ -10,9 +10,12 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import { FileUpload } from "../../../../Shared/types/fileUpload.type";
 import { ICompanyChangePasswordUsecase } from "../../../../Application/company/interfaces/settings/iCompany.changePassword.usecase";
 import { CompanyChangePasswordInputDTO } from "../../../../Application/company/dtos/settings/changePassword.company.dto";
-import { DeleteAccountInputDTO, SendRestoreAccountEmailInputDTO } from "../../../../Application/company/dtos/settings/deleteAccount.company.dto";
+import { ConfirmRestoreAccountInputDto, DeleteAccountInputDTO, GetDeletedAccountDetailsInputDTO, SendRestoreAccountEmailInputDTO } from "../../../../Application/company/dtos/settings/deleteAccount.company.dto";
 import { IDeleteAccountUsecase } from "../../../../Application/company/interfaces/settings/iCompany.deleteAccount.usecase";
 import { ISendRestoreAccountEmailUsecase } from "../../../../Application/company/interfaces/settings/iCompany.sendRestoreAccountEmail.usecase";
+import { IGetDeletedAccountDetailsUsecase } from "../../../../Application/company/interfaces/settings/iCompany.getDeletedAccountDetails.usecase";
+import { IConfirmRestoreAccountUsecase } from "../../../../Application/company/interfaces/settings/iCompany.confirmRestoreAccount.usecase";
+import { env } from "../../../../Infrastructure/config/env";
 
 
 export class CompanySettingsController {
@@ -22,7 +25,9 @@ export class CompanySettingsController {
         private _uploadCompanyProfileImage: IUploadCompanyProfileImage,
         private _companyChangePassword: ICompanyChangePasswordUsecase,
         private _deleteAccount: IDeleteAccountUsecase,
-        private _sendRestoreAccountEmail: ISendRestoreAccountEmailUsecase
+        private _sendRestoreAccountEmail: ISendRestoreAccountEmailUsecase,
+        private _getDeletedAccountDetails: IGetDeletedAccountDetailsUsecase,
+        private _confirmRestoreAccount: IConfirmRestoreAccountUsecase
 
     ) {}
 
@@ -149,6 +154,63 @@ export class CompanySettingsController {
             return res.status(statusCode.OK).json({
                 success: true,
                 message: settingsMessages.success.RESTORE_LINK_SEND_SUCCESSFULLY
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    getDeletedAccountDetails = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+            const parsed = restoreAccountSchema.parse({token: req.query.token})
+            const payload: GetDeletedAccountDetailsInputDTO = {
+                token: parsed.token
+            }
+
+            const company = await this._getDeletedAccountDetails.execute(payload)
+            return res.status(statusCode.OK).json({
+                success: true,
+                company
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    confirmRestoreAccount = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const parsed = restoreAccountSchema.parse({token: req.query.token})
+            const payload: ConfirmRestoreAccountInputDto = {
+                token: parsed.token
+            }
+
+            const {refreshToken, accessToken, csrfToken, company} = await this._confirmRestoreAccount.execute(payload)
+
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: env.REFRESH_TOKEN_MAX_AGE,
+                path: '/'
+            })
+
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: env.ACCESS_TOKEN_MAX_AGE,
+                path: '/'
+            })
+
+            res.cookie("XSRF-TOKEN", csrfToken, {
+                httpOnly: false,
+                sameSite: "lax",
+                secure: true
+            })
+            return res.status(statusCode.OK).json({
+                success: true,
+                message:settingsMessages.success.ACCOUNT_RESTORED_SUCCESSFULLY ,
+                company
             })
         } catch (error) {
             next(error)
