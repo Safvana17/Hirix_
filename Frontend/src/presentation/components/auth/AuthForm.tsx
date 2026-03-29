@@ -10,7 +10,7 @@ import { loginUser, registerUser, googleLogin } from '../../../redux/slices/feat
 import toast from 'react-hot-toast'
 import { loginSchema, registerSchema } from '../../../lib/validation/authValidation'
 import { ZodError } from 'zod'
-
+import { requestRestoreAccountEmail } from '../../../redux/slices/features/settingsSlice.ts/companySettingsSlice'
 
 
 
@@ -30,7 +30,6 @@ const AuthForm: React.FC<AuthFormProps> = ({mode, role}) => {
     })
 
     const [error, setError] = useState<Record<string, string>>({})
-
     const dispatch = useDispatch<AppDispatch>()
     const {loading} = useSelector((state: RootState) => state.auth)
     const navigate = useNavigate()
@@ -97,15 +96,20 @@ const AuthForm: React.FC<AuthFormProps> = ({mode, role}) => {
                 toast.success('Welcome Back!')
                 navigate(`/${role}/dashboard`)
             }else{
-                    const errorMsg = result.payload as string;
+                const errorMsg = result.payload as string;
+                console.log("Full Error Message:", errorMsg);
                 if (errorMsg.includes('pending admin verification')) {
-                    toast.error('Your account is pending admin approval. We will notify you via email.', { icon: '⏳' });
-                } else if (errorMsg.includes('rejected')) {
-                    toast.error('Your registration was rejected by the admin.', { icon: '❌' });
+                    toast.error('Your account is pending admin approval. We will notify you via email.');
+                }else if(errorMsg.toLowerCase().includes('deactivated')){
+                    toast.error('Your account is deactivated. We have sent a restore link to your email.');
+                    const Role = role === 'company' ? 'Company' : 'Candidate'
+                    dispatch(requestRestoreAccountEmail({email: formData.email, role: Role}))
+                }else if (errorMsg.includes('rejected')) {
+                    toast.error('Your registration was rejected by the admin.');
                 } else if (errorMsg.includes('blocked')) {
-                    toast.error('Your account has been blocked. Please contact support.', { icon: '🚫' });
+                    toast.error('Your account has been blocked. Please contact support.');
                 } else if (errorMsg.includes('Email verification required')) {
-                    toast.error('Email verification required. Check your inbox for the link.', { icon: '📧' });
+                    toast.error('Email verification required. Check your inbox for the link.');
                 } else {
                     toast.error(errorMsg || 'Login failed');
                 }
@@ -127,13 +131,13 @@ const AuthForm: React.FC<AuthFormProps> = ({mode, role}) => {
             }else{
                     const errorMsg = result.payload as string;
                 if (errorMsg.includes('pending admin verification')) {
-                    toast.error('Your account is pending admin approval. We will notify you via email.', { icon: '⏳' });
+                    toast.error('Your account is pending admin approval. We will notify you via email.');
                 } else if (errorMsg.includes('rejected')) {
-                    toast.error('Your registration was rejected by the admin.', { icon: '❌' });
+                    toast.error('Your registration was rejected by the admin.');
                 } else if (errorMsg.includes('blocked')) {
-                    toast.error('Your account has been blocked. Please contact support.', { icon: '🚫' });
+                    toast.error('Your account has been blocked. Please contact support.');
                 } else if (errorMsg.includes('Email verification required')) {
-                    toast.error('Email verification required. Check your inbox for the link.', { icon: '📧' });
+                    toast.error('Email verification required. Check your inbox for the link.');
                 } else {
                     toast.error(errorMsg || 'Login failed');
                 }
@@ -148,7 +152,6 @@ const AuthForm: React.FC<AuthFormProps> = ({mode, role}) => {
     const accentColor = role === 'candidate' ? 'blue' : 'indigo';
     // const accentClass = role === 'candidate' ? 'border-blue-500 focus:border-blue-500 bg-blue-600 hover:bg-blue-700' : 'border-indigo-500 focus:border-indigo-500 bg-indigo-600 hover:bg-indigo-700';
     const textAccentClass = role === 'candidate' ? 'text-blue-400' : 'text-indigo-400';
-
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 min-h-[600px]'>
         {/* Left section */}
@@ -266,7 +269,6 @@ const AuthForm: React.FC<AuthFormProps> = ({mode, role}) => {
                     </Link>
                 </div>
             )}
-
          </form>
        </div>
     </div>

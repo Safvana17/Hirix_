@@ -58,6 +58,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps>= ({
 
   const config = typeConfig[type]
   const Icon = config.icon
+  console.log('Modal rendered');
 
   return (
     <AlertDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>

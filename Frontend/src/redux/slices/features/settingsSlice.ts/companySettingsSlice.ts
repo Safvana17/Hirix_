@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { changePasswordPayload, CompanySettings, deleteAccountPayload, UpdateCompanyProfilePayload } from "../../../../types/company";
+import type { changePasswordPayload, CompanySettings, deleteAccountPayload, restoreAccountPayload, UpdateCompanyProfilePayload } from "../../../../types/company";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
+import type { UserRole } from "../../../../constants/role";
 
 interface settingsState {
     loading: boolean;
@@ -112,12 +113,50 @@ deleteAccountPayload,
   }
 })
 
+export const requestRestoreAccountEmail = createAsyncThunk<
+void,
+{email: string, role: UserRole},
+{rejectValue: string}
+>('setting/requestRestoreEmail', async({email, role}, {rejectWithValue}) => {
+ try {
+   const response = await api.post(API_ROUTES.COMPANY.RESTORE_EMAIL, {email, role})
+   if(!response.data.success){
+     return rejectWithValue('Invalid Response')
+   }
+ 
+   return
+ } catch (error) {
+    const err = error as AxiosError<{message: string}>
+    return rejectWithValue(err.response?.data.message || 'Failed to send restore account email')  
+ }
+})
+
+export const restoreAccount = createAsyncThunk<
+void,
+restoreAccountPayload,
+{rejectValue: string}
+>('settings/restoreAccount', async({email, password}, {rejectWithValue}) => {
+   try {
+    const response = await api.put(API_ROUTES.COMPANY.RESTORE, {password,email})
+    if(!response.data.success){
+      return rejectWithValue('Invalid response')
+    }
+
+    return 
+   } catch (error) {
+    const err = error as AxiosError<{message: string}>
+    return rejectWithValue(err.response?.data.message || 'Failed to restore account')   
+   }
+})
+
 const CompanySettingsSlice = createSlice({
     name: 'companySettings',
     initialState,
     reducers: {
-        clearError: (state) => {
-            state.error = null
+        resetStatus: (state) => {
+          state.loading = false
+          state.company = null
+          state.error =  null
         }
     },
     extraReducers: (builder) => {
@@ -175,8 +214,28 @@ const CompanySettingsSlice = createSlice({
             state.loading = false
             state.error = action.payload || 'Failed to delete account'
           })
+          .addCase(requestRestoreAccountEmail.pending, (state) => {
+            state.loading = true
+          })
+          .addCase(requestRestoreAccountEmail.fulfilled, (state) => {
+            state.loading = false
+          })
+          .addCase(requestRestoreAccountEmail.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to send email'
+          })
+          .addCase(restoreAccount.pending, (state) => {
+            state.loading = true
+          })
+          .addCase(restoreAccount.fulfilled, (state) => {
+            state.loading = false
+          })
+          .addCase(restoreAccount.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to restore account'
+          })
     }
 })
 
-export const {clearError} = CompanySettingsSlice.actions
+export const {resetStatus} = CompanySettingsSlice.actions
 export default CompanySettingsSlice.reducer

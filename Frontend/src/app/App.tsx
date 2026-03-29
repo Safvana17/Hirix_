@@ -9,6 +9,7 @@ import RoleRoute from '../components/auth/RoleRoute'
 import { ROLES } from '../constants/role'
 import { ROUTES } from '../constants/routes'
 import ChangePassword from '../presentation/components/company/ChangePassword'
+import RestoreAccount from '../presentation/pages/company/RestoreAccount'
 
 
 
@@ -69,6 +70,10 @@ const App = () => {
               <ChangePassword />
             </RoleRoute>
           } />
+
+         <Route path={ROUTES.COMPANY.RESTORE} element={<RestoreAccount />} />
+
+
 
           <Route path={ROUTES.CANDIDATE.VERIFY_OTP} element={<VerifyOtp />} />
           <Route path={ROUTES.CANDIDATE.FORGOT_PASSWORD} element={<ForgotPassword />} />

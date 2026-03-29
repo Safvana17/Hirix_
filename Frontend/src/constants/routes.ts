@@ -12,7 +12,8 @@ export const ROUTES = {
     RESET_PASSWORD: '/company/resetpassword',
     DASHBOARD: '/company/dashboard',
     SETTINGS:'/company/settings',
-    PASSWORD: '/company/password'
+    PASSWORD: '/company/password',
+    RESTORE: '/restore'
   },
 
   CANDIDATE: {

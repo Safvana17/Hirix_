@@ -24,7 +24,9 @@ export const API_ROUTES = {
     PASSWORD: (id: string) => 
       `/company/settings/${id}/password`,
     ACCOUNT: (id: string) => 
-      `/company/settings/${id}/account`
+      `/company/settings/${id}/account`,
+    RESTORE: '/company/settings/restore',
+    RESTORE_EMAIL: '/company/settings/restore-email'
   },
 
   ADMIN: {

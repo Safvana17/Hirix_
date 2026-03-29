@@ -6,12 +6,15 @@ import RoleSelection from '../../components/auth/RoleSelection'
 import AuthForm from '../../components/auth/AuthForm'
 
 
+
 type publicAuthRole = Exclude<UserRole, 'admin'>
 
 const AuthGatewayPage: React.FC = () => {
 
     const [role, setRole] = useState<publicAuthRole | null> (null)
     const location = useLocation()
+    // const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false)
+    // const [emailForRestore, setEmailForRestore] = useState('')
 
     const mode: 'login' | 'signup' = location.pathname.includes('login') ? 'login' : 'signup'
 
@@ -38,7 +41,11 @@ const AuthGatewayPage: React.FC = () => {
        {!role ? (
            <RoleSelection onSelect={(selectedRole) => setRole(selectedRole)}/>
        ): (
-           <AuthForm mode={mode} role={role} onBack={() => setRole(null)}/>
+           <AuthForm 
+           mode={mode} 
+           role={role} 
+           onBack={() => setRole(null)}   
+           />
        )}
     </AuthLayout>
   )
