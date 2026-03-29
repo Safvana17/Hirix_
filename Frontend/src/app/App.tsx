@@ -10,6 +10,7 @@ import { ROLES } from '../constants/role'
 import { ROUTES } from '../constants/routes'
 import ChangePassword from '../presentation/components/company/ChangePassword'
 import RestoreAccount from '../presentation/pages/company/RestoreAccount'
+import JobRoles from '../presentation/pages/company/JobRoles'
 
 
 
@@ -73,7 +74,12 @@ const App = () => {
           } />
 
          <Route path={ROUTES.COMPANY.RESTORE} element={<RestoreAccount />} />
-
+         
+          <Route path={ROUTES.COMPANY.JOB_ROLES} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <JobRoles />
+            </RoleRoute>
+          } />
 
 
           <Route path={ROUTES.CANDIDATE.VERIFY_OTP} element={<VerifyOtp />} />
