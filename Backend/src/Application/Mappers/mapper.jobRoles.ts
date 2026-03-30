@@ -11,7 +11,8 @@ export class JobRoleMapper {
             doc.experienceMax,
             doc.openings,
             doc.isActive,
-            doc.isDeleted
+            doc.isDeleted,
+            doc.status
         )
         return jobRole
     }
@@ -24,7 +25,8 @@ export class JobRoleMapper {
             experienceMax: entity.experienceMax,
             openings: entity.openings,
             isActive: entity.isActive,
-            isDeleted: entity.isDeleted
+            isDeleted: entity.isDeleted,
+            status: entity.status
         }
     }
 }

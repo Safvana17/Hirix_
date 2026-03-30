@@ -1,4 +1,5 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
+import jobRoleStatus from "../../../Domain/enums/jobRoleStatus";
 
 export interface IJobRoles extends Document{
     id: Types.ObjectId;
@@ -9,6 +10,7 @@ export interface IJobRoles extends Document{
     openings: number;
     isDeleted: boolean;
     isActive: boolean;
+    status: jobRoleStatus;
     createdAt: Date;
     updatedAt: Date
 }
@@ -40,6 +42,10 @@ const JobRolesSchema: Schema<IJobRoles> = new Schema({
     isDeleted: {
         type: Boolean,
         default: false
+    },
+    status: {
+        type: String,
+        default: jobRoleStatus.Active
     }
 }, {
     timestamps: true

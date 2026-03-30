@@ -1,3 +1,5 @@
+import jobRoleStatus from "../enums/jobRoleStatus";
+
 export class JobRolesEntity {
     id: string;
     name: string;
@@ -7,9 +9,10 @@ export class JobRolesEntity {
     openings: number
     isActive: boolean
     isDeleted: boolean
+    status: jobRoleStatus
    
 
-    constructor(id: string, name:string, skills: string[], experienceMin: number, experienceMax: number, openings: number, isActive: boolean, isDeleted: boolean){
+    constructor(id: string, name:string, skills: string[], experienceMin: number, experienceMax: number, openings: number, isActive: boolean, isDeleted: boolean, status: jobRoleStatus){
         this.id = id
         this.name = name
         this.skills = skills
@@ -18,5 +21,6 @@ export class JobRolesEntity {
         this.openings = openings
         this.isActive = isActive
         this.isDeleted = isDeleted
+        this.status = status
     }
 }

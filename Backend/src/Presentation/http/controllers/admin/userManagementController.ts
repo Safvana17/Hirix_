@@ -30,7 +30,6 @@ export class UserManagementController {
         try {
             logger.info({Query: req.query})
             const parsed: AdminCompanyQueryDTO = QuerySchema.parse(req.query)
-            logger.info({parsed: parsed})
             const {companies, totalPages, totalCount} = await this._getAllCompaniesUsecase.exexute(parsed)
             return res.status(statusCode.OK).json({
                 success: true,

@@ -1,3 +1,4 @@
+import { QueryFilter } from "mongoose";
 import { JobRoleMapper } from "../../Application/Mappers/mapper.jobRoles";
 import { JobRolesEntity } from "../../Domain/entities/JobRoles.entity";
 import { IJobRepository } from "../../Domain/repositoryInterface/iJobRoles.repository";
@@ -26,6 +27,45 @@ export class JobRolesRepository extends BaseRepository<JobRolesEntity, IJobRoles
         )
     }
 
+    async findAllFiltered(query: { search?: string; status?: string; page: number; limit: number; }): Promise<{ data: JobRolesEntity[]; totalPages: number; totalCount: number; }> {
+        const filter: QueryFilter<IJobRoles> = {}
+        if(query.search){
+            filter.$or = [
+                {name: {$regex: query.search, $options: 'i'} },
+                {email: {$regex: query.search, $options: 'i'} }
+            ]
+        }
+        if (query.status) {
+
+
+            if (query.status === "Active") {
+            filter.status = "active"
+            }
+
+            else if (query.status === "Closed") {
+            filter.status = "pending"
+            }
+
+            else if (query.status === "Deleted") {
+            filter.status = "rejected"
+            }
+        }
+
+        const skip = (query.page - 1) * query.limit
+        const totalCount = await this._model.countDocuments(filter)
+        const totalPages =Math.ceil(totalCount / query.limit)
+
+        const documents = await this._model.find(filter)
+              .skip(skip)
+              .limit(query.limit)
+              .sort({createdAt: -1})
+
+        return {
+            data: documents.map(doc => this.mapToEntity(doc)),
+            totalPages,
+            totalCount
+        }
+    }
     protected mapToEntity(doc: IJobRoles): JobRolesEntity {
         return JobRoleMapper.toEntity(doc)
     }

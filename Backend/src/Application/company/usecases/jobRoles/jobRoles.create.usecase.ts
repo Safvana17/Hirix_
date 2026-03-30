@@ -1,4 +1,5 @@
 import { JobRolesEntity } from "../../../../Domain/entities/JobRoles.entity";
+import jobRoleStatus from "../../../../Domain/enums/jobRoleStatus";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
@@ -29,7 +30,8 @@ export class CreateJobRolesUsecase implements ICreateJobRolesUsecase {
             request.experienceMax,
             request.openings,
             true,
-            false
+            false,
+            jobRoleStatus.Active
         )
 
         await this._jobRolesRepository.create(jobRole)

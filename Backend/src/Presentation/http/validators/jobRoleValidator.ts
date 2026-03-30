@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import jobRoleStatus from '../../../Domain/enums/jobRoleStatus'
 
 
 export const createJobRoleScheama = z.object({
@@ -20,4 +21,11 @@ export const createJobRoleScheama = z.object({
     openings: z
         .number()
         .min(1)
+})
+
+export const JobRoleQuerySchema = z.object({
+    search: z.string().optional(),
+    status: z.nativeEnum(jobRoleStatus).optional(),
+    page: z.coerce.number().default(1),
+    limit: z.coerce.number().default(1)
 })

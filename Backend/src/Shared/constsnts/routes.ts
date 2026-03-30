@@ -26,7 +26,9 @@ export const ROUTES = {
         RESTORE: '/settings/restore'
       },
       JOBROLE: {
-        CREATE: '/jobrole'
+        BASE: '/jobroles',
+        CREATE: '/jobrole',
+
       }
     },
 
