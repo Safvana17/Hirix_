@@ -33,6 +33,10 @@ export const API_ROUTES = {
     JOB_ROLE: '/company/jobrole',
     GET_ALL_JOBROLE: '/company/jobroles',
     EDIT_JOBROLE: (id: string) => 
+      `/company/jobrole/${id}`,
+    JOBROLE_STATUS: (id: string) => 
+      `/company/jobrole/${id}/status`,
+    DELETE_JOB_ROLE: (id: string) => 
       `/company/jobrole/${id}`
   },
 

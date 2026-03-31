@@ -4,12 +4,12 @@ import { companySidebarItems } from '../../../constants/sidebarItems'
 import { Ban, CheckCircle, Edit2, Eye, Filter, LucideDelete, Plus, Search } from 'lucide-react'
 import JobRoleModal from '../../components/modal/JobRoleModal'
 import type { JobRole, ModalMode } from '../../../types/jobRole'
-import { createJobRole, editJobRole, getAllJobRoles } from '../../../redux/slices/features/jobRoles/jobRoleSlice'
+import { createJobRole, editJobRole, getAllJobRoles, updateJobRoleStatus } from '../../../redux/slices/features/jobRoles/jobRoleSlice'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import { useDebounce } from '../../../hooks/useDebounce'
-// import ConfirmationModal from '../../components/modal/ConfirmationModal'
+import ConfirmationModal from '../../components/modal/ConfirmationModal'
 import DataTable from '../../components/ui/DataTable'
 import type { Column } from '../../../types/table'
 
@@ -26,9 +26,31 @@ const JobRoles: React.FC= () => {
     const { loading, pagination, jobRoles} = useSelector((state: RootState) => state.jobRole)
     const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: boolean;
+        title: string;
+        message: string;
+        onConfirm: () => void;
+        type: 'danger' | 'warning' | 'info';
+    }>({
+        isOpen: false,
+        title: '',
+        message: '',
+        onConfirm: () => { },
+        type: 'warning'
+    })
+
     useEffect(() => {
         dispatch(getAllJobRoles({search: debouncedSearchTerm, status: statusFilter, page: currentPage, limit: 10}))
     }, [dispatch, debouncedSearchTerm, statusFilter, currentPage])
+
+    const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+        setModalConfig({...config, isOpen: true})
+    }
+
+    const closeModal = () => {
+        setModalConfig(prev => ({...prev, isOpen: false}))
+    }
 
     const handleCreateJobRole = () => {
         setModalMode('create')
@@ -76,8 +98,19 @@ const JobRoles: React.FC= () => {
         }
     }
 
-    const handleUpdateStatus = async(id: string, status: string) => {
-         toast.success(`change status, ${id}, ${status}`)
+    const handleUpdateStatus = async(id: string, currentStatus: string) => {
+        const newStatus = currentStatus === 'Active' ? 'Closed' : 'Active'
+        const actionText = newStatus === 'Closed' ? 'Close' : 'Active Role'
+
+        openModal({
+            title: `${actionText} Job Role`,
+            message: `Are you sure you want to ${actionText.toLowerCase()} this job role?`,
+            type: newStatus === 'Closed' ? 'danger' : 'warning',
+            onConfirm: () => {
+                dispatch(updateJobRoleStatus({id, status: newStatus}));
+                closeModal();
+            }
+        })
     }
 
     const columns: Column<JobRole>[] =  [
@@ -128,6 +161,7 @@ const JobRoles: React.FC= () => {
                 <button
                     title="Delete"
                     className="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all"
+                    
                 >
                     <LucideDelete className="w-4 h-4" />
                 </button>
@@ -197,6 +231,15 @@ const JobRoles: React.FC= () => {
                 initialData={selectedJobRole}
                 onClose={() => setIsModalOpen(false)}
                 onSave={handleSaveJobRole}
+            />
+
+            <ConfirmationModal 
+               isOpen={modalConfig.isOpen}
+               onClose={closeModal}
+               onConfirm={modalConfig.onConfirm}
+               title={modalConfig.title}
+               message={modalConfig.message}
+               type={modalConfig.type}
             />
         </div>
     </InternalLayout>

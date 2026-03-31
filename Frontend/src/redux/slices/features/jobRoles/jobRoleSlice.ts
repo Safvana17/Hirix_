@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { createJobRolePayload, editJobRolePayload, getAllJobRolesParams, GetAllJobRolesResponse, JobRole } from "../../../../types/jobRole";
+import type { createJobRolePayload, editJobRolePayload, getAllJobRolesParams, GetAllJobRolesResponse, JobRole, UpdateJobRoleStatusArgs, UpdateJobRoleStatusPayload } from "../../../../types/jobRole";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -84,6 +84,27 @@ editJobRolePayload,
     }
 })
 
+export const updateJobRoleStatus = createAsyncThunk<
+UpdateJobRoleStatusPayload,
+UpdateJobRoleStatusArgs,
+{rejectValue: string}
+>('jobrole/updateStatus', async(UpdateJobRoleStatusArgs, {rejectWithValue}) => {
+    try {
+        const response = await api.put(API_ROUTES.COMPANY.JOBROLE_STATUS(UpdateJobRoleStatusArgs.id), {status: UpdateJobRoleStatusArgs.status})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return {
+            id: response.data.updatedJobRole.id,
+            status: response.data.updatedJobRole.status
+        }
+    } catch (error) {
+       const err = error as AxiosError<{message: string}>
+       return rejectWithValue(err.response?.data?.message || 'Failed to update status of job role')        
+    }
+})
+
 const jobRoleSlice = createSlice({
     name: 'JobRole',
     initialState,
@@ -131,6 +152,21 @@ const jobRoleSlice = createSlice({
          .addCase(editJobRole.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to edit job role'
+         })
+         .addCase(updateJobRoleStatus.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(updateJobRoleStatus.fulfilled, (state, action) => {
+            state.loading = false
+            const {id, status} = action.payload
+            const role = state.jobRoles.find(c => c.id === id)
+            if(role){
+                role.status = status
+            }
+         })
+         .addCase(updateJobRoleStatus.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Faile to update job role status'
          })
     }  
 })

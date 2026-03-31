@@ -39,3 +39,14 @@ export interface GetAllJobRolesResponse{
     totalPages: number
     totalCount: number
 }
+
+export type UpdateJobRoleStatusPayload = {
+  id: string
+  status: 'Active' | 'Closed' 
+}
+
+export type UpdateJobRoleStatusArgs = {
+  id: string
+  status: 'Active' | 'Closed' | ""
+  queryParams?: getAllJobRolesParams
+}
