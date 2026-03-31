@@ -11,6 +11,7 @@ import { ROUTES } from '../constants/routes'
 import ChangePassword from '../presentation/components/company/ChangePassword'
 import RestoreAccount from '../presentation/pages/company/RestoreAccount'
 import JobRoles from '../presentation/pages/company/JobRoles'
+import AdminCategory from '../presentation/pages/admin/AdminCategory'
 
 
 
@@ -114,6 +115,12 @@ const App = () => {
           <Route path={ROUTES.ADMIN.COMPANY_DETAIL} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminCompanyDetailPage />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.ADMIN.CATEGORIES} element={
+            <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+              <AdminCategory />
             </RoleRoute>
           } />
           

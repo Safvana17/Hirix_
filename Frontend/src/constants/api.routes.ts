@@ -53,6 +53,14 @@ export const API_ROUTES = {
     CANDIDATES: {
       GET_ALL: "/admin/candidates",
       STATUS: (id: string) => `/admin/candidate/${id}/status`,
+    },
+    CATEGORY: {
+      CREATE: '/admin/category',
+      EDIT: (id: string) => 
+        `/admin/category/${id}`,
+      DELETE: (id: string) => 
+        `/admin/category/${id}`,
+      GET_ALL: '/admin/categories'
     }
   },
 }
