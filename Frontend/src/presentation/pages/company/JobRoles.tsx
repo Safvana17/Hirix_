@@ -1,20 +1,19 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState,  } from 'react'
 import InternalLayout from '../../layouts/InternalLayout'
 import { companySidebarItems } from '../../../constants/sidebarItems'
-import { Filter, Plus, Search } from 'lucide-react'
+import { Ban, CheckCircle, Edit2, Eye, Filter, LucideDelete, Plus, Search } from 'lucide-react'
 import JobRoleModal from '../../components/modal/JobRoleModal'
 import type { JobRole } from '../../../types/jobRole'
-import { createJobRole } from '../../../redux/slices/features/jobRoles/jobRoleSlice'
+import { createJobRole, getAllJobRoles } from '../../../redux/slices/features/jobRoles/jobRoleSlice'
 import toast from 'react-hot-toast'
-import { useDispatch } from 'react-redux'
-import type { AppDispatch } from '../../../redux/store'
-// import { createJobRole } from '../../../redux/slices/features/jobRoles/jobRoleSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import type { AppDispatch, RootState } from '../../../redux/store'
 // import { useNavigate } from 'react-router-dom'
-// import { useDebounce } from '../../../hooks/useDebounce'
+import { useDebounce } from '../../../hooks/useDebounce'
 // import ConfirmationModal from '../../components/modal/ConfirmationModal'
-// import DataTable from '../../components/ui/DataTable'
-// import type { Column } from '../../../types/table'
-// import type { JobRole } from '../../../types/jobRole'
+import DataTable from '../../components/ui/DataTable'
+import type { Column } from '../../../types/table'
+
 
 const JobRoles: React.FC= () => {
 
@@ -22,24 +21,27 @@ const JobRoles: React.FC= () => {
     const [statusFilter, setStatusFilter] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
    
-    // const [currentPage, setCurrentPage] = useState(1)
+    const [currentPage, setCurrentPage] = useState(1)
     const dispatch = useDispatch<AppDispatch>()
     // const navigate = useNavigate()
-    // const { candidates, loading, pagination } = useSelector((state: RootState) => state.userSlice)
-    // const {JobRoles, loading, pagination} = useSelector((state: RootState) => state.jobRole)
-    // const debouncedSearchTerm = useDebounce(searchTerm, 500)
+    const { loading, pagination, jobRoles} = useSelector((state: RootState) => state.jobRole)
+    const debouncedSearchTerm = useDebounce(searchTerm, 500)
+
+    useEffect(() => {
+        dispatch(getAllJobRoles({search: debouncedSearchTerm, status: statusFilter, page: currentPage, limit: 4}))
+    }, [dispatch, debouncedSearchTerm, statusFilter, currentPage])
 
     const handleCreateJobRole = () => {
          setIsModalOpen(true)
     }
     const handleSearchChange = useCallback((val: string) => {
         setSearchTerm(val)
-        // setCurrentPage(1)
+        setCurrentPage(1)
     }, [])
 
     const handleStatusChange = useCallback((val: string) => {
         setStatusFilter(val)
-        // setCurrentPage(1)
+        setCurrentPage(1)
     },[])
 
     const handleSaveJobRole = async(data: JobRole) => {
@@ -56,29 +58,65 @@ const JobRoles: React.FC= () => {
         }
     }
 
-    // const columns: Column<JobRole>[] =  [
-    //     {header: 'Name', key: 'name', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
-    //     {header: 'Email Address', key: 'email', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
-    //     {header: 'Status', key: 'status', render: (val) => (
-    //         <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${val === 'active' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
-    //             {val}
-    //         </span>
-    //     )},
-    //     {header: 'Actions', key: 'id', render:(id, item) => (
-    //         <div>
-    //             <button
-    //               onClick={() => handleUpdateStatus(id, item.status)}
-    //               title={item.status === 'active' ? 'Block Candidate' : 'Unblock Candidate'}
-    //               className={`p-2 rounded-lg transition-colors border border-transparent ${item.status === 'active' 
-    //                  ?'hover:bg-red-50 text-red-600 hover:border-red-100'
-    //                  : 'hover:bg-green-50 text-green-600 hover:border-green-100'
-    //               }`}
-    //             >
-    //                {item.status === 'active' ? <Ban className='w-4 h-4'/> : <CheckCircle className='w-4 h-4' />} 
-    //             </button>
-    //         </div>
-    //     )}
-    // ]
+    const handleUpdateStatus = async(id: string, status: string) => {
+         toast.success(`change status, ${id}, ${status}`)
+    }
+
+    const columns: Column<JobRole>[] =  [
+        {header: 'Name', key: 'name', render: (val) => <span className='font-bold text-gray-600'>{val}</span>},
+        {header: 'Skills', key: 'skills', render: (val) => <span className='font-bold text-gray-600'>{Array.isArray(val)?val.join(', '): '-' }</span>},
+        {header: 'Experience', key: 'experienceMin', render: (_, item) => (
+            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border bg-[#E9C788] text-white">
+              {item.experienceMin} - {item.experienceMax} yrs
+            </span>
+           )
+        },
+        {header: 'Openings', key: 'openings', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+        {header: 'Status', key: 'status', render: (val) => <span className={`${val === 'Active' ? 'font-bold text-green-800' : 'font-bold text-red-800'}`}>{val}</span>},
+        {header: 'Actions', key: 'id', render: (id, item) => (
+            <div className="flex items-center gap-1 sm:gap-2">
+            
+            {/* Status Toggle */}
+            <button
+                onClick={() => handleUpdateStatus(id, item.status)}
+                title={item.status === 'Active' ? 'Deactivate' : 'Activate'}
+                className={`p-2 rounded-lg border transition-all duration-200 
+                ${item.status === 'Active'
+                    ? 'text-red-600 hover:bg-red-50 border-transparent hover:border-red-100'
+                    : 'text-green-600 hover:bg-green-50 border-transparent hover:border-green-100'
+                }`}
+            >
+                {item.status === 'Active'
+                ? <Ban className="w-4 h-4" />
+                : <CheckCircle className="w-4 h-4" />
+                }
+            </button>
+
+            <button
+                title="View"
+                className="p-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all"
+            >
+                <Eye className="w-4 h-4" />
+            </button>
+
+            <button
+                title="Edit"
+                className="p-2 rounded-lg text-gray-500 hover:text-yellow-600 hover:bg-yellow-50 transition-all"
+            >
+                <Edit2 className="w-4 h-4" />
+            </button>
+
+            <button
+                title="Delete"
+                className="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all"
+            >
+                <LucideDelete className="w-4 h-4" />
+            </button>
+
+            </div>
+        )
+        }
+    ]
   return (
     <InternalLayout title='Job Roles' subTitle='Manage your open positions and requirements' sidebarItems={companySidebarItems}>
         <div>
@@ -113,25 +151,25 @@ const JobRoles: React.FC= () => {
                                onChange={(e) => handleStatusChange(e.target.value)}
                             >
                                 <option value="">All Status</option>
-                                <option value="active">Active</option>
-                                <option value="blocked">Blocked</option>
+                                <option value="Active">Active</option>
+                                <option value="Closed">Closed</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
-            {/* <DataTable 
+            <DataTable 
                columns={columns}
                isLoading={loading}
-               data={candidates}
-               emptyMessage='No candidates found matching your criteria'
+               data={jobRoles}
+               emptyMessage='No job roles found matching your criteria'
                pagination={{
                 currentPage,
-                totalPages: pagination.users.totalPages,
+                totalPages: pagination.jobRole.totalPages,
                 onPageChange: (page) => setCurrentPage(page)
                }}
             >
-            </DataTable> */}
+            </DataTable>
 
             <JobRoleModal
                 isOpen={isModalOpen}

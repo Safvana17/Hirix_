@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { createJobRolePayload, JobRole } from "../../../../types/jobRole";
+import type { createJobRolePayload, getAllJobRolesParams, GetAllJobRolesResponse, JobRole } from "../../../../types/jobRole";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -49,6 +49,23 @@ createJobRolePayload,
     }
 })
 
+export const getAllJobRoles = createAsyncThunk <
+GetAllJobRolesResponse,
+getAllJobRolesParams | undefined,
+{rejectValue: string}
+>('jobrole/getAllJobRole', async(params: {search?: string; status?: string; page?: number; limit?: number} | undefined, {rejectWithValue} )=> {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.GET_ALL, {params})
+        if(!response.data.success){
+            return rejectWithValue('Invalid Response')
+        }
+        return response.data
+    } catch (error) {
+       const err = error as AxiosError<{message: string}>
+       return rejectWithValue(err.response?.data?.message || 'Failed to get all job roles')        
+    }
+})
+
 const jobRoleSlice = createSlice({
     name: 'JobRole',
     initialState,
@@ -68,6 +85,19 @@ const jobRoleSlice = createSlice({
          .addCase(createJobRole.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to add job role'
+         })
+         .addCase(getAllJobRoles.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getAllJobRoles.fulfilled, (state, action) => {
+            state.loading = false
+            state.jobRoles = action.payload.jobRoles
+            state.pagination.jobRole.totalCount = action.payload.totalCount
+            state.pagination.jobRole.totalPages = action.payload.totalPages
+         })
+         .addCase(getAllJobRoles.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to fetch job roles'
          })
     }  
 })

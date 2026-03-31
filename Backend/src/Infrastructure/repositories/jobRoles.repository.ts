@@ -39,15 +39,15 @@ export class JobRolesRepository extends BaseRepository<JobRolesEntity, IJobRoles
 
 
             if (query.status === "Active") {
-            filter.status = "active"
+            filter.status = "Active"
             }
 
             else if (query.status === "Closed") {
-            filter.status = "pending"
+            filter.status = "Closed"
             }
 
             else if (query.status === "Deleted") {
-            filter.status = "rejected"
+            filter.status = "Deleted"
             }
         }
 

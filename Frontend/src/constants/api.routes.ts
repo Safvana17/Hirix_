@@ -30,7 +30,8 @@ export const API_ROUTES = {
     DETAILS: (token: string) => 
       `/company/settings/deletedaccount-details?token=${token}`,
     RESTORE_EMAIL: '/company/settings/restore-email',
-    JOB_ROLE: '/company/jobrole'
+    JOB_ROLE: '/company/jobrole',
+    GET_ALL: '/company/jobroles'
   },
 
   ADMIN: {

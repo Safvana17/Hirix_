@@ -1,10 +1,11 @@
 export interface JobRole {
-    id?: string
+    id: string
     name: string
     skills: string[]
     experienceMin: number
     experienceMax: number
     openings: number
+    status: string
 }
 
 export interface createJobRolePayload {
@@ -13,4 +14,17 @@ export interface createJobRolePayload {
     experienceMin: number
     experienceMax: number
     openings: number
+}
+
+export type getAllJobRolesParams = {
+  search?: string
+  status?: string
+  page?: number
+  limit?: number
+}
+
+export interface GetAllJobRolesResponse{
+    jobRoles: JobRole[]
+    totalPages: number
+    totalCount: number
 }
