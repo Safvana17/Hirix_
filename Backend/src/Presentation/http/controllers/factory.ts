@@ -39,7 +39,7 @@ import { CreateJobRolesUsecase } from "../../../Application/company/usecases/job
 import { GetAllJobRolesUsecase } from "../../../Application/company/usecases/jobRoles/jobRoles.getAll.usecase";
 import { EditJobRoleUsecase } from "../../../Application/company/usecases/jobRoles/jobRole.edit.usecase";
 import { UpdateJobRoleStatusUsecase } from "../../../Application/company/usecases/jobRoles/jobRole.updateStatus.usecase";
-
+import { DeleteJobRoleUsecase } from "../../../Application/company/usecases/jobRoles/jobRole.delete.usecase";
 
 
 //repositories
@@ -241,6 +241,9 @@ const iEditJobRole = new EditJobRoleUsecase(
 const iUpdateJobRoleStatus = new UpdateJobRoleStatusUsecase (
     iJobRoleRepository
 )
+const iDeleteJobRole = new DeleteJobRoleUsecase(
+    iJobRoleRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -362,5 +365,6 @@ export const iJobRoleController = new JobRolesController(
     iCreateJobRole,
     iGetAllJobRoles,
     iEditJobRole,
-    iUpdateJobRoleStatus
+    iUpdateJobRoleStatus,
+    iDeleteJobRole
 )

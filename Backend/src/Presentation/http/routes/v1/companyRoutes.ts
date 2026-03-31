@@ -23,5 +23,5 @@ router.post(ROUTES.COMPANY.JOBROLE.CREATE, authHandler(iTokenService), verifyCsr
 router.get(ROUTES.COMPANY.JOBROLE.BASE, authHandler(iTokenService), verifyCsrf, iJobRoleController.getAllJobRoles)
 router.put(ROUTES.COMPANY.JOBROLE.EDIT, authHandler(iTokenService), verifyCsrf, iJobRoleController.editJobRole)
 router.put(ROUTES.COMPANY.JOBROLE.STATUS, authHandler(iTokenService), verifyCsrf, iJobRoleController.updateStatus)
-
+router.delete(ROUTES.COMPANY.JOBROLE.DELETE, authHandler(iTokenService), verifyCsrf, iJobRoleController.deleteJobRole)
 export default router;

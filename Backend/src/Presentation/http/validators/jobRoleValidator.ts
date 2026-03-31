@@ -55,3 +55,7 @@ export const updateJobRoleSchema = z.object({
     id: z.string().regex(/^[0-9a-fA-F]{24}$/),
     status: z.nativeEnum(jobRoleStatus)
 })
+
+export const deleteJobRoleSchema = z.object({
+    id: z.string().regex(/^[0-9a-fA-F]{24}$/)
+})

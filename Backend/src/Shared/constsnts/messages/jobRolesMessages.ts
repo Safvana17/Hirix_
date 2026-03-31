@@ -1,6 +1,7 @@
 export const JobRoleMessages = {
     success: {
         JOB_ROLE_CREATED: 'Job role created successfully',
+        JOB_ROLE_DELETED: 'Job role deleted successfully',
     },
     error: {
         ALREADY_EXIST: 'Active job role with this name already exists.',
@@ -10,5 +11,6 @@ export const JobRoleMessages = {
         CANNOT_EDIT_DELETED_JOBROLE: 'You cannot edit deleted job role',
         INVALID_OPENINGS: 'Openings must be greater than zero',
         UPDATE_JOBROLE_STATUS_FAILED: 'Failed to update job role status',
+        FAILED_DELETE_JOBROLE: 'Failed to delete job role',
     }
 }

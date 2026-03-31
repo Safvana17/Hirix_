@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ICreateJobRolesUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRols.create.usecase";
-import { createJobRoleScheama, EditJobRoleScheama, JobRoleQuerySchema, updateJobRoleSchema } from "../../validators/jobRoleValidator";
+import { createJobRoleScheama, deleteJobRoleSchema, EditJobRoleScheama, JobRoleQuerySchema, updateJobRoleSchema } from "../../validators/jobRoleValidator";
 import { CreateJobRolesInputDTO } from "../../../../Application/company/dtos/jobRoles/jobRoles.create.dto";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
@@ -10,6 +10,8 @@ import { EditJobRolesInputDTO } from "../../../../Application/company/dtos/jobRo
 import { IEditJobRoleUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRoles.edit.usecase";
 import { UpdateJobRoleStatusInputDTO } from "../../../../Application/company/dtos/jobRoles/jobRole.updateStatus.dto";
 import { IUpdateJobRoleStatusUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRole.updateStatus.usecase";
+import { IDeleteJobRoleUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRole.delete.usecase";
+import { DeleteJobRoleInputDto } from "../../../../Application/company/dtos/jobRoles/jobRole.delete.dto";
 
 export class JobRolesController {
     constructor (
@@ -17,6 +19,7 @@ export class JobRolesController {
         private _getAllJobRoles: IGetAllJobRolesUsecase,
         private _editJobRole: IEditJobRoleUsecase,
         private _updateJobRoleStatus: IUpdateJobRoleStatusUsecase,
+        private _deleteJobRole: IDeleteJobRoleUsecase
     ) {}
 
     createJobRole =async (req: Request, res: Response, next: NextFunction) => {
@@ -97,6 +100,27 @@ export class JobRolesController {
             return res.status(statusCode.OK).json({
                 success: true,
                 updatedJobRole
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    deleteJobRole = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = Array.isArray(req.params.id)
+                ? req.params.id[0]
+                : req.params.id
+            const parsed = deleteJobRoleSchema.parse({id})
+            const payload: DeleteJobRoleInputDto = {
+                id: parsed.id
+            }
+            const deletedJobRole = await this._deleteJobRole.execute(payload)
+
+            return res.status(statusCode.OK).json({
+                success: true,
+                message: JobRoleMessages.success.JOB_ROLE_DELETED,
+                deletedJobRole
             })
         } catch (error) {
             next(error)
