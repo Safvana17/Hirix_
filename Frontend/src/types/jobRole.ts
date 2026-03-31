@@ -16,6 +16,15 @@ export interface createJobRolePayload {
     openings: number
 }
 
+export interface editJobRolePayload {
+    id: string
+    name: string;
+    skills: string[]
+    experienceMin: number
+    experienceMax: number
+    openings: number
+}
+
 export type getAllJobRolesParams = {
   search?: string
   status?: string

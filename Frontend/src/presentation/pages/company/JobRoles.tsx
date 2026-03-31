@@ -4,7 +4,7 @@ import { companySidebarItems } from '../../../constants/sidebarItems'
 import { Ban, CheckCircle, Edit2, Eye, Filter, LucideDelete, Plus, Search } from 'lucide-react'
 import JobRoleModal from '../../components/modal/JobRoleModal'
 import type { JobRole, ModalMode } from '../../../types/jobRole'
-import { createJobRole, getAllJobRoles } from '../../../redux/slices/features/jobRoles/jobRoleSlice'
+import { createJobRole, editJobRole, getAllJobRoles } from '../../../redux/slices/features/jobRoles/jobRoleSlice'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
@@ -41,6 +41,11 @@ const JobRoles: React.FC= () => {
         setSelectedJobRole(item)
         setIsModalOpen(true)
     }
+    const handleEditJobRole = (item: JobRole) => {
+        setModalMode('edit')
+        setSelectedJobRole(item)
+        setIsModalOpen(true)
+    }
     const handleSearchChange = useCallback((val: string) => {
         setSearchTerm(val)
         setCurrentPage(1)
@@ -53,9 +58,15 @@ const JobRoles: React.FC= () => {
 
     const handleSaveJobRole = async(data: JobRole) => {
         try {
-            await dispatch(createJobRole(data)).unwrap()
-            setIsModalOpen(false)
-            toast.success('Job Role added successfully')
+            if(modalMode === 'create'){
+               await dispatch(createJobRole(data)).unwrap()
+               setIsModalOpen(false)
+               toast.success('Job Role added successfully')
+            }else if(modalMode === 'edit'){
+                await dispatch(editJobRole(data))
+                setIsModalOpen(false)
+                toast.success('Job role updated successfully')
+            }
         } catch (error) {
             if (error instanceof Error) {
             toast.error(error.message);
@@ -109,6 +120,7 @@ const JobRoles: React.FC= () => {
                 <button
                     title="Edit"
                     className="p-2 rounded-lg text-gray-500 hover:text-yellow-600 hover:bg-yellow-50 transition-all"
+                    onClick={() => handleEditJobRole(item)}
                 >
                     <Edit2 className="w-4 h-4" />
                 </button>

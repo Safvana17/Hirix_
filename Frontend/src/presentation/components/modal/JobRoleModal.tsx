@@ -25,26 +25,6 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
         openings: initialData?.openings || 0
     });
 
-    // useEffect(() => {
-    //     if(initialData){
-    //         setFormData({
-    //             name: initialData.name,
-    //             skills: initialData.skills.join(', '),
-    //             experienceMin: initialData.experienceMin,
-    //             experienceMax: initialData.experienceMax,
-    //             openings: initialData.openings
-    //         })
-    //     }else{
-    //         setFormData({
-    //             name: '',
-    //             skills: '',
-    //             experienceMin: 0,
-    //             experienceMax: 0,
-    //             openings: 0
-    //         })
-    //     }
-    // },[initialData, isOpen])
-
     if (!isOpen) return null;
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -60,16 +40,27 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
           return;
         }
 
-        const data: JobRole = {
-            ...initialData,
-            name: formData.name.trim(),
-            skills: formattedSkills,
-            experienceMin: formData.experienceMin,
-            experienceMax: formData.experienceMax,
-            openings: formData.openings
-        };
-
-        onSave(data);
+        if( mode === 'create'){
+            onSave({
+                name: formData.name.trim(),
+                skills: formattedSkills,
+                experienceMin: formData.experienceMin,
+                experienceMax: formData.experienceMax,
+                openings: formData.openings,
+                status: 'Active',
+                id: ''
+            })
+        }else if(mode === 'edit' && initialData){
+            onSave({
+                id: initialData.id,
+                status: initialData.status,
+                name: formData.name.trim(),
+                skills: formattedSkills,
+                experienceMin: formData.experienceMin,
+                experienceMax: formData.experienceMax,
+                openings: formData.openings,
+            })
+        }
     };
 
     const isView = mode === 'view'
@@ -220,7 +211,7 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
                                 type="submit"
                                 className="flex-1 py-3 rounded-xl bg-amber-600 text-white font-semibold hover:bg-amber-700 transition"
                             >
-                                Add Job Role
+                                {mode === 'create' ? 'Add Job Role' : 'Update'}
                             </button>
                         </div>
                     }

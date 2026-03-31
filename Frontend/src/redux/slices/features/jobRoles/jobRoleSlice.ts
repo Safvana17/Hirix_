@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { createJobRolePayload, getAllJobRolesParams, GetAllJobRolesResponse, JobRole } from "../../../../types/jobRole";
+import type { createJobRolePayload, editJobRolePayload, getAllJobRolesParams, GetAllJobRolesResponse, JobRole } from "../../../../types/jobRole";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -55,7 +55,7 @@ getAllJobRolesParams | undefined,
 {rejectValue: string}
 >('jobrole/getAllJobRole', async(params: {search?: string; status?: string; page?: number; limit?: number} | undefined, {rejectWithValue} )=> {
     try {
-        const response = await api.get(API_ROUTES.COMPANY.GET_ALL, {params})
+        const response = await api.get(API_ROUTES.COMPANY.GET_ALL_JOBROLE, {params})
         if(!response.data.success){
             return rejectWithValue('Invalid Response')
         }
@@ -63,6 +63,24 @@ getAllJobRolesParams | undefined,
     } catch (error) {
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to get all job roles')        
+    }
+})
+
+export const editJobRole = createAsyncThunk<
+JobRole,
+editJobRolePayload,
+{rejectValue: string}
+>('jobrole/edit', async({id, name, skills, experienceMin, experienceMax, openings}, {rejectWithValue}) => {
+    try {
+        const response = await api.put(API_ROUTES.COMPANY.EDIT_JOBROLE(id), {name, skills, experienceMin, experienceMax, openings} )
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.updatedJobRole
+    } catch (error) {
+       const err = error as AxiosError<{message: string}>
+       return rejectWithValue(err.response?.data?.message || 'Failed to edit job role')         
     }
 })
 
@@ -99,6 +117,20 @@ const jobRoleSlice = createSlice({
          .addCase(getAllJobRoles.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to fetch job roles'
+         })
+         .addCase(editJobRole.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(editJobRole.fulfilled, (state, action) => {
+            state.loading = false
+            const index = state.jobRoles.findIndex((c) => c.id === action.payload.id)
+            if(index !== -1){
+                state.jobRoles[index] = action.payload
+            }
+         })
+         .addCase(editJobRole.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to edit job role'
          })
     }  
 })
