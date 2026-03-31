@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import type { JobRole, ModalMode } from '../../../types/jobRole';
+import { createJobRoleScheama } from '../../../lib/validation/jobRoleValidation';
+import { ZodError } from 'zod';
 
 interface JobRoleModalProps {
     isOpen: boolean;
@@ -24,8 +26,29 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
         experienceMax: initialData?.experienceMax || 0,
         openings: initialData?.openings || 0
     });
+    const [localError, setLocalError] = useState<Record<string, string>>({})
 
     if (!isOpen) return null;
+
+    const validate = () => {
+        try {
+        createJobRoleScheama.parse(formData)
+        setLocalError({})
+        return true
+
+        } catch (error) {
+        if(error instanceof ZodError){
+            const errors: Record<string, string> = {}
+            error.issues.forEach((issue) => {
+            const field = issue.path[0] 
+            if(typeof field === 'string' ||typeof field === 'number')
+            errors[field] = issue.message
+            })
+            setLocalError(errors)
+        }
+        return false
+        }
+    }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,9 +59,11 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
             .filter(Boolean);
 
         if (formattedSkills.length === 0) {
-          alert("Please add at least one skill");
+          setLocalError({skills: 'Atleast one skill required'})
           return;
         }
+
+        if(!validate()) return
 
         if( mode === 'create'){
             onSave({
@@ -91,7 +116,6 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
                         </label>
                         <input
                             type="text"
-                            required
                             disabled={isView}
                             value={formData.name}
                             onChange={(e) =>
@@ -103,6 +127,7 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
                             className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-amber-500"
                             placeholder="Enter job role name"
                         />
+                        {localError.name && <p className='text-[#FBBEBE] text-sm'>{localError.name}</p>}
                     </div>
 
                     <div>
@@ -122,6 +147,7 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
                             className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-amber-500"
                             placeholder="React, Node.js, MongoDB"
                         />
+                        {localError.skills && <p className='text-[#FBBEBE] text-sm'>{localError.skills}</p>}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -142,6 +168,7 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
                                 }
                                 className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-amber-500"
                             />
+                            {localError.experienceMin && <p className='text-[#FBBEBE] text-sm'>{localError.experienceMin}</p>}
                         </div>
 
                         <div>
@@ -161,6 +188,7 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
                                 }
                                 className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-amber-500"
                             />
+                            {localError.experienceMax && <p className='text-[#FBBEBE] text-sm'>{localError.experienceMax}</p>}
                         </div>
                     </div>
 
@@ -181,6 +209,7 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
                             }
                             className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-amber-500"
                         />
+                        {localError.openings && <p className='text-[#FBBEBE] text-sm'>{localError.openings}</p>}
                     </div>
 
                     {isView && 

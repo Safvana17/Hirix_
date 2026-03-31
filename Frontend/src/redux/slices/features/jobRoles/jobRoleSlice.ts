@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { createJobRolePayload, editJobRolePayload, getAllJobRolesParams, GetAllJobRolesResponse, JobRole, UpdateJobRoleStatusArgs, UpdateJobRoleStatusPayload } from "../../../../types/jobRole";
+import { type DeleteJobRoleResponse, type createJobRolePayload, type editJobRolePayload, type getAllJobRolesParams, type GetAllJobRolesResponse, type JobRole, type UpdateJobRoleStatusArgs, type UpdateJobRoleStatusPayload } from "../../../../types/jobRole";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -105,6 +105,26 @@ UpdateJobRoleStatusArgs,
     }
 })
 
+export const deleteJobRole = createAsyncThunk<
+DeleteJobRoleResponse,
+{id: string},
+{rejectValue: string}
+>('jobRole/delete', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.delete(API_ROUTES.COMPANY.DELETE_JOB_ROLE(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return {
+            id : response.data.updatedJobRole.id
+        }
+    } catch (error) {
+       const err = error as AxiosError<{message: string}>
+       return rejectWithValue(err.response?.data?.message || 'Failed to delete job role')        
+    }
+})
+
 const jobRoleSlice = createSlice({
     name: 'JobRole',
     initialState,
@@ -131,7 +151,9 @@ const jobRoleSlice = createSlice({
          })
          .addCase(getAllJobRoles.fulfilled, (state, action) => {
             state.loading = false
-            state.jobRoles = action.payload.jobRoles
+            state.jobRoles = action.payload.jobRoles.filter((role) => 
+              role.status !== 'Deleted'
+            )
             state.pagination.jobRole.totalCount = action.payload.totalCount
             state.pagination.jobRole.totalPages = action.payload.totalPages
          })
@@ -167,6 +189,13 @@ const jobRoleSlice = createSlice({
          .addCase(updateJobRoleStatus.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Faile to update job role status'
+         })
+         .addCase(deleteJobRole.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(deleteJobRole.fulfilled, (state, action) => {
+            state.loading = false
+            state.jobRoles = state.jobRoles.filter((role) => role.id !== action.payload.id)
          })
     }  
 })

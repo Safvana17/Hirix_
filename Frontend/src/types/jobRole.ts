@@ -45,6 +45,9 @@ export type UpdateJobRoleStatusPayload = {
   status: 'Active' | 'Closed' 
 }
 
+export type DeleteJobRoleResponse = {
+  id: string
+}
 export type UpdateJobRoleStatusArgs = {
   id: string
   status: 'Active' | 'Closed' | ""

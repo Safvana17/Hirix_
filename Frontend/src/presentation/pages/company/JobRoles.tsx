@@ -4,7 +4,7 @@ import { companySidebarItems } from '../../../constants/sidebarItems'
 import { Ban, CheckCircle, Edit2, Eye, Filter, LucideDelete, Plus, Search } from 'lucide-react'
 import JobRoleModal from '../../components/modal/JobRoleModal'
 import type { JobRole, ModalMode } from '../../../types/jobRole'
-import { createJobRole, editJobRole, getAllJobRoles, updateJobRoleStatus } from '../../../redux/slices/features/jobRoles/jobRoleSlice'
+import { createJobRole, deleteJobRole, editJobRole, getAllJobRoles, updateJobRoleStatus } from '../../../redux/slices/features/jobRoles/jobRoleSlice'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
@@ -113,6 +113,26 @@ const JobRoles: React.FC= () => {
         })
     }
 
+    const handleDeleteJobRole = (id: string) => {
+        openModal({
+            title: 'Delete Job Role',
+            message: 'Are you sure you want to delete this job role?',
+            type: 'danger',
+            onConfirm: async() => {
+                try {
+                    await dispatch(deleteJobRole({ id }))
+                    toast.success('Job role deleted successfully')
+                    dispatch(getAllJobRoles({search: debouncedSearchTerm, status: statusFilter, page: currentPage, limit: 10}))
+                } catch (error: unknown) {
+                    if(error instanceof Error)
+                      toast.error('Failed to delete job role')
+                } finally {
+                    closeModal()
+                }
+            }
+        })
+    }
+
     const columns: Column<JobRole>[] =  [
         {header: 'Name', key: 'name', render: (val) => <span className='font-bold text-gray-600'>{val}</span>},
         {header: 'Skills', key: 'skills', render: (val) => <span className='font-bold text-gray-600'>{Array.isArray(val)?val.join(', '): '-' }</span>},
@@ -137,8 +157,8 @@ const JobRoles: React.FC= () => {
                     }`}
                 >
                     {item.status === 'Active'
-                    ? <Ban className="w-4 h-4" />
-                    : <CheckCircle className="w-4 h-4" />
+                        ? <Ban className="w-4 h-4" />
+                        : <CheckCircle className="w-4 h-4" />
                     }
                 </button>
 
@@ -161,7 +181,7 @@ const JobRoles: React.FC= () => {
                 <button
                     title="Delete"
                     className="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all"
-                    
+                    onClick={() => handleDeleteJobRole(id)}
                 >
                     <LucideDelete className="w-4 h-4" />
                 </button>
