@@ -14,7 +14,7 @@ export class EditJobRoleUsecase implements IEditJobRoleUsecase {
     async execute(request: EditJobRolesInputDTO): Promise<EditJobRolesOutputDTO> {
         const jobRole = await this._jobRoleRepository.findById(request.id)
         if(!jobRole){
-            throw new AppError(JobRoleMessages.error.JOBROLE_NOT_FOUNT, statusCode.NOT_FOUND)
+            throw new AppError(JobRoleMessages.error.JOBROLE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
         const existing = await this._jobRoleRepository.findActiveByName(request.name)

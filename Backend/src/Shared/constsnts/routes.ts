@@ -28,8 +28,9 @@ export const ROUTES = {
       JOBROLE: {
         BASE: '/jobroles',
         CREATE: '/jobrole',
-        EDIT: '/jobrole/:id'
-
+        EDIT: '/jobrole/:id',
+        STATUS: '/jobrole/:id/status',
+        DELETE: '/jobrole/:id'
       }
     },
 
