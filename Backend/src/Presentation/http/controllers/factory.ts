@@ -37,6 +37,10 @@ import { UpdateCompanyProfileUsecase } from "../../../Application/company/usecas
 import { SendRestoreAccountEmailUsecase } from "../../../Application/company/usecases/settings/company.sendRestoreAccountEmail.usecase";
 import { CreateJobRolesUsecase } from "../../../Application/company/usecases/jobRoles/jobRoles.create.usecase";
 import { GetAllJobRolesUsecase } from "../../../Application/company/usecases/jobRoles/jobRoles.getAll.usecase";
+import { EditJobRoleUsecase } from "../../../Application/company/usecases/jobRoles/jobRole.edit.usecase";
+
+
+
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -231,6 +235,9 @@ const iCreateJobRole = new CreateJobRolesUsecase(
 const iGetAllJobRoles = new GetAllJobRolesUsecase (
     iJobRoleRepository
 )
+const iEditJobRole = new EditJobRoleUsecase(
+    iJobRoleRepository
+)
 
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
@@ -351,5 +358,6 @@ export const iCompanySettingsController = new CompanySettingsController(
 
 export const iJobRoleController = new JobRolesController(
     iCreateJobRole,
-    iGetAllJobRoles
+    iGetAllJobRoles,
+    iEditJobRole
 )

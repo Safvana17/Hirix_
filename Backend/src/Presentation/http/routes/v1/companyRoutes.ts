@@ -21,7 +21,7 @@ router.put(ROUTES.COMPANY.SETTINGS.RESTORE, iCompanySettingsController.confirmRe
 //job role
 router.post(ROUTES.COMPANY.JOBROLE.CREATE, authHandler(iTokenService), verifyCsrf, iJobRoleController.createJobRole)
 router.get(ROUTES.COMPANY.JOBROLE.BASE, authHandler(iTokenService), verifyCsrf, iJobRoleController.getAllJobRoles)
-
+router.put(ROUTES.COMPANY.JOBROLE.EDIT, authHandler(iTokenService), verifyCsrf, iJobRoleController.editJobRole)
 
 
 export default router;

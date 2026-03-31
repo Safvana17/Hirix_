@@ -21,6 +21,10 @@ export class CreateJobRolesUsecase implements ICreateJobRolesUsecase {
         if(request.experienceMin > request.experienceMax){
             throw new AppError(JobRoleMessages.error.INVALID_EXPERIENCE, statusCode.BAD_REQUEST)
         }
+
+        if(request.openings < 1){
+            throw new AppError(JobRoleMessages.error.INVALID_OPENINGS, statusCode.BAD_REQUEST)
+        }
         
         const jobRole = new JobRolesEntity(
             "",

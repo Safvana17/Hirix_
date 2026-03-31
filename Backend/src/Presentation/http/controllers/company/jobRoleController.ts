@@ -1,17 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import { ICreateJobRolesUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRols.create.usecase";
-import { createJobRoleScheama, JobRoleQuerySchema } from "../../validators/jobRoleValidator";
+import { createJobRoleScheama, EditJobRoleScheama, JobRoleQuerySchema } from "../../validators/jobRoleValidator";
 import { CreateJobRolesInputDTO } from "../../../../Application/company/dtos/jobRoles/jobRoles.create.dto";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
-import { QuerySchema } from "../../validators/adminValidator";
 import { JobRolesQueryDTO } from "../../../../Application/company/dtos/jobRoles/jobRole.getAll.dto";
 import { IGetAllJobRolesUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRoles.getAll.usecase";
+import { EditJobRolesInputDTO } from "../../../../Application/company/dtos/jobRoles/jobRoles.edit.dto";
+import { IEditJobRoleUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRoles.edit.usecase";
 
 export class JobRolesController {
     constructor (
         private _createJobRole: ICreateJobRolesUsecase,
-        private _getAllJobRoles: IGetAllJobRolesUsecase
+        private _getAllJobRoles: IGetAllJobRolesUsecase,
+        private _editJobRole: IEditJobRoleUsecase,
     ) {}
 
     createJobRole =async (req: Request, res: Response, next: NextFunction) => {
@@ -45,6 +47,32 @@ export class JobRolesController {
                 jobRoles,
                 totalCount,
                 totalPages
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    editJobRole = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = Array.isArray(req.params.id) 
+                ? req.params.id[0]
+                : req.params.id
+            const parsed = EditJobRoleScheama.parse(req.body)
+            const payload: EditJobRolesInputDTO = {
+                id: id,
+                name: parsed.name,
+                skills: parsed.skills,
+                experienceMin: parsed.experienceMin,
+                experienceMax: parsed.experienceMax,
+                openings: parsed.openings,
+            }
+
+            const updatedJobRole = await this._editJobRole.execute(payload)
+
+            return res.status(statusCode.OK).json({
+                success: true,
+                updatedJobRole
             })
         } catch (error) {
             next(error)
