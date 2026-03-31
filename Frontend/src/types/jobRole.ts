@@ -23,6 +23,8 @@ export type getAllJobRolesParams = {
   limit?: number
 }
 
+export type ModalMode = 'create' | 'edit' | 'view'
+
 export interface GetAllJobRolesResponse{
     jobRoles: JobRole[]
     totalPages: number

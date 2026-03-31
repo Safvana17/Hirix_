@@ -1,3 +1,5 @@
+import jobRoleStatus from "../../../../Domain/enums/jobRoleStatus";
+
 export interface CreateJobRolesInputDTO{
     name: string;
     skills: string[];
@@ -7,5 +9,10 @@ export interface CreateJobRolesInputDTO{
 }
 
 export interface CreateJobRolesOutputDTO {
-    success: boolean
+    name: string;
+    skills: string[];
+    experienceMin: number;
+    experienceMax: number;
+    openings: number;
+    status: jobRoleStatus
 }

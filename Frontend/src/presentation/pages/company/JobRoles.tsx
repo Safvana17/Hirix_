@@ -3,12 +3,11 @@ import InternalLayout from '../../layouts/InternalLayout'
 import { companySidebarItems } from '../../../constants/sidebarItems'
 import { Ban, CheckCircle, Edit2, Eye, Filter, LucideDelete, Plus, Search } from 'lucide-react'
 import JobRoleModal from '../../components/modal/JobRoleModal'
-import type { JobRole } from '../../../types/jobRole'
+import type { JobRole, ModalMode } from '../../../types/jobRole'
 import { createJobRole, getAllJobRoles } from '../../../redux/slices/features/jobRoles/jobRoleSlice'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-// import { useNavigate } from 'react-router-dom'
 import { useDebounce } from '../../../hooks/useDebounce'
 // import ConfirmationModal from '../../components/modal/ConfirmationModal'
 import DataTable from '../../components/ui/DataTable'
@@ -20,19 +19,27 @@ const JobRoles: React.FC= () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
-   
+    const [modalMode, setModalMode] = useState<ModalMode>('create')
+    const [selectedJobRole, setSelectedJobRole] = useState<JobRole | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
     const dispatch = useDispatch<AppDispatch>()
-    // const navigate = useNavigate()
     const { loading, pagination, jobRoles} = useSelector((state: RootState) => state.jobRole)
     const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
     useEffect(() => {
-        dispatch(getAllJobRoles({search: debouncedSearchTerm, status: statusFilter, page: currentPage, limit: 4}))
+        dispatch(getAllJobRoles({search: debouncedSearchTerm, status: statusFilter, page: currentPage, limit: 10}))
     }, [dispatch, debouncedSearchTerm, statusFilter, currentPage])
 
     const handleCreateJobRole = () => {
-         setIsModalOpen(true)
+        setModalMode('create')
+        setSelectedJobRole(null)
+        setIsModalOpen(true)
+    }
+
+    const handleViewJobRole = (item: JobRole) => {
+        setModalMode('view')
+        setSelectedJobRole(item)
+        setIsModalOpen(true)
     }
     const handleSearchChange = useCallback((val: string) => {
         setSearchTerm(val)
@@ -76,42 +83,42 @@ const JobRoles: React.FC= () => {
         {header: 'Actions', key: 'id', render: (id, item) => (
             <div className="flex items-center gap-1 sm:gap-2">
             
-            {/* Status Toggle */}
-            <button
-                onClick={() => handleUpdateStatus(id, item.status)}
-                title={item.status === 'Active' ? 'Deactivate' : 'Activate'}
-                className={`p-2 rounded-lg border transition-all duration-200 
-                ${item.status === 'Active'
-                    ? 'text-red-600 hover:bg-red-50 border-transparent hover:border-red-100'
-                    : 'text-green-600 hover:bg-green-50 border-transparent hover:border-green-100'
-                }`}
-            >
-                {item.status === 'Active'
-                ? <Ban className="w-4 h-4" />
-                : <CheckCircle className="w-4 h-4" />
-                }
-            </button>
+                <button
+                    onClick={() => handleUpdateStatus(id, item.status)}
+                    title={item.status === 'Active' ? 'Deactivate' : 'Activate'}
+                    className={`p-2 rounded-lg border transition-all duration-200 
+                    ${item.status === 'Active'
+                        ? 'text-red-600 hover:bg-red-50 border-transparent hover:border-red-100'
+                        : 'text-green-600 hover:bg-green-50 border-transparent hover:border-green-100'
+                    }`}
+                >
+                    {item.status === 'Active'
+                    ? <Ban className="w-4 h-4" />
+                    : <CheckCircle className="w-4 h-4" />
+                    }
+                </button>
 
-            <button
-                title="View"
-                className="p-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all"
-            >
-                <Eye className="w-4 h-4" />
-            </button>
+                <button
+                    title="View"
+                    className="p-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all"
+                    onClick={() => handleViewJobRole(item)}
+                >
+                    <Eye className="w-4 h-4" />
+                </button>
 
-            <button
-                title="Edit"
-                className="p-2 rounded-lg text-gray-500 hover:text-yellow-600 hover:bg-yellow-50 transition-all"
-            >
-                <Edit2 className="w-4 h-4" />
-            </button>
+                <button
+                    title="Edit"
+                    className="p-2 rounded-lg text-gray-500 hover:text-yellow-600 hover:bg-yellow-50 transition-all"
+                >
+                    <Edit2 className="w-4 h-4" />
+                </button>
 
-            <button
-                title="Delete"
-                className="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all"
-            >
-                <LucideDelete className="w-4 h-4" />
-            </button>
+                <button
+                    title="Delete"
+                    className="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all"
+                >
+                    <LucideDelete className="w-4 h-4" />
+                </button>
 
             </div>
         )
@@ -172,7 +179,10 @@ const JobRoles: React.FC= () => {
             </DataTable>
 
             <JobRoleModal
+                key={selectedJobRole?.id || modalMode}
                 isOpen={isModalOpen}
+                mode={modalMode}
+                initialData={selectedJobRole}
                 onClose={() => setIsModalOpen(false)}
                 onSave={handleSaveJobRole}
             />

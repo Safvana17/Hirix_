@@ -25,11 +25,12 @@ export class JobRolesController {
                 openings: parsed.openings
             }
 
-            await this._createJobRole.execute(payload)
+            const jobRole = await this._createJobRole.execute(payload)
 
             return res.status(statusCode.OK).json({
                 success: true,
-                message: JobRoleMessages.success.JOB_ROLE_CREATED
+                message: JobRoleMessages.success.JOB_ROLE_CREATED,
+                jobRole
             })
         } catch (error) {
             next(error)

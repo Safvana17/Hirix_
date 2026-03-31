@@ -32,7 +32,7 @@ const initialState: jobRoleState = {
 }
 
 export const createJobRole = createAsyncThunk<
-void,
+JobRole,
 createJobRolePayload,
 {rejectValue: string}
 >('company/createJobRole', async(createJobRolePayload, {rejectWithValue}) => {
@@ -42,7 +42,7 @@ createJobRolePayload,
             return rejectWithValue('Invalid Response')
         }
 
-        return response.data
+        return response.data.jobRole
     } catch (error) {
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to create job role')  
@@ -79,8 +79,9 @@ const jobRoleSlice = createSlice({
          .addCase(createJobRole.pending, (state) => {
             state.loading = true
          })
-         .addCase(createJobRole.fulfilled, (state) => {
+         .addCase(createJobRole.fulfilled, (state, action) => {
             state.loading = false
+            state.jobRoles.unshift(action.payload)
          })
          .addCase(createJobRole.rejected, (state, action) => {
             state.loading = false

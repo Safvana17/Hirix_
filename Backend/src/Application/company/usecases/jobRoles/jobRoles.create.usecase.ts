@@ -34,8 +34,15 @@ export class CreateJobRolesUsecase implements ICreateJobRolesUsecase {
             jobRoleStatus.Active
         )
 
-        await this._jobRolesRepository.create(jobRole)
+        const newJobRole = await this._jobRolesRepository.create(jobRole)
 
-        return { success: true }
+        return { 
+            name: newJobRole.name,
+            skills: newJobRole.skills,
+            experienceMin: newJobRole.experienceMin,
+            experienceMax: newJobRole.experienceMax,
+            openings: newJobRole.openings,
+            status: newJobRole.status    
+        }
     }
 }
