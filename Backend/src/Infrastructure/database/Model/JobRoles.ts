@@ -2,7 +2,7 @@ import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import jobRoleStatus from "../../../Domain/enums/jobRoleStatus";
 
 export interface IJobRoles extends Document{
-    id: Types.ObjectId;
+    _id: Types.ObjectId;
     name: string;
     skills: string[];
     experienceMin: number;

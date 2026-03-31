@@ -1,4 +1,3 @@
-import { Express } from 'express'
 import CompanyEntity from "../../../../Domain/entities/company.entity"
 import { FileUpload } from '../../../../Shared/types/fileUpload.type'
 

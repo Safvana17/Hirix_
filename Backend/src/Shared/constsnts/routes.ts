@@ -60,7 +60,13 @@ export const ROUTES = {
             CANDIDATES: {
                 BASE: '/candidates',
                 STATUS: '/candidate/:id/status'
-            }
+            },
+        },
+        CATEGORY: {
+            CREATE: '/category',
+            EDIT: '/category/:id',
+            DELETE: '/category/:id',
+            GET_ALL: '/categories'
         }
     }
 }

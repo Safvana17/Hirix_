@@ -40,7 +40,7 @@ import { GetAllJobRolesUsecase } from "../../../Application/company/usecases/job
 import { EditJobRoleUsecase } from "../../../Application/company/usecases/jobRoles/jobRole.edit.usecase";
 import { UpdateJobRoleStatusUsecase } from "../../../Application/company/usecases/jobRoles/jobRole.updateStatus.usecase";
 import { DeleteJobRoleUsecase } from "../../../Application/company/usecases/jobRoles/jobRole.delete.usecase";
-
+import { AdminAddCategoryUsecase } from "../../../Application/admin/usecases/category/addCategory.admin.usecase";
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -49,6 +49,8 @@ import { AdminLoginUsecase } from "../../../Application/admin/usecases/auth/Admi
 import { CompanyRepository } from "../../../Infrastructure/repositories/companyRepository";
 import { AdminRepository } from "../../../Infrastructure/repositories/admin.repository";
 import { JobRolesRepository } from "../../../Infrastructure/repositories/jobRoles.repository";
+import { CategoryRepository } from "../../../Infrastructure/repositories/category.repository";
+
 
 //services
 import { HashService } from "../../../Infrastructure/services/HashService";
@@ -67,6 +69,7 @@ import { AdminRejectCompanyUsecase } from "../../../Application/admin/usecases/u
 import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
 import { CompanySettingsController } from "./company/companySettingsController";
 import { JobRolesController } from "./company/jobRoleController";
+import { CategoryController } from "./admin/categoryController";
 
 
 
@@ -75,6 +78,7 @@ const iCompanyRepository = new CompanyRepository()
 const iAdminRepository = new AdminRepository()
 const iOtpRepository = new OtpRepository(redisClient)
 const iJobRoleRepository = new JobRolesRepository()
+const iCategoryRepository = new CategoryRepository()
 
 const iHashService = new HashService()
 const iOtpService = new OtpService()
@@ -250,6 +254,9 @@ const iLoginAdmin = new AdminLoginUsecase(
     iHashService,
     iTokenService
 )
+const iAddCategory = new AdminAddCategoryUsecase(
+    iCategoryRepository
+)
 
 
 //unified
@@ -367,4 +374,8 @@ export const iJobRoleController = new JobRolesController(
     iEditJobRole,
     iUpdateJobRoleStatus,
     iDeleteJobRole
+)
+
+export const iCategoryController = new CategoryController(
+    iAddCategory
 )

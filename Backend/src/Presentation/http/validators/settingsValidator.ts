@@ -1,4 +1,4 @@
-import { email, z } from 'zod'
+import { z } from 'zod'
 import { DeleteReason } from '../../../Domain/enums/deleteReason'
 import userRole from '../../../Domain/enums/userRole.enum'
 

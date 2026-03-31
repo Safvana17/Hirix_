@@ -1,4 +1,3 @@
-import jobRoleStatus from "../../../../Domain/enums/jobRoleStatus";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";

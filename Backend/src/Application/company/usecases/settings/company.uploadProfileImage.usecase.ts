@@ -1,4 +1,3 @@
-import { file } from "zod";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";

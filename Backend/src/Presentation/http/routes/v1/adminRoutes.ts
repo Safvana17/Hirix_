@@ -1,5 +1,5 @@
 import  Express  from "express";
-import { iTokenService, IUserManagementController } from "../../controllers/factory";
+import { iCategoryController, iTokenService, IUserManagementController } from "../../controllers/factory";
 import { authHandler } from "../../middlewares/authMiddleware";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
@@ -19,5 +19,8 @@ router.patch(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.REJECT, authHandler(iTokenSe
 router.get(ROUTES.ADMIN.USER_MANAGEMENT.CANDIDATES.BASE, authHandler(iTokenService), IUserManagementController.getAllCandidates)
 router.patch(ROUTES.ADMIN.USER_MANAGEMENT.CANDIDATES.STATUS, authHandler(iTokenService), verifyCsrf, IUserManagementController.updateCandidateStatus)
 
+
+//category
+router.post(ROUTES.ADMIN.CATEGORY.CREATE, authHandler(iTokenService), verifyCsrf, iCategoryController.addCategory)
 
 export default router;               
