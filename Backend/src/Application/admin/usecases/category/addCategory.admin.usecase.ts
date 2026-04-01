@@ -3,6 +3,7 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import { ICategoryRepository } from "../../../../Domain/repositoryInterface/iCategory.repository";
 import { categoryMessages } from "../../../../Shared/constsnts/messages/categoryMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { logger } from "../../../../utils/logging/loger";
 import { AdminAddCategoryInputDTO, AdminAddCategoryOutputDTO } from "../../dtos/category/category.add.dto";
 import { IAdminAddCategoryUsecase } from "../../interfaces/category/iAddCategory.admin.usecase";
 
@@ -21,6 +22,7 @@ export class AdminAddCategoryUsecase implements IAdminAddCategoryUsecase{
             if(parent.isDeleted){
                 throw new AppError(categoryMessages.error.DELETED_CATEGORY, statusCode.BAD_REQUEST)
             }
+            logger.info({parentfromusecae: parent})
             parentId = parent.id
        }
 
@@ -29,12 +31,14 @@ export class AdminAddCategoryUsecase implements IAdminAddCategoryUsecase{
         throw new AppError(categoryMessages.error.ALREADY_EXISITING, statusCode.CONFLICT)
        }
    
+       logger.info({parentid: parentId}, 'from usecase')
        const newCategory = new CategoryEntity(
          "",
          request.name,
          false,
          parentId
        )
+       logger.info({ctegory: newCategory})
        const savedCategory = await this._categoryRepository.create(newCategory)
        return {
         id: savedCategory.id,

@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { QueryFilter, Types } from "mongoose";
 import { CategoryMapper } from "../../Application/Mappers/mapper.category";
 import { CategoryEntity } from "../../Domain/entities/Category.entity";
 import { ICategoryRepository } from "../../Domain/repositoryInterface/iCategory.repository";
@@ -20,9 +20,20 @@ export class CategoryRepository extends BaseRepository<CategoryEntity, ICategory
         return this.mapToEntity(category)
     }
 
-    // async findAllFiltered(query: { search?: string; status?: string; page: number; limit: number; }): Promise<{ data: CategoryEntity[]; totalPages: number; totalCount: number; }> {
-        
-    // }
+    async findAllFiltered(): Promise<CategoryEntity[]> {
+    //    const filter: QueryFilter<ICategory> = {}
+
+    //     const skip = (query.page - 1) * query.limit
+    //     const totalCount = await this._model.countDocuments(filter)
+    //     const totalPages =Math.ceil(totalCount / query.limit)
+
+        const documents = await this._model
+               .find({ isDeleted: false })
+               .sort({ createdAt: -1 })
+             
+
+        return documents.map(doc => this.mapToEntity(doc)) 
+    }
 
     protected mapToEntity(doc: ICategory): CategoryEntity {
         return CategoryMapper.toEntity(doc)
