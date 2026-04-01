@@ -29,6 +29,8 @@ const CategoryModal: React.FC<CategoryModalProps>= ({
 
     const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault()
+        console.log('parent: ', formData.parentId)
+        console.log('mode', mode)
         if(mode === 'create'){
             onSave({
                 name: formData.name,
@@ -88,11 +90,11 @@ const CategoryModal: React.FC<CategoryModalProps>= ({
                             Parent
                         </label>
                         <select
-                            value={formData.parentId}
+                            value={formData.parentId ?? ""}
                             onChange={(e) =>
                                 setFormData({
                                     ...formData,
-                                    parentId: e.target.value
+                                    parentId: e.target.value || null
                                 })
                             }
                             className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-amber-500"

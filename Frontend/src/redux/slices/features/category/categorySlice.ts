@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { Category, createCategoryPayload } from "../../../../types/category";
+import type { Category, createCategoryPayload, GetAllCategoryResponse } from "../../../../types/category";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -48,6 +48,23 @@ createCategoryPayload,
     }
 })
 
+export const getAllCategories = createAsyncThunk<
+GetAllCategoryResponse,
+void,
+{rejectValue: string}
+>('category/getAll', async(_, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.ADMIN.CATEGORY.GET_ALL)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get all categories')
+    }
+})
+
 const categorySlice = createSlice({
     name: 'Category',
     initialState,
@@ -68,6 +85,17 @@ const categorySlice = createSlice({
           .addCase(createCategory.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to create category'
+          })
+          .addCase(getAllCategories.pending, (state) => {
+            state.loading = true
+          })
+          .addCase(getAllCategories.fulfilled, (state, action) => {
+            state.loading = false
+            state.categories = action.payload.categories.filter(c => !c.isDeleted)
+          })
+          .addCase(getAllCategories.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get all categories'
           })
     }
 })

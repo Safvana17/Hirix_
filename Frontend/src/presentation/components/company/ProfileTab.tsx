@@ -59,11 +59,19 @@ const profileData = useMemo(() => ({
     }
   }, [profileData, reset, company, user])
 
-  const onSubmit = (data: ProfileFormValues) => {
+  const onSubmit = async(data: ProfileFormValues) => {
     if (!user?.id) return
-    const result = dispatch(updateProfile({ id: user.id, company: data }))
-    if(updateProfile.fulfilled.match(result)){
-        toast.success('Profile updatedSuccessfully')
+
+    try {
+      await dispatch(updateProfile({ id: user.id, company: data })).unwrap()
+
+      toast.success('Profile updated successfully')
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error('Failed to update profile')
+      }
     }
   }
 
