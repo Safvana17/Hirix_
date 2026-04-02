@@ -17,6 +17,11 @@ export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandida
         private tokenService: ITokenService
     ) {}
 
+    /**
+     * 
+     * @param request 
+     * @returns 
+     */
     async execute(request: verifyRegisterCandidateOtpInputDTO): Promise<verifyRegisterCandidateOtpOutputDTO> {
 
         const candidate = await this.candidateRepository.findByEmail(request.email)

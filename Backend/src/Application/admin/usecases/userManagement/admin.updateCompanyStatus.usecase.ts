@@ -11,6 +11,11 @@ export class AdminUpdateCompanyStatus implements IAdminUpdateCompanyStatusUsecas
         private _companyRepository: ICompanyRepository
     ) {}
 
+    /**
+     * 
+     * @param request - company id and status
+     * @returns - return company id, role and status
+     */
     async execute(request: UpdataStatusInputDTO): Promise<UpdateStatusOutputDTO> {
         const company = await this._companyRepository.findById(request.id)
         if(!company){

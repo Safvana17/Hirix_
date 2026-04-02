@@ -19,6 +19,12 @@ export class UnifiedRefreshTokenUsecase implements IUnifiedTokenRefreshUsecase{
         private _hashService: IHashService
     ) {}
 
+    /**
+     * 
+     * @param request access token
+     * @returns id, accesstoken refresh token and csrf token
+     */
+
     async execute(request: UnifiedRefreshTokenInputDTO): Promise<UnifiedRefreshTokenOutputDTO> {
         if(!request.token){
             throw new AppError(authMessages.error.REFRESH_TOKEN_NOT_FOUND, statusCode.UNAUTHORIZED)

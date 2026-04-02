@@ -3,6 +3,7 @@ import { iCategoryController, iTokenService, IUserManagementController } from ".
 import { authHandler } from "../../middlewares/authMiddleware";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
+import { deleteCategorySchema } from "../../validators/categoryValidator";
 
 const router = Express.Router()
 
@@ -23,5 +24,6 @@ router.patch(ROUTES.ADMIN.USER_MANAGEMENT.CANDIDATES.STATUS, authHandler(iTokenS
 //category
 router.post(ROUTES.ADMIN.CATEGORY.CREATE, authHandler(iTokenService), verifyCsrf, iCategoryController.addCategory)
 router.get(ROUTES.ADMIN.CATEGORY.GET_ALL, authHandler(iTokenService), iCategoryController.getAllCategory)
+router.delete(ROUTES.ADMIN.CATEGORY.DELETE, authHandler(iTokenService), verifyCsrf, iCategoryController.deleteCategory)
 
 export default router;               

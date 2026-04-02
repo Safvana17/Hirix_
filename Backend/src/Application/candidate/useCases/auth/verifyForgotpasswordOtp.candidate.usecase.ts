@@ -16,6 +16,12 @@ export class VerifyCandidateForgotPasswordOtpUsecase implements ICandidateVerify
         private _tokenService: ITokenService
     ) {}
 
+    /**
+     * 
+     * @param request otp
+     * @returns - reset token and email
+     */
+
     async execute(request: verifyCandidateForgotPasswordOtpInputDTO): Promise<verifyCandidateForgotPasswordOtpOutputDTO> {
         const candidate = await this._candidateRepository.findByEmail(request.email)
         if(!candidate){

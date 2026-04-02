@@ -7,11 +7,14 @@ import { categoryMessages } from "../../../../Shared/constsnts/messages/category
 import { IGetAllCategoriesUsecase } from "../../../../Application/admin/interfaces/category/iGetAllCategory.admin.usecase";
 import { logger } from "../../../../utils/logging/loger";
 import { asyncHandler } from "../../../../utils/asyncHandler";
+import { IAdminDeleteCategoryUsecase } from "../../../../Application/admin/interfaces/category/iDeleteCategory.admin.usecase";
+import { sendSuccess } from "../../utils/apiResponse";
 
 export class CategoryController {
     constructor(
         private _addCategory: IAdminAddCategoryUsecase,
-        private _getAllCategories: IGetAllCategoriesUsecase
+        private _getAllCategories: IGetAllCategoriesUsecase,
+        private _deleteCategory: IAdminDeleteCategoryUsecase
     ) {}
 
     addCategory = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -42,4 +45,12 @@ export class CategoryController {
             next(error)
         }
     }
+
+    deleteCategory = asyncHandler(async(req: Request, res: Response, next: NextFunction): Promise<Response> => {
+            const categoryId = Array.isArray(req.params.id)
+                  ? req.params.id[0]
+                  : req.params.id
+            const deletedCategory = await this._deleteCategory.execute({id:categoryId})
+            return sendSuccess(res, statusCode.OK, categoryMessages.success.CATEGORY_DELETED_SUCCESSFULLY, deletedCategory)
+    })
 }

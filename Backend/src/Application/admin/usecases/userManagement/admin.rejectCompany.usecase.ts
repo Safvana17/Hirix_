@@ -13,8 +13,14 @@ export class AdminRejectCompanyUsecase implements IAdminRejectCompanyUsecase{
         private _mailService: IMailService
     ) {}
 
+
+    /**
+     * 
+     * @param request - company id and reject company register flag
+     * @returns company id, role and status
+     */
     async execute(request: AdminRejectCompanyInputDTO): Promise<UpdateStatusOutputDTO> {
-  const company = await this._companyRepository.findById(request.id)
+        const company = await this._companyRepository.findById(request.id)
         if(!company){
             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
         }

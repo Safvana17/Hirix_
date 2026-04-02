@@ -7,6 +7,11 @@ export class GetAllJobRolesUsecase implements IGetAllJobRolesUsecase {
         private _jobRoleRepository: IJobRepository
     ) {}
 
+    /**
+     * 
+     * @param request 
+     * @returns - all job roles
+     */
     async execute(request: JobRolesQueryDTO): Promise<PaginatedJobRolesDTO> {
         const {data, totalPages, totalCount} = await this._jobRoleRepository.findAllFiltered(request)
         return {

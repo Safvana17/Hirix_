@@ -15,6 +15,11 @@ export class UnifiedGetMeUsecase implements IUnifiedGetMeUsecase{
         private _repositoryRegistry: Map<userRole, IBaseRepository<CandidateEntity | CompanyEntity | AdminEntity>>
     ) {}
 
+    /**
+     * 
+     * @param request id and role
+     * @returns - id name, email and role
+     */
     async execute(request: UnifiedGetMeInputDTO): Promise<UnifiedGetMeOutputDTO> {
         const repository = this._repositoryRegistry.get(request.role)
 

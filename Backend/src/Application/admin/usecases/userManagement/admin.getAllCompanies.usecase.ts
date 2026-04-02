@@ -7,6 +7,11 @@ export class AdminGetAllCompaniesUsecase implements IAdminGetAllCompaniesUsecase
         private _companyRepository: ICompanyRepository
     ) {}
 
+    /**
+     * 
+     * @param query - to fetch all companies
+     * @returns - all companies, total count and total pages
+     */
     async exexute(query: AdminCompanyQueryDTO): Promise<AdminPaginatedCompanyDTO> {
         // const companies = await this._companyRepository.findAll()
         const {data, totalPages, totalCount} = await this._companyRepository.findAllFiltered(query)

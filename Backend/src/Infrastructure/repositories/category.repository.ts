@@ -1,4 +1,4 @@
-import { QueryFilter, Types } from "mongoose";
+import { Types } from "mongoose";
 import { CategoryMapper } from "../../Application/Mappers/mapper.category";
 import { CategoryEntity } from "../../Domain/entities/Category.entity";
 import { ICategoryRepository } from "../../Domain/repositoryInterface/iCategory.repository";
@@ -14,7 +14,6 @@ export class CategoryRepository extends BaseRepository<CategoryEntity, ICategory
         const category = await this._model.findOne({
             name: {$regex: `${name}`, $options: "i"},
             parentId: parent === null ? null : new Types.ObjectId(parent),
-            isDeleted: false
         })
         if(!category) return null
         return this.mapToEntity(category)
@@ -33,6 +32,18 @@ export class CategoryRepository extends BaseRepository<CategoryEntity, ICategory
              
 
         return documents.map(doc => this.mapToEntity(doc)) 
+    }
+
+    async hasChildren(categoryId: string): Promise<boolean> {
+        
+        const count = await this._model.countDocuments({
+            $and:
+              [
+                {parentId: categoryId},
+                { isDeleted: false}
+              ]
+        })
+        return count > 0
     }
 
     protected mapToEntity(doc: ICategory): CategoryEntity {

@@ -7,6 +7,11 @@ export class GetAllCategoryUsecase implements IGetAllCategoriesUsecase {
         private _categoryRepository: ICategoryRepository
     ) {}
 
+    /**
+     * 
+     * @returns all categories with id, name, parentid and is deleted or not flag
+     */
+
     async execute(): Promise<GetAllCategoryOutputDTO> {
         const data = await this._categoryRepository.findAllFiltered()
 

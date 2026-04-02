@@ -20,6 +20,12 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
         private mailService: IMailService
     ) {}
 
+    /**
+     * 
+     * @param request - name, email and password
+     * @returns - true if sent otp
+     */
+
     async execute(request: RegisterCandidateInputDTO): Promise<RegisterCandidateOutputDTO> {
 
         const userExist = await this.candidateRepository.findByEmail(request.email)

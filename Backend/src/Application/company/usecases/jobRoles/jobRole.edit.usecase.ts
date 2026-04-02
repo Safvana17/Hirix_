@@ -11,6 +11,12 @@ export class EditJobRoleUsecase implements IEditJobRoleUsecase {
         private _jobRoleRepository: IJobRepository
     ) {}
 
+    /**
+     * 
+     * @param request job role details- name, skills, experience and openings
+     * @returns updated job role
+     */
+
     async execute(request: EditJobRolesInputDTO): Promise<EditJobRolesOutputDTO> {
         const jobRole = await this._jobRoleRepository.findById(request.id)
         if(!jobRole){

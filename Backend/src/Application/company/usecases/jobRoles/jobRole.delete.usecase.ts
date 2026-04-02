@@ -3,8 +3,7 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
-import { DeleteJobRoleOutputDTO } from "../../dtos/jobRoles/jobRole.delete.dto";
-import { DeleteAccountInputDTO } from "../../dtos/settings/deleteAccount.company.dto";
+import { DeleteJobRoleInputDto, DeleteJobRoleOutputDTO } from "../../dtos/jobRoles/jobRole.delete.dto";
 import { IDeleteJobRoleUsecase } from "../../interfaces/jobRoles/iJobRole.delete.usecase";
 
 export class DeleteJobRoleUsecase implements IDeleteJobRoleUsecase {
@@ -12,7 +11,12 @@ export class DeleteJobRoleUsecase implements IDeleteJobRoleUsecase {
         private _jobRoleRepository: IJobRepository
     ) {}
 
-    async execute(request: DeleteAccountInputDTO): Promise<DeleteJobRoleOutputDTO> {
+    /**
+     * 
+     * @param request job role id
+     * @returns job role id
+     */
+    async execute(request: DeleteJobRoleInputDto): Promise<DeleteJobRoleOutputDTO> {
         const jobRole = await this._jobRoleRepository.findById(request.id)
         if(!jobRole){
             throw new AppError(JobRoleMessages.error.JOBROLE_NOT_FOUND, statusCode.NOT_FOUND)

@@ -13,6 +13,12 @@ export class ResendOtpUsecase implements IResendOtpUsecase {
         private mailService: IMailService
     ) {}
 
+    /**
+     * 
+     * @param request email
+     * @returns - otp
+     */
+
     async execute(request: ResendOtpInputDTO): Promise<ResendOtpOutputDTO> {
         const candidate = await this.candidateRepository.findByEmail(request.email)
         if(!candidate){

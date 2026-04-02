@@ -18,6 +18,12 @@ export class ResetPasswordUsecase implements IResetPasswordUsecase {
         private _tokenService: ITokenService
     ) {}
 
+    /**
+     * 
+     * @param request old password and new password
+     * @returns true if updated password
+     */
+
     async execute(request: ResetPasswordInputDTO): Promise<ResetPasswordOutputDTO> {
         const candidate = await this._candidateRepository.findByEmail(request.email)
         if(!candidate || !candidate.getId()){

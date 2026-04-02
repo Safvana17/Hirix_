@@ -11,6 +11,11 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
         private _companyRepository: ICompanyRepository
     ) {}
 
+    /**
+     * 
+     * @param request - company id
+     * @returns - return company details
+     */
     async execute(request: AdminGetCompanyInputDTO): Promise<AdminGetCompanyOutputDTO> {
         const company = await this._companyRepository.findById(request.id)
         if(!company){

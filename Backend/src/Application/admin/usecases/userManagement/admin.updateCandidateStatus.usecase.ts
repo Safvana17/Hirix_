@@ -12,6 +12,11 @@ export class AdminUpdateCandidateStatus implements IAdminUpdateCandidateStatus {
         private _candidateRepository: ICandidateRepository
     ) {}
 
+    /**
+     * 
+     * @param request - candidate id and staus
+     * @returns - candidated, role and status
+     */
     async execute(request: UpdataStatusInputDTO): Promise<UpdateStatusOutputDTO> {
         const candidate = await this._candidateRepository.findById(request.id)
         if(!candidate){

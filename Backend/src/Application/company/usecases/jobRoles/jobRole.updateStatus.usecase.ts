@@ -10,6 +10,11 @@ export class UpdateJobRoleStatusUsecase implements IUpdateJobRoleStatusUsecase{
         private _jobRoleRepository: IJobRepository
     ) {}
 
+    /**
+     * 
+     * @param request job role id and status
+     * @returns job role id and status
+     */
     async execute(request: UpdateJobRoleStatusInputDTO): Promise<UpdateJobRoleStatusOutputDTO> {
         const jobRole = await this._jobRoleRepository.findById(request.id)
         if(!jobRole){

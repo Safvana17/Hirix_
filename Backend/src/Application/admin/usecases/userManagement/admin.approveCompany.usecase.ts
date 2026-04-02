@@ -13,6 +13,12 @@ export class AdminApproveCompanyUsecase implements IAdminApproveCompanyUsecase {
          private _companyRepository: ICompanyRepository,
          private _mailService: IMailService
     ) {}
+
+    /**
+     * 
+     * @param request - company id and approve flag for approving company register
+     * @returns - company id, role and status
+     */
     async execute(request: AdminApproveCompanyInputDTO): Promise<UpdateStatusOutputDTO> {
         const company = await this._companyRepository.findById(request.id)
         if(!company){

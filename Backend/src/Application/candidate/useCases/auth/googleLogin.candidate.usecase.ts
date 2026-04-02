@@ -20,6 +20,12 @@ export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
         private _googleAuthService: IGoogleAuthService
     ) {}
 
+    /**
+     * 
+     * @param token 
+     * @param role 
+     * @returns - refresh token, csrf token, accesstoken and candidate details
+     */
     async execute(token: string, role: userRole): Promise<LoginCandidateOutputDTO> {
         logger.info({Role: role}, 'Your role')
 

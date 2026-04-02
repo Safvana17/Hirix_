@@ -18,6 +18,12 @@ export class ForgotPasswordUsecase implements IForgotPasswordUsecase{
         private _mailService: IMailService
     ) {}
 
+    /**
+     * 
+     * @param request - user email
+     * @returns - true if it send otp
+     */
+
     async execute(request: ForgotPasswordInputDTO): Promise<ForgotPasswordOutputDTO> {
         
         const candidate = await this._candidateRepository.findByEmail(request.email)

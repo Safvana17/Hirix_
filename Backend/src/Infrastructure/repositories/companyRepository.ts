@@ -104,6 +104,16 @@ export class CompanyRepository extends BaseRepository<CompanyEntity, ICompany> i
             {$pull: {refreshToken: hashedToken}}
         )
     }
+
+    // async checkLimit(): Promise<boolean>{
+       
+    //     const now = new Date()
+    //     const oneDayAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24)
+        
+    //     const documentCount = await this._model.countDocuments({createdAt: {$gt: oneDayAgo}})
+
+    //     return documentCount<= 5
+    // }
     
     protected mapToEntity(doc: ICompany): CompanyEntity {
         return CompanyMapper.toEntity(doc)

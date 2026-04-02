@@ -12,6 +12,12 @@ export class CreateJobRolesUsecase implements ICreateJobRolesUsecase {
         private _jobRolesRepository: IJobRepository
     ) {}
 
+
+    /**
+     * 
+     * @param request name, skills, experience and openings
+     * @returns new job role
+     */
     async execute(request: CreateJobRolesInputDTO): Promise<CreateJobRolesOutputDTO> {
         const existing = await this._jobRolesRepository.findActiveByName(request.name)
         if(existing){

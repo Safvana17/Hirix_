@@ -8,6 +8,11 @@ export class AdminGetAllCandidates implements IAdminGetAllCandidates {
         private _candidateRepository: ICandidateRepository
     ) {}
 
+    /**
+     * 
+     * @param query to fetch all candidates 
+     * @returns - all candidates, total count and total pages
+     */
     async execute(query: AdminCandidateQueryDTO): Promise<AdminPaginatedCandidateDTO> {
         // const candidates = await this._candidateRepository.findAll()
 
