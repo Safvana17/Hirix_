@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { IAdminAddCategoryUsecase } from "../../../../Application/admin/interfaces/category/iAddCategory.admin.usecase";
-import { addCategorySchema } from "../../validators/categoryValidator";
+import { addCategorySchema, editCategorySchema } from "../../validators/categoryValidator";
 import { AdminAddCategoryInputDTO } from "../../../../Application/admin/dtos/category/category.add.dto";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { categoryMessages } from "../../../../Shared/constsnts/messages/categoryMessages";
@@ -9,12 +9,14 @@ import { logger } from "../../../../utils/logging/loger";
 import { asyncHandler } from "../../../../utils/asyncHandler";
 import { IAdminDeleteCategoryUsecase } from "../../../../Application/admin/interfaces/category/iDeleteCategory.admin.usecase";
 import { sendSuccess } from "../../utils/apiResponse";
+import { IAdminEditCategoryUsecase } from "../../../../Application/admin/interfaces/category/iEditCategory.admin.usecase";
 
 export class CategoryController {
     constructor(
         private _addCategory: IAdminAddCategoryUsecase,
         private _getAllCategories: IGetAllCategoriesUsecase,
-        private _deleteCategory: IAdminDeleteCategoryUsecase
+        private _deleteCategory: IAdminDeleteCategoryUsecase,
+        private _editCategory: IAdminEditCategoryUsecase
     ) {}
 
     addCategory = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -52,5 +54,13 @@ export class CategoryController {
                   : req.params.id
             const deletedCategory = await this._deleteCategory.execute({id:categoryId})
             return sendSuccess(res, statusCode.OK, categoryMessages.success.CATEGORY_DELETED_SUCCESSFULLY, deletedCategory)
+    })
+    editCategory = asyncHandler( async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const categoryId = Array.isArray(req.params.id)
+              ? req.params.id[0]
+              : req.params.id
+        const parsed = editCategorySchema.parse(req.body)
+        const updatedCategory = await this._editCategory.execute({...parsed, id: categoryId})
+        return sendSuccess(res, statusCode.OK, categoryMessages.success.CATEGORY_UPDATED_SUCCESSFULLY, updatedCategory)
     })
 }

@@ -43,7 +43,7 @@ import { DeleteJobRoleUsecase } from "../../../Application/company/usecases/jobR
 import { AdminAddCategoryUsecase } from "../../../Application/admin/usecases/category/addCategory.admin.usecase";
 import { GetAllCategoryUsecase } from "../../../Application/admin/usecases/category/getAllCategory.admin.usecase";
 import { AdminDeleteCategoryUsecase } from "../../../Application/admin/usecases/category/deleteCategory.admin.usecase";
-
+import { AdminEditCategoryUsecase } from "../../../Application/admin/usecases/category/editCategory.admin.usecase";
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -266,6 +266,9 @@ const iGetAllCategory = new GetAllCategoryUsecase(
 const iDeleteCategory = new AdminDeleteCategoryUsecase(
     iCategoryRepository
 )
+const iEditCategory = new AdminEditCategoryUsecase(
+    iCategoryRepository
+)
 
 
 //unified
@@ -388,5 +391,6 @@ export const iJobRoleController = new JobRolesController(
 export const iCategoryController = new CategoryController(
     iAddCategory,
     iGetAllCategory,
-    iDeleteCategory
+    iDeleteCategory,
+    iEditCategory
 )

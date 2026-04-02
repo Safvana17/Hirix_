@@ -20,3 +20,14 @@ export const CategoryQuerySchema = z.object({
 export const deleteCategorySchema = z.object({
     id: z.string().regex(/^[0-9a-fA-F]{24}$/)
 })
+
+export const editCategorySchema = z.object({
+    name: z
+       .string()
+       .trim()
+       .min(2, 'Name must be atleast 2 characters')
+       .regex(/^[A-Za-z0-9.+#\-/ ]+$/),
+    parentId: z
+       .string()
+       .nullable()
+})
