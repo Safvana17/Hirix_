@@ -10,6 +10,11 @@ export interface createCategoryPayload {
     parentId: string | null
 }
 
+export interface editCategoryPayload {
+    id: string
+    name: string
+    parentId: string | null
+}
 export type ModalMode = 'create' | 'edit'
 
 export type getAllCategoryParams = {
@@ -17,6 +22,12 @@ export type getAllCategoryParams = {
   limit?: number
 }
 
+export interface editCategoryResponse {
+    id: string
+    name: string
+    parentId: string | null
+    isDeleted: boolean
+}
 export interface deleteCategoryResponse {
     id: string
 }

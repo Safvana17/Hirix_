@@ -4,9 +4,8 @@ import { adminSidebarItems } from '../../../constants/sidebarItems'
 import type { Category, ModalMode } from '../../../types/category'
 import CategoryModal from '../../components/modal/CategoryModal'
 import { useDispatch, useSelector } from 'react-redux'
-import type { createCategoryPayload } from '../../../types/category'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { createCategory, deleteCategory, getAllCategories } from '../../../redux/slices/features/category/categorySlice'
+import { createCategory, deleteCategory, editCategory, getAllCategories } from '../../../redux/slices/features/category/categorySlice'
 import toast from 'react-hot-toast'
 import { buildTree } from '../../../utils/buildTree'
 import  CategoryTree  from '../../components/admin/CategoryTree'
@@ -54,7 +53,7 @@ const AdminCategory: React.FC = () => {
         setIsModalOpen(true)
     }
 
-    const handleSaveCategory = async (data: createCategoryPayload) => {
+    const handleSaveCategory = async (data: Category) => {
         try {
             console.log('from category: ', data)
             if (modalMode === 'create') {
@@ -62,6 +61,10 @@ const AdminCategory: React.FC = () => {
                 await dispatch(getAllCategories()).unwrap()
                 setIsModalOpen(false)
                 toast.success('Category added successfully')
+            }else if(modalMode === 'edit'){
+                await dispatch(editCategory(data)).unwrap()
+                await dispatch(getAllCategories()).unwrap()
+                setIsModalOpen(false)
             }
         } catch (error) {
             toast.error(typeof error === 'string' ? error :  'Failed to delete category')

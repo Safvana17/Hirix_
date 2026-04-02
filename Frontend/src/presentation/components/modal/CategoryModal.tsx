@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import type { Category, createCategoryPayload, ModalMode } from '../../../types/category'
+import type { Category, ModalMode } from '../../../types/category'
 
 
 interface CategoryModalProps {
@@ -8,7 +8,7 @@ interface CategoryModalProps {
     initialData?: Category | null
     categories: Category[]
     onClose: () => void
-    onSave: (data: createCategoryPayload) => void
+    onSave: (data: Category) => void
 
 }
 const CategoryModal: React.FC<CategoryModalProps>= ({
@@ -35,14 +35,16 @@ const CategoryModal: React.FC<CategoryModalProps>= ({
             onSave({
                 name: formData.name,
                 parentId: formData.parentId,
+                id: '',
+                isDeleted: false
             })
-        // }else if(mode === 'edit' && initialData){
-        //     onSave({
-        //         id: initialData.id,
-        //         isDeleted: initialData.isDeleted,
-        //         name: formData.name,
-        //         parentId: formData.parentId
-        //     })
+        }else if(mode === 'edit' && initialData){
+            onSave({
+                id: initialData.id,
+                name: formData.name,
+                parentId: formData.parentId,
+                isDeleted: false
+            })
         }
     }
   return (
