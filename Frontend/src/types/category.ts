@@ -18,8 +18,9 @@ export interface editCategoryPayload {
 export type ModalMode = 'create' | 'edit'
 
 export type getAllCategoryParams = {
-  page?: number
-  limit?: number
+    categories: Category[]
+    page?: number
+    limit?: number
 }
 
 export interface editCategoryResponse {

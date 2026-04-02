@@ -61,20 +61,20 @@ export class JobRolesController {
 
     editJobRole = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const id = Array.isArray(req.params.id) 
+            const jobRoleId = Array.isArray(req.params.id) 
                 ? req.params.id[0]
                 : req.params.id
             const parsed = EditJobRoleScheama.parse(req.body)
-            const payload: EditJobRolesInputDTO = {
-                id: id,
-                name: parsed.name,
-                skills: parsed.skills,
-                experienceMin: parsed.experienceMin,
-                experienceMax: parsed.experienceMax,
-                openings: parsed.openings,
-            }
+            // const payload: EditJobRolesInputDTO = {
+            //     id: id,
+            //     name: parsed.name,
+            //     skills: parsed.skills,
+            //     experienceMin: parsed.experienceMin,
+            //     experienceMax: parsed.experienceMax,
+            //     openings: parsed.openings,
+            // }
 
-            const updatedJobRole = await this._editJobRole.execute(payload)
+            const updatedJobRole = await this._editJobRole.execute({...parsed, id: jobRoleId})
 
             return res.status(statusCode.OK).json({
                 success: true,

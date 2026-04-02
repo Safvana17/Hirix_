@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { QueryFilter, Types } from "mongoose";
 import { CategoryMapper } from "../../Application/Mappers/mapper.category";
 import { CategoryEntity } from "../../Domain/entities/Category.entity";
 import { ICategoryRepository } from "../../Domain/repositoryInterface/iCategory.repository";
@@ -19,19 +19,47 @@ export class CategoryRepository extends BaseRepository<CategoryEntity, ICategory
         return this.mapToEntity(category)
     }
 
-    async findAllFiltered(): Promise<CategoryEntity[]> {
+    // async findAllFiltered(query: {page: number, limit: number; }): Promise< data: CategoryEntity[], totalPages: number, totalCount: number }> {
     //    const filter: QueryFilter<ICategory> = {}
 
     //     const skip = (query.page - 1) * query.limit
     //     const totalCount = await this._model.countDocuments(filter)
     //     const totalPages =Math.ceil(totalCount / query.limit)
 
-        const documents = await this._model
-               .find({ isDeleted: false })
-               .sort({ createdAt: -1 })
+    //     const documents = await this._model
+    //            .find({ isDeleted: false })
+    //            .sort({ createdAt: -1 })
              
 
-        return documents.map(doc => this.mapToEntity(doc)) 
+    //     return documents.map(doc => this.mapToEntity(doc)) 
+    // }
+    async findAllFiltered(query: { page: number; limit: number; }): Promise<{ data: CategoryEntity[]; totalPages: number; totalCount: number; }> {
+        const filter: QueryFilter<ICategory> = {
+            parentId: null,
+            isDeleted: false
+        }
+
+        const skip = (query.page - 1) * query.limit
+        const totalCount = await this._model.countDocuments(filter)
+        const totalPages =Math.ceil(totalCount / query.limit)
+
+        const rootDocuments = await this._model
+               .find(filter)
+               .skip(skip)
+               .sort({ createdAt: -1 })
+               .limit(query.limit)
+        const rootIds = rootDocuments.map(doc => doc._id)   
+        const childrenDocuments = await this._model.find({
+            parentId: {$in: rootIds},
+            isDeleted: false
+        }) 
+
+        const allDocs = [...rootDocuments, ...childrenDocuments]
+        return {
+            data: allDocs.map(doc => this.mapToEntity(doc)),
+            totalPages,
+            totalCount
+        }
     }
 
     async hasChildren(categoryId: string): Promise<boolean> {

@@ -1,16 +1,19 @@
 
 
 export interface GetAllCategoryOutputDTO {
-    categories: {
-        id: string;
-        name: string;
-        parentId: string | null;
-        isDeleted: boolean
-    }[]
+    id: string;
+    name: string;
+    parentId: string | null;
+    isDeleted: boolean
 }
 
-// export interface PaginatedCategoryDTO {
-//     categories: GetAllCategoryOutputDTO[];
-//     totalPages: number;
-//     totalCount: number
-// }
+export interface getAllCategoryInputDTO{
+    page: number;
+    limit: number
+}
+
+export interface PaginatedCategoryDTO {
+    categories: GetAllCategoryOutputDTO[];
+    totalPages: number;
+    totalCount: number
+}

@@ -1,5 +1,5 @@
 import { ICategoryRepository } from "../../../../Domain/repositoryInterface/iCategory.repository";
-import { GetAllCategoryOutputDTO } from "../../dtos/category/category.getAll.dto";
+import { getAllCategoryInputDTO, PaginatedCategoryDTO } from "../../dtos/category/category.getAll.dto";
 import { IGetAllCategoriesUsecase } from "../../interfaces/category/iGetAllCategory.admin.usecase";
 
 export class GetAllCategoryUsecase implements IGetAllCategoriesUsecase {
@@ -12,8 +12,8 @@ export class GetAllCategoryUsecase implements IGetAllCategoriesUsecase {
      * @returns all categories with id, name, parentid and is deleted or not flag
      */
 
-    async execute(): Promise<GetAllCategoryOutputDTO> {
-        const data = await this._categoryRepository.findAllFiltered()
+    async execute(request: getAllCategoryInputDTO): Promise<PaginatedCategoryDTO> {
+        const {data, totalCount, totalPages} = await this._categoryRepository.findAllFiltered(request)
 
         return {
             categories: data.map((c) => ({
@@ -21,7 +21,9 @@ export class GetAllCategoryUsecase implements IGetAllCategoriesUsecase {
                 name: c.name,
                 parentId: c.parentId,
                 isDeleted: c.isDeleted
-            }))
+            })),
+            totalCount,
+            totalPages
         }
     }
 }

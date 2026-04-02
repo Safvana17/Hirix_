@@ -11,10 +11,13 @@ import { buildTree } from '../../../utils/buildTree'
 import  CategoryTree  from '../../components/admin/CategoryTree'
 import { Plus } from 'lucide-react'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
+import { Pagination } from '@mui/material'
+
 
 const AdminCategory: React.FC = () => {
 
     const [isModelOpen, setIsModalOpen] = useState(false)
+    const [page, setPage] = useState(1)
     const [modalMode, setModalMode] = useState<ModalMode>('create')
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
     const [modalConfig, setModalConfig] = useState<{
@@ -31,12 +34,12 @@ const AdminCategory: React.FC = () => {
         type: 'danger'
     })
     const dispatch = useDispatch<AppDispatch>()
-    const { categories } = useSelector((state: RootState) => state.category)
+    const { categories, pagination } = useSelector((state: RootState) => state.category)
 
 
     useEffect(() => {
-        dispatch(getAllCategories())
-    }, [dispatch])
+        dispatch(getAllCategories({page, limit: 5}))
+    }, [dispatch, page])
 
     const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
         setModalConfig({...config, isOpen: true})
@@ -58,12 +61,12 @@ const AdminCategory: React.FC = () => {
             console.log('from category: ', data)
             if (modalMode === 'create') {
                 await dispatch(createCategory(data)).unwrap()
-                await dispatch(getAllCategories()).unwrap()
+                await dispatch(getAllCategories({page, limit: 5})).unwrap()
                 setIsModalOpen(false)
                 toast.success('Category added successfully')
             }else if(modalMode === 'edit'){
                 await dispatch(editCategory(data)).unwrap()
-                await dispatch(getAllCategories()).unwrap()
+                await dispatch(getAllCategories({page, limit: 5})).unwrap()
                 setIsModalOpen(false)
             }
         } catch (error) {
@@ -86,7 +89,7 @@ const AdminCategory: React.FC = () => {
                  try {
                     await dispatch(deleteCategory({id})).unwrap()
                     toast.success('Category deleted successfully')
-                    dispatch(getAllCategories())
+                    dispatch(getAllCategories({page, limit: 5}))
                  } catch (error: unknown) {
                    toast.error(typeof error === 'string' ? error :  'Failed to delete category')
                  }finally{
@@ -137,6 +140,11 @@ const AdminCategory: React.FC = () => {
                     title={modalConfig.title}
                     message={modalConfig.message}
                     type={modalConfig.type}
+            />
+            <Pagination
+              count={pagination.category.totalPages}
+              page={page}
+              onChange={(_, value) => setPage(value)}
             />
             </div>
         </InternalLayout>

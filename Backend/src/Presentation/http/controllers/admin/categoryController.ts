@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { IAdminAddCategoryUsecase } from "../../../../Application/admin/interfaces/category/iAddCategory.admin.usecase";
-import { addCategorySchema, editCategorySchema } from "../../validators/categoryValidator";
+import { addCategorySchema, editCategorySchema, getAllCategorySchema } from "../../validators/categoryValidator";
 import { AdminAddCategoryInputDTO } from "../../../../Application/admin/dtos/category/category.add.dto";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { categoryMessages } from "../../../../Shared/constsnts/messages/categoryMessages";
@@ -36,17 +36,16 @@ export class CategoryController {
             })
     })
 
-    getAllCategory = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const {categories} = await this._getAllCategories.execute()
-            return res.status(statusCode.OK).json({
-                success: true,
-                categories
-            })
-        } catch (error) {
-            next(error)
-        }
-    }
+    getAllCategory = asyncHandler( async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const parsed = getAllCategorySchema.parse(req.query)
+        const {categories, totalCount, totalPages} = await this._getAllCategories.execute(parsed)
+        return res.status(statusCode.OK).json({
+            success: true,
+            categories,
+            totalCount,
+            totalPages
+        })
+    })
 
     deleteCategory = asyncHandler(async(req: Request, res: Response, next: NextFunction): Promise<Response> => {
             const categoryId = Array.isArray(req.params.id)

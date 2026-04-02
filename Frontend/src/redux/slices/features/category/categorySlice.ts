@@ -50,11 +50,11 @@ createCategoryPayload,
 
 export const getAllCategories = createAsyncThunk<
 GetAllCategoryResponse,
-void,
+{page: number, limit: number},
 {rejectValue: string}
->('category/getAll', async(_, {rejectWithValue}) => {
+>('category/getAll', async(params: {search?: string; status?: string; page?: number; limit?: number} | undefined, {rejectWithValue}) => {
     try {
-        const response = await api.get(API_ROUTES.ADMIN.CATEGORY.GET_ALL)
+        const response = await api.get(API_ROUTES.ADMIN.CATEGORY.GET_ALL, {params})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -128,7 +128,9 @@ const categorySlice = createSlice({
           .addCase(getAllCategories.fulfilled, (state, action) => {
             state.loading = false
             state.categories = action.payload.categories.filter(c => !c.isDeleted)
-          })
+            state.pagination.category.totalCount = action.payload.totalCount
+            state.pagination.category.totalPages = action.payload.totalPages  
+        })
           .addCase(getAllCategories.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get all categories'
