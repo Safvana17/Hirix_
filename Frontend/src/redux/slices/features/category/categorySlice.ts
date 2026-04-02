@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { Category, createCategoryPayload, GetAllCategoryResponse } from "../../../../types/category";
+import type { Category, createCategoryPayload, deleteCategoryResponse, GetAllCategoryResponse } from "../../../../types/category";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -65,6 +65,24 @@ void,
     }
 })
 
+export const deleteCategory = createAsyncThunk<
+deleteCategoryResponse,
+{id: string},
+{rejectValue: string}
+>('category/delete', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.delete(API_ROUTES.ADMIN.CATEGORY.DELETE(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to delete category')
+    }
+})
+
 const categorySlice = createSlice({
     name: 'Category',
     initialState,
@@ -96,6 +114,17 @@ const categorySlice = createSlice({
           .addCase(getAllCategories.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get all categories'
+          })
+          .addCase(deleteCategory.pending, (state) => {
+            state.loading = true
+          })
+          .addCase(deleteCategory.fulfilled, (state, action) => {
+            state.loading = false
+            state.categories = state.categories.filter(c => c.id !== action.payload.id)
+          })
+          .addCase(deleteCategory.rejected,(state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to delete category'
           })
     }
 })

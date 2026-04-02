@@ -17,6 +17,9 @@ export type getAllCategoryParams = {
   limit?: number
 }
 
+export interface deleteCategoryResponse {
+    id: string
+}
 export interface GetAllCategoryResponse{
     categories: Category[]
     totalPages: number
@@ -26,4 +29,3 @@ export interface GetAllCategoryResponse{
 export interface CategoryNode extends Category {
     children: CategoryNode[]
 }
-

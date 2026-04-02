@@ -6,20 +6,32 @@ import CategoryModal from '../../components/modal/CategoryModal'
 import { useDispatch, useSelector } from 'react-redux'
 import type { createCategoryPayload } from '../../../types/category'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { createCategory, getAllCategories } from '../../../redux/slices/features/category/categorySlice'
+import { createCategory, deleteCategory, getAllCategories } from '../../../redux/slices/features/category/categorySlice'
 import toast from 'react-hot-toast'
 import { buildTree } from '../../../utils/buildTree'
 import  CategoryTree  from '../../components/admin/CategoryTree'
 import { Plus } from 'lucide-react'
+import ConfirmationModal from '../../components/modal/ConfirmationModal'
 
 const AdminCategory: React.FC = () => {
 
     const [isModelOpen, setIsModalOpen] = useState(false)
     const [modalMode, setModalMode] = useState<ModalMode>('create')
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
-
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: boolean;
+        title: string;
+        message: string;
+        onConfirm: () => void
+        type: 'danger'
+    }>({
+        isOpen: false,
+        title: '',
+        message: '',
+        onConfirm: () => { },
+        type: 'danger'
+    })
     const dispatch = useDispatch<AppDispatch>()
-
     const { categories } = useSelector((state: RootState) => state.category)
 
 
@@ -27,7 +39,13 @@ const AdminCategory: React.FC = () => {
         dispatch(getAllCategories())
     }, [dispatch])
 
+    const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+        setModalConfig({...config, isOpen: true})
+    }
 
+    const closeModal = () => {
+        setModalConfig(prev => ({...prev, isOpen: false}))
+    }
     const treeData = useMemo(() => buildTree(categories), [categories])
 
     const handleAddCategory = () => {
@@ -46,16 +64,34 @@ const AdminCategory: React.FC = () => {
                 toast.success('Category added successfully')
             }
         } catch (error) {
-            if (error instanceof Error) {
-                toast.error(error.message)
-            } else {
-                toast.error('Failed to create category')
-            }
+            toast.error(typeof error === 'string' ? error :  'Failed to delete category')
         }
     }
 
-    console.log("FLAT categories:", categories)
-console.log("TREE:", treeData)
+    const handleEditCategory = async(category: Category) => {
+        setModalMode('edit')
+        setSelectedCategory(category)
+        setIsModalOpen(true)
+    }
+
+    const handleDeleteCategory = (id: string) => {
+        openModal({
+            title: 'Delete Category',
+            message: 'Are you sure you want to delete this category?',
+            type: 'danger',
+            onConfirm: async() => {
+                 try {
+                    await dispatch(deleteCategory({id})).unwrap()
+                    toast.success('Category deleted successfully')
+                    dispatch(getAllCategories())
+                 } catch (error: unknown) {
+                   toast.error(typeof error === 'string' ? error :  'Failed to delete category')
+                 }finally{
+                    closeModal()
+                 }
+            }
+        })
+    }
 
     return (
         <InternalLayout title='Categories' subTitle='Organize categories into hierarchical categories' sidebarItems={adminSidebarItems} >
@@ -73,7 +109,11 @@ console.log("TREE:", treeData)
                         <h2 className="font-semibold">Category Hierarchy</h2>
                     </div>
                     <div className="p-4">
-                        <CategoryTree nodes={treeData} />
+                        <CategoryTree 
+                          nodes={treeData}
+                          onEdit={handleEditCategory}
+                          onDelete={handleDeleteCategory} 
+                        />
                     </div>
                 </div>
 
@@ -86,6 +126,15 @@ console.log("TREE:", treeData)
                     onClose={() => setIsModalOpen(false)}
                     onSave={handleSaveCategory}
                 />
+
+               <ConfirmationModal 
+                    isOpen={modalConfig.isOpen}
+                    onClose={closeModal}
+                    onConfirm={modalConfig.onConfirm}
+                    title={modalConfig.title}
+                    message={modalConfig.message}
+                    type={modalConfig.type}
+            />
             </div>
         </InternalLayout>
     )
