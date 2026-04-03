@@ -67,6 +67,13 @@ export const ROUTES = {
             EDIT: '/category/:id',
             DELETE: '/category/:id',
             GET_ALL: '/categories'
+        },
+        QUESTION: {
+            CREATE: '/question',
+            EDIT: '/question/:id',
+            DELETE: '/question/:id',
+            GET_ALL: '/questions',
+            BY_ID: '/question/:id'
         }
     }
 }

@@ -36,8 +36,6 @@ export class JobRolesRepository extends BaseRepository<JobRolesEntity, IJobRoles
             ]
         }
         if (query.status) {
-
-
             if (query.status === "Active") {
             filter.status = "Active"
             }

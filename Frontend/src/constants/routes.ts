@@ -31,6 +31,7 @@ export const ROUTES = {
     CANDIDATES: '/admin/candidates',
     COMPANY_DETAIL: `/admin/company/:id`,
     COMPANY_DETAIL_PATH: (id: string) => `/admin/company/${id}`,
-    CATEGORIES: '/admin/categories'
+    CATEGORIES: '/admin/categories',
+    QUESTIONS: '/admin/questions',
   },
 }

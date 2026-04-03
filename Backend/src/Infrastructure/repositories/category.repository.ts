@@ -2,7 +2,7 @@ import { QueryFilter, Types } from "mongoose";
 import { CategoryMapper } from "../../Application/Mappers/mapper.category";
 import { CategoryEntity } from "../../Domain/entities/Category.entity";
 import { ICategoryRepository } from "../../Domain/repositoryInterface/iCategory.repository";
-import { CategoryModel, ICategory } from "../database/Model/category";
+import { CategoryModel, ICategory } from "../database/Model/Category";
 import { BaseRepository } from "./base.repository";
 
 export class CategoryRepository extends BaseRepository<CategoryEntity, ICategory> implements ICategoryRepository {
@@ -19,20 +19,6 @@ export class CategoryRepository extends BaseRepository<CategoryEntity, ICategory
         return this.mapToEntity(category)
     }
 
-    // async findAllFiltered(query: {page: number, limit: number; }): Promise< data: CategoryEntity[], totalPages: number, totalCount: number }> {
-    //    const filter: QueryFilter<ICategory> = {}
-
-    //     const skip = (query.page - 1) * query.limit
-    //     const totalCount = await this._model.countDocuments(filter)
-    //     const totalPages =Math.ceil(totalCount / query.limit)
-
-    //     const documents = await this._model
-    //            .find({ isDeleted: false })
-    //            .sort({ createdAt: -1 })
-             
-
-    //     return documents.map(doc => this.mapToEntity(doc)) 
-    // }
     async findAllFiltered(query: { page: number; limit: number; }): Promise<{ data: CategoryEntity[]; totalPages: number; totalCount: number; }> {
         const filter: QueryFilter<ICategory> = {
             parentId: null,
@@ -72,6 +58,11 @@ export class CategoryRepository extends BaseRepository<CategoryEntity, ICategory
               ]
         })
         return count > 0
+    }
+
+    async exists(categoryId: string): Promise<boolean> {
+        const document = await this._model.exists({ _id: categoryId })
+        return !!document
     }
 
     protected mapToEntity(doc: ICategory): CategoryEntity {

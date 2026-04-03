@@ -10,7 +10,7 @@ export const errorHandler: ErrorRequestHandler = (
     res: Response,
     next: NextFunction
 ): void =>{
-    req.log.error({error: error}, 'From error handler')
+    req.log.error(error, 'From error handler')
 
 
     if(error instanceof AppError){
@@ -28,10 +28,10 @@ export const errorHandler: ErrorRequestHandler = (
             message: errorMessage
         })
         return
-    }else{
+    }else {
       res.status(500).json({
         success: false,
-        message: authMessages.error.INTERNAL_SERVER_ERROR
+        message: error instanceof Error ? error.message : authMessages.error.INTERNAL_SERVER_ERROR
       })
     }
 } 

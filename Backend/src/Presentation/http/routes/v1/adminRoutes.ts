@@ -1,9 +1,10 @@
 import  Express  from "express";
-import { iCategoryController, iTokenService, IUserManagementController } from "../../controllers/factory";
+import { iAdminQuestionController, iCategoryController, iTokenService, IUserManagementController } from "../../controllers/factory";
 import { authHandler } from "../../middlewares/authMiddleware";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
-import { deleteCategorySchema } from "../../validators/categoryValidator";
+import { validate } from "../../middlewares/validate";
+import { createQuestionSchema } from "../../validators/questionValidator";
 
 const router = Express.Router()
 
@@ -26,4 +27,10 @@ router.post(ROUTES.ADMIN.CATEGORY.CREATE, authHandler(iTokenService), verifyCsrf
 router.get(ROUTES.ADMIN.CATEGORY.GET_ALL, authHandler(iTokenService), iCategoryController.getAllCategory)
 router.delete(ROUTES.ADMIN.CATEGORY.DELETE, authHandler(iTokenService), verifyCsrf, iCategoryController.deleteCategory)
 router.put(ROUTES.ADMIN.CATEGORY.EDIT, authHandler(iTokenService), verifyCsrf, iCategoryController.editCategory)
+
+//questions
+router.post(ROUTES.ADMIN.QUESTION.CREATE,  validate(createQuestionSchema, 'body'), iAdminQuestionController.createQuestion)
+
+
+
 export default router;               

@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { CategoryEntity } from "../../Domain/entities/Category.entity";
-import { ICategory } from "../../Infrastructure/database/Model/category";
+import { ICategory } from "../../Infrastructure/database/Model/Category";
+
 
 export class CategoryMapper {
     static toEntity(doc: ICategory): CategoryEntity {

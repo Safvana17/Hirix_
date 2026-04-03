@@ -12,6 +12,7 @@ import ChangePassword from '../presentation/components/company/ChangePassword'
 import RestoreAccount from '../presentation/pages/company/RestoreAccount'
 import JobRoles from '../presentation/pages/company/JobRoles'
 import AdminCategory from '../presentation/pages/admin/AdminCategory'
+import AdminTestQuestions from '../presentation/pages/admin/AdminTestQuestions'
 
 
 
@@ -121,6 +122,12 @@ const App = () => {
           <Route path={ROUTES.ADMIN.CATEGORIES} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminCategory />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.ADMIN.QUESTIONS} element={
+            <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+              <AdminTestQuestions />
             </RoleRoute>
           } />
           

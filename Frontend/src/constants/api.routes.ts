@@ -61,6 +61,16 @@ export const API_ROUTES = {
       DELETE: (id: string) => 
         `/admin/category/${id}`,
       GET_ALL: '/admin/categories'
-    }
+    },
+    TEST_QUESTIONS: {
+      CREATE: '/admin/question',
+      EDIT: (id: string) => 
+        `/admin/question/${id}`,
+      DELETE: (id: string) => 
+        `/admin/question/${id}`,
+      BY_ID: (id: string) => 
+        `/admin/question/${id}`,
+      GET_ALL: '/admin/questions'
+    },
   },
 }

@@ -44,6 +44,8 @@ import { AdminAddCategoryUsecase } from "../../../Application/admin/usecases/cat
 import { GetAllCategoryUsecase } from "../../../Application/admin/usecases/category/getAllCategory.admin.usecase";
 import { AdminDeleteCategoryUsecase } from "../../../Application/admin/usecases/category/deleteCategory.admin.usecase";
 import { AdminEditCategoryUsecase } from "../../../Application/admin/usecases/category/editCategory.admin.usecase";
+import { AdminCreateQuestionUsecase } from "../../../Application/admin/usecases/question/admin.createQuestion.usecase";
+
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -53,7 +55,7 @@ import { CompanyRepository } from "../../../Infrastructure/repositories/companyR
 import { AdminRepository } from "../../../Infrastructure/repositories/admin.repository";
 import { JobRolesRepository } from "../../../Infrastructure/repositories/jobRoles.repository";
 import { CategoryRepository } from "../../../Infrastructure/repositories/category.repository";
-
+import { QuestionRepository } from "../../../Infrastructure/repositories/question.repository";
 
 //services
 import { HashService } from "../../../Infrastructure/services/HashService";
@@ -73,6 +75,7 @@ import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repos
 import { CompanySettingsController } from "./company/companySettingsController";
 import { JobRolesController } from "./company/jobRoleController";
 import { CategoryController } from "./admin/categoryController";
+import { AdminQestionController } from "./admin/adminQuestionController";
 
 
 
@@ -82,6 +85,8 @@ const iAdminRepository = new AdminRepository()
 const iOtpRepository = new OtpRepository(redisClient)
 const iJobRoleRepository = new JobRolesRepository()
 const iCategoryRepository = new CategoryRepository()
+const iQuestionRepository = new QuestionRepository()
+
 
 const iHashService = new HashService()
 const iOtpService = new OtpService()
@@ -270,6 +275,11 @@ const iEditCategory = new AdminEditCategoryUsecase(
     iCategoryRepository
 )
 
+//question
+const iAdminCreateQuestion = new AdminCreateQuestionUsecase(
+    iQuestionRepository,
+    iCategoryRepository
+)
 
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
@@ -393,4 +403,8 @@ export const iCategoryController = new CategoryController(
     iGetAllCategory,
     iDeleteCategory,
     iEditCategory
+)
+
+export const iAdminQuestionController = new AdminQestionController(
+    iAdminCreateQuestion
 )
