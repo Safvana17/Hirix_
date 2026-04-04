@@ -18,7 +18,13 @@ export class QuestionMapper {
             doc.isDeleted,
             doc.answer,
             doc.options,
-            doc.testCases,
+            doc.testCases?.map(tc => {
+                try {
+                    return JSON.parse(tc)
+                } catch{
+                    return tc
+                }
+            }),
             doc.createdById ? doc.createdById.toString() : null
         )
 
@@ -39,9 +45,13 @@ export class QuestionMapper {
             isDeleted: entity.isDeleted,
             answer: entity.answer,
             options: entity.options,
+            testCases: entity.testCases?.map(tc => 
+                JSON.stringify(tc)
+            ),
             createdById: entity.createdById
                 ? new Types.ObjectId(entity.createdById)
                 : null
+            
         }
     }
 }

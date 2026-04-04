@@ -8,6 +8,7 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { AdminCreateQuestionInputDTO, AdminCreateQuestionOutputDTO } from "../../dtos/question/admin.createQuestion.dto";
 import { IAdminCreateQuestionUsecase } from "../../interfaces/question/iAdminCreateQuestionUsecase";
 import { QuestionEntity } from "../../../../Domain/entities/Question.entity";
+import QuestionVisibility from "../../../../Domain/enums/questionVisibility";
 
 export class AdminCreateQuestionUsecase implements IAdminCreateQuestionUsecase {
     constructor(
@@ -49,6 +50,8 @@ export class AdminCreateQuestionUsecase implements IAdminCreateQuestionUsecase {
             })
         }
 
+        let visibility = request.isPremium ? QuestionVisibility.PRO : QuestionVisibility.FREE
+
         const question = new QuestionEntity(
             "",
             request.title,
@@ -57,7 +60,7 @@ export class AdminCreateQuestionUsecase implements IAdminCreateQuestionUsecase {
             request.difficulty,
             request.categoryId,
             request.createdBy,
-            request.visibility,
+            visibility,
             request.isPremium,
             request.isPractice,
             false,

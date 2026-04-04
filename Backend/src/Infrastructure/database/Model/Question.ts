@@ -3,7 +3,6 @@ import QuestionType from "../../../Domain/enums/questionType";
 import QuestionDifficulty from "../../../Domain/enums/questionDifficulty";
 import userRole from "../../../Domain/enums/userRole.enum";
 import QuestionVisibility from "../../../Domain/enums/questionVisibility";
-import { TestCase } from "../../../Domain/interfaces/question.testCase";
 
 export interface IQuestion extends Document {
     _id: Types.ObjectId;
@@ -11,7 +10,7 @@ export interface IQuestion extends Document {
     description: string;
     type: QuestionType;
     options: string[];
-    testCases: TestCase[];
+    testCases: string[];
     difficulty: QuestionDifficulty;
     categoryId: Types.ObjectId;
     createdBy: userRole;
@@ -37,10 +36,12 @@ const QuestionSchema: Schema<IQuestion> = new Schema({
         default: QuestionType.MCQ
     },
     options: {
-        type: [String]
+        type: [String],
+        default: []
     },
     testCases: {
-        type: [String]
+        type: [String],
+        default: []
     },
     difficulty: {
         type: String,

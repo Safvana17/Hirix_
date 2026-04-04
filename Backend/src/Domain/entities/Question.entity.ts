@@ -19,7 +19,7 @@ export class QuestionEntity {
     isPremium: boolean;
     isPractice: boolean;
     isDeleted: boolean;
-    answer: string
+    answer?: string
 
     constructor (
         id: string,
@@ -33,7 +33,7 @@ export class QuestionEntity {
         isPremium: boolean,
         isPractice: boolean,
         isDeleted: boolean,
-        answer: string,
+        answer?: string,
         options?: string[],
         testCases?: TestCase[],
         createdById?: string | null

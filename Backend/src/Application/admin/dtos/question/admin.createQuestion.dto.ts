@@ -12,8 +12,8 @@ export interface AdminCreateQuestionInputDTO {
     categoryId: string;
     isPremium: boolean;
     isPractice: boolean;
-    visibility: QuestionVisibility;
-    answer: string;
+    // visibility: QuestionVisibility;
+    answer?: string;
     createdBy: userRole;
     options?: string[];
     testCases?: TestCase[]
