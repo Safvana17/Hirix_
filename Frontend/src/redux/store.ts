@@ -4,6 +4,7 @@ import userSlice from './slices/features/users/usersSlice'
 import CompanySettingsSlice from './slices/features/settingsSlice.ts/companySettingsSlice'
 import JobRoleSlice from './slices/features/jobRoles/jobRoleSlice'
 import CategorySlice from './slices/features/category/categorySlice'
+import questionSlice from './slices/features/question/questionSlice'
 
 export const store = configureStore({
     reducer: {   
@@ -11,7 +12,8 @@ export const store = configureStore({
         userSlice: userSlice,
         companySettings: CompanySettingsSlice,
         jobRole: JobRoleSlice,
-        category: CategorySlice
+        category: CategorySlice,
+        question: questionSlice
     }
 })
 

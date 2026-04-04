@@ -9,14 +9,12 @@ export interface createCategoryPayload {
     name: string
     parentId: string | null
 }
-
 export interface editCategoryPayload {
     id: string
     name: string
     parentId: string | null
 }
 export type ModalMode = 'create' | 'edit'
-
 export type getAllCategoryParams = {
     categories: Category[]
     page?: number

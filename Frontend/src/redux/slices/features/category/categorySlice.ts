@@ -50,7 +50,7 @@ createCategoryPayload,
 
 export const getAllCategories = createAsyncThunk<
 GetAllCategoryResponse,
-{page: number, limit: number},
+{page?: number, limit?: number},
 {rejectValue: string}
 >('category/getAll', async(params: {search?: string; status?: string; page?: number; limit?: number} | undefined, {rejectWithValue}) => {
     try {

@@ -140,12 +140,12 @@ const AdminCategory: React.FC = () => {
                     title={modalConfig.title}
                     message={modalConfig.message}
                     type={modalConfig.type}
-            />
-            <Pagination
-              count={pagination.category.totalPages}
-              page={page}
-              onChange={(_, value) => setPage(value)}
-            />
+                />
+                <Pagination
+                    count={pagination.category.totalPages}
+                    page={page}
+                    onChange={(_, value) => setPage(value)}
+                />
             </div>
         </InternalLayout>
     )
