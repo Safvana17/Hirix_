@@ -1,13 +1,33 @@
-import { NextFunction, Request, Response } from "express";
-import { ZodSchema } from "zod";
+// import { NextFunction, Request, Response } from "express";
+// import { ZodSchema } from "zod";
 
 
-export const validate = (schema: ZodSchema, property: 'body' | 'query' | 'params') => {
-   return (req: Request, res: Response, next: NextFunction) => {
-       schema.parse(req[property]);
-        next();
-    }
-};
+// export const validate = (schema: ZodSchema, property: 'body' | 'query' | 'params') => {
+//    return (req: Request, res: Response, next: NextFunction) => {
+//        const parsed = schema.parse(req[property]);
+//        req[property] = parsed
+//         next();
+//     }
+// };
+
+import { Request, Response, NextFunction } from "express";
+import { ZodSchema, z } from "zod";
+
+type RequestProperty = "body" | "query" | "params";
+
+export const validate =
+  <T extends ZodSchema>(schema: T, property: RequestProperty) =>
+  (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): asserts req is Request & {
+    [K in typeof property]: z.infer<T>;
+  } => {
+    const parsed = schema.parse(req[property]);
+    req[property] = parsed;
+    next();
+  };
 
 
 // import { Request, Response, NextFunction } from "express";

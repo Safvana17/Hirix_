@@ -4,6 +4,7 @@ import { IQuestion } from "../../Infrastructure/database/Model/Question";
 
 export class QuestionMapper {
     static toEntity(doc: IQuestion): QuestionEntity {
+        
         const question = new QuestionEntity (
             doc._id.toString(),
             doc.title,
@@ -21,13 +22,19 @@ export class QuestionMapper {
             doc.testCases?.map(tc => {
                 try {
                     return JSON.parse(tc)
-                } catch{
+                } catch {
                     return tc
                 }
             }),
             doc.createdById ? doc.createdById.toString() : null
         )
 
+        let categoryName: string | undefined = undefined
+
+if (doc.categoryId && typeof doc.categoryId === 'object' && 'name' in doc.categoryId) {
+  categoryName = (doc.categoryId as { name: string }).name
+}
+        question.categoryName = categoryName
         return question
     }
 

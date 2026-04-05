@@ -52,3 +52,12 @@ export const createQuestionSchema = z.object({
         }
     }
 });
+
+export const getAllQuestionSchema = z.object({
+    page: z.coerce.number().default(1),
+    limit: z.coerce.number().default(10),
+    difficulty: z.nativeEnum(QuestionDifficulty).optional(),
+    type: z.nativeEnum(QuestionType).optional(),
+    category: z.string().optional(),
+    search: z.string().optional()
+})

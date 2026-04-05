@@ -49,6 +49,7 @@ const QuestionSchema: Schema<IQuestion> = new Schema({
     },
     categoryId: {
         type: Types.ObjectId,
+        ref: 'Category'
     },
     createdBy: {
         type: String,

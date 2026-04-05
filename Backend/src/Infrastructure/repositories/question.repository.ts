@@ -26,32 +26,14 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
         if(query.search){
             filter.$or = [
                 { title: { $regex: query.search, $options: "i" } },
-                { difficulty: { $regex: query.search, $options: "i" } },
-                { type: { $regex: query.search, $options: "i" } },
-                { categoryId: { $regex: query.search, $options: "i" } }
+                { description: {$regex: query.search, $options: 'i' } }
             ]
         }
         if(query.difficulty){
-            if(query.difficulty === 'easy'){
-                filter.difficulty = 'easy'
-            }
-            if(query.difficulty === 'medium'){
-                filter.difficulty = 'medium'
-            }
-            if(query.difficulty === 'hard'){
-                filter.difficulty = 'hard'
-            }
+            filter.difficulty = query.difficulty
         }
         if(query.type){
-            if(query.type === 'mcq'){
-                filter.type = 'mcq'
-            }
-            if(query.type === 'descriptive'){
-                filter.type = 'descriptive'
-            }
-            if(query.type === 'coding'){
-                filter.type = 'coding'
-            }
+            filter.type = query.type
         }
         if(query.category){
             filter.categoryId = query.category
@@ -63,6 +45,7 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
 
         const documents = await this._model  
             .find(filter)
+            .populate('categoryId', 'name')
             .skip(skip)
             .limit(query.limit)
             .sort({createdAt: -1})

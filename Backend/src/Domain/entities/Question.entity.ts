@@ -20,6 +20,7 @@ export class QuestionEntity {
     isPractice: boolean;
     isDeleted: boolean;
     answer?: string
+    categoryName?: string
 
     constructor (
         id: string,

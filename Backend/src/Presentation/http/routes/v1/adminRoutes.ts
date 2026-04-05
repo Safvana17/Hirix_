@@ -30,7 +30,7 @@ router.put(ROUTES.ADMIN.CATEGORY.EDIT, authHandler(iTokenService), verifyCsrf, i
 
 //questions
 router.post(ROUTES.ADMIN.QUESTION.CREATE,  validate(createQuestionSchema, 'body'), iAdminQuestionController.createQuestion)
-
+router.get(ROUTES.ADMIN.QUESTION.GET_ALL, authHandler(iTokenService), iAdminQuestionController.getAllQuestions)
 
 
 export default router;               
