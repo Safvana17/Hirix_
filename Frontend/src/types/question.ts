@@ -23,6 +23,7 @@ export interface Question {
     testCases?: TestCase[];
     difficulty: QuestionDifficulty;
     categoryId: string;
+    categoryName: string;
     createdBy: UserRole
     createdById?: string | null;
     visibility: QuestionVisibility;
@@ -45,3 +46,18 @@ export type QuestionFormData = {
   isPractice: boolean;
   createdBy: UserRole
 };
+
+export interface getAllQuestionsResponse {
+  questions: Question[],
+  totalCount: number;
+  totalPages: number
+}
+
+export interface getAllQuestionsParams {
+  search?: string;
+  category?: string;
+  type?: QuestionType;
+  difficulty?: QuestionDifficulty;
+  page?: number;
+  limit?: number;
+}
