@@ -48,7 +48,7 @@ import { AdminCreateQuestionUsecase } from "../../../Application/admin/usecases/
 import { AdminGetAllQuestionsUsecase } from "../../../Application/admin/usecases/question/admin.getAllQuestion.usecase";
 import { AdminEditQuestionUsecase } from "../../../Application/admin/usecases/question/admin.editQuestion.usecase";
 import { AdminDeleteQuestionUsecase } from "../../../Application/admin/usecases/question/admin.deleteQuestion.usecase";
-
+import { CompanyCreateQuestionUsecase } from "../../../Application/company/usecases/question/company.createQuestion.usecase";
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -79,6 +79,7 @@ import { CompanySettingsController } from "./company/companySettingsController";
 import { JobRolesController } from "./company/jobRoleController";
 import { CategoryController } from "./admin/categoryController";
 import { AdminQestionController } from "./admin/adminQuestionController";
+import { CompanyQuestionController } from "./company/companyQuestionController";
 
 
 
@@ -259,6 +260,13 @@ const iUpdateJobRoleStatus = new UpdateJobRoleStatusUsecase (
 const iDeleteJobRole = new DeleteJobRoleUsecase(
     iJobRoleRepository
 )
+
+//question
+
+const iCompanyCreateQuestion = new CompanyCreateQuestionUsecase(
+    iQuestionRepository,
+    iCategoryRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -422,4 +430,8 @@ export const iAdminQuestionController = new AdminQestionController(
     iAdminGetAllQuestions,
     iAdminEditQuestion,
     iAdminDeleteQuestion,
+)
+
+export const iCompanyQuestionController = new CompanyQuestionController(
+    iCompanyCreateQuestion
 )

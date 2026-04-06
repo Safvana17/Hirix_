@@ -7,6 +7,7 @@ import { IQuestion, QuestionModel } from "../database/Model/Question";
 import { BaseRepository } from "./base.repository";
 import { QuestionMapper } from "../../Application/Mappers/mapper.question";
 import { logger } from "../../utils/logging/loger";
+import userRole from "../../Domain/enums/userRole.enum";
 
 export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestion> implements IQuestionRepository{
     constructor(){
@@ -19,11 +20,19 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
         return this.mapToEntity(documents)
     }
 
-    async findAllFiltered(query: { search?: string; difficulty?: QuestionDifficulty; type?: QuestionType; category?: string; page: number; limit: number; }): Promise<{ data: QuestionEntity[]; totalPages: number; totalCount: number; }> {
+    async findAllFiltered(query: { search?: string; difficulty?: QuestionDifficulty; type?: QuestionType; category?: string; role: userRole; userId?: string; page: number; limit: number; }): Promise<{ data: QuestionEntity[]; totalPages: number; totalCount: number; }> {
         const filter: QueryFilter<IQuestion> = {
             isDeleted: false
         }
 
+        if(query.role === userRole.Admin){
+            filter.createdBy = 'Admin'
+        }
+
+        if(query.role === userRole.Company){
+            filter.createdBy = 'Company'
+            filter.createdById = query.userId
+        }
         if(query.search){
             filter.$or = [
                 { title: { $regex: query.search, $options: "i" } },

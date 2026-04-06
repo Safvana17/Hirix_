@@ -26,7 +26,7 @@ export class AdminQestionController {
 
     getAllQuestions = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
         const parsed = getAllQuestionSchema.parse(req.query)
-        const questions = await this._getAllQuestions.execute(parsed)
+        const questions = await this._getAllQuestions.execute({...parsed, role: req.user.role, userId: req.user.id})
         logger.info(questions)
         return sendSuccess(res, statusCode.OK, "", questions)
     })

@@ -31,6 +31,12 @@ export const ROUTES = {
         EDIT: '/jobrole/:id',
         STATUS: '/jobrole/:id/status',
         DELETE: '/jobrole/:id'
+      },
+      QUESTION: {
+        BASE: '/questions',
+        CREATE: '/question',
+        EDIT: '/question/:id',
+        DELETE: '/question/:id'
       }
     },
 

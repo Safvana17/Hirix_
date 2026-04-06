@@ -1,7 +1,7 @@
 import  Express  from "express";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { authHandler } from "../../middlewares/authMiddleware";
-import { iCompanySettingsController, iJobRoleController, iTokenService } from "../../controllers/factory";
+import { iCompanyQuestionController, iCompanySettingsController, iJobRoleController, iTokenService } from "../../controllers/factory";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { upload } from "../../middlewares/imageUpload";
 
@@ -24,4 +24,7 @@ router.get(ROUTES.COMPANY.JOBROLE.BASE, authHandler(iTokenService), verifyCsrf, 
 router.put(ROUTES.COMPANY.JOBROLE.EDIT, authHandler(iTokenService), verifyCsrf, iJobRoleController.editJobRole)
 router.put(ROUTES.COMPANY.JOBROLE.STATUS, authHandler(iTokenService), verifyCsrf, iJobRoleController.updateStatus)
 router.delete(ROUTES.COMPANY.JOBROLE.DELETE, authHandler(iTokenService), verifyCsrf, iJobRoleController.deleteJobRole)
+
+//questions
+router.post(ROUTES.COMPANY.QUESTION.CREATE, authHandler(iTokenService), verifyCsrf, iCompanyQuestionController.createQuestion)
 export default router;
