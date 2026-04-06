@@ -62,6 +62,8 @@ export const getAllQuestionSchema = z.object({
     search: z.string().optional()
 })
 
+export type getAllQuestionQuery = z.infer<typeof getAllQuestionSchema>
+
 
 export const editQuestionSchema = z.object({
     title: z.string().min(1, "Title is required"),

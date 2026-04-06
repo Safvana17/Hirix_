@@ -10,6 +10,14 @@
 //     }
 // };
 
+// utils/validate.ts
+
+// import { ZodSchema } from "zod";
+
+// export const validate = <T>(schema: ZodSchema<T>, data: unknown): T => {
+//   return schema.parse(data);
+// };
+
 import { Request, Response, NextFunction } from "express";
 import { ZodSchema, z } from "zod";
 
