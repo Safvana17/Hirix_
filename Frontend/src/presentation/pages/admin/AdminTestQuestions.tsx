@@ -50,7 +50,7 @@ const AdminTestQuestions: React.FC= () => {
   const { user } = useSelector((state: RootState) => state.auth)
 
   useEffect(() =>{
-    dispatch(getAllQuestions({search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page}))
+    dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:10}, role: user!.role}))
     dispatch(getAllCategories({}))
   },[dispatch, debouncedSearchTerm, category, type, difficulty, page])
 
@@ -81,7 +81,7 @@ const AdminTestQuestions: React.FC= () => {
         try {
           await dispatch(deleteQuestion({id})).unwrap()
           toast.success('Question deleted successfully')
-          dispatch(getAllQuestions())
+          dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:10}, role: user!.role}))
         } catch (error: unknown) {
           toast.error(typeof error === 'string' ? error :  'Failed to delete question')
         }finally{
@@ -102,14 +102,14 @@ const AdminTestQuestions: React.FC= () => {
             await dispatch(createQuestion({data, role: user.role})).unwrap()
             setIsModalOpen(false)
             toast.success('Question added successfully')
-            await dispatch(getAllQuestions())
+            await dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:10}, role: user!.role}))
         }
         if(modalMode === 'edit'){
           console.log('from edit: ', data)
           await dispatch(editQuestions(data)).unwrap()
           setIsModalOpen(false)
           toast.success('Question updated successfully')
-          await dispatch(getAllQuestions())
+          await dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:10}, role: user!.role}))
         }
       } catch (error) {
         toast.error(typeof error === 'string' ? error : 'Failed to create question')

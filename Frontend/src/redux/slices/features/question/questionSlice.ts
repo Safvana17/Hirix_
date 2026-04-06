@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { getAllQuestionsParams, getAllQuestionsResponse, Question, QuestionDifficulty, QuestionFormData, QuestionType } from "../../../../types/question";
+import type { getAllQuestionsParams, getAllQuestionsResponse, Question, QuestionFormData } from "../../../../types/question";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -51,11 +51,11 @@ Question,
 
 export const getAllQuestions = createAsyncThunk<
 getAllQuestionsResponse,
-getAllQuestionsParams | undefined,
+{params: getAllQuestionsParams | undefined, role: UserRole},
 {rejectValue: string}
->('question/getAll', async(params: {search?: string, category?: string, type?: QuestionType, difficulty?: QuestionDifficulty, page?: number, limit?: number} | undefined, {rejectWithValue}) => {
+>('question/getAll', async({params,role}, {rejectWithValue}) => {
     try {
-        const response = await api.get(API_ROUTES.ADMIN.TEST_QUESTIONS.GET_ALL, {params})
+        const response = await api.get(API_ROUTES.COMMON.QUESTION.GET_ALL(role), {params})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
