@@ -1,15 +1,7 @@
+import { QuestionEntity } from "../../../../Domain/entities/Question.entity";
 import QuestionDifficulty from "../../../../Domain/enums/questionDifficulty";
 import QuestionType from "../../../../Domain/enums/questionType";
-import QuestionVisibility from "../../../../Domain/enums/questionVisibility";
 
-export interface GetAllQuestionsOutputDTO {
-    id: string;
-    title: string;
-    categoryName: string;
-    type: QuestionType;
-    difficulty: QuestionDifficulty;
-    visibility: QuestionVisibility;
-}
 
 export interface getAllQuestionsInputDTO{
     search?: string;
@@ -21,7 +13,7 @@ export interface getAllQuestionsInputDTO{
 }
 
 export interface PaginatedQuestionDTO {
-    questions: GetAllQuestionsOutputDTO[];
+    questions: QuestionEntity[];
     totalPages: number;
     totalCount: number
 }

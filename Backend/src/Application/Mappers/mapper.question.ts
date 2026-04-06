@@ -11,7 +11,7 @@ export class QuestionMapper {
             doc.description,
             doc.type,
             doc.difficulty,
-            doc.categoryId.toString(),
+            doc.categoryId._id.toString(),
             doc.createdBy,
             doc.visibility,
             doc.isPremium,
@@ -26,14 +26,12 @@ export class QuestionMapper {
                     return tc
                 }
             }),
-            doc.createdById ? doc.createdById.toString() : null
+            doc.createdById ? doc.createdById._id.toString() : null
         )
-
         let categoryName: string | undefined = undefined
-
-if (doc.categoryId && typeof doc.categoryId === 'object' && 'name' in doc.categoryId) {
-  categoryName = (doc.categoryId as { name: string }).name
-}
+        if (doc.categoryId && typeof doc.categoryId === 'object' && 'name' in doc.categoryId) {
+           categoryName = (doc.categoryId as { name: string }).name
+        }
         question.categoryName = categoryName
         return question
     }

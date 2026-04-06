@@ -6,6 +6,7 @@ import { IQuestionRepository } from "../../Domain/repositoryInterface/iQuestion.
 import { IQuestion, QuestionModel } from "../database/Model/Question";
 import { BaseRepository } from "./base.repository";
 import { QuestionMapper } from "../../Application/Mappers/mapper.question";
+import { logger } from "../../utils/logging/loger";
 
 export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestion> implements IQuestionRepository{
     constructor(){
@@ -50,6 +51,7 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
             .limit(query.limit)
             .sort({createdAt: -1})
 
+            logger.info(documents, 'from repository')
         return {
             data: documents.map(doc => this.mapToEntity(doc)),
             totalPages,

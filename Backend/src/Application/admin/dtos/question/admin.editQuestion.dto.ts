@@ -1,10 +1,9 @@
 import QuestionDifficulty from "../../../../Domain/enums/questionDifficulty";
 import QuestionType from "../../../../Domain/enums/questionType";
-import QuestionVisibility from "../../../../Domain/enums/questionVisibility";
-import userRole from "../../../../Domain/enums/userRole.enum";
 import { TestCase } from "../../../../Domain/interfaces/question.testCase";
 
-export interface AdminCreateQuestionInputDTO {
+export interface AdminEditQuestionInputDTO {
+    id: string
     title: string;
     description: string;
     difficulty: QuestionDifficulty;
@@ -12,19 +11,11 @@ export interface AdminCreateQuestionInputDTO {
     categoryId: string;
     isPremium: boolean;
     isPractice: boolean;
-    // visibility: QuestionVisibility;
     answer?: string;
     options?: string[];
     testCases?: TestCase[]
-    user: {
-        id: string;
-        role: userRole;
-    }
 }
 
-export interface AdminCreateQuestionOutputDTO {
+export interface AdminEditQuestionOutputDTO {
     id: string
-    isPremium: boolean
-    isPractice: boolean
-    visibility: QuestionVisibility
 }

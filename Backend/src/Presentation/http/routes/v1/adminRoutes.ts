@@ -4,7 +4,7 @@ import { authHandler } from "../../middlewares/authMiddleware";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { validate } from "../../middlewares/validate";
-import { createQuestionSchema } from "../../validators/questionValidator";
+import { createQuestionSchema, editQuestionSchema } from "../../validators/questionValidator";
 
 const router = Express.Router()
 
@@ -29,8 +29,8 @@ router.delete(ROUTES.ADMIN.CATEGORY.DELETE, authHandler(iTokenService), verifyCs
 router.put(ROUTES.ADMIN.CATEGORY.EDIT, authHandler(iTokenService), verifyCsrf, iCategoryController.editCategory)
 
 //questions
-router.post(ROUTES.ADMIN.QUESTION.CREATE,  validate(createQuestionSchema, 'body'), iAdminQuestionController.createQuestion)
+router.post(ROUTES.ADMIN.QUESTION.CREATE,authHandler(iTokenService), validate(createQuestionSchema, 'body'), iAdminQuestionController.createQuestion)
 router.get(ROUTES.ADMIN.QUESTION.GET_ALL, authHandler(iTokenService), iAdminQuestionController.getAllQuestions)
-
+router.put(ROUTES.ADMIN.QUESTION.EDIT, authHandler(iTokenService), verifyCsrf, validate(editQuestionSchema, 'body'), iAdminQuestionController.editQuestion)
 
 export default router;               

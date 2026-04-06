@@ -1,29 +1,32 @@
 import QuestionType from "../../../../Domain/enums/questionType";
+import QuestionVisibility from "../../../../Domain/enums/questionVisibility";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { ICategoryRepository } from "../../../../Domain/repositoryInterface/iCategory.repository";
 import { IQuestionRepository } from "../../../../Domain/repositoryInterface/iQuestion.repository";
 import { questionMessages } from "../../../../Shared/constsnts/messages/questionMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
-import { AdminCreateQuestionInputDTO, AdminCreateQuestionOutputDTO } from "../../dtos/question/admin.createQuestion.dto";
-import { IAdminCreateQuestionUsecase } from "../../interfaces/question/iAdminCreateQuestionUsecase";
-import { QuestionEntity } from "../../../../Domain/entities/Question.entity";
-import QuestionVisibility from "../../../../Domain/enums/questionVisibility";
+import { AdminEditQuestionInputDTO, AdminEditQuestionOutputDTO } from "../../dtos/question/admin.editQuestion.dto";
+import { IAdminEditQuestionUsecase } from "../../interfaces/question/iAdmin.editQuestion.usecase";
 
-export class AdminCreateQuestionUsecase implements IAdminCreateQuestionUsecase {
+export class AdminEditQuestionUsecase implements IAdminEditQuestionUsecase {
     constructor(
         private _questionRepository: IQuestionRepository,
-        private _categoryRepository: ICategoryRepository
+        private _categoryRepository: ICategoryRepository,
     ) {}
 
-    async execute(request: AdminCreateQuestionInputDTO): Promise<AdminCreateQuestionOutputDTO> {
-        
-        if(request.isPremium && request.user.role !== userRole.Admin){
-            throw new AppError(questionMessages.error.COMPANY_CANNOT_CREATE_PREMIUM_QUESTION, statusCode.BAD_REQUEST)
+    async execute(request: AdminEditQuestionInputDTO): Promise<AdminEditQuestionOutputDTO> {
+        const question = await this._questionRepository.findById(request.id)
+        if(!question){
+            throw new AppError(questionMessages.error.QUESTION_NOT_FOUND, statusCode.NOT_FOUND)
+        }
+
+        if(question.createdBy !== userRole.Admin){
+            throw new AppError(questionMessages.error.ADMIN_CANNOT_EDIT_COMPANY_QUESTION, statusCode.BAD_REQUEST)
         }
 
         const existing = await this._questionRepository.findByTitle(request.title)
-        if(existing){
+        if(existing && existing.id !== request.id){
             throw new AppError(questionMessages.error.ALREADY_EXIST, statusCode.CONFLICT)
         }
 
@@ -53,6 +56,7 @@ export class AdminCreateQuestionUsecase implements IAdminCreateQuestionUsecase {
             if(!request.options.includes(request.answer)){
                 throw new AppError(questionMessages.error.INCORRECT_ANSWER, statusCode.BAD_REQUEST)
             }
+            question.testCases = undefined
         }
 
         if(request.type === QuestionType.CODING) {
@@ -60,38 +64,32 @@ export class AdminCreateQuestionUsecase implements IAdminCreateQuestionUsecase {
                 throw new AppError(questionMessages.error.REQUIRED_TEST_CASES, statusCode.BAD_REQUEST)
             }
             request.testCases.forEach(tc => {
-                if(!tc.input || !tc.expectedOutput) {
+                if(tc.input === undefined || tc.expectedOutput === undefined) {
                     throw new AppError(questionMessages.error.INVALID_TESTCASE, statusCode.BAD_REQUEST)
                 }
             })
+            question.answer = undefined
+            question.options = undefined
         }
 
         let visibility = request.isPremium ? QuestionVisibility.PRO : QuestionVisibility.FREE
+        question.title = request.title
+        question.description = request.description
+        question.type = request.type
+        question.difficulty = request.difficulty
+        question.categoryId = request.categoryId
 
-        const question = new QuestionEntity(
-            "",
-            request.title,
-            request.description,
-            request.type,
-            request.difficulty,
-            request.categoryId,
-            request.user.role,
-            visibility,
-            request.isPremium,
-            request.isPractice,
-            false,
-            request.answer,
-            request.options,
-            request.testCases
-        )
+        question.visibility = visibility
+        question.isPremium = request.isPremium
+        question.isPractice = request.isPractice
 
-        await this._questionRepository.create(question)
-        return {
-            id: question.id,
-            isPractice: question.isPractice,
-            isPremium: question.isPremium,
-            visibility: question.visibility
+
+        const updatedQuestion = await this._questionRepository.update(question.id, question)
+        if(!updatedQuestion){
+            throw new AppError(questionMessages.error.EDIT_QUESTION_FAILED, statusCode.SERVER_ERROR)
         }
-
+        return{
+            id: updatedQuestion.id
+        }
     }
 }
