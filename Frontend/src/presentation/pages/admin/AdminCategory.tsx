@@ -129,7 +129,10 @@ const AdminCategory: React.FC = () => {
                     mode={modalMode}
                     initialData={selectedCategory}
                     categories={categories} 
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={() => {
+                        setIsModalOpen(false)
+                        setSelectedCategory(null)
+                    }}
                     onSave={handleSaveCategory}
                 />
 

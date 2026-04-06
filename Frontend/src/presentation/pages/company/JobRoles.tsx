@@ -202,7 +202,6 @@ const JobRoles: React.FC= () => {
             <div className="bg-white p-7 rounded-3xl border border-gray-100 shadow-sm mb-3">
                 <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
                     
-                    {/* Search Box */}
                     <div className="relative w-full md:w-2/3 lg:w-1/2 group">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
                         <input
@@ -213,8 +212,6 @@ const JobRoles: React.FC= () => {
                             onChange={(e) => handleSearchChange(e.target.value)}
                         />
                     </div>
-
-                    {/* Filter Dropdown */}
                     <div className="flex items-center gap-3 w-full md:w-auto">
                         <div className="relative w-full md:w-48">
                             <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9A6605]" />

@@ -58,12 +58,33 @@ getAllQuestionsParams | undefined,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
+        const data = response.data.data
 
-        console.log('response from question ', response.data.data)
-        return response.data.data
+        return {
+            questions: data.questions.map((q: Question) => q),
+            totalCount: data.totalCount,
+            totalPages: data.totalPages
+        }
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get all questions')
+    }
+})
+
+export const editQuestions = createAsyncThunk<
+Question,
+QuestionFormData,
+{rejectValue: string}
+>('question/edit', async(QuestionFormData, {rejectWithValue}) => {
+    try {
+        const response = await api.put(API_ROUTES.ADMIN.TEST_QUESTIONS.EDIT(QuestionFormData.id), QuestionFormData)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to edit question')
     }
 })
 
@@ -100,6 +121,21 @@ const questionSlice = createSlice({
          .addCase(getAllQuestions.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get all questions'
+         })
+         .addCase(editQuestions.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(editQuestions.fulfilled, (state, action) => {
+            state.loading = false
+            // state.selctedQuestion = action.payload
+            const index = state.questions.findIndex(q => q.id === action.payload.id)
+            if(index !== -1){
+                state.questions[index] = action.payload
+            }
+         })
+         .addCase(editQuestions.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to edit question'
          })
     }
 })

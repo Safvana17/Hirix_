@@ -15,7 +15,7 @@ import {
   Typography
 } from '@mui/material';
 import { Grid } from '@mui/material';
-import type { ModalMode, QuestionFormData, TestCase } from '../../../types/question';
+import type { ModalMode, Question, QuestionFormData, TestCase } from '../../../types/question';
 import type { Category } from '../../../types/category';
 
 const questionTypes = [
@@ -30,25 +30,30 @@ interface QuestionModalProps {
     isOpen: boolean;
     mode: ModalMode
     categories: Category[]
+    initialData: Question | null
     onClose: () => void;
     onSave: (data: QuestionFormData) => void
 }
 
 
- const QuestionModal: React.FC<QuestionModalProps> = ({ isOpen, mode, categories, onClose, onSave }) => {
+ const QuestionModal: React.FC<QuestionModalProps> = ({ isOpen, mode, categories,initialData, onClose, onSave }) => {
   const [formData, setFormData] = useState<QuestionFormData>({
-    title: '',
-    description: '',
-    type: 'mcq',
-    difficulty: 'easy',
-    categoryId: '',
-    options: [],
-    answer: '',
-    testCases: [],
-    isPremium: false,
-    isPractice: false,
+    id: initialData?.id || '',
+    title: initialData?.title || '',
+    description: initialData?.description || '',
+    type: initialData?.type || 'mcq',
+    difficulty: initialData?.difficulty ||  'easy',
+    categoryId: initialData?.categoryId || '',
+    categoryName: initialData?.categoryName || '',
+    options: initialData?.options || [],
+    answer: initialData?.answer || '',
+    testCases: initialData?.testCases || [],
+    isPremium: initialData?.isPremium || false,
+    isPractice: initialData?.isPractice || false,
     createdBy: 'Admin'
   });
+
+  console.log('initial data: ', initialData)
 
   const handleChange = <K extends keyof QuestionFormData>(field: K, value: QuestionFormData[K]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -142,19 +147,17 @@ interface QuestionModalProps {
 
           <Grid size={12}>
             <Autocomplete
-            options={categories}
-            getOptionLabel={(option) => option.name}
-            value={categories.find(c => c.id === formData.categoryId) || null}
-            onChange={(_, value) => {
-               handleChange('categoryId', value?.id || '');
-            }}
-            renderInput={(params) => (
-               <TextField {...params} label="Category" />
-            )}
+              options={categories}
+              getOptionLabel={(option) => option.name}
+              value={categories.find(c => c.id === formData.categoryId) || null}
+              onChange={(_, value) => {
+                handleChange('categoryId', value?.id || '');
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Category" />
+              )}
             />
           </Grid>
-
-          {/* Conditional UI */}
           {formData.type === 'mcq' && (
             <Grid size={12}>
               <Typography variant="subtitle1" gutterBottom>Options</Typography>
@@ -236,11 +239,15 @@ interface QuestionModalProps {
           </Grid>
         </Grid>
       </DialogContent>
-
+      {mode !== 'view' &&
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" style={{backgroundColor:'#0B3358'}} onClick={handleSubmit}>Save</Button>
+        <Button variant="contained" style={{backgroundColor:'#0B3358'}} onClick={handleSubmit}>
+          {mode === 'create' && 'Add Question'}
+          {mode === 'edit' && 'Update'}
+        </Button>
       </DialogActions>
+      }
     </Dialog>
   );
 }

@@ -34,11 +34,13 @@ export interface Question {
 }
 
 export type QuestionFormData = {
+  id: string;
   title: string;
   description: string;
   type: QuestionType;
   difficulty: QuestionDifficulty;
   categoryId: string;
+  categoryName: string;
   options: string[];
   answer: string;
   testCases: TestCase[];
@@ -60,4 +62,9 @@ export interface getAllQuestionsParams {
   difficulty?: QuestionDifficulty;
   page?: number;
   limit?: number;
+}
+
+export interface editQuestionPaylod {
+  id: string
+
 }

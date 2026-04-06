@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import InternalLayout from '../../layouts/InternalLayout'
 import { adminSidebarItems } from '../../../constants/sidebarItems'
 import { Plus } from 'lucide-react'
-import type { ModalMode, QuestionDifficulty, QuestionFormData, QuestionType } from '../../../types/question'
+import type { ModalMode, Question, QuestionDifficulty, QuestionFormData, QuestionType } from '../../../types/question'
 import QuestionModal from '../../components/modal/QuestionModal'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import { getAllCategories } from '../../../redux/slices/features/category/categorySlice'
 import toast from 'react-hot-toast'
-import { createQuestion, getAllQuestions } from '../../../redux/slices/features/question/questionSlice'
+import { createQuestion, editQuestions, getAllQuestions } from '../../../redux/slices/features/question/questionSlice'
 import Tabs from '@mui/material/Tabs'
 import Tab from "@mui/material/Tab"
 import { Box, Card, Chip, Divider, IconButton, InputAdornment, Pagination, TextField, Typography } from '@mui/material'
@@ -28,6 +28,7 @@ const AdminTestQuestions: React.FC= () => {
   const [category, setCategory] = useState('')
   const [difficulty, setDifficulty] = useState<QuestionDifficulty | ''>('')
   const [type, setType] = useState<QuestionType | ''>('')
+  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null)
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const dispatch = useDispatch<AppDispatch>()
   const { categories } = useSelector((state: RootState) => state.category)
@@ -42,13 +43,27 @@ const AdminTestQuestions: React.FC= () => {
     setModalMode('create')
     setIsModalOpen(true)
   }
-  console.log('questions: ', questions)
+  const handleEditQuestion = (question: Question) => {
+    console.log('question from edit: ', question)
+    setSelectedQuestion(question)
+    setModalMode('edit')
+    setIsModalOpen(true)
+  }
+
   const handleSaveQuestion = async(data: QuestionFormData) => {
       try {
         if(modalMode === 'create'){
             await dispatch(createQuestion(data)).unwrap()
             setIsModalOpen(false)
             toast.success('Question added successfully')
+            await dispatch(getAllQuestions())
+        }
+        if(modalMode === 'edit'){
+          console.log('from edit: ', data)
+          await dispatch(editQuestions(data)).unwrap()
+          setIsModalOpen(false)
+          toast.success('Question updated successfully')
+          await dispatch(getAllQuestions())
         }
       } catch (error) {
         toast.error(typeof error === 'string' ? error : 'Failed to create question')
@@ -217,7 +232,8 @@ const AdminTestQuestions: React.FC= () => {
                   ))}
                 </TextField>
               </Box>
-              {questions?.map((q) => (
+              {questions && questions.length > 0 ? (
+               questions?.map((q) => (
                 <Card
                   key={q.id}
                   sx={{
@@ -236,10 +252,12 @@ const AdminTestQuestions: React.FC= () => {
                           {q.title}
                         </Typography>
                         <Chip
-                          label={q.visibility.toUpperCase()}
+                          label={q.visibility}
                           size="small"
                           sx={{
-                            background: "#D28E10",
+                            background: q.visibility === 'pro' 
+                                        ? 'linear-gradient(to right, #8822F5, #feb47b)' 
+                                        : 'linear-gradient(to right, #ff7e5f, #9057C6)',
                             color: "#fff",
                             fontWeight: 500
                           }}
@@ -247,7 +265,7 @@ const AdminTestQuestions: React.FC= () => {
                       </Box>
                       <Box display="flex" gap={1.5} mt={1} alignItems="center">
                         <Typography variant="body2" color="text.secondary">
-                          • {q.categoryName}
+                          {q.categoryName}
                         </Typography>
                         {/* <Typography variant="body2" color="text.secondary">
                           • Used 234 Times
@@ -257,12 +275,12 @@ const AdminTestQuestions: React.FC= () => {
                         <Chip
                           label={q.type}
                           size="small"
-                          sx={{ background: "#E9C788" }}
+                          sx={{ background: "#6B4705", color: "#fff" }}
                         />
                         <Chip
                           label={q.difficulty}
                           size="small"
-                          sx={{ background: "#E9C788" }}
+                          sx={{ background: "#274E72", color: "#fff"}}
                         />
                       </Box>
                     </Box>
@@ -272,7 +290,7 @@ const AdminTestQuestions: React.FC= () => {
                       <IconButton size="small">
                         <Visibility />
                       </IconButton>
-                      <IconButton size="small">
+                      <IconButton size="small" onClick={() => handleEditQuestion(q)}>
                         <Edit />
                       </IconButton>
                       <IconButton size="small">
@@ -282,16 +300,28 @@ const AdminTestQuestions: React.FC= () => {
 
                   </Box>
                 </Card>
-              ))}
+              ))
+            ):(
+                <Box display="flex" justifyContent="center" alignItems="center" py={10}>
+                  <Typography variant="h6" color="text.secondary">
+                    No questions available
+                  </Typography>
+                </Box>
+              )}
               <Box display="flex" justifyContent="center" mt={3}>
                 <Pagination count={pagination.question.totalPages} page={page} onChange={(_, v) => setPage(v)} />
               </Box>
             </div>
             <QuestionModal
+                key={selectedQuestion?.id || modalMode}
                 isOpen={isModalOpen}
                 mode={modalMode}
                 categories={categories}
-                onClose={() => setIsModalOpen(false)}
+                initialData={selectedQuestion}
+                onClose={() => {
+                  setIsModalOpen(false)
+                  setSelectedQuestion(null)
+                }}
                 onSave={handleSaveQuestion}
             />
         </div>
