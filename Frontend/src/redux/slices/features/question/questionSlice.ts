@@ -88,22 +88,22 @@ QuestionFormData,
     }
 })
 
-// export const getQuestion = createAsyncThunk<
-// Question,
-// {id: string},
-// {rejectValue: string}
-// >('question/getQuestion', async({id}, {rejectWithValue}) => {
-//     try {
-//         const response = await api.get(API_ROUTES.ADMIN.TEST_QUESTIONS.BY_ID(id))
-//         if(!response.data.success){
-//             return rejectWithValue('Invalid response')
-//         }
-//         return response.data.data
-//     } catch (error) {
-//         const err = error as AxiosError<{message: string}>
-//         return rejectWithValue(err.response?.data.message || 'Failed to get all questions')
-//     }
-// })
+export const deleteQuestion = createAsyncThunk<
+{id: string},
+{id: string},
+{rejectValue: string}
+>('question/deleteQuestion', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.ADMIN.TEST_QUESTIONS.DELETE(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get all questions')
+    }
+})
 
 const questionSlice = createSlice({
     name: 'Question',
@@ -131,7 +131,7 @@ const questionSlice = createSlice({
          })
          .addCase(getAllQuestions.fulfilled, (state, action) => {
             state.loading = false
-            state.questions = action.payload.questions
+            state.questions = action.payload.questions.filter(q => !q.isDeleted)
             state.pagination.question.totalCount = action.payload.totalCount
             state.pagination.question.totalPages = action.payload.totalPages
          })
@@ -154,17 +154,17 @@ const questionSlice = createSlice({
             state.loading = false
             state.error = action.payload || 'Failed to edit question'
          })
-        //  .addCase(getQuestion.pending, (state) => {
-        //     state.loading = true
-        //  })
-        //  .addCase(getQuestion.fulfilled, (state, action) => {
-        //     state.loading = false
-        //     state.selctedQuestion = action.payload
-        //  })
-        //  .addCase(getQuestion.rejected, (state, action) => {
-        //     state.loading = false
-        //     state.error = action.payload || 'Failed to get Question'
-        //  })
+         .addCase(deleteQuestion.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(deleteQuestion.fulfilled, (state, action) => {
+            state.loading = false
+            state.questions = state.questions.filter(q => q.id !== action.payload.id)
+         })
+         .addCase(deleteQuestion.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get Question'
+         })
     }
 })
 

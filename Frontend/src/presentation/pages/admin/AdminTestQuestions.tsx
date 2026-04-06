@@ -8,13 +8,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import { getAllCategories } from '../../../redux/slices/features/category/categorySlice'
 import toast from 'react-hot-toast'
-import { createQuestion, editQuestions, getAllQuestions } from '../../../redux/slices/features/question/questionSlice'
+import { createQuestion, deleteQuestion, editQuestions, getAllQuestions } from '../../../redux/slices/features/question/questionSlice'
 import Tabs from '@mui/material/Tabs'
 import Tab from "@mui/material/Tab"
 import { Box, Card, Chip, Divider, IconButton, InputAdornment, Pagination, TextField, Typography } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem';
 import { Delete, Edit, Search, Visibility } from '@mui/icons-material'
 import { useDebounce } from '../../../hooks/useDebounce'
+import ConfirmationModal from '../../components/modal/ConfirmationModal'
 
 const questionDifficulty: QuestionDifficulty[] = ['easy', 'medium', 'hard']
 const questionType: QuestionType[] = ['mcq', 'coding', 'descriptive']
@@ -29,6 +30,19 @@ const AdminTestQuestions: React.FC= () => {
   const [difficulty, setDifficulty] = useState<QuestionDifficulty | ''>('')
   const [type, setType] = useState<QuestionType | ''>('')
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null)
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void
+    type: 'danger'
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => { },
+    type: 'danger'
+  })
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const dispatch = useDispatch<AppDispatch>()
   const { categories } = useSelector((state: RootState) => state.category)
@@ -39,6 +53,13 @@ const AdminTestQuestions: React.FC= () => {
     dispatch(getAllCategories({}))
   },[dispatch, debouncedSearchTerm, category, type, difficulty, page])
 
+  const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+    setModalConfig({...config, isOpen: true})
+  }
+
+  const closeModal = () => {
+    setModalConfig(prev => ({...prev, isOpen: false}))
+  }
   const handleAddQuestion = () => {
     setModalMode('create')
     setIsModalOpen(true)
@@ -48,6 +69,25 @@ const AdminTestQuestions: React.FC= () => {
     setSelectedQuestion(question)
     setModalMode('edit')
     setIsModalOpen(true)
+  }
+
+  const handleDeleteQuestion = (id: string) => {
+    openModal({
+      title: 'Delete Question',
+      message: 'Are you sure you want to delete this question?',
+      type: 'danger',
+      onConfirm: async() => {
+        try {
+          await dispatch(deleteQuestion({id})).unwrap()
+          toast.success('Question deleted successfully')
+          dispatch(getAllQuestions())
+        } catch (error: unknown) {
+          toast.error(typeof error === 'string' ? error :  'Failed to delete question')
+        }finally{
+          closeModal()
+        }
+      }
+    })
   }
 
   const handleViewQuestion = (question: Question) => {
@@ -298,7 +338,7 @@ const AdminTestQuestions: React.FC= () => {
                       <IconButton size="small" onClick={() => handleEditQuestion(q)}>
                         <Edit />
                       </IconButton>
-                      <IconButton size="small">
+                      <IconButton size="small" onClick={() => handleDeleteQuestion(q.id)}>
                         <Delete />
                       </IconButton>
                     </Box>
@@ -328,6 +368,14 @@ const AdminTestQuestions: React.FC= () => {
                   setSelectedQuestion(null)
                 }}
                 onSave={handleSaveQuestion}
+            />
+            <ConfirmationModal 
+               isOpen={modalConfig.isOpen}
+               onClose={closeModal}
+               onConfirm={modalConfig.onConfirm}
+               title={modalConfig.title}
+               message={modalConfig.message}
+               type={modalConfig.type}
             />
         </div>
     </InternalLayout>
