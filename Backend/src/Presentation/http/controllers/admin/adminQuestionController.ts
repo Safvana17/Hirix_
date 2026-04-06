@@ -8,12 +8,14 @@ import { IAdminGetAllQuestionUsecase } from "../../../../Application/admin/inter
 import { getAllQuestionSchema } from "../../validators/questionValidator";
 import { logger } from "../../../../utils/logging/loger";
 import { IAdminEditQuestionUsecase } from "../../../../Application/admin/interfaces/question/iAdmin.editQuestion.usecase";
+import { IAdminDeleteQuestionUsecase } from "../../../../Application/admin/interfaces/question/iAdmin.deleteQuestion.usecase";
 
 export class AdminQestionController {
     constructor(
         private _createQuestion: IAdminCreateQuestionUsecase,
         private _getAllQuestions: IAdminGetAllQuestionUsecase,
         private _editQuestion: IAdminEditQuestionUsecase,
+        private _deleteQuestion: IAdminDeleteQuestionUsecase,
     ) {}
 
     createQuestion = asyncHandler (async( req: Request, res: Response, next: NextFunction) => {
@@ -36,5 +38,13 @@ export class AdminQestionController {
         
         const updatedQuestion = await this._editQuestion.execute({id: questionId, ...req.body})
         return sendSuccess(res, statusCode.OK, questionMessages.success.QUESTION_UPDATED_SUCCESSFULLY, updatedQuestion)
+    })
+    deleteQuestion = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+        const quesionId = Array.isArray(req.params.id)
+              ? req.params.id[0]
+              : req.params.id
+        const question = await this._deleteQuestion.execute({id: quesionId})
+
+        return sendSuccess(res, statusCode.OK, "", question)
     })
 }

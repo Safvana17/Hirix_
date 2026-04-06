@@ -17,3 +17,4 @@ export interface PaginatedQuestionDTO {
     totalPages: number;
     totalCount: number
 }
+

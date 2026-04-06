@@ -19,5 +19,6 @@ export const questionMessages = {
         ANSWER_REQUIRED: 'For MCQ question type answer is required',
         EMPTY_OPTION: 'Options cannot be empty',
         DUPLICATE_OPTION: 'Options must be unique',
+        DELETED_QUESTION: 'Question is already deleted',
     }
 }
