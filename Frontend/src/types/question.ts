@@ -46,7 +46,6 @@ export type QuestionFormData = {
   testCases: TestCase[];
   isPremium: boolean;
   isPractice: boolean;
-  createdBy: UserRole
 };
 
 export interface getAllQuestionsResponse {

@@ -13,6 +13,7 @@ import RestoreAccount from '../presentation/pages/company/RestoreAccount'
 import JobRoles from '../presentation/pages/company/JobRoles'
 import AdminCategory from '../presentation/pages/admin/AdminCategory'
 import AdminTestQuestions from '../presentation/pages/admin/AdminTestQuestions'
+import CompanyQuestion from '../presentation/pages/company/CompanyQuestion'
 
 
 
@@ -82,7 +83,11 @@ const App = () => {
               <JobRoles />
             </RoleRoute>
           } />
-
+          <Route path={ROUTES.COMPANY.QUESTIONS} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <CompanyQuestion />
+            </RoleRoute>
+          } />
 
           <Route path={ROUTES.CANDIDATE.VERIFY_OTP} element={<VerifyOtp />} />
           <Route path={ROUTES.CANDIDATE.FORGOT_PASSWORD} element={<ForgotPassword />} />

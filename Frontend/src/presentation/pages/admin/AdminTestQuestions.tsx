@@ -47,6 +47,7 @@ const AdminTestQuestions: React.FC= () => {
   const dispatch = useDispatch<AppDispatch>()
   const { categories } = useSelector((state: RootState) => state.category)
   const { questions, pagination } = useSelector((state: RootState) => state.question)
+  const { user } = useSelector((state: RootState) => state.auth)
 
   useEffect(() =>{
     dispatch(getAllQuestions({search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page}))
@@ -97,8 +98,8 @@ const AdminTestQuestions: React.FC= () => {
   }
   const handleSaveQuestion = async(data: QuestionFormData) => {
       try {
-        if(modalMode === 'create'){
-            await dispatch(createQuestion(data)).unwrap()
+        if(modalMode === 'create' && user){
+            await dispatch(createQuestion({data, role: user.role})).unwrap()
             setIsModalOpen(false)
             toast.success('Question added successfully')
             await dispatch(getAllQuestions())

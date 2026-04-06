@@ -52,7 +52,6 @@ interface QuestionModalProps {
     testCases: initialData?.testCases || [],
     isPremium: initialData?.isPremium || false,
     isPractice: initialData?.isPractice || false,
-    createdBy: 'Admin'
   });
 
   console.log('initial data: ', initialData)

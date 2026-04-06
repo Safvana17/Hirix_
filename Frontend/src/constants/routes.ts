@@ -14,7 +14,8 @@ export const ROUTES = {
     SETTINGS:'/company/settings',
     PASSWORD: '/company/password',
     RESTORE: '/company/restore-account',
-    JOB_ROLES: '/company/job-roles'
+    JOB_ROLES: '/company/job-roles',
+    QUESTIONS: '/company/questions',
   },
 
   CANDIDATE: {

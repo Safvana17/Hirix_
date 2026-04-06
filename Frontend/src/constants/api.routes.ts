@@ -1,3 +1,5 @@
+import type { UserRole } from "./role";
+
 export const API_ROUTES = {
   AUTH: {
     ME: "/auth/me",
@@ -73,4 +75,16 @@ export const API_ROUTES = {
       GET_ALL: '/admin/questions'
     },
   },
+  COMMON: {
+    QUESTION: {
+      CREATE: (role: UserRole) => 
+        `/${role}/question`,
+      EDIT: (role: UserRole, id: string) => 
+        `/${role}/question/${id}`,
+      DELETE: (role: UserRole, id: string) => 
+        `/${role}/question/${id}`,
+      GET_ALL: (role: UserRole) => 
+        `/${role}/questions`
+    }
+  }
 }

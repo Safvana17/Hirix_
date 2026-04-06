@@ -3,6 +3,7 @@ import type { getAllQuestionsParams, getAllQuestionsResponse, Question, Question
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
+import type { UserRole } from "../../../../constants/role";
 
 
 interface QuestionState {
@@ -33,11 +34,11 @@ const initialState: QuestionState = {
 
 export const createQuestion = createAsyncThunk<
 Question,
-QuestionFormData,
+{data: QuestionFormData, role: UserRole},
 {rejectValue: string}
->('question/create', async(createQuestionPayload, {rejectWithValue}) => {
+>('question/create', async({data, role}, {rejectWithValue}) => {
     try {
-        const response = await api.post(API_ROUTES.ADMIN.TEST_QUESTIONS.CREATE, createQuestionPayload)
+        const response = await api.post(API_ROUTES.COMMON.QUESTION.CREATE(role), data)
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
