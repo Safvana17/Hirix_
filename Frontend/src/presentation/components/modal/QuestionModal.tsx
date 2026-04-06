@@ -12,11 +12,13 @@ import {
   FormControlLabel,
   Chip,
   Box,
-  Typography
+  Typography,
+  IconButton
 } from '@mui/material';
 import { Grid } from '@mui/material';
 import type { ModalMode, Question, QuestionFormData, TestCase } from '../../../types/question';
 import type { Category } from '../../../types/category';
+import { Close } from '@mui/icons-material';
 
 const questionTypes = [
   { label: 'MCQ', value: 'mcq' },
@@ -91,8 +93,16 @@ interface QuestionModalProps {
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>
-        {mode === 'create' ? 'Add Question' : 'Edit Question'}
+      <DialogTitle sx={{background:"#6B4705", color:"#fff"}}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+           <span>
+              {mode === 'create' && 'Add Question'} 
+              {mode === 'edit' && 'Edit Question'}
+           </span>
+           <IconButton onClick={onClose} sx={{color: "#fff"}}>
+              <Close />
+            </IconButton>
+        </Box>
       </DialogTitle>
 
       <DialogContent dividers>
@@ -101,6 +111,9 @@ interface QuestionModalProps {
             <TextField
               label="Title"
               fullWidth
+              InputProps={{
+                readOnly: mode === 'view'
+              }}
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
             />
@@ -111,6 +124,9 @@ interface QuestionModalProps {
               label="Description"
               multiline
               rows={4}
+              InputProps={{
+                readOnly: mode === 'view'
+              }}
               fullWidth
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
@@ -122,6 +138,9 @@ interface QuestionModalProps {
               select
               label="Type"
               fullWidth
+              InputProps={{
+                readOnly: mode === 'view'
+              }}
               value={formData.type}
               onChange={(e) => handleChange('type', e.target.value as QuestionFormData['type'])}
             >
@@ -136,6 +155,9 @@ interface QuestionModalProps {
               select
               label="Difficulty"
               fullWidth
+              InputProps={{
+                readOnly: mode === 'view'
+              }}
               value={formData.difficulty}
               onChange={(e) => handleChange('difficulty', e.target.value as QuestionFormData['difficulty'])}
             >
@@ -148,6 +170,7 @@ interface QuestionModalProps {
           <Grid size={12}>
             <Autocomplete
               options={categories}
+              disabled={mode==='view'}
               getOptionLabel={(option) => option.name}
               value={categories.find(c => c.id === formData.categoryId) || null}
               onChange={(_, value) => {
@@ -166,6 +189,9 @@ interface QuestionModalProps {
                   key={index}
                   label={`Option ${index + 1}`}
                   fullWidth
+                  InputProps={{
+                    readOnly: mode === 'view'
+                  }}
                   margin="dense"
                   value={opt}
                   onChange={(e) => handleOptionChange(index, e.target.value)}
@@ -176,10 +202,15 @@ interface QuestionModalProps {
                 label="Correct Answer"
                 fullWidth
                 margin="normal"
+                InputProps={{
+                  readOnly: mode === 'view'
+                }}
                 value={formData.answer}
                 onChange={(e) => handleChange('answer', e.target.value)}
               />
-              <Button onClick={addOptions}>Add Options</Button>
+              {mode !== 'view' &&
+                <Button onClick={addOptions}>Add Options</Button>
+              }
             </Grid>
           )}
 
@@ -191,23 +222,30 @@ interface QuestionModalProps {
                   <TextField
                     label="Input"
                     fullWidth
+                    InputProps={{
+                      readOnly: mode === 'view'
+                    }}
                     value={tc.input}
                     onChange={(e) => handleTestCaseChange(index, 'input', e.target.value)}
                   />
                   <TextField
                     label="Output"
                     fullWidth
+                    InputProps={{
+                      readOnly: mode === 'view'
+                    }}
                     value={tc.expectedOutput}
                     onChange={(e) => handleTestCaseChange(index, 'expectedOutput', e.target.value)}
                   />
                 </Box>
               ))}
-
-              <Button onClick={addTestCase}>Add Test Case</Button>
+              {mode !== 'view' &&
+                <Button onClick={addTestCase}>Add Test Case</Button>
+              }
             </Grid>
           )}
 
-          {/* Toggles */}
+         {mode !== 'view' && 
           <Grid size={12}>
             <Box display="flex" gap={4}>
               <FormControlLabel
@@ -230,13 +268,17 @@ interface QuestionModalProps {
                 label="Premium"
               />
             </Box>
-
-            {/* Visual indicator */}
-            <Box mt={2}>
-              {formData.isPractice && <Chip label="Practice" color="primary" />}
-              {formData.isPremium && <Chip label="Premium" color="secondary" sx={{ ml: 1 }} />}
-            </Box>
           </Grid>
+        }
+        <Box mt={2}>
+          {formData.isPractice && <Chip label="Practice" color="primary" />}
+
+          {formData.isPremium ? (
+            <Chip label="Premium" sx={{ background: 'linear-gradient(to right, #8822F5, #feb47b)', color: "#fff", ml: 1 }}/>
+          ) : (
+            <Chip label="Free" sx={{ ml: 1, background: 'linear-gradient(to right, #ff7e5f, #9057C6)', color: "#fff"}} />
+          )}
+        </Box>
         </Grid>
       </DialogContent>
       {mode !== 'view' &&

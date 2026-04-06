@@ -50,6 +50,11 @@ const AdminTestQuestions: React.FC= () => {
     setIsModalOpen(true)
   }
 
+  const handleViewQuestion = (question: Question) => {
+    setSelectedQuestion(question)
+    setModalMode('view')
+    setIsModalOpen(true)
+  }
   const handleSaveQuestion = async(data: QuestionFormData) => {
       try {
         if(modalMode === 'create'){
@@ -287,7 +292,7 @@ const AdminTestQuestions: React.FC= () => {
 
                     {/* RIGHT ACTIONS */}
                     <Box display="flex" alignItems="center" gap={1}>
-                      <IconButton size="small">
+                      <IconButton size="small" onClick={() => handleViewQuestion(q)}>
                         <Visibility />
                       </IconButton>
                       <IconButton size="small" onClick={() => handleEditQuestion(q)}>
