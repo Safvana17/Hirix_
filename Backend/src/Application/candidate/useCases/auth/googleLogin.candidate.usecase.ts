@@ -12,6 +12,8 @@ import { ITokenService } from "../../../interface/service/ITokenService";
 import { LoginCandidateOutputDTO } from "../../dtos/login.candidate.dto";
 import { IGoogleLoginUsecase } from "../../interfaces/auth/IGoogleLoginUsecase";
 
+
+
 export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
     constructor(
         private _candidateRepository: ICandidateRepository,

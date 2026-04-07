@@ -1,3 +1,3 @@
 export interface IUnifiedLogoutUsecase {
-    execute(refreshToken: string): Promise<void>
+    execute(refreshToken: string, accessToken: string): Promise<void>
 }

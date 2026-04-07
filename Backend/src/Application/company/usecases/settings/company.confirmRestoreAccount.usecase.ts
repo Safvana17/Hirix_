@@ -8,6 +8,8 @@ import { ITokenService } from "../../../interface/service/ITokenService";
 import { ConfirmRestoreAccountInputDto, ConfirmRestoreAccountOutputDto } from "../../dtos/settings/deleteAccount.company.dto";
 import { IConfirmRestoreAccountUsecase } from "../../interfaces/settings/iCompany.confirmRestoreAccount.usecase";
 
+
+
 export class ConfirmRestoreAccountUsecase implements IConfirmRestoreAccountUsecase {
     constructor (
         private _companyRepository: ICompanyRepository,

@@ -13,6 +13,7 @@ import { ITokenService } from "../../../interface/service/ITokenService";
 import { LoginCompanyOutputDTO } from "../../dtos/auth/login.company.dto";
 import { ICompanyGoogleLoginUsecase } from "../../interfaces/auth/ICompanyGoogleLoginUsecase";
 
+
 export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
     constructor(
         private _companyRepository: ICompanyRepository,

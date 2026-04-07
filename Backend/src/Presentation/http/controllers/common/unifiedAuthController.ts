@@ -82,9 +82,9 @@ export class UnifiedAuthController {
     }
 logout = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            
+            const accessToken = req.cookies.accessToken
             const refreshToken = req.cookies.refreshToken
-            await this._unifiedLogoutUsecase.execute(refreshToken)
+            await this._unifiedLogoutUsecase.execute(refreshToken, accessToken)
 
             res.clearCookie('refreshToken', {
                 httpOnly: true,

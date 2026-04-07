@@ -6,6 +6,7 @@ import { LoginCandidateInputDTO, LoginCandidateOutputDTO } from "../../dtos/logi
 import { IHashService } from "../../../interface/service/IHashService";
 import { ITokenService } from "../../../interface/service/ITokenService";
 
+
 export class LoginCandidateUsecase {
     constructor(
         private _candidateRepository: ICandidateRepository,
@@ -41,7 +42,11 @@ export class LoginCandidateUsecase {
         }
 
         const refreshToken = this._tokenService.generateRefreshToken({id: candidateId, role: candidate.getRole()})
-        const accessToken = this._tokenService.generateAccessToken({id: candidateId, email: candidate.getEmail(), role: candidate.getRole()})
+        const accessToken = this._tokenService.generateAccessToken({
+            id: candidateId, 
+            email: candidate.getEmail(), 
+            role: candidate.getRole(),
+        })
         const csrfToken = this._tokenService.generateCsrfToken()
 
         const hashedRefreshToken = this._hashService.hashToken(refreshToken)

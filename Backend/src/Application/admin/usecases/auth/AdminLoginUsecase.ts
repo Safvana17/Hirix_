@@ -7,6 +7,7 @@ import { ITokenService } from "../../../interface/service/ITokenService";
 import { LoginAdminInputDto, LoginAdminOutputDTO } from "../../dtos/auth/login.admin.dto";
 import { IAdminLoginUsecase } from "../../interfaces/auth/IAdminLoginUsecase";
 
+
 export class AdminLoginUsecase implements IAdminLoginUsecase {
     constructor(
         private _adminRepository: IAdminRepository,

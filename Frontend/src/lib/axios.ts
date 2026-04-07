@@ -56,6 +56,11 @@ api.interceptors.response.use(
         console.log("Interceptor caught error:", error.response?.status)
         const originalRequest = error.config as CustomAxiosRequestConfig
 
+        if(!error.response){
+            console.error("Network error or server not reachable")
+            return Promise.reject(error)
+        }
+        
         if(error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes("/refresh")){
             
             if(isRefreshing){

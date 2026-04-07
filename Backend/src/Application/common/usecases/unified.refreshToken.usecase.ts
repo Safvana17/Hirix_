@@ -12,6 +12,7 @@ import { ITokenService } from "../../interface/service/ITokenService";
 import { UnifiedRefreshTokenInputDTO, UnifiedRefreshTokenOutputDTO } from "../dtos/unified.refreshToken.dto";
 import { IUnifiedTokenRefreshUsecase } from "../interfaces/IUnifiedTokenRefreshUsecase";
 
+
 export class UnifiedRefreshTokenUsecase implements IUnifiedTokenRefreshUsecase{
     constructor(
         private _repositoryRegistry: Map<userRole, IAuthRepository<CandidateEntity | CompanyEntity | AdminEntity>>,
@@ -52,7 +53,7 @@ export class UnifiedRefreshTokenUsecase implements IUnifiedTokenRefreshUsecase{
         const newAccessToken = this._tokenService.generateAccessToken({
             id: user.id!,
             email: user.getEmail(),
-            role: user.getRole()
+            role: user.getRole(),
         })
 
         const newRefereshToken = this._tokenService.generateRefreshToken({id: user.id!, role: user.getRole()})

@@ -12,6 +12,7 @@ import { ITokenService } from "../../../interface/service/ITokenService";
 import { LoginCompanyInputDTO, LoginCompanyOutputDTO } from "../../dtos/auth/login.company.dto";
 import { ILoginCompanyUsecase } from "../../interfaces/auth/ILoginCompanyUsecase";
 
+
 export class LoginCompanyUsecase implements ILoginCompanyUsecase{
     constructor(
         private _companyRepository: ICompanyRepository,

@@ -6,22 +6,20 @@ import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { TokenExpiredError } from "jsonwebtoken";
 
 export function authHandler(tokenService: ITokenService) {
-    return (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
 
         console.log("Auth middleware running");
 
         let token = req.cookies.accessToken 
-        // if(!token){
-        //     const authHeader = req.headers['authorization']
-        //     if(authHeader && authHeader.startsWith('Bearer')){
-        //         token = authHeader.split(' ')[1]
-        //     }
-        // }
         if(!token){
             return next(new AppError(authMessages.error.UNAUTHORIZED, statusCode.UNAUTHORIZED))
         }
 
         try {
+            const isBlackListed = await tokenService.isTokenBlackListed(token)
+            if(isBlackListed){
+               return next(new AppError(authMessages.error.UNAUTHORIZED, statusCode.UNAUTHORIZED))
+            }
             const user: AccessTokenPayload = tokenService.verifyAccessToken(token)
             req.user = user
             console.log("Decoded user:", user);

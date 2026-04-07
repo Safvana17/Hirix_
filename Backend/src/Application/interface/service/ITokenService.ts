@@ -3,7 +3,7 @@ import userRole from "../../../Domain/enums/userRole.enum";
 export interface AccessTokenPayload { 
     id: string;
     email: string;
-    role: userRole
+    role: userRole;
 }
 
 export interface RefreshTokenPayload {
@@ -32,5 +32,6 @@ export interface ITokenService {
     verifyRefreshToken(token: string): RefreshTokenPayload
     verifyResetTokenForForgotPassword(token: string): ResetTokenPayload
     verifyRestoreAccountToken(token: string): RestoreAccountTokenPayload
-
+    blackListToken(token: string, expiresInSeconds: number): Promise<void>
+    isTokenBlackListed(token: string): Promise<boolean>
 }

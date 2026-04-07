@@ -5,6 +5,7 @@ import { authMessages } from "../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../Shared/Enumes/statusCode";
 import { jwtConfig } from "../config/jwt.config";
 import jwt from 'jsonwebtoken'
+import { redisClient } from '../config/redis.config';
 
 
 export class TokenService implements ITokenService {
@@ -19,7 +20,7 @@ export class TokenService implements ITokenService {
  * 
  * @param payload 
  * @returns 
- */
+ */ 
     generateAccessToken(payload: AccessTokenPayload): string {
         const accessSecret = jwtConfig.accessToken.secret
         if(!accessSecret){
@@ -89,5 +90,14 @@ export class TokenService implements ITokenService {
         }
 
         return {email: decoded.email, purpose: decoded.purpose}
+    }
+
+    async blackListToken(token: string, expiresInSeconds: number): Promise<void> {
+        await redisClient.set(`bl_${token}`, "true", "EX", expiresInSeconds)
+    }
+
+    async isTokenBlackListed(token: string): Promise<boolean>{
+        const result = await redisClient.exists(`bl_${token}`)
+        return result === 1
     }
 }

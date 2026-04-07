@@ -4,6 +4,7 @@ import CompanyEntity from "../../../Domain/entities/company.entity";
 import userRole from "../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../Domain/errors/app.error";
 import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
+import { env } from "../../../Infrastructure/config/env";
 import { authMessages } from "../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../Shared/Enumes/statusCode";
 import { IHashService } from "../../interface/service/IHashService";
@@ -16,7 +17,12 @@ export class UnifiedLogoutUsecase implements IUnifiedLogoutUsecase{
         private _hashService: IHashService,
         private _tokenService: ITokenService
     ) {}
-    async execute(refreshToken: string): Promise<void> {
+    async execute(refreshToken: string, accessToken: string): Promise<void> {
+        
+        if(accessToken){
+            const expireInSeconds = env.ACCESS_TOKEN_MAX_AGE ? Math.floor(env.ACCESS_TOKEN_MAX_AGE / 1000) : 3600
+            await this._tokenService.blackListToken(accessToken, expireInSeconds)
+        }
         if(!refreshToken){
             throw new AppError(authMessages.error.REFRESH_TOKEN_NOT_FOUND, statusCode.NOT_FOUND)
         }
