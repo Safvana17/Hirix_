@@ -7,11 +7,13 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { questionMessages } from "../../../../Shared/constsnts/messages/questionMessages";
 import { ICompanyGetAllQuestionsUsecase } from "../../../../Application/company/interfaces/question/iCompany.getAllQuestions.usecase";
 import { getAllQuestionSchema } from "../../validators/questionValidator";
+import { ICompanyEditQuestionUsecase } from "../../../../Application/company/interfaces/question/iCompany.editQuestion.usecase";
 
 export class CompanyQuestionController {
     constructor (
         private _createQuestion: ICompanyCreateQuestionUsecase,
         private _getAllQuestions: ICompanyGetAllQuestionsUsecase,
+        private _editQuestion: ICompanyEditQuestionUsecase,
     ) {}
 
     createQuestion = asyncHandler (async( req: Request, res: Response, next: NextFunction) => {
@@ -25,5 +27,14 @@ export class CompanyQuestionController {
         const questions = await this._getAllQuestions.execute({...parsed, role: req.user.role, userId: req.user.id})
         logger.info(questions)
         return sendSuccess(res, statusCode.OK, "", questions)
+    })
+
+    editQuestion = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+        const questionId = Array.isArray (req.params.id ) 
+            ? req.params.id[0]
+            :req.params.id 
+        
+        const updatedQuestion = await this._editQuestion.execute({id: questionId, ...req.body})
+        return sendSuccess(res, statusCode.OK, questionMessages.success.QUESTION_UPDATED_SUCCESSFULLY, updatedQuestion)
     })
 }

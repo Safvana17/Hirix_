@@ -28,4 +28,5 @@ router.delete(ROUTES.COMPANY.JOBROLE.DELETE, authHandler(iTokenService), verifyC
 //questions
 router.post(ROUTES.COMPANY.QUESTION.CREATE, authHandler(iTokenService), verifyCsrf, iCompanyQuestionController.createQuestion)
 router.get(ROUTES.COMPANY.QUESTION.BASE, authHandler(iTokenService), iCompanyQuestionController.getAllQuestions)
+router.put(ROUTES.COMPANY.QUESTION.EDIT, authHandler(iTokenService), verifyCsrf, iCompanyQuestionController.editQuestion)
 export default router;

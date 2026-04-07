@@ -20,5 +20,7 @@ export const questionMessages = {
         EMPTY_OPTION: 'Options cannot be empty',
         DUPLICATE_OPTION: 'Options must be unique',
         DELETED_QUESTION: 'Question is already deleted',
+        COMPANY_CANNOT_EDIT_ADMIN_QUESTIONS: 'Company cannot edit questions created by admin',
+        
     }
 }
