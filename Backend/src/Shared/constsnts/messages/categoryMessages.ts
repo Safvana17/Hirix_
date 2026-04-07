@@ -13,6 +13,7 @@ export const categoryMessages = {
         CANNOT_SET_ITSELF_AS_PARENT: 'Cannot set itself as parent',
         CANNOT_DELETE_cATEGORY_WITH_CHILDREN: 'Cannot delete a category with children',
         UPDATE_CATEGORY_FAILED: 'Failed to update category',
-        SAME_CATEGORY_AND_PARENT_cATEGORY: 'Categoy and parent category should not be same'
+        SAME_CATEGORY_AND_PARENT_cATEGORY: 'Categoy and parent category should not be same',
+        SAME_PARENT_AND_CHILD: 'Cannot assign a child category as parent'
     }
 }

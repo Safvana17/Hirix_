@@ -15,11 +15,11 @@ export interface editCategoryPayload {
     parentId: string | null
 }
 export type ModalMode = 'create' | 'edit'
-export type getAllCategoryParams = {
-    categories: Category[]
-    page?: number
-    limit?: number
+export interface getAllCategoryParams {
+  page?: number;
+  limit?: number;
 }
+
 
 export interface editCategoryResponse {
     id: string

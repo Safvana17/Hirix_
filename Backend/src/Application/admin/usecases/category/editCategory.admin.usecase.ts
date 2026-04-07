@@ -33,6 +33,11 @@ export class AdminEditCategoryUsecase implements IAdminEditCategoryUsecase {
             if(parent.isDeleted){
                 throw new AppError(categoryMessages.error.DELETED_PARENT_CATEGORY, statusCode.NOT_FOUND)
             }
+
+            const isInValid = await this._categoryRepository.isDescendant(category.id, parent.id)
+            if(isInValid){
+                throw new AppError(categoryMessages.error.SAME_PARENT_AND_CHILD, statusCode.BAD_REQUEST)
+            }
             parentId = parent.id
         }
 

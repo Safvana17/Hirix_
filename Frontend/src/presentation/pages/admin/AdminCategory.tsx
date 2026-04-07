@@ -48,11 +48,10 @@ const AdminCategory: React.FC = () => {
     const closeModal = () => {
         setModalConfig(prev => ({...prev, isOpen: false}))
     }
-    const treeData = useMemo(() => buildTree(categories), [categories])
+    const treeData = useMemo(() => buildTree(categories || []), [categories])
 
     const handleAddCategory = () => {
         setModalMode('create')
-        setSelectedCategory(null)
         setIsModalOpen(true)
     }
 
@@ -61,8 +60,8 @@ const AdminCategory: React.FC = () => {
             console.log('from category: ', data)
             if (modalMode === 'create') {
                 await dispatch(createCategory(data)).unwrap()
-                await dispatch(getAllCategories({page, limit: 5})).unwrap()
                 setIsModalOpen(false)
+                await dispatch(getAllCategories({page, limit: 5})).unwrap()
                 toast.success('Category added successfully')
             }else if(modalMode === 'edit'){
                 await dispatch(editCategory(data)).unwrap()

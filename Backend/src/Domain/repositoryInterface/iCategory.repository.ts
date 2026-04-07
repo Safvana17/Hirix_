@@ -6,4 +6,5 @@ export interface ICategoryRepository extends IBaseRepository<CategoryEntity> {
     findByNameAndParent(name: string, parent: string | null): Promise<CategoryEntity | null>
     hasChildren(categoryId: string): Promise<boolean>
     exists(categoryId: string): Promise<boolean>
+    isDescendant(categoryId: string, parentId: string): Promise<boolean>
 }

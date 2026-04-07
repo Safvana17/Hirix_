@@ -5,6 +5,7 @@ import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { validate } from "../../middlewares/validate";
 import { createQuestionSchema, editQuestionSchema } from "../../validators/questionValidator";
+import { addCategorySchema, editCategorySchema } from "../../validators/categoryValidator";
 
 const router = Express.Router()
 
@@ -23,10 +24,10 @@ router.patch(ROUTES.ADMIN.USER_MANAGEMENT.CANDIDATES.STATUS, authHandler(iTokenS
 
 
 //category
-router.post(ROUTES.ADMIN.CATEGORY.CREATE, authHandler(iTokenService), verifyCsrf, iCategoryController.addCategory)
+router.post(ROUTES.ADMIN.CATEGORY.CREATE, authHandler(iTokenService), verifyCsrf, validate(addCategorySchema, 'body'), iCategoryController.addCategory)
 router.get(ROUTES.ADMIN.CATEGORY.GET_ALL, authHandler(iTokenService), iCategoryController.getAllCategory)
 router.delete(ROUTES.ADMIN.CATEGORY.DELETE, authHandler(iTokenService), verifyCsrf, iCategoryController.deleteCategory)
-router.put(ROUTES.ADMIN.CATEGORY.EDIT, authHandler(iTokenService), verifyCsrf, iCategoryController.editCategory)
+router.put(ROUTES.ADMIN.CATEGORY.EDIT, authHandler(iTokenService), verifyCsrf,validate(editCategorySchema, 'body'), iCategoryController.editCategory)
 
 //questions
 router.post(ROUTES.ADMIN.QUESTION.CREATE,authHandler(iTokenService), validate(createQuestionSchema, 'body'), iAdminQuestionController.createQuestion)

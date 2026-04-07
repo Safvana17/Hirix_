@@ -6,10 +6,12 @@ export const buildTree = (categories: Category[] ): CategoryNode[] => {
     const roots: CategoryNode[] = []
 
     categories.forEach((c) => {
+        if (!c || !c.id) return 
         map.set(c.id, {...c, children: []})
     })
 
     categories.forEach((c) => {
+        if (!c || !c.id) return 
         const node = map.get(c.id)
         if(!node) return
         if(c.parentId){

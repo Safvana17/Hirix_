@@ -1,11 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { IAdminAddCategoryUsecase } from "../../../../Application/admin/interfaces/category/iAddCategory.admin.usecase";
-import { addCategorySchema, editCategorySchema, getAllCategorySchema } from "../../validators/categoryValidator";
-import { AdminAddCategoryInputDTO } from "../../../../Application/admin/dtos/category/category.add.dto";
+import { getAllCategorySchema } from "../../validators/categoryValidator";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { categoryMessages } from "../../../../Shared/constsnts/messages/categoryMessages";
 import { IGetAllCategoriesUsecase } from "../../../../Application/admin/interfaces/category/iGetAllCategory.admin.usecase";
-import { logger } from "../../../../utils/logging/loger";
 import { asyncHandler } from "../../../../utils/asyncHandler";
 import { IAdminDeleteCategoryUsecase } from "../../../../Application/admin/interfaces/category/iDeleteCategory.admin.usecase";
 import { sendSuccess } from "../../utils/apiResponse";
@@ -20,31 +18,14 @@ export class CategoryController {
     ) {}
 
     addCategory = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-            logger.info({req: req.body})
-            const parsed = addCategorySchema.parse(req.body)
-            const payload: AdminAddCategoryInputDTO = {
-                name: parsed.name,
-                parentId: parsed.parentId
-            }
-            logger.info({payload: payload})
-            const category = await this._addCategory.execute(payload)
-
-            return res.status(statusCode.OK).json({
-                success: true,
-                message: categoryMessages.success.CATEGORY_ADDED_SUCCESSFULLY,
-                category
-            })
+        const category = await this._addCategory.execute(req.body)
+        return sendSuccess(res, statusCode.OK, categoryMessages.success.CATEGORY_ADDED_SUCCESSFULLY,{category})
     })
 
     getAllCategory = asyncHandler( async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
         const parsed = getAllCategorySchema.parse(req.query)
         const {categories, totalCount, totalPages} = await this._getAllCategories.execute(parsed)
-        return res.status(statusCode.OK).json({
-            success: true,
-            categories,
-            totalCount,
-            totalPages
-        })
+        return sendSuccess(res, statusCode.OK, "", {categories,totalCount,totalPages})
     })
 
     deleteCategory = asyncHandler(async(req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -58,8 +39,7 @@ export class CategoryController {
         const categoryId = Array.isArray(req.params.id)
               ? req.params.id[0]
               : req.params.id
-        const parsed = editCategorySchema.parse(req.body)
-        const updatedCategory = await this._editCategory.execute({...parsed, id: categoryId})
+        const updatedCategory = await this._editCategory.execute({...req.body, id: categoryId})
         return sendSuccess(res, statusCode.OK, categoryMessages.success.CATEGORY_UPDATED_SUCCESSFULLY, updatedCategory)
     })
 }

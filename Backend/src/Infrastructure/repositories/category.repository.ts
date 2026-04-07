@@ -65,6 +65,18 @@ export class CategoryRepository extends BaseRepository<CategoryEntity, ICategory
         return !!document
     }
 
+    async isDescendant(categoryId: string, parentId: string): Promise<boolean> {
+        let current = await this.findById(parentId)
+        while(current){
+            if(current.parentId === categoryId){
+                return true
+            }
+            if(!current.parentId) break
+            current = await this.findById(current.parentId)
+        }
+        return false
+    }
+
     protected mapToEntity(doc: ICategory): CategoryEntity {
         return CategoryMapper.toEntity(doc)
     }

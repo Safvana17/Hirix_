@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { Category, createCategoryPayload, deleteCategoryResponse, editCategoryPayload, editCategoryResponse, GetAllCategoryResponse } from "../../../../types/category";
+import type { Category, createCategoryPayload, deleteCategoryResponse, editCategoryPayload, editCategoryResponse, getAllCategoryParams, GetAllCategoryResponse } from "../../../../types/category";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -41,7 +41,7 @@ createCategoryPayload,
             return rejectWithValue('Invalid response')
         }
 
-        return response.data.category
+        return response.data.data.category
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to create category')
@@ -50,15 +50,22 @@ createCategoryPayload,
 
 export const getAllCategories = createAsyncThunk<
 GetAllCategoryResponse,
-{page?: number, limit?: number},
+getAllCategoryParams | undefined,
 {rejectValue: string}
->('category/getAll', async(params: {search?: string; status?: string; page?: number; limit?: number} | undefined, {rejectWithValue}) => {
+>('category/getAll', async(params, {rejectWithValue}) => {
     try {
         const response = await api.get(API_ROUTES.ADMIN.CATEGORY.GET_ALL, {params})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        return response.data
+        // const data = response.data.data
+
+        // return {
+        //     categories: data.categories.map((q: Category) => q),
+        //     totalCount: data.totalCount,
+        //     totalPages: data.totalPages
+        // }
+        return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get all categories')

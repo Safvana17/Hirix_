@@ -2,6 +2,8 @@ import Express from 'express'
 import { iAdminAuthController, iCandidateAuthController, iCompanyAuthController, iUnifiedController, iTokenService } from '../../controllers/factory'
 import { authHandler } from '../../middlewares/authMiddleware'
 import { ROUTES } from '../../../../Shared/constsnts/routes'
+import { validate } from '../../middlewares/validate'
+import { loginSchema } from '../../validators/loginValidator'
 const router = Express.Router()
 
 
@@ -31,7 +33,7 @@ router.post(ROUTES.COMPANY.GOOGLE, iCompanyAuthController.googleLogin)
 
 
 //admin
-router.post(ROUTES.ADMIN.LOGIN, iAdminAuthController.login)
+router.post(ROUTES.ADMIN.LOGIN, validate(loginSchema, 'body'), iAdminAuthController.login)
 
 
 
