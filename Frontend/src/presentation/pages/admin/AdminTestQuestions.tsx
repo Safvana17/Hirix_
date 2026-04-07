@@ -79,7 +79,7 @@ const AdminTestQuestions: React.FC= () => {
       type: 'danger',
       onConfirm: async() => {
         try {
-          await dispatch(deleteQuestion({id})).unwrap()
+          await dispatch(deleteQuestion({id, role: user!.role})).unwrap()
           toast.success('Question deleted successfully')
           dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:10}, role: user!.role}))
         } catch (error: unknown) {

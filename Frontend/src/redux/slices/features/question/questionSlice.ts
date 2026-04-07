@@ -91,11 +91,11 @@ Question,
 
 export const deleteQuestion = createAsyncThunk<
 {id: string},
-{id: string},
+{id: string, role: UserRole},
 {rejectValue: string}
->('question/deleteQuestion', async({id}, {rejectWithValue}) => {
+>('question/deleteQuestion', async({id, role}, {rejectWithValue}) => {
     try {
-        const response = await api.get(API_ROUTES.ADMIN.TEST_QUESTIONS.DELETE(id))
+        const response = await api.delete(API_ROUTES.COMMON.QUESTION.DELETE(id, role))
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }

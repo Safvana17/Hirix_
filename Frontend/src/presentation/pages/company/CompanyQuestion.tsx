@@ -8,10 +8,11 @@ import type { AppDispatch, RootState } from '../../../redux/store'
 import { getAllCategories } from '../../../redux/slices/features/category/categorySlice'
 import QuestionModal from '../../components/modal/QuestionModal'
 import toast from 'react-hot-toast'
-import { createQuestion, editQuestions, getAllQuestions } from '../../../redux/slices/features/question/questionSlice'
+import { createQuestion, deleteQuestion, editQuestions, getAllQuestions } from '../../../redux/slices/features/question/questionSlice'
 import { Box, Card, Chip, Divider, IconButton, InputAdornment, MenuItem, Pagination, Tab, Tabs, TextField, Typography } from '@mui/material'
 import { Delete, Edit, Search, Visibility } from '@mui/icons-material'
 import { useDebounce } from '../../../hooks/useDebounce'
+import ConfirmationModal from '../../components/modal/ConfirmationModal'
 
 
 const questionDifficulty: QuestionDifficulty[] = ['easy', 'medium', 'hard']
@@ -27,6 +28,19 @@ const CompanyQuestion: React.FC = () => {
   const [type, setType] = useState<QuestionType | ''>('')
   const [category, setCategory] = useState('')
   const [page, setPage] = useState(1)
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void
+    type: 'danger'
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => { },
+    type: 'danger'
+  })
   const dispatch = useDispatch<AppDispatch>()
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const {categories} = useSelector((state: RootState) => state.category)
@@ -39,6 +53,13 @@ const CompanyQuestion: React.FC = () => {
      dispatch(getAllCategories({}))
   }, [dispatch, debouncedSearchTerm, category,difficulty, type, page, user])
 
+  const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+    setModalConfig({...config, isOpen: true})
+  }
+
+  const closeModal = () => {
+    setModalConfig(prev => ({...prev, isOpen: false}))
+  }
   const handleAddQuestion = () => {
     setSelectedQuestion(null)
     setModalMode('create')
@@ -50,6 +71,32 @@ const CompanyQuestion: React.FC = () => {
     setModalMode('edit')
     setIsModalOpen(true)
   }
+
+  const handleViewQuestion = (question: Question) => {
+    setSelectedQuestion(question)
+    setModalMode('view')
+    setIsModalOpen(true)
+  }
+
+  const handleDeleteQuestion = (id: string) => {
+    openModal({
+      title: 'Delete Question',
+      message: 'Are you sure you want to delete this question?',
+      type: 'danger',
+      onConfirm: async() => {
+        try {
+          await dispatch(deleteQuestion({id, role: user!.role})).unwrap()
+          toast.success('Question deleted successfully')
+          dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:10}, role: user!.role}))
+        } catch (error: unknown) {
+          toast.error(typeof error === 'string' ? error :  'Failed to delete question')
+        }finally{
+          closeModal()
+        }
+      }
+    })
+  }
+
   const handleSaveQuestion = async (data: QuestionFormData) => {
       try {
         if(modalMode === 'create' && user){
@@ -286,13 +333,13 @@ const CompanyQuestion: React.FC = () => {
 
                     {/* RIGHT ACTIONS */}
                     <Box display="flex" alignItems="center" gap={1}>
-                      <IconButton size="small">
+                      <IconButton size="small" onClick={() => handleViewQuestion(q)}>
                         <Visibility />
                       </IconButton>
                       <IconButton size="small" onClick={() => handleEditQuestion(q)}>
                         <Edit />
                       </IconButton>
-                      <IconButton size="small">
+                      <IconButton size="small" onClick={() => handleDeleteQuestion(q.id)}>
                         <Delete />
                       </IconButton>
                     </Box>
@@ -322,6 +369,14 @@ const CompanyQuestion: React.FC = () => {
                onClose={() => {
                  setIsModalOpen(false)
                }}
+            />
+            <ConfirmationModal 
+              isOpen={modalConfig.isOpen}
+              title={modalConfig.title}
+              message={modalConfig.message}
+              onConfirm={modalConfig.onConfirm}
+              onClose={closeModal}
+              type={modalConfig.type}
             />
        </div>
     </InternalLayout>

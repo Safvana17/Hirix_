@@ -81,7 +81,7 @@ export const API_ROUTES = {
         `/${role}/question`,
       EDIT: (role: UserRole, id: string) => 
         `/${role}/question/${id}`,
-      DELETE: (role: UserRole, id: string) => 
+      DELETE: (id: string, role: UserRole) => 
         `/${role}/question/${id}`,
       GET_ALL: (role: UserRole) => 
         `/${role}/questions`
