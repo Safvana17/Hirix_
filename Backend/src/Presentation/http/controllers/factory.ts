@@ -51,7 +51,7 @@ import { AdminDeleteQuestionUsecase } from "../../../Application/admin/usecases/
 import { CompanyCreateQuestionUsecase } from "../../../Application/company/usecases/question/company.createQuestion.usecase";
 import { CompanyGetAllQuestionsUsecase } from "../../../Application/company/usecases/question/company.getAllQuestions.usecase";
 import { CompanyEditQuestionUsecase } from "../../../Application/company/usecases/question/company.editQuestion.usecase";
-
+import { CompanyDeleteQuestionUsecase } from "../../../Application/company/usecases/question/company.deleteQuestion.usecase";
 
 
 //repositories
@@ -278,6 +278,9 @@ const iCompanyEditQuestion = new CompanyEditQuestionUsecase(
     iQuestionRepository,
     iCategoryRepository
 )
+const iCompanyDeleteQuestion = new CompanyDeleteQuestionUsecase(
+    iQuestionRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -446,5 +449,6 @@ export const iAdminQuestionController = new AdminQestionController(
 export const iCompanyQuestionController = new CompanyQuestionController(
     iCompanyCreateQuestion,
     iCompanyGetAllQuestions,
-    iCompanyEditQuestion
+    iCompanyEditQuestion,
+    iCompanyDeleteQuestion
 )

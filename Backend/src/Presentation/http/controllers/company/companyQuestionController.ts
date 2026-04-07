@@ -8,12 +8,14 @@ import { questionMessages } from "../../../../Shared/constsnts/messages/question
 import { ICompanyGetAllQuestionsUsecase } from "../../../../Application/company/interfaces/question/iCompany.getAllQuestions.usecase";
 import { getAllQuestionSchema } from "../../validators/questionValidator";
 import { ICompanyEditQuestionUsecase } from "../../../../Application/company/interfaces/question/iCompany.editQuestion.usecase";
+import { ICompanyDeleteQuestionUsecase } from "../../../../Application/company/interfaces/question/iCompany.deleteQuestion.usecase";
 
 export class CompanyQuestionController {
     constructor (
         private _createQuestion: ICompanyCreateQuestionUsecase,
         private _getAllQuestions: ICompanyGetAllQuestionsUsecase,
         private _editQuestion: ICompanyEditQuestionUsecase,
+        private _deleteQuestion: ICompanyDeleteQuestionUsecase
     ) {}
 
     createQuestion = asyncHandler (async( req: Request, res: Response, next: NextFunction) => {
@@ -36,5 +38,14 @@ export class CompanyQuestionController {
         
         const updatedQuestion = await this._editQuestion.execute({id: questionId, ...req.body})
         return sendSuccess(res, statusCode.OK, questionMessages.success.QUESTION_UPDATED_SUCCESSFULLY, updatedQuestion)
+    })
+
+    deleteQuestion = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+        const quesionId = Array.isArray(req.params.id)
+              ? req.params.id[0]
+              : req.params.id
+        const question = await this._deleteQuestion.execute({id: quesionId, user: req.user})
+
+        return sendSuccess(res, statusCode.OK, "", question)
     })
 }

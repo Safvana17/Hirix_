@@ -21,6 +21,7 @@ export const questionMessages = {
         DUPLICATE_OPTION: 'Options must be unique',
         DELETED_QUESTION: 'Question is already deleted',
         COMPANY_CANNOT_EDIT_ADMIN_QUESTIONS: 'Company cannot edit questions created by admin',
-        
+        ADMIN_CANNOT_DELETE_COMPANY_QUESTION: 'Admin cannot delete questions created by company',
+        COMPANY_CANNOT_DELETE_OTHER_QUESTION: 'Company can only delete questions created by their own'
     }
 }

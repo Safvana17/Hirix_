@@ -4,6 +4,8 @@ import { authHandler } from "../../middlewares/authMiddleware";
 import { iCompanyQuestionController, iCompanySettingsController, iJobRoleController, iTokenService } from "../../controllers/factory";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { upload } from "../../middlewares/imageUpload";
+import { validate } from "../../middlewares/validate";
+import { createQuestionSchema, editQuestionSchema } from "../../validators/questionValidator";
 
 const router = Express.Router()
 
@@ -26,7 +28,8 @@ router.put(ROUTES.COMPANY.JOBROLE.STATUS, authHandler(iTokenService), verifyCsrf
 router.delete(ROUTES.COMPANY.JOBROLE.DELETE, authHandler(iTokenService), verifyCsrf, iJobRoleController.deleteJobRole)
 
 //questions
-router.post(ROUTES.COMPANY.QUESTION.CREATE, authHandler(iTokenService), verifyCsrf, iCompanyQuestionController.createQuestion)
+router.post(ROUTES.COMPANY.QUESTION.CREATE, authHandler(iTokenService), verifyCsrf, validate(createQuestionSchema, 'body'), iCompanyQuestionController.createQuestion)
 router.get(ROUTES.COMPANY.QUESTION.BASE, authHandler(iTokenService), iCompanyQuestionController.getAllQuestions)
-router.put(ROUTES.COMPANY.QUESTION.EDIT, authHandler(iTokenService), verifyCsrf, iCompanyQuestionController.editQuestion)
+router.put(ROUTES.COMPANY.QUESTION.EDIT, authHandler(iTokenService), verifyCsrf, validate(editQuestionSchema, 'body'), iCompanyQuestionController.editQuestion)
+router.delete(ROUTES.COMPANY.QUESTION.DELETE, authHandler(iTokenService), verifyCsrf, iCompanyQuestionController.deleteQuestion)
 export default router;
