@@ -74,11 +74,11 @@ getAllQuestionsResponse,
 
 export const editQuestions = createAsyncThunk<
 Question,
-QuestionFormData,
+{data: QuestionFormData, role: UserRole},
 {rejectValue: string}
->('question/edit', async(QuestionFormData, {rejectWithValue}) => {
+>('question/edit', async({data, role}, {rejectWithValue}) => {
     try {
-        const response = await api.put(API_ROUTES.ADMIN.TEST_QUESTIONS.EDIT(QuestionFormData.id), QuestionFormData)
+        const response = await api.put(API_ROUTES.COMMON.QUESTION.EDIT(role, data.id), data)
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }

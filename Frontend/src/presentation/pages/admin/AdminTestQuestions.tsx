@@ -52,7 +52,7 @@ const AdminTestQuestions: React.FC= () => {
   useEffect(() =>{
     dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:10}, role: user!.role}))
     dispatch(getAllCategories({}))
-  },[dispatch, debouncedSearchTerm, category, type, difficulty, page])
+  },[dispatch, debouncedSearchTerm, category, type, difficulty, page, user])
 
   const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
     setModalConfig({...config, isOpen: true})
@@ -106,7 +106,7 @@ const AdminTestQuestions: React.FC= () => {
         }
         if(modalMode === 'edit'){
           console.log('from edit: ', data)
-          await dispatch(editQuestions(data)).unwrap()
+          await dispatch(editQuestions({data, role: user!.role})).unwrap()
           setIsModalOpen(false)
           toast.success('Question updated successfully')
           await dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:10}, role: user!.role}))
@@ -295,7 +295,7 @@ const AdminTestQuestions: React.FC= () => {
                     <Box>
                       <Box display="flex" alignItems="center" gap={2}>
                         <Typography fontWeight="bold" fontSize={16}>
-                          {q.title}
+                          {q.title.toUpperCase()}
                         </Typography>
                         <Chip
                           label={q.visibility}
@@ -363,6 +363,7 @@ const AdminTestQuestions: React.FC= () => {
                 isOpen={isModalOpen}
                 mode={modalMode}
                 categories={categories}
+                role={user!.role}
                 initialData={selectedQuestion}
                 onClose={() => {
                   setIsModalOpen(false)

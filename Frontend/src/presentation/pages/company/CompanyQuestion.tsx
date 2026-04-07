@@ -8,7 +8,7 @@ import type { AppDispatch, RootState } from '../../../redux/store'
 import { getAllCategories } from '../../../redux/slices/features/category/categorySlice'
 import QuestionModal from '../../components/modal/QuestionModal'
 import toast from 'react-hot-toast'
-import { createQuestion, getAllQuestions } from '../../../redux/slices/features/question/questionSlice'
+import { createQuestion, editQuestions, getAllQuestions } from '../../../redux/slices/features/question/questionSlice'
 import { Box, Card, Chip, Divider, IconButton, InputAdornment, MenuItem, Pagination, Tab, Tabs, TextField, Typography } from '@mui/material'
 import { Delete, Edit, Search, Visibility } from '@mui/icons-material'
 import { useDebounce } from '../../../hooks/useDebounce'
@@ -45,6 +45,11 @@ const CompanyQuestion: React.FC = () => {
     setIsModalOpen(true) 
   }
 
+  const handleEditQuestion = (question: Question) => {
+    setSelectedQuestion(question)
+    setModalMode('edit')
+    setIsModalOpen(true)
+  }
   const handleSaveQuestion = async (data: QuestionFormData) => {
       try {
         if(modalMode === 'create' && user){
@@ -52,6 +57,11 @@ const CompanyQuestion: React.FC = () => {
             setIsModalOpen(false)
             toast.success('Question added successfully')
             await dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit: 10}, role: user!.role}))
+        }else if(modalMode === 'edit' && user){
+          await dispatch(editQuestions({data, role: user.role})).unwrap()
+          setIsModalOpen(false)
+          toast.success('Question updated successfully')
+          await dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit: 10}, role: user!.role}))
         }
       } catch (error) {
         toast.error(typeof error === 'string' ? error : 'Failed to create question')
@@ -240,17 +250,17 @@ const CompanyQuestion: React.FC = () => {
                         <Typography fontWeight="bold" fontSize={16}>
                           {q.title}
                         </Typography>
+                        {q.isPractice &&
                         <Chip
-                          label={q.visibility}
+                          label={'Practice'}
                           size="small"
                           sx={{
-                            background: q.visibility === 'pro' 
-                                        ? 'linear-gradient(to right, #8822F5, #feb47b)' 
-                                        : 'linear-gradient(to right, #ff7e5f, #9057C6)',
+                            background: 'linear-gradient(to right, #8822F5, #feb47b)' ,
                             color: "#fff",
                             fontWeight: 500
                           }}
                         />
+                        }
                       </Box>
                       <Box display="flex" gap={1.5} mt={1} alignItems="center">
                         <Typography variant="body2" color="text.secondary">
@@ -279,7 +289,7 @@ const CompanyQuestion: React.FC = () => {
                       <IconButton size="small">
                         <Visibility />
                       </IconButton>
-                      <IconButton size="small">
+                      <IconButton size="small" onClick={() => handleEditQuestion(q)}>
                         <Edit />
                       </IconButton>
                       <IconButton size="small">
@@ -303,10 +313,12 @@ const CompanyQuestion: React.FC = () => {
             </div>
             <QuestionModal 
                isOpen={isModalOpen}
+               key={selectedQuestion?.id || modalMode}
                mode={modalMode}
                categories={categories}
                initialData={selectedQuestion}
                onSave={handleSaveQuestion}
+               role={user!.role}
                onClose={() => {
                  setIsModalOpen(false)
                }}

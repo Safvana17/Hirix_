@@ -19,6 +19,7 @@ import { Grid } from '@mui/material';
 import type { ModalMode, Question, QuestionFormData, TestCase } from '../../../types/question';
 import type { Category } from '../../../types/category';
 import { Close } from '@mui/icons-material';
+import type { UserRole } from '../../../constants/role';
 
 const questionTypes = [
   { label: 'MCQ', value: 'mcq' },
@@ -33,12 +34,13 @@ interface QuestionModalProps {
     mode: ModalMode
     categories: Category[]
     initialData: Question | null
+    role: UserRole
     onClose: () => void;
     onSave: (data: QuestionFormData) => void
 }
 
 
- const QuestionModal: React.FC<QuestionModalProps> = ({ isOpen, mode, categories,initialData, onClose, onSave }) => {
+ const QuestionModal: React.FC<QuestionModalProps> = ({ isOpen, mode, categories,initialData,role, onClose, onSave }) => {
   const [formData, setFormData] = useState<QuestionFormData>({
     id: initialData?.id || '',
     title: initialData?.title || '',
@@ -257,29 +259,36 @@ interface QuestionModalProps {
                 label="Practice"
               />
 
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formData.isPremium}
-                    onChange={(e) => handleChange('isPremium', e.target.checked)}
-                  />
-                }
-                label="Premium"
-              />
+              {role === 'Admin' && 
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.isPremium}
+                      onChange={(e) => handleChange('isPremium', e.target.checked)}
+                    />
+                  }
+                  label="Premium"
+                />
+              }
             </Box>
           </Grid>
         }
-        <Box mt={2}>
-          {formData.isPractice && <Chip label="Practice" color="primary" />}
 
-          {formData.isPremium ? (
-            <Chip label="Premium" sx={{ background: 'linear-gradient(to right, #8822F5, #feb47b)', color: "#fff", ml: 1 }}/>
-          ) : (
-            <Chip label="Free" sx={{ ml: 1, background: 'linear-gradient(to right, #ff7e5f, #9057C6)', color: "#fff"}} />
+          <Box mt={2}>
+            {formData.isPractice && <Chip label="Practice" color="primary" />}
+            {role === 'Admin' && (
+            formData.isPremium ? (
+              <Chip label="Premium" sx={{ background: 'linear-gradient(to right, #8822F5, #feb47b)', color: "#fff", ml: 1 }}/>
+            ) : (
+              <Chip label="Free" sx={{ ml: 1, background: 'linear-gradient(to right, #ff7e5f, #9057C6)', color: "#fff"}} />
+            )
           )}
-        </Box>
+          </Box>
+
         </Grid>
       </DialogContent>
+
+
       {mode !== 'view' &&
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
@@ -289,6 +298,7 @@ interface QuestionModalProps {
         </Button>
       </DialogActions>
       }
+
     </Dialog>
   );
 }
