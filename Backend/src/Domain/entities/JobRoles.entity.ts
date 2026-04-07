@@ -9,10 +9,11 @@ export class JobRolesEntity {
     openings: number
     isActive: boolean
     isDeleted: boolean
+    createdById: string;
     status: jobRoleStatus
    
 
-    constructor(id: string, name:string, skills: string[], experienceMin: number, experienceMax: number, openings: number, isActive: boolean, isDeleted: boolean, status: jobRoleStatus){
+    constructor(id: string, name:string, skills: string[], experienceMin: number, experienceMax: number, openings: number, isActive: boolean, isDeleted: boolean, createdById: string, status: jobRoleStatus){
         this.id = id
         this.name = name
         this.skills = skills
@@ -22,5 +23,6 @@ export class JobRolesEntity {
         this.isActive = isActive
         this.isDeleted = isDeleted
         this.status = status
+        this.createdById = createdById
     }
 }

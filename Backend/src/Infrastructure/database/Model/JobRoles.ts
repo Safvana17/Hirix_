@@ -10,6 +10,7 @@ export interface IJobRoles extends Document{
     openings: number;
     isDeleted: boolean;
     isActive: boolean;
+    createdById: Types.ObjectId;
     status: jobRoleStatus;
     createdAt: Date;
     updatedAt: Date
@@ -46,6 +47,10 @@ const JobRolesSchema: Schema<IJobRoles> = new Schema({
     status: {
         type: String,
         default: jobRoleStatus.Active
+    },
+    createdById: {
+        type: Types.ObjectId,
+        ref: 'Company'
     }
 }, {
     timestamps: true

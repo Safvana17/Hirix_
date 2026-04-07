@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { JobRolesEntity } from "../../Domain/entities/JobRoles.entity";
 import { IJobRoles } from "../../Infrastructure/database/Model/JobRoles";
 
@@ -12,6 +13,7 @@ export class JobRoleMapper {
             doc.openings,
             doc.isActive,
             doc.isDeleted,
+            doc.createdById.toString(),
             doc.status
         )
         return jobRole
@@ -26,7 +28,8 @@ export class JobRoleMapper {
             openings: entity.openings,
             isActive: entity.isActive,
             isDeleted: entity.isDeleted,
-            status: entity.status
+            status: entity.status,
+            createdById: new Types.ObjectId(entity.createdById)
         }
     }
 }

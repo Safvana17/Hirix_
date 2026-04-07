@@ -6,7 +6,8 @@ export interface EditJobRolesInputDTO{
     skills: string[];
     experienceMin: number;
     experienceMax: number;
-    openings: number
+    openings: number;
+    userId: string
 }
 
 export interface EditJobRolesOutputDTO {

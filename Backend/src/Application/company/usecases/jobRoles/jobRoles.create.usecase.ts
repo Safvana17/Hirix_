@@ -41,6 +41,7 @@ export class CreateJobRolesUsecase implements ICreateJobRolesUsecase {
             request.openings,
             true,
             false,
+            request.userId,
             jobRoleStatus.Active
         )
 

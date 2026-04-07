@@ -72,13 +72,12 @@ const ResetPassword: React.FC = () => {
     }
 
     console.log('email: ', formData.email)
-    const result = await dispatch(resetPassword({role, email: formData.email, newPassword: formData.newPassword, confirmPassword: formData.confirmPassword, resetToken}))
-    if(resetPassword.fulfilled.match(result)){
-      toast('Your password reset successful. PLease login to continue.')
-      navigate(`/login`)
-    }else{
-      console.log(result.error.message)
-      toast.error(result.error.message || 'Failed to reset password')
+    try{
+       await dispatch(resetPassword({role, email: formData.email, newPassword: formData.newPassword, confirmPassword: formData.confirmPassword, resetToken}))
+       toast.success('Your password reset successfull. Please login to continue')
+       navigate('/login')
+    }catch(error){
+      toast.error(typeof error === 'string' ? error : 'Failed to reset password, try again')
     }
   }
 

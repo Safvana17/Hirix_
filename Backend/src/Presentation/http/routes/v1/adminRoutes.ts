@@ -6,6 +6,7 @@ import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { validate } from "../../middlewares/validate";
 import { createQuestionSchema, editQuestionSchema } from "../../validators/questionValidator";
 import { addCategorySchema, editCategorySchema } from "../../validators/categoryValidator";
+import { rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
 
 const router = Express.Router()
 
@@ -14,13 +15,13 @@ const router = Express.Router()
 //company
 router.get(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.BASE,authHandler(iTokenService), IUserManagementController.getAllCompanies)
 router.get(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.BY_ID,authHandler(iTokenService), IUserManagementController.getCompanyById)
-router.patch(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.STATUS, authHandler(iTokenService),verifyCsrf, IUserManagementController.updateCompanyStatus)
+router.patch(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.STATUS, authHandler(iTokenService),verifyCsrf, validate(updateStatusSchema, 'body'), IUserManagementController.updateCompanyStatus)
 router.patch(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.APPROVE, authHandler(iTokenService),verifyCsrf, IUserManagementController.approveCompany)
-router.patch(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.REJECT, authHandler(iTokenService), verifyCsrf, IUserManagementController.rejectCompany)
+router.patch(ROUTES.ADMIN.USER_MANAGEMENT.COMPANIES.REJECT, authHandler(iTokenService), verifyCsrf, validate(rejectCompanySchema, 'body'), IUserManagementController.rejectCompany)
 
 //candidate
 router.get(ROUTES.ADMIN.USER_MANAGEMENT.CANDIDATES.BASE, authHandler(iTokenService), IUserManagementController.getAllCandidates)
-router.patch(ROUTES.ADMIN.USER_MANAGEMENT.CANDIDATES.STATUS, authHandler(iTokenService), verifyCsrf, IUserManagementController.updateCandidateStatus)
+router.patch(ROUTES.ADMIN.USER_MANAGEMENT.CANDIDATES.STATUS, authHandler(iTokenService), verifyCsrf, validate(updateStatusSchema, 'body'), IUserManagementController.updateCandidateStatus)
 
 
 //category

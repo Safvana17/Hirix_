@@ -18,11 +18,15 @@ export class EditJobRoleUsecase implements IEditJobRoleUsecase {
      */
 
     async execute(request: EditJobRolesInputDTO): Promise<EditJobRolesOutputDTO> {
+
         const jobRole = await this._jobRoleRepository.findById(request.id)
         if(!jobRole){
             throw new AppError(JobRoleMessages.error.JOBROLE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
+        if(jobRole.createdById !== request.userId){
+            throw new AppError(JobRoleMessages.error.CANNOT_EDIT_OTHER_COMPANY_JOBROLE, statusCode.FORBIDDEN)
+        }
         const existing = await this._jobRoleRepository.findActiveByName(request.name)
         if(existing && existing.id !== request.id){
             throw new AppError(JobRoleMessages.error.ALREADY_EXIST, statusCode.CONFLICT)

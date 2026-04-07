@@ -3,7 +3,8 @@ import { iAdminAuthController, iCandidateAuthController, iCompanyAuthController,
 import { authHandler } from '../../middlewares/authMiddleware'
 import { ROUTES } from '../../../../Shared/constsnts/routes'
 import { validate } from '../../middlewares/validate'
-import { loginSchema } from '../../validators/loginValidator'
+import { googleLoginSchema, loginSchema } from '../../validators/loginValidator'
+import { forgotPasswordSchema, otpSchema, registerSchema, resendOtpSchema, resetPasswordSchema } from '../../validators/registerValidator'
 const router = Express.Router()
 
 
@@ -22,14 +23,14 @@ router.post(ROUTES.CANDIDATE.RESET_PASSWORD, iCandidateAuthController.resetPassw
 router.post(ROUTES.CANDIDATE.GOOGLE, iCandidateAuthController.googleLogin)
 
 //company
-router.post(ROUTES.COMPANY.REGISTER, iCompanyAuthController.register)
+router.post(ROUTES.COMPANY.REGISTER, validate(registerSchema, 'body'), iCompanyAuthController.register)
 router.post(ROUTES.COMPANY.VERIFY_EMAIL, iCompanyAuthController.verifyEmail)
-router.post(ROUTES.COMPANY.RESEND_OTP, iCompanyAuthController.resendOtp)
-router.post(ROUTES.COMPANY.LOGIN, iCompanyAuthController.login)
-router.post(ROUTES.COMPANY.FORGOT_PASSWORD, iCompanyAuthController.forgotPassword)
-router.post(ROUTES.COMPANY.VERIFY_OTP_RESET,iCompanyAuthController.VerifyOtpForForgotPassword)
-router.post(ROUTES.COMPANY.RESET_PASSWORD, iCompanyAuthController.resetPassword)
-router.post(ROUTES.COMPANY.GOOGLE, iCompanyAuthController.googleLogin)
+router.post(ROUTES.COMPANY.RESEND_OTP, validate(resendOtpSchema, 'body'), iCompanyAuthController.resendOtp)
+router.post(ROUTES.COMPANY.LOGIN, validate(loginSchema, 'body'), iCompanyAuthController.login)
+router.post(ROUTES.COMPANY.FORGOT_PASSWORD, validate(forgotPasswordSchema, 'body'), iCompanyAuthController.forgotPassword)
+router.post(ROUTES.COMPANY.VERIFY_OTP_RESET, validate(otpSchema, 'body'), iCompanyAuthController.VerifyOtpForForgotPassword)
+router.post(ROUTES.COMPANY.RESET_PASSWORD, validate(resetPasswordSchema, 'body'), iCompanyAuthController.resetPassword)
+router.post(ROUTES.COMPANY.GOOGLE, validate(googleLoginSchema, 'body'), iCompanyAuthController.googleLogin)
 
 
 //admin

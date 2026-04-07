@@ -13,6 +13,7 @@ export interface GetAllJobRolesOutputDTO {
 export interface JobRolesQueryDTO {
     search?: string;
     status?: string;
+    userId: string;
     page: number;
     limit: number
 }

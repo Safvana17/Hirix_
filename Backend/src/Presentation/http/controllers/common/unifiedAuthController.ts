@@ -2,11 +2,12 @@ import { Request, Response, NextFunction } from "express"
 import { statusCode } from "../../../../Shared/Enumes/statusCode"
 import  { authMessages } from '../../../../Shared/constsnts/messages/authMessages'
 import { IUnifiedGetMeUsecase } from "../../../../Application/common/interfaces/IUnifiedGetMeUsecase"
-import { UnifiedGetMeInputDTO } from "../../../../Application/common/dtos/unified.getme.dto"
 import { IUnifiedTokenRefreshUsecase } from "../../../../Application/common/interfaces/IUnifiedTokenRefreshUsecase"
 import { env } from "../../../../Infrastructure/config/env"
 import { IUnifiedLogoutUsecase } from "../../../../Application/common/interfaces/IUnifiedLogoutUsecase"
 import { logger } from "../../../../utils/logging/loger"
+import { asyncHandler } from "../../../../utils/asyncHandler"
+import { sendSuccess } from "../../utils/apiResponse"
 
 export class UnifiedAuthController {
     constructor(
@@ -15,8 +16,7 @@ export class UnifiedAuthController {
         private _unifiedLogoutUsecase: IUnifiedLogoutUsecase
     ) {}
 
-    getMe = async(req: Request, res: Response, next: NextFunction) => {
-        try {
+    getMe = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
             const userId = req.user?.id
             const role = req.user?.role
 
@@ -26,23 +26,10 @@ export class UnifiedAuthController {
                     message: authMessages.error.UNAUTHORIZED
                 })
             }
-            const payload: UnifiedGetMeInputDTO = {
-                id: userId,
-                role: role
-            }
-
-            const user = await this._unifiedGetMeUsecase.execute(payload)
-            return res.status(statusCode.OK).json({
-                success: true,
-                user
-            })
-        } catch (error) {
-            next(error)
-        }
-    }
-    refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            // const parsed = refreshTokenSchema.parse(req.body)
+            const user = await this._unifiedGetMeUsecase.execute({id: userId, role: role})
+            return sendSuccess(res, statusCode.OK, '', user)
+    })
+    refreshToken = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
             const refreshToken = req.cookies.refreshToken
             logger.info(`Refresh cookie:${req.cookies.refreshToken}`)
 
@@ -70,18 +57,9 @@ export class UnifiedAuthController {
                 sameSite: "lax"
             })
 
-            return res.status(statusCode.OK).json({
-                success: true,
-                message: authMessages.success.TOKEN_REFRESHED
-            })
-
-
-        } catch (error) {
-            next(error)
-        }
-    }
-logout = async (req: Request, res: Response, next: NextFunction) => {
-        try {
+            return sendSuccess(res, statusCode.OK, authMessages.success.TOKEN_REFRESHED)
+    })
+    logout = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
             const accessToken = req.cookies.accessToken
             const refreshToken = req.cookies.refreshToken
             await this._unifiedLogoutUsecase.execute(refreshToken, accessToken)
@@ -102,9 +80,5 @@ logout = async (req: Request, res: Response, next: NextFunction) => {
                 success: true,
                 message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
             })
-            
-        } catch (error) {
-            next(error)
-        }
-    }
+    })
 }

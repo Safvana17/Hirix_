@@ -12,5 +12,6 @@ export const JobRoleMessages = {
         INVALID_OPENINGS: 'Openings must be greater than zero',
         UPDATE_JOBROLE_STATUS_FAILED: 'Failed to update job role status',
         FAILED_DELETE_JOBROLE: 'Failed to delete job role',
+        CANNOT_EDIT_OTHER_COMPANY_JOBROLE:'You can edit only job roles created by you',
     }
 }

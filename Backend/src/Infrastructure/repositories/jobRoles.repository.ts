@@ -27,8 +27,10 @@ export class JobRolesRepository extends BaseRepository<JobRolesEntity, IJobRoles
         )
     }
 
-    async findAllFiltered(query: { search?: string; status?: string; page: number; limit: number; }): Promise<{ data: JobRolesEntity[]; totalPages: number; totalCount: number; }> {
-        const filter: QueryFilter<IJobRoles> = {}
+    async findAllFiltered(query: { search?: string; status?: string; userId: string; page: number; limit: number; }): Promise<{ data: JobRolesEntity[]; totalPages: number; totalCount: number; }> {
+        const filter: QueryFilter<IJobRoles> = {
+            createdById: query.userId
+        }
         if(query.search){
             filter.$or = [
                 {name: {$regex: query.search, $options: 'i'} },

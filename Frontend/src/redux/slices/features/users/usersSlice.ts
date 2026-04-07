@@ -42,7 +42,7 @@ FetchCompaniesParams | undefined,
             return rejectWithValue('Invalid response')
         }
 
-        return response.data
+        return response.data.data
     } catch (error) {
        const err = error as AxiosError<{ message: string }>
        return rejectWithValue(err.response?.data?.message || 'Failed to fetch companies')
@@ -60,7 +60,7 @@ FetchCandidatesParams,
             return rejectWithValue('Invalid response')
         }
 
-        return response.data
+        return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data?.message || 'Failed to fetch candidates')
@@ -82,7 +82,7 @@ UpdateStatusArgs,
             return rejectWithValue('Invalid response')
         }
         console.log(response.data)
-        const updatedUser = response.data.updatedCompany || response.data.updatedCandidate
+        const updatedUser = response.data.data || response.data.data
         return {
             id: updatedUser.id,
             status: updatedUser.status,

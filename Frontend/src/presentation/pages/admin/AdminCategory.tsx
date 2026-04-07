@@ -51,6 +51,7 @@ const AdminCategory: React.FC = () => {
     const treeData = useMemo(() => buildTree(categories || []), [categories])
 
     const handleAddCategory = () => {
+        setSelectedCategory(null)
         setModalMode('create')
         setIsModalOpen(true)
     }
@@ -123,8 +124,8 @@ const AdminCategory: React.FC = () => {
                 </div>
 
                 <CategoryModal
-                    isOpen={isModelOpen}
                     key={selectedCategory?.id || modalMode}
+                    isOpen={isModelOpen}
                     mode={modalMode}
                     initialData={selectedCategory}
                     categories={categories} 

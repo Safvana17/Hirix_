@@ -26,7 +26,6 @@ const CategoryModal: React.FC<CategoryModalProps>= ({
     })
 
     if(!isOpen) return null
-
     const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault()
         console.log('parent: ', formData.parentId)

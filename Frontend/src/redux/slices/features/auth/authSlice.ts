@@ -29,11 +29,7 @@ export const registerUser = createAsyncThunk<
 {email: string; role: UserRole},RegisterPayload,{rejectValue: string}
 >('auth/register', async({role, data}, {rejectWithValue}) => {
     try {
-        const response = await api.post<
-        {
-            success: boolean;
-            message: string;
-        }>(API_ROUTES.AUTH.REGISTER(role), data)
+        const response = await api.post(API_ROUTES.AUTH.REGISTER(role), data)
 
         if(!response.data.success){
             return rejectWithValue('Registration failed')
@@ -49,16 +45,11 @@ export const loginUser = createAsyncThunk<
 {user: User; role: UserRole}, LoginPayload, {rejectValue: string}
 > ('auth/login', async({role, data}, {rejectWithValue}) => {
     try {
-        const response = await api.post<
-                {
-                    candidate?: User;
-                    company?: User;
-                    admin?: User
-                }>(API_ROUTES.AUTH.LOGIN(role), data);
+        const response = await api.post(API_ROUTES.AUTH.LOGIN(role), data);
 
-        const user = response.data.candidate ||
-                     response.data.company ||
-                     response.data.admin
+        const user = response.data.data.candidate ||
+                     response.data.data.company ||
+                     response.data.data.admin
         
         if(!user){
             return rejectWithValue('Invalid login response')
@@ -75,12 +66,10 @@ export const adminLogin = createAsyncThunk <
 {admin: User}, AdminLoginPayload, {rejectValue: string}
 >('admin/login', async({email, password}, {rejectWithValue}) => {
     try {
-        const response = await api.post<{
-            admin?: User
-        }>(API_ROUTES.ADMIN.LOGIN,{email, password})
+        const response = await api.post(API_ROUTES.ADMIN.LOGIN,{email, password})
 
         console.log('response: ', response.data)
-        const admin = response.data.admin
+        const admin = response.data.data
         console.log("admin: ", admin)
         if(!admin){
             return rejectWithValue('Invalid response')
@@ -96,12 +85,9 @@ export const googleLogin = createAsyncThunk<
 {user: User, role: UserRole}, {role: UserRole,token: string}, {rejectValue: string}
 >('/auth/googlelogin', async({role,token}, {rejectWithValue}) => {
     try {
-        const response = await api.post<{
-            candidate?: User,
-            company?: User
-        }>(API_ROUTES.AUTH.GOOGLE_LOGIN(role), {role, token})
+        const response = await api.post(API_ROUTES.AUTH.GOOGLE_LOGIN(role), {role, token})
 
-        const user = response.data.candidate || response.data.company
+        const user = response.data.data.company
         if(!user){
             return rejectWithValue('Invalid response')
         }
@@ -133,14 +119,10 @@ export const getMe = createAsyncThunk <
         > ('auth/getMe', async(_, {rejectWithValue}) => {
 
             try {
-                const response = await api.get<
-                {
-                    user?: User;
-
-                }>(API_ROUTES.AUTH.ME)
+                const response = await api.get(API_ROUTES.AUTH.ME)
 
                 console.log('from get me: ', response.data)
-                const user = response.data.user
+                const user = response.data.data
 
                 if(!user){
                     return rejectWithValue("Invalid session response")
@@ -216,12 +198,12 @@ export const verifyOtpForForgotPassword = createAsyncThunk<
 >('auth/verifyOtpForReset', async({role, email, otp}, {rejectWithValue}) => {
     try {
         const response = await api.post(API_ROUTES.AUTH.VERIFY_OTP_RESET(role), {email, otp})
-        if(!response.data.resetToken){
+        if(!response.data.data.resetToken){
             return rejectWithValue('Invalid Otp Response')
         }
 
         return {
-            resetToken: response.data.resetToken,
+            resetToken: response.data.data.resetToken,
             email
         }
     } catch (error) {

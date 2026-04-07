@@ -10,15 +10,9 @@ export const QuerySchema = z.object({
 })
 
 export const updateStatusSchema = z.object({
-    id: z.string().regex(/^[0-9a-fA-F]{24}$/),
     status: z.nativeEnum(UserStatus)
 })
 
-export const approveCompanySchema = z.object({
-    id: z.string().regex(/^[0-9a-fA-F]{24}$/),
-})
-
 export const rejectCompanySchema = z.object({
-    id: z.string().regex(/^[0-9a-fA-F]{24}$/),
-    reason: z.string()
+    reason: z.string().min(1, 'Reason for rejection is required')
 })

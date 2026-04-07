@@ -6,12 +6,12 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { JobRolesQueryDTO } from "../../../../Application/company/dtos/jobRoles/jobRole.getAll.dto";
 import { IGetAllJobRolesUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRoles.getAll.usecase";
-import { EditJobRolesInputDTO } from "../../../../Application/company/dtos/jobRoles/jobRoles.edit.dto";
 import { IEditJobRoleUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRoles.edit.usecase";
 import { UpdateJobRoleStatusInputDTO } from "../../../../Application/company/dtos/jobRoles/jobRole.updateStatus.dto";
 import { IUpdateJobRoleStatusUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRole.updateStatus.usecase";
 import { IDeleteJobRoleUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRole.delete.usecase";
 import { DeleteJobRoleInputDto } from "../../../../Application/company/dtos/jobRoles/jobRole.delete.dto";
+import { asyncHandler } from "../../../../utils/asyncHandler";
 
 export class JobRolesController {
     constructor (
@@ -30,7 +30,8 @@ export class JobRolesController {
                 skills: parsed.skills,
                 experienceMin: parsed.experienceMin,
                 experienceMax: parsed.experienceMax,
-                openings: parsed.openings
+                openings: parsed.openings,
+                userId: req.user.id
             }
 
             const jobRole = await this._createJobRole.execute(payload)
@@ -44,20 +45,16 @@ export class JobRolesController {
             next(error)
         }
     }
-    getAllJobRoles = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const parsed: JobRolesQueryDTO = JobRoleQuerySchema.parse(req.query)
-            const { jobRoles, totalCount, totalPages } = await this._getAllJobRoles.execute(parsed)
+    getAllJobRoles = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+            const parsed = JobRoleQuerySchema.parse(req.query)
+            const { jobRoles, totalCount, totalPages } = await this._getAllJobRoles.execute({...parsed, userId: req.user.id})
             return res.status(statusCode.OK).json({
                 success: true,
                 jobRoles,
                 totalCount,
                 totalPages
             })
-        } catch (error) {
-            next(error)
-        }
-    }
+    })
 
     editJobRole = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -65,16 +62,7 @@ export class JobRolesController {
                 ? req.params.id[0]
                 : req.params.id
             const parsed = EditJobRoleScheama.parse(req.body)
-            // const payload: EditJobRolesInputDTO = {
-            //     id: id,
-            //     name: parsed.name,
-            //     skills: parsed.skills,
-            //     experienceMin: parsed.experienceMin,
-            //     experienceMax: parsed.experienceMax,
-            //     openings: parsed.openings,
-            // }
-
-            const updatedJobRole = await this._editJobRole.execute({...parsed, id: jobRoleId})
+            const updatedJobRole = await this._editJobRole.execute({...parsed, id: jobRoleId, userId: req.user.id})
 
             return res.status(statusCode.OK).json({
                 success: true,
