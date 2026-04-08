@@ -84,17 +84,15 @@ const JobRoles: React.FC= () => {
                await dispatch(createJobRole(data)).unwrap()
                setIsModalOpen(false)
                toast.success('Job Role added successfully')
+               await dispatch(getAllJobRoles())
             }else if(modalMode === 'edit'){
-                await dispatch(editJobRole(data))
+                await dispatch(editJobRole(data)).unwrap()
                 setIsModalOpen(false)
                 toast.success('Job role updated successfully')
+                await dispatch(getAllJobRoles())
             }
         } catch (error) {
-            if (error instanceof Error) {
-            toast.error(error.message);
-            } else {
-            toast.error('Failed to restore account');
-            }
+            toast.error(typeof error === 'string' ? error : 'Failed to create job role')
         }
     }
 

@@ -96,10 +96,14 @@ const AdminTestQuestions: React.FC= () => {
     setModalMode('view')
     setIsModalOpen(true)
   }
+
+  console.log('questions', questions)
   const handleSaveQuestion = async(data: QuestionFormData) => {
       try {
         if(modalMode === 'create' && user){
+          console.log('from create')
             await dispatch(createQuestion({data, role: user.role})).unwrap()
+            console.log('reached here')
             setIsModalOpen(false)
             toast.success('Question added successfully')
             await dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:10}, role: user!.role}))
@@ -295,7 +299,7 @@ const AdminTestQuestions: React.FC= () => {
                     <Box>
                       <Box display="flex" alignItems="center" gap={2}>
                         <Typography fontWeight="bold" fontSize={16}>
-                          {q.title.toUpperCase()}
+                          {q.title}
                         </Typography>
                         <Chip
                           label={q.visibility}

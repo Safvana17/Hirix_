@@ -37,7 +37,7 @@ export const updateProfile = createAsyncThunk<
          return rejectWithValue('Invalid response')
      }
  
-     return {company: response.data.company}
+     return {company: response.data.data.updatedCompany}
    } catch (error) {
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to update company profile')       
@@ -54,7 +54,7 @@ export const getCompanyProfile = createAsyncThunk<
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        return {company: response.data.company}
+        return {company: response.data.data}
     } catch (error) {
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to get company profile')        
@@ -78,7 +78,7 @@ export const uploadProfileImage = createAsyncThunk<
        return rejectWithValue('Invalid response')
      }
  
-     return { company: response.data.company}
+     return { company: response.data.data}
    } catch (error) {
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to upload profile logo')     
@@ -155,7 +155,7 @@ restoreAccountPayload,
     //   name: response.data.company.name
     // }
 
-    return response.data.company
+    return response.data.data.company
   } catch (error) {
     const err = error as AxiosError<{message: string}>
     return rejectWithValue(err.response?.data.message || 'Failed to get details')     
@@ -172,7 +172,7 @@ restoreAccountPayload,
     if(!response.data.success){
       return rejectWithValue('Invalid response')
     }
-    const company = response.data.company
+    const company = response.data.data.company
     if(!company){
       return rejectWithValue('Invalid restore response')
     }

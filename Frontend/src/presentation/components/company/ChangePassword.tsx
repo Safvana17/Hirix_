@@ -56,8 +56,8 @@ const ChangePassword: React.FC= () => {
         return
     }
 
-    const result = await dispatch(changePassword({id, oldPassword: formData.oldPassword, newPassword: formData.newPassword, confirmPassword: formData.confirmPassword}))
-    if(changePassword.fulfilled.match(result)){
+    try{
+      await dispatch(changePassword({id, oldPassword: formData.oldPassword, newPassword: formData.newPassword, confirmPassword: formData.confirmPassword})).unwrap()
       toast('Your password changed successfully.')
       setFormData({
         oldPassword: '',
@@ -65,9 +65,8 @@ const ChangePassword: React.FC= () => {
         confirmPassword: ''
       })
 
-    }else{
-      console.log(result.error.message)
-      toast.error(result.payload || 'Failed to change password')
+    }catch(error){
+      toast.error(typeof error === 'string' ? error : 'Failed to change password')
     }
   }
 

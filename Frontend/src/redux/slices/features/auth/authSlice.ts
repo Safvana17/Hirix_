@@ -140,14 +140,9 @@ export const verifyOtp = createAsyncThunk<
 {user: User, role: UserRole}, {role: UserRole, otp: string, email: string}, {rejectValue: string}
 >('auth/verifyotp', async({role, otp, email}, {rejectWithValue}) => {
    try {
-     const response = await api.post<
-     {
-        candidate?: User;
-        company?: User;
-        admin?: User
-     }>(API_ROUTES.AUTH.VERIFY_OTP(role), {email, otp})
+     const response = await api.post(API_ROUTES.AUTH.VERIFY_OTP(role), {email, otp})
  
-     const user = response.data.candidate || response.data.company || response.data.admin
+     const user = response.data.data || response.data.company || response.data.admin
      if(!user){
         return rejectWithValue('Invalid otp response')
      }

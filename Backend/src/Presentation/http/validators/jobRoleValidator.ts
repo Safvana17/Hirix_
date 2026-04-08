@@ -2,7 +2,7 @@ import { z } from 'zod'
 import jobRoleStatus from '../../../Domain/enums/jobRoleStatus'
 
 
-export const createJobRoleScheama = z.object({
+export const createJobRoleSchema = z.object({
     name: z
         .string()
         .trim()
@@ -24,7 +24,7 @@ export const createJobRoleScheama = z.object({
 })
 
 
-export const EditJobRoleScheama = z.object({
+export const EditJobRoleSchema = z.object({
     name: z
         .string()
         .trim()
@@ -48,11 +48,10 @@ export const JobRoleQuerySchema = z.object({
     search: z.string().optional(),
     status: z.nativeEnum(jobRoleStatus).optional(),
     page: z.coerce.number().default(1),
-    limit: z.coerce.number().default(1)
+    limit: z.coerce.number().default(10)
 })
 
 export const updateJobRoleSchema = z.object({
-    id: z.string().regex(/^[0-9a-fA-F]{24}$/),
     status: z.nativeEnum(jobRoleStatus)
 })
 

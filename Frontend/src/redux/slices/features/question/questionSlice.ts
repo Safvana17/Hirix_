@@ -61,12 +61,14 @@ getAllQuestionsResponse,
         }
         const data = response.data.data
 
+        console.log('from slice,', data)
         return {
             questions: data.questions.map((q: Question) => q),
             totalCount: data.totalCount,
             totalPages: data.totalPages
         }
     } catch (error) {
+        console.log("ERROR OCCURRED:", error)
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get all questions')
     }

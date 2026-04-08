@@ -42,7 +42,7 @@ createJobRolePayload,
             return rejectWithValue('Invalid Response')
         }
 
-        return response.data.jobRole
+        return response.data.data
     } catch (error) {
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to create job role')  
@@ -59,7 +59,7 @@ getAllJobRolesParams | undefined,
         if(!response.data.success){
             return rejectWithValue('Invalid Response')
         }
-        return response.data
+        return response.data.data
     } catch (error) {
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to get all job roles')        
@@ -77,7 +77,7 @@ editJobRolePayload,
             return rejectWithValue('Invalid response')
         }
 
-        return response.data.updatedJobRole
+        return response.data.data.updatedJobRole
     } catch (error) {
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to edit job role')         
@@ -96,8 +96,8 @@ UpdateJobRoleStatusArgs,
         }
 
         return {
-            id: response.data.updatedJobRole.id,
-            status: response.data.updatedJobRole.status
+            id: response.data.data.updatedJobRole.id,
+            status: response.data.data.updatedJobRole.status
         }
     } catch (error) {
        const err = error as AxiosError<{message: string}>
@@ -117,7 +117,7 @@ DeleteJobRoleResponse,
         }
 
         return {
-            id : response.data.updatedJobRole.id
+            id : response.data.data.updatedJobRole.id
         }
     } catch (error) {
        const err = error as AxiosError<{message: string}>

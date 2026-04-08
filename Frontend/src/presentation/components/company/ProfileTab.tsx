@@ -67,11 +67,7 @@ const profileData = useMemo(() => ({
 
       toast.success('Profile updated successfully')
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message)
-      } else {
-        toast.error('Failed to update profile')
-      }
+      toast.error(typeof error === 'string' ? error : 'Failed to upload profile')
     }
   }
 
@@ -85,9 +81,8 @@ const profileData = useMemo(() => ({
     try {
       await dispatch(uploadProfileImage({id: user.id, formData})).unwrap()
       toast.success('Profile image uploaded successfully')
-    } catch (error: unknown) {
-      if(typeof error === 'string')
-         toast.error('failed to upload image') 
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to upload profile pic')
     }
   }
 
