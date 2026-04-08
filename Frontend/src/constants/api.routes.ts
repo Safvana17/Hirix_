@@ -74,6 +74,10 @@ export const API_ROUTES = {
         `/admin/question/${id}`,
       GET_ALL: '/admin/questions'
     },
+    PRACTICE_QUESTION: {
+      GET_ALL: (role: UserRole) =>
+        `/${role}/practice-questions`,
+    },
   },
   COMMON: {
     QUESTION: {

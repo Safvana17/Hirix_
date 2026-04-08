@@ -36,7 +36,7 @@ interface QuestionModalProps {
     initialData: Question | null
     role: UserRole
     onClose: () => void;
-    onSave: (data: QuestionFormData) => void
+    onSave?: (data: QuestionFormData) => void
 }
 
 
@@ -89,7 +89,7 @@ interface QuestionModalProps {
     handleChange('options', [...formData.options, ''])
   }
   const handleSubmit = () => {
-    onSave(formData);
+    if(onSave) onSave(formData);
   };
 
   return (
