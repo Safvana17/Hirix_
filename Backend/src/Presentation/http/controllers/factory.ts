@@ -53,7 +53,7 @@ import { CompanyGetAllQuestionsUsecase } from "../../../Application/company/usec
 import { CompanyEditQuestionUsecase } from "../../../Application/company/usecases/question/company.editQuestion.usecase";
 import { CompanyDeleteQuestionUsecase } from "../../../Application/company/usecases/question/company.deleteQuestion.usecase";
 import { AdminGetAllPracticeQuestionUsecase } from "../../../Application/admin/usecases/question/admin.getAllPracticeQuestions.usecase";
-
+import { CandidateGetAllPracticeQuestionsInputDTO } from "../../../Application/candidate/dtos/practiceLibrary/candidate.getAllPracticeQuestion.dto";
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
 import { OtpRepository } from "../../../Infrastructure/services/OtpStore";
@@ -84,6 +84,8 @@ import { JobRolesController } from "./company/jobRoleController";
 import { CategoryController } from "./admin/categoryController";
 import { AdminQestionController } from "./admin/adminQuestionController";
 import { CompanyQuestionController } from "./company/companyQuestionController";
+import { CandidateGetAllPracticeQuestionsUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getAllPracticeQuestion.usecase";
+import { PracticeLibraryController } from "./candidate/practiceQuestionController";
 
 
 
@@ -159,7 +161,10 @@ const iCandidateGoogleLogin = new CandidateGoogleLoginUsecase(
     iHashService,
     iGoogleAuthService,
 )
-
+//practice
+const iCandidateGetAllPracticeQuestions = new CandidateGetAllPracticeQuestionsUsecase(
+    iQuestionRepository
+)
 
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -455,4 +460,8 @@ export const iCompanyQuestionController = new CompanyQuestionController(
     iCompanyGetAllQuestions,
     iCompanyEditQuestion,
     iCompanyDeleteQuestion
+)
+
+export const iPracticeLibraryController = new PracticeLibraryController (
+    iCandidateGetAllPracticeQuestions
 )

@@ -41,7 +41,6 @@ export const ROUTES = {
     },
 
     CANDIDATE: {
-        BASEE: '/candidate',
         LOGIN: "/candidate/login",
         REGISTER: "/candidate/register",
         GOOGLE: "/candidate/googlelogin",
@@ -49,7 +48,10 @@ export const ROUTES = {
         FORGOT_PASSWORD: '/candidate/forgotpassword',
         RESET_PASSWORD: '/candidate/resetpassword',
         VERIFY_OTP: "/candidate/verifyotp",
-        VERIFY_OTP_RESET: '/candidate/verifyotpforforgotpassword'
+        VERIFY_OTP_RESET: '/candidate/verifyotpforforgotpassword',
+        PRACTICE: {
+            GET_ALL: '/practice-questions'
+        }
     },
 
     ADMIN: {
