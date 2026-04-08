@@ -61,7 +61,13 @@ api.interceptors.response.use(
             return Promise.reject(error)
         }
         
-        if(error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes("/refresh")){
+        if(
+            error.response?.status === 401 && 
+            !originalRequest._retry && 
+            !originalRequest.url?.includes("/refresh") && 
+            !originalRequest.url?.includes("/login") && 
+            !originalRequest.url?.includes("/register")
+        ){
             
             if(isRefreshing){
                 return new Promise((resolve, reject) => {
