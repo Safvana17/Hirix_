@@ -9,11 +9,13 @@ import { getAllQuestionSchema } from "../../validators/questionValidator";
 import { logger } from "../../../../utils/logging/loger";
 import { IAdminEditQuestionUsecase } from "../../../../Application/admin/interfaces/question/iAdmin.editQuestion.usecase";
 import { IAdminDeleteQuestionUsecase } from "../../../../Application/admin/interfaces/question/iAdmin.deleteQuestion.usecase";
+import { IAdminGetAllPracticeQuestionsUsecase } from "../../../../Application/admin/interfaces/question/iAdmin.getAllPracticeQuestion.usecase";
 
 export class AdminQestionController {
     constructor(
         private _createQuestion: IAdminCreateQuestionUsecase,
         private _getAllQuestions: IAdminGetAllQuestionUsecase,
+        private _getAllPracticeQuestions: IAdminGetAllPracticeQuestionsUsecase,
         private _editQuestion: IAdminEditQuestionUsecase,
         private _deleteQuestion: IAdminDeleteQuestionUsecase,
     ) {}
@@ -29,6 +31,12 @@ export class AdminQestionController {
         const questions = await this._getAllQuestions.execute({...parsed, role: req.user.role, userId: req.user.id})
         logger.info(questions, 'from question controller')
         return sendSuccess(res, statusCode.OK, "", questions)
+    })
+
+    getAllPracticeQuestions = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+        const parsed = getAllQuestionSchema.parse(req.query)
+        const practiceQuestions = await this._getAllPracticeQuestions.execute(parsed)
+        return sendSuccess(res, statusCode.OK, '', practiceQuestions)
     })
 
     editQuestion = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {

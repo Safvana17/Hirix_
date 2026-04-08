@@ -80,6 +80,10 @@ export const ROUTES = {
             DELETE: '/question/:id',
             GET_ALL: '/questions',
             BY_ID: '/question/:id'
+        },
+        PRACTICE_QUESTION: {
+            GET_ALL: '/practice-questions',
+            BY_ID: '/practice-question/:id'
         }
     }
 }

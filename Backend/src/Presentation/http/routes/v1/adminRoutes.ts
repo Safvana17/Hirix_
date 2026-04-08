@@ -33,6 +33,7 @@ router.put(ROUTES.ADMIN.CATEGORY.EDIT, authHandler(iTokenService), verifyCsrf,va
 //questions
 router.post(ROUTES.ADMIN.QUESTION.CREATE,authHandler(iTokenService), validate(createQuestionSchema, 'body'), iAdminQuestionController.createQuestion)
 router.get(ROUTES.ADMIN.QUESTION.GET_ALL, authHandler(iTokenService), iAdminQuestionController.getAllQuestions)
+router.get(ROUTES.ADMIN.PRACTICE_QUESTION.GET_ALL, authHandler(iTokenService), iAdminQuestionController.getAllPracticeQuestions)
 router.put(ROUTES.ADMIN.QUESTION.EDIT, authHandler(iTokenService), verifyCsrf, validate(editQuestionSchema, 'body'), iAdminQuestionController.editQuestion)
 router.delete(ROUTES.ADMIN.QUESTION.DELETE, authHandler(iTokenService), verifyCsrf, iAdminQuestionController.deleteQuestion)
 export default router;               

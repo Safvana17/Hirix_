@@ -68,6 +68,46 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
         }
     }
 
+    async findAllPracticeQuestions(query: { search?: string; difficulty?: QuestionDifficulty; type?: QuestionType; category?: string; page: number; limit: number; }): Promise<{ data: QuestionEntity[]; totalCount: number; totalPages: number; }> {
+        const filter: QueryFilter<IQuestion> = {
+            isDeleted: false,
+            isPractice: true
+        }
+
+        if(query.search){
+            filter.$or = [
+                { title: { $regex: query.search, $options: "i" } },
+                { description: {$regex: query.search, $options: 'i' } }
+            ]
+        }
+        if(query.difficulty){
+            filter.difficulty = query.difficulty
+        }
+        if(query.type){
+            filter.type = query.type
+        }
+        if(query.category){
+            filter.categoryId = query.category
+        }
+
+        const skip = (query.page - 1) * query.limit
+        const totalCount = await this._model.countDocuments(filter)
+        const totalPages = Math.ceil(totalCount / query.limit)
+
+        const documents = await this._model  
+            .find(filter)
+            .populate('categoryId', 'name')
+            .skip(skip)
+            .limit(query.limit)
+            .sort({createdAt: -1})
+
+            logger.info(documents, 'from repository')
+        return {
+            data: documents.map(doc => this.mapToEntity(doc)),
+            totalPages,
+            totalCount
+        }
+    }
     protected mapToEntity(doc: IQuestion): QuestionEntity {
         return QuestionMapper.toEntity(doc)
     }

@@ -52,7 +52,7 @@ import { CompanyCreateQuestionUsecase } from "../../../Application/company/useca
 import { CompanyGetAllQuestionsUsecase } from "../../../Application/company/usecases/question/company.getAllQuestions.usecase";
 import { CompanyEditQuestionUsecase } from "../../../Application/company/usecases/question/company.editQuestion.usecase";
 import { CompanyDeleteQuestionUsecase } from "../../../Application/company/usecases/question/company.deleteQuestion.usecase";
-
+import { AdminGetAllPracticeQuestionUsecase } from "../../../Application/admin/usecases/question/admin.getAllPracticeQuestions.usecase";
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -315,6 +315,9 @@ const iAdminEditQuestion = new AdminEditQuestionUsecase(
 const iAdminDeleteQuestion = new AdminDeleteQuestionUsecase(
     iQuestionRepository
 )
+const iAdminGetAllPracticeQuestions = new AdminGetAllPracticeQuestionUsecase(
+    iQuestionRepository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -442,6 +445,7 @@ export const iCategoryController = new CategoryController(
 export const iAdminQuestionController = new AdminQestionController(
     iAdminCreateQuestion,
     iAdminGetAllQuestions,
+    iAdminGetAllPracticeQuestions,
     iAdminEditQuestion,
     iAdminDeleteQuestion,
 )
