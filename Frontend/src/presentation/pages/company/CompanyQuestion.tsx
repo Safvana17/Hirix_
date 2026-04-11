@@ -49,7 +49,7 @@ const CompanyQuestion: React.FC = () => {
 
 
   useEffect(() => {
-     dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page,limit: 10}, role: user!.role}))
+     dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page,limit: 1}, role: user!.role}))
      dispatch(getAllCategories({}))
   }, [dispatch, debouncedSearchTerm, category,difficulty, type, page, user])
 

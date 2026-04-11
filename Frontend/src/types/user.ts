@@ -4,6 +4,8 @@ export interface User {
     email: string;
     name: string;
     role: string
+    isAdminVerified?: boolean
+    isProfileUpdated?: boolean
 }
 
 export interface AuthState {

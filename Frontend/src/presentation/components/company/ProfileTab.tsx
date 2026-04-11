@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { updateProfileSchema } from '../../../lib/validation/settingsValidator'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import { getCompanyProfile, updateProfile, uploadProfileImage } from '../../../redux/slices/features/settingsSlice.ts/companySettingsSlice'
-import { Building2, Upload } from 'lucide-react'
+import { Building2, File, Upload } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 
@@ -16,39 +16,47 @@ type ProfileFormValues = z.infer<typeof updateProfileSchema>
 
 const ProfileTab: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
-
+  const [documentFile, setDocumentFile] = useState<File | null>(null)
 
   const { company } = useSelector((state: RootState) => state.companySettings)
   const { user } = useSelector((state: RootState) => state.auth)
  
   useEffect(() => {
-  if (user?.id) {
-    console.log('Fetching company...')
-    dispatch(getCompanyProfile({id: user.id}))
+    if (user?.id) {
+      console.log('Fetching company...')
+      dispatch(getCompanyProfile({id: user.id}))
+    }
+  }, [user, dispatch])
+
+  const handleDocumnetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if(!file) return
+    setDocumentFile(file)
   }
-}, [user, dispatch])
+  const profileData = useMemo(() => ({
+    name: company?.name || user?.name || '',
+    email: company?.email || user?.email || '',
+    legalName: company?.legalName || '',
+    website: company?.website || '',
+    domain: company?.domain || '',
+    teamSize: company?.teamSize || undefined,
+    about: company?.about || '',
+    streetName: company?.streetName || '',
+    city: company?.city || '',
+    state: company?.state || '',
+    country: company?.country || '',
+    pinCode: company?.pinCode || '',
+    primaryContactName: company?.primaryContactName || '',
+    billingEmail: company?.billingEmail || '',
+    phoneNumber: company?.phoneNumber || '',
+    status: company?.status || 'Active',
+    profileLogo: company?.profileLogo || '',
+    certificateType: company?.certificateType || undefined,
+    certificateNumber: company?.certificateNumber || '',
+    certificate: company?.certificate || ''
+  }), [company, user])
 
-const profileData = useMemo(() => ({
-  name: company?.name || user?.name || '',
-  email: company?.email || user?.email || '',
-  legalName: company?.legalName || '',
-  website: company?.website || '',
-  domain: company?.domain || '',
-  teamSize: company?.teamSize || undefined,
-  about: company?.about || '',
-  streetName: company?.streetName || '',
-  city: company?.city || '',
-  state: company?.state || '',
-  country: company?.country || '',
-  pinCode: company?.pinCode || '',
-  primaryContactName: company?.primaryContactName || '',
-  billingEmail: company?.billingEmail || '',
-  phoneNumber: company?.phoneNumber || '',
-  status: company?.status || 'Active',
-  profileLogo: company?.profileLogo || ''
-}), [company, user])
-
-  const { register, handleSubmit,reset, formState: {errors} } = useForm<ProfileFormValues>({
+  const { register, handleSubmit,reset, watch, formState: {errors} } = useForm<ProfileFormValues>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: profileData
   })
@@ -63,9 +71,19 @@ const profileData = useMemo(() => ({
     if (!user?.id) return
 
     try {
-      await dispatch(updateProfile({ id: user.id, company: data })).unwrap()
+      const formData = new FormData()
+      Object.entries(data).forEach(([key, value]) => {
+        if(value !== undefined && value !== null){
+          formData.append(key, String(value))
+        }
+      })
 
-      toast.success('Profile updated successfully')
+      if(documentFile){
+        formData.append('certificateFile', documentFile)
+      }
+      await dispatch(updateProfile({ id: user.id, company: formData })).unwrap()
+
+      toast.success('Your profile has been updated successfully. It is now under admin review.')
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'Failed to upload profile')
     }
@@ -86,10 +104,9 @@ const profileData = useMemo(() => ({
     }
   }
 
+  console.log('company: ', company)
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-
-      {/* ================= BASIC ================= */}
       <div className='bg-white rounded-xl p-8'>
         <h2 className="text-xl font-bold text-gray-800 mb-4">Basic Information</h2>
 
@@ -154,9 +171,9 @@ const profileData = useMemo(() => ({
           <div className="space-y-2">
             <label htmlFor="teamSize">Team Size</label>
             <input {...register('teamSize', {
-    valueAsNumber: true,
-    setValueAs: (v) => v === '' ? undefined : Number(v)
-  })} id="teamSize" type="number"
+                valueAsNumber: true,
+                setValueAs: (v) => v === '' ? undefined : Number(v)
+              })} id="teamSize" type="number"
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#7c5a1a]"
               placeholder="e.g. 50"
             />
@@ -174,7 +191,113 @@ const profileData = useMemo(() => ({
         </div>
       </div>
 
-      {/* ================= ADDRESS ================= */}
+      <div className="bg-white rounded-2xl p-8 shadow-sm border">
+        <h2 className="text-xl font-semibold text-gray-800 mb-6">Documents</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-600">Document Type</label>
+            <select
+              {...register('certificateType')}
+              className="w-full border border-gray-200 bg-gray-50 px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#7c5a1a] outline-none"
+            >
+              <option value="">Select document type</option>
+              <option value="GST">GST Certificate</option>
+              <option value="COI">Certificate of Incorporation</option>
+            </select>
+            {errors.certificateType && (
+              <p className="text-red-500 text-sm">{errors.certificateType.message}</p>
+            )}
+          </div>
+
+          {/* GST Number */}
+          {watch('certificateType') === 'GST' && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-600">GST Number</label>
+              <input
+                {...register('certificateNumber')}
+                className="w-full border border-gray-200 bg-gray-50 px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#7c5a1a] outline-none"
+                placeholder="Enter GST number"
+              />
+              {errors.certificateNumber && (
+                <p className="text-red-500 text-sm">{errors.certificateNumber.message}</p>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Upload Area */}
+        <div className="mt-6">
+          <label className="text-sm font-medium text-gray-600">Upload Document</label>
+
+          <div className="mt-2 border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-[#7c5a1a] transition cursor-pointer">
+            <input
+              type="file"
+              accept=".pdf,image/*"
+              onChange={handleDocumnetChange}
+              className="hidden"
+              id="certificateUpload"
+            />
+
+            <label htmlFor="certificateUpload" className="cursor-pointer flex flex-col items-center gap-2">
+              <Upload className="w-6 h-6 text-gray-400" />
+              <p className="text-sm text-gray-600">
+                Click to upload or drag & drop
+              </p>
+              <p className="text-xs text-gray-400">
+                PDF or Image (Max 5MB)
+              </p>
+            </label>
+          </div>
+
+          {/* Selected File Preview */}
+          {documentFile && (
+            <div className="mt-3 flex items-center justify-between bg-gray-50 border rounded-lg px-3 py-2">
+              <span className="text-sm text-gray-700 truncate">
+                {documentFile.name}
+              </span>
+              <button
+                type="button"
+                onClick={() => setDocumentFile(null)}
+                className="text-red-500 text-xs hover:underline"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+        </div>
+        {company?.certificate && (
+          <div className="mt-6">
+            <label className="text-sm font-medium text-gray-600">Current Document</label>
+
+            <div className="mt-2 flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="bg-green-100 p-2 rounded-lg">
+                  <File className='w-3 h-3' />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-800">
+                    Uploaded Document
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Click below to view
+                  </p>
+                </div>
+              </div>
+
+              <a
+                href={company.certificate}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-blue-600 hover:underline font-medium"
+              >
+                View
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className='bg-white rounded-xl p-8'>
         <h2 className="text-xl font-bold text-gray-800 pt-4 mb-5">Address Details</h2>
 
@@ -228,7 +351,6 @@ const profileData = useMemo(() => ({
         </div>
       </div>
 
-      {/* ================= CONTACT ================= */}
       <div className='bg-white rounded-xl p-8'>
         <h2 className="text-xl font-bold text-gray-800 pt-4">Contact Information</h2>
 
@@ -273,7 +395,6 @@ const profileData = useMemo(() => ({
         </div>
       </div>
 
-    {/* ================= SUBSCRIPTION ================= */}
     <div className='bg-white rounded-xl p-8'>
     <h2 className="text-xl font-bold text-gray-800 pt-4">Subscription & Limits</h2>
 
@@ -323,7 +444,6 @@ const profileData = useMemo(() => ({
     </div>
     </div>
 
-      {/* ================= SUBMIT ================= */}
       <div className="pt-6 flex justify-end">
         <button
           type="submit"

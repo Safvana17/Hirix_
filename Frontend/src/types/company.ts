@@ -24,6 +24,9 @@ export interface CompanySettings extends Company {
   pinCode?: string
   primaryContactName?: string
   billingEmail?: string
+  certificateType?: 'GST' | 'COI';
+  certificateNumber: string;
+  certificate: string;
   subscriptionPlan?: string
   maxCandidates?: number
   maxTestPerMonth?: string

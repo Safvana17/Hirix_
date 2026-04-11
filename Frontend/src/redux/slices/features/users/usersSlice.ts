@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import api from "../../../../lib/axios";
-import { type UpdateStatusArgs, type Company, type FetchCompaniesParams, type FetchCompaniesResponse, type UpdateStatusPayload, type ApproveCompanyArgs, type RejectCompanyArgs } from "../../../../types/company";
+import { type UpdateStatusArgs, type Company, type FetchCompaniesParams, type FetchCompaniesResponse, type UpdateStatusPayload, type ApproveCompanyArgs, type RejectCompanyArgs, type CompanySettings } from "../../../../types/company";
 import type { Candidate, FetchCandidatesParams, FetchCandidatesResponse } from "../../../../types/candidate";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import { ROLES } from "../../../../constants/role";
@@ -11,7 +11,7 @@ interface usersState {
     error: string | null;
     candidates: Candidate[];
     companies: Company[];
-    selectedCompany: Company | null;
+    selectedCompany: CompanySettings | null;
     pagination: {
         users: {
             totalPages: number;
@@ -106,9 +106,9 @@ ApproveCompanyArgs,
         }
         console.log(response.data)
         return {
-            id: response.data.company.id,
-            status: response.data.company.status,
-            role: response.data.company.role
+            id: response.data.data.id,
+            status: response.data.data.status,
+            role: response.data.data.role
         }
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -129,9 +129,9 @@ RejectCompanyArgs,
         console.log(response.data)
        
         return {
-            id: response.data.company.id,
-            status: response.data.company.status,
-            role: response.data.company.role
+            id: response.data.data.id,
+            status: response.data.data.status,
+            role: response.data.data.role
         }
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -140,7 +140,7 @@ RejectCompanyArgs,
 })
 
 export const getCompanyDetail = createAsyncThunk<
-{company: Company},
+{company: CompanySettings},
 {id: string},
 {rejectValue: string}
 >('/admin/getCompanyDetails', async({id}, {rejectWithValue}) => {
@@ -149,7 +149,7 @@ export const getCompanyDetail = createAsyncThunk<
      if(!response){
          return rejectWithValue('Invalid response')
      }
-     return response.data
+     return { company: response.data.data}
    } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data?.message || 'Failed to fetch company')       

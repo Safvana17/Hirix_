@@ -14,7 +14,7 @@ type TabType = 'profile'| 'notifications'| 'change-Password'| 'delete-Account'
 
 const CompanyProfile: React.FC = () => {
 
-   const [activeTab, setActiveTab] = useState('profile')
+   const [activeTab, setActiveTab] = useState<TabType>('profile')
    const navigate = useNavigate()
 
    const tabs: {id: TabType, label: string} [] = [
@@ -35,6 +35,7 @@ const CompanyProfile: React.FC = () => {
                 onClick={() => {
                   if(tab.id === 'change-Password'){
                     navigate('/company/password')
+                    return
                   }
                     setActiveTab(tab.id)
                   

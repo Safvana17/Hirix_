@@ -1,7 +1,8 @@
 import React from 'react'
-import type { UserRole } from '../../constants/role';
+import { ROLES, type UserRole } from '../../constants/role';
 import { useAuth } from '../../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 interface RoleRouteProps {
     children: React.ReactNode;
@@ -28,6 +29,15 @@ const RoleRoute: React.FC<RoleRouteProps>= ({children, allowedRoles}) => {
         console.log('user from role route: ', user)
         console.log('moving to home page')
         return <Navigate to='/' replace />
+    }
+    if(user.role === ROLES.COMPANY && !user.isProfileUpdated && location.pathname !== '/company/settings'){
+        toast.error('Please update your profile')
+        return <Navigate to='/company/settings' replace />
+    }
+
+    if(user.role === ROLES.COMPANY && !user.isAdminVerified && location.pathname !== '/company/settings'){
+        toast.error('Please wait for admin approval.')
+        return <Navigate to='/company/settings' replace />
     }
     return (
       <>{children}</>

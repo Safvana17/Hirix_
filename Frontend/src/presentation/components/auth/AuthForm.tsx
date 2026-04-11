@@ -74,12 +74,12 @@ const AuthForm: React.FC<AuthFormProps> = ({mode, role}) => {
             }))
 
             if(registerUser.fulfilled.match(result)){
-                if(role === 'company') {
-                    toast.success('Registration submitted! Please wait for admin approval. You will get emil once approved.', {duration: 6000})
-                }else{
+                // if(role === 'company') {
+                //     toast.success('Registration submitted! Please wait for admin approval. You will get emil once approved.', {duration: 6000})
+                // }else{
                     toast.success('Registration successful. Please verify your OTP')
                     navigate(`/${role}/verifyotp`, {state: {email: formData.email, role}})
-                }
+                
             }else{
                 toast.error(result.payload || 'Registarion failed')
             }

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { changePasswordPayload, CompanySettings, deleteAccountPayload, restoreAccountPayload, UpdateCompanyProfilePayload } from "../../../../types/company";
+import type { changePasswordPayload, CompanySettings, deleteAccountPayload, restoreAccountPayload } from "../../../../types/company";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -27,11 +27,19 @@ const initialState: settingsState = {
 
 export const updateProfile = createAsyncThunk<
 {company: CompanySettings},
-{id: string, company: UpdateCompanyProfilePayload},
+{id: string, company: FormData},
 {rejectValue: string}
 > ('settings/updateProfile', async({id, company}, {rejectWithValue}) => {
    try {
-     const response = await api.put(API_ROUTES.COMPANY.PROFILE(id), company)
+     const response = await api.put(
+        API_ROUTES.COMPANY.PROFILE(id), 
+        company,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      )
  
      if(!response.data.success){
          return rejectWithValue('Invalid response')

@@ -45,9 +45,9 @@ export const updateProfileSchema = z.object({
     .optional(),
 
   streetName: z.string().trim().optional(),
-  country: z.string().trim().optional(),
-  state: z.string().trim().optional(),
-  city: z.string().trim().optional(),
+  country: z.string().trim().min(1, 'Country is required'),
+  state: z.string().trim().min(1, 'state is required'),
+  city: z.string().trim().min(1, 'city is required'),
 
   pinCode: z
     .string()
@@ -55,7 +55,7 @@ export const updateProfileSchema = z.object({
     .regex(/^[0-9]{6}$/, 'Pin code must be 6 digits')
     .optional(),
 
-  primaryContactName: z.string().trim().optional(),
+  primaryContactName: z.string().trim().min(1, 'Primary contact name is required'),
 
   email: z
     .string()
@@ -68,6 +68,18 @@ export const updateProfileSchema = z.object({
     .trim()
     .email('Invalid email')
     .optional(),
+  certificateType: z.enum(['GST', 'COI'], {message: 'Select document type'}),
+  certificateNumber: z.string().optional(),
+  certificate: z.string().optional()
+})
+.refine((data) => {
+  if(data.certificateType === 'GST'){
+    return !!data.certificateNumber
+  }
+  return true
+}, {
+  message: 'GST number is required',
+  path: ['certificateNumber']
 })
 
 export const changePasswordSchema = z.object({
