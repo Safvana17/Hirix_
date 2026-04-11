@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { ICreateJobRolesUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRols.create.usecase";
-import { JobRoleQuerySchema } from "../../validators/jobRoleValidator";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { IGetAllJobRolesUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRoles.getAll.usecase";
@@ -9,6 +8,7 @@ import { IUpdateJobRoleStatusUsecase } from "../../../../Application/company/int
 import { IDeleteJobRoleUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRole.delete.usecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
 import { sendSuccess } from "../../utils/apiResponse";
+import { JobRoleQuerySchema } from "../../validators/jobRoleValidator";
 
 export class JobRolesController {
     constructor (
@@ -26,14 +26,15 @@ export class JobRolesController {
     })
     getAllJobRoles = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const parsed = JobRoleQuerySchema.parse(req.query)
-        const { jobRoles, totalCount, totalPages } = await this._getAllJobRoles.execute({...parsed, userId: req.user.id})
+        // validate(JobRoleQuerySchema, req.query)
+        const userId = req.user.id
+        // const query = req.query as unknown as { page: number, limit: number, search: string, status: string}
+        const { jobRoles, totalCount, totalPages } = await this._getAllJobRoles.execute({...parsed, userId})
         return sendSuccess(res, statusCode.OK, '', {jobRoles, totalCount, totalPages})
     })
 
     editJobRole = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const jobRoleId = Array.isArray(req.params.id) 
-            ? req.params.id[0]
-            : req.params.id
+        const jobRoleId = req.params.id
         const updatedJobRole = await this._editJobRole.execute({...req.body, id: jobRoleId, userId: req.user.id})
         return sendSuccess(res, statusCode.OK, '', {updatedJobRole})
     })

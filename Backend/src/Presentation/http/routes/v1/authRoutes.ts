@@ -24,6 +24,7 @@ router.post(ROUTES.CANDIDATE.GOOGLE, validate(googleLoginSchema, 'body'), iCandi
 
 //company
 router.post(ROUTES.COMPANY.REGISTER, validate(registerSchema, 'body'), iCompanyAuthController.register)
+router.post(ROUTES.COMPANY.VERIFY_OTP, validate(otpSchema, 'body'), iCompanyAuthController.verifyOtp)
 router.post(ROUTES.COMPANY.VERIFY_EMAIL, iCompanyAuthController.verifyEmail)
 router.post(ROUTES.COMPANY.RESEND_OTP, validate(resendOtpSchema, 'body'), iCompanyAuthController.resendOtp)
 router.post(ROUTES.COMPANY.LOGIN, validate(loginSchema, 'body'), iCompanyAuthController.login)

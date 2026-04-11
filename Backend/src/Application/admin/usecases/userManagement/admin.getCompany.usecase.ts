@@ -1,4 +1,3 @@
-import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
@@ -25,7 +24,25 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
             id: company.getId(),
             name: company.getName(),
             email: company.getEmail(),
-            status: company.getIsBlocked() ? UserStatus.BLOCKED : UserStatus.ACTIVE
+            status: company.status,
+            teamSize: company.teamSize,
+            phoneNumber: company.phoneNumber,
+            pinCode: company.pinCode,
+            primaryContactEmail: company.getEmail(),
+            primaryContactName: company.primaryContactName,
+            profileLogo: company.profileLogo,
+            legalName: company.legalName,
+            domain: company.domain,
+            website: company.website,
+            about: company.about,
+            streetName:company.streetName,
+            state: company.state,
+            country: company.country,
+            city: company.city,
+            billingEmail: company.billingEmail,
+            certificateType: company.certificateType,
+            certificateNumber: company.certificateNumber,
+            certificate: company.certificate
         }
     }
 }

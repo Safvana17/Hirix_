@@ -6,15 +6,15 @@ import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { upload } from "../../middlewares/imageUpload";
 import { validate } from "../../middlewares/validate";
 import { createQuestionSchema, editQuestionSchema } from "../../validators/questionValidator";
-import { createJobRoleSchema, EditJobRoleSchema, updateJobRoleSchema } from "../../validators/jobRoleValidator";
-import { changePasswordSchema, deleteAccountSchema, restoreAccountSchema, sendRestoreLinkSchema, updateProfileSchema } from "../../validators/settingsValidator";
+import { createJobRoleSchema, EditJobRoleSchema, updateJobRoleSchema} from "../../validators/jobRoleValidator";
+import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updateProfileSchema } from "../../validators/settingsValidator";
 
 const router = Express.Router()
 
 //settings
 
 router.get(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), iCompanySettingsController.getCompanyProfile)
-router.put(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), verifyCsrf, validate(updateProfileSchema, 'body'), iCompanySettingsController.updateProfile)
+router.put(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), verifyCsrf,upload.single('certificateFile'), validate(updateProfileSchema, 'body'), iCompanySettingsController.updateProfile)
 router.put(ROUTES.COMPANY.SETTINGS.PROFILE_IMAGE, authHandler(iTokenService), verifyCsrf, upload.single('profileLogo'), iCompanySettingsController.uploadProfileImage)
 router.put(ROUTES.COMPANY.SETTINGS.PASSWORD, authHandler(iTokenService),verifyCsrf, validate(changePasswordSchema, 'body'), iCompanySettingsController.changePassword)
 router.put(ROUTES.COMPANY.SETTINGS.ACCOUNT, authHandler(iTokenService), verifyCsrf, validate(deleteAccountSchema, 'body'), iCompanySettingsController.deleteAccount)

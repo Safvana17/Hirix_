@@ -33,8 +33,9 @@ export class CompanySettingsController {
     updateProfile = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const companyId = Array.isArray(req.params.id)
             ? req.params.id[0]
-            : req.params.id            
-        const updatedCompany = await this._updateCompanyProfileUsecase.execute({id: companyId,...req.body})
+            : req.params.id    
+        const certificateFile = req.file        
+        const updatedCompany = await this._updateCompanyProfileUsecase.execute({id: companyId, certificateFile , ...req.body})
         return sendSuccess(res, statusCode.OK, settingsMessages.success.COMPANY_PROFILE_UPDATED, {updatedCompany})
     })
 

@@ -39,6 +39,7 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
                 false,
                 UserStatus.PENDING,
                 false,
+                false,
                 googleCompanyInfo.googleId
             )
 
@@ -99,7 +100,9 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
                 id: companyId,
                 email: company.getEmail(),
                 name: company.getName(),
-                role: company.getRole()
+                role: company.getRole(),
+                isAdminVerified: company.isAdminVerified,
+                isProfileUpdated: company.isProfileUpdated
             }
         }
     }

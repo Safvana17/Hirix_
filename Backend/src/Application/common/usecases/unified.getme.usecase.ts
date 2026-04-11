@@ -23,25 +23,37 @@ export class UnifiedGetMeUsecase implements IUnifiedGetMeUsecase{
     async execute(request: UnifiedGetMeInputDTO): Promise<UnifiedGetMeOutputDTO> {
         const repository = this._repositoryRegistry.get(request.role)
 
-        if(!repository){
+        if (!repository) {
             throw new AppError(authMessages.error.UNAUTHORIZED, statusCode.UNAUTHORIZED)
         }
 
         const user = await repository.findById(request.id)
-        if(!user){
+
+        if (!user) {
             throw new AppError(authMessages.error.UNAUTHORIZED, statusCode.UNAUTHORIZED)
         }
 
-        if(user.getIsBlocked()){
+        if (user.getIsBlocked()) {
             throw new AppError(authMessages.error.COMPANY_BLOCKED, statusCode.FORBIDDEN)
         }
-        const id = user.id
-        const userId = id!
-        return {
-                id: userId,
-                name: user.getName(),
-                email: user.getEmail(),
-                role: user.getRole()
+
+        const response: UnifiedGetMeOutputDTO = {
+            id: user.id!,
+            name: user.getName(),
+            email: user.getEmail(),
+            role: user.getRole(),
+            isAdminVerified: true,      
+            isProfileUpdated: true,     
         }
+
+        if (request.role === userRole.Company) {
+            const company = user as CompanyEntity
+
+            response.isAdminVerified = company.isAdminVerified
+            response.isProfileUpdated = company.isProfileUpdated
+        }
+
+        return response
     }
+    
 }

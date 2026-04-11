@@ -19,8 +19,8 @@ export class CreateJobRolesUsecase implements ICreateJobRolesUsecase {
      * @returns new job role
      */
     async execute(request: CreateJobRolesInputDTO): Promise<CreateJobRolesOutputDTO> {
-        const existing = await this._jobRolesRepository.findActiveByName(request.name)
-        if(existing){
+        const existing = await this._jobRolesRepository.findActiveByName(request.name, request.userId)
+        if(existing ){
             throw new AppError(JobRoleMessages.error.ALREADY_EXIST, statusCode.CONFLICT)
         }
 

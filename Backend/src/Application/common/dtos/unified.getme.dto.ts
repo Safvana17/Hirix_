@@ -9,5 +9,7 @@ export interface UnifiedGetMeOutputDTO {
         id: string
         name: string;
         email: string;
-        role: userRole
+        role: userRole;
+        isAdminVerified?: boolean;
+        isProfileUpdated?: boolean
 }

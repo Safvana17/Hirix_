@@ -10,9 +10,10 @@ export class JobRolesRepository extends BaseRepository<JobRolesEntity, IJobRoles
         super(JobRolesModel)
     }
 
-    async findActiveByName(name: string): Promise<JobRolesEntity | null> {
+    async findActiveByName(name: string, companyId: string): Promise<JobRolesEntity | null> {
         const jobRole = await this._model.findOne({
             name: {$regex: `^${name}$`, $options: "i"},
+            createdById: companyId,
             isActive: true,
             isDeleted: false
         })

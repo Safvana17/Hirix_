@@ -53,7 +53,7 @@ import { CompanyGetAllQuestionsUsecase } from "../../../Application/company/usec
 import { CompanyEditQuestionUsecase } from "../../../Application/company/usecases/question/company.editQuestion.usecase";
 import { CompanyDeleteQuestionUsecase } from "../../../Application/company/usecases/question/company.deleteQuestion.usecase";
 import { AdminGetAllPracticeQuestionUsecase } from "../../../Application/admin/usecases/question/admin.getAllPracticeQuestions.usecase";
-import { CandidateGetAllPracticeQuestionsInputDTO } from "../../../Application/candidate/dtos/practiceLibrary/candidate.getAllPracticeQuestion.dto";
+import { CompanyVerifyRegisterOtpUsecase } from "../../../Application/company/usecases/auth/company.verifyRegisterOtp.usecase";
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
 import { OtpRepository } from "../../../Infrastructure/services/OtpStore";
@@ -169,7 +169,10 @@ const iCandidateGetAllPracticeQuestions = new CandidateGetAllPracticeQuestionsUs
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
       iCompanyRepository,
-      iHashService
+      iHashService,
+      iOtpService,
+      iOtpRepository,
+      iMailService
 )
 
 const iResendOtpCompny = new ResendOtpCompanyUsecase(
@@ -186,6 +189,11 @@ const iLoginCompany = new LoginCompanyUsecase(
     iMailService
 )
 
+const iCompanyVerifyRegisterOtp = new CompanyVerifyRegisterOtpUsecase(
+    iCompanyRepository,
+    iOtpRepository,
+    iOtpService
+)
 const iCompanyForgotPassword = new CompanyForgotPasswordUsecase(
     iCompanyRepository,
     iMailService,
@@ -404,7 +412,8 @@ export const iCompanyAuthController = new CompanyAuthController(
     iCompanyVerifyOtpForForgotPassword,
     iCompanyResetPassword,
     iCompanyGoogleLogin,
-    iVerifyRegisterCompany
+    iVerifyRegisterCompany,
+    iCompanyVerifyRegisterOtp
 )
 
 export const iAdminAuthController = new AdminAuthController(

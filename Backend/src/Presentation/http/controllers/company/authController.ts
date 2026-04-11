@@ -14,6 +14,7 @@ import { IVerifyRegisterCompanyUsecase } from "../../../../Application/company/i
 import { ICompanyVerifyOtpForForgotPasswordUsease } from "../../../../Application/company/interfaces/auth/ICompany.verifyOtpForForgotpassword.usecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
 import { sendSuccess } from "../../utils/apiResponse";
+import { IVerifyRegisterCompanyOtpUsecase } from "../../../../Application/company/interfaces/auth/ICompany.verifyRegisterOtp.usecase";
 
 export class CompanyAuthController {
     constructor(
@@ -24,12 +25,18 @@ export class CompanyAuthController {
         private _verifyOtpForForgotPassword: ICompanyVerifyOtpForForgotPasswordUsease,
         private _companyResetPasswordUsecase: ICompanyResetPasswordUsecase,
         private _companyGoogleLogin: ICompanyGoogleLoginUsecase,
-        private _verifyRegisterompany: IVerifyRegisterCompanyUsecase
+        private _verifyRegisterompany: IVerifyRegisterCompanyUsecase,
+        private _verifyCompanyRegisterOtp: IVerifyRegisterCompanyOtpUsecase,
     ) {}
 
     register = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         await this._registerUsecase.execute(req.body)
         return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_REGISTER_PENDING)
+    })
+
+    verifyOtp = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const savedCompany = await this._verifyCompanyRegisterOtp.execute(req.body)
+        return sendSuccess(res, statusCode.OK, '', {savedCompany})
     })
 
     verifyEmail = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

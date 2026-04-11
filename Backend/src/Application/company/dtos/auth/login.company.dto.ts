@@ -11,6 +11,8 @@ export interface LoginCompanyOutputDTO {
         id: string,
         name: string,
         email: string,
-        role: string
+        role: string,
+        isAdminVerified: boolean;
+        isProfileUpdated: boolean;
     }
 }

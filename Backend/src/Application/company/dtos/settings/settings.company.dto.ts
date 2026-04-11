@@ -19,6 +19,9 @@ export interface UpdateCompanyProfileInputDTO {
   primaryContactName?: string
   primaryContactEmail?: string
   billingEmail?: string
+  certificateType: 'GST' | 'COI'
+  certificateNumber?: string
+  certificateFile: FileUpload
 }
 
 export interface UpdateCompanyProfileOutputDTO {

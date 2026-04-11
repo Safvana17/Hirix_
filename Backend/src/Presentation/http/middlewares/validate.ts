@@ -19,7 +19,7 @@
 // };
 
 import { Request, Response, NextFunction } from "express";
-import { ZodSchema, z } from "zod";
+import { ZodSchema, ZodTypeAny, z } from "zod";
 
 type RequestProperty = "body" | "query" | "params";
 
@@ -71,5 +71,56 @@ export const validate =
 //     req.params = data.params;
 
 //     next();
+//   };
+// };
+
+
+// import { Request, Response, NextFunction } from 'express';
+// import { AnyZodObject } from 'zod';
+
+// export const validateRequest = (schemas: { body?: ZodSchema, query?: ZodSchema, params?: ZodSchema }) => {
+//   return async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       if (schemas.params) req.params = await schemas.params.parseAsync(req.params) as any;
+//       if (schemas.query) req.query = await schemas.query.parseAsync(req.query);
+//       if (schemas.body) req.body = await schemas.body.parseAsync(req.body);
+      
+//       next();
+//     } catch (error) {
+//       // Handle Zod validation error
+//       return res.status(400).json({ error: error }); 
+//     }
+//   };
+// };
+
+
+
+// import { ZodObject } from 'zod';
+
+// export const validateRequest = (schema: ZodObject) => {
+//   return async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       // It's recommended to use parseAsync in case any schemas use async refinements
+//       const parsed = await schema.parseAsync({
+//         params: req.params,
+//         query: req.query,
+//         body: req.body
+//       });
+
+//       // Cast parsed to safely access optional properties
+//       const { params, query, body } = parsed as {
+//         params?: typeof req.params;
+//         query?: typeof req.query;
+//         body?: typeof req.body;
+//       };
+
+//       if (params) req.params = params;
+//       if (query) req.query = query;
+//       if (body) req.body = body;
+
+//       next();
+//     } catch (error) {
+//       next(error);
+//     }
 //   };
 // };

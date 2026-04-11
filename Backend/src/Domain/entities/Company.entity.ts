@@ -10,6 +10,10 @@ export default class CompanyEntity extends UserEntity{
     teamSize?: number;
     about?: string;
 
+    certificateType?: 'GST' | 'COI';
+    certificateNumber?: string;
+    certificate?: string;
+
     phoneNumber?: string;
     streetName?: string;
     country?: string;
@@ -26,12 +30,14 @@ export default class CompanyEntity extends UserEntity{
     deleteFeedback?: string;
     status: UserStatus;
     deletedAt?: Date | null;
+    isProfileUpdated: boolean;
 
-    constructor(id: string, name: string, email: string, password: string, isVerified: boolean ,isBlocked: boolean,isAdminVerified: boolean, status: UserStatus,isDeleted: boolean, googleId?: string, refreshTokens: string[] = []){
+    constructor(id: string, name: string, email: string, password: string, isVerified: boolean ,isBlocked: boolean,isAdminVerified: boolean, status: UserStatus,isDeleted: boolean,isProfileUpdated: boolean, googleId?: string, refreshTokens: string[] = []){
         super(id, name, email, password, isVerified, isBlocked, userRole.Company, googleId, refreshTokens)
         this.isAdminVerified = isAdminVerified;
         this.status = status;
         this.isDeleted = isDeleted;
+        this.isProfileUpdated = isProfileUpdated
     }
 
     public getIsAdminVerified(): boolean{

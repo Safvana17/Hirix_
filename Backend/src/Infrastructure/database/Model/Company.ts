@@ -12,6 +12,9 @@ export interface ICompany extends Document {
     role: userRole;
     status: UserStatus;
     isAdminVerified: boolean;
+    certificateType: 'GST' | 'COI';
+    certificate: string;
+    certificateNumber: string;
     googleId: string;
     isBlocked: boolean;
     profileLogo: string
@@ -30,6 +33,7 @@ export interface ICompany extends Document {
     website: string;
     primaryContactName: string;
     billingEmail: string;
+    isProfileUpdated: boolean;
     isDeleted: boolean;
     deleteReason: string;
     deleteFeedback: string;
@@ -68,6 +72,16 @@ const companySchema: Schema<ICompany> = new Schema({
     isAdminVerified: {
         type: Boolean,
         default: false
+    },
+    certificateType: {
+        type: String,
+        default: 'GST'
+    },
+    certificate: {
+        type: String
+    },
+    certificateNumber: {
+        type: String
     },
     isBlocked: {
        type: Boolean,
@@ -126,6 +140,10 @@ const companySchema: Schema<ICompany> = new Schema({
     lastActive: {
         type: Date,
         default: Date.now
+    },
+    isProfileUpdated: {
+        type: Boolean,
+        default: false
     },
     isDeleted: {
         type: Boolean,

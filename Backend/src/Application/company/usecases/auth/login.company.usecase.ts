@@ -51,9 +51,9 @@ export class LoginCompanyUsecase implements ILoginCompanyUsecase{
             throw new AppError(authMessages.error.COMPANY_BLOCKED, statusCode.FORBIDDEN)
         }
 
-        if(company.status === UserStatus.PENDING) {
-            throw new AppError(authMessages.success.COMPANY_REGISTER_PENDING, statusCode.FORBIDDEN)
-        }
+        // if(company.status === UserStatus.PENDING) {
+        //     throw new AppError(authMessages.success.COMPANY_REGISTER_PENDING, statusCode.FORBIDDEN)
+        // }
 
         if(company.status === UserStatus.REJECTED) {
             throw new AppError(authMessages.error.COMPANY_REJECTED, statusCode.FORBIDDEN)
@@ -87,7 +87,9 @@ export class LoginCompanyUsecase implements ILoginCompanyUsecase{
                 id: id,
                 name: company.getName(),
                 email: company.getEmail(),
-                role: company.getRole()
+                role: company.getRole(),
+                isAdminVerified: company.isAdminVerified,
+                isProfileUpdated: company.isProfileUpdated
             }
         }
     }

@@ -10,6 +10,7 @@ export const ROUTES = {
       BASE: "/company",
       LOGIN: "/company/login",
       REGISTER: "/company/register",
+      VERIFY_OTP: "/company/verifyotp",
       GOOGLE: "/company/googlelogin",
       RESEND_OTP: "/company/resendotp",
       FORGOT_PASSWORD: '/company/forgotpassword',

@@ -3,6 +3,7 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { logger } from "../../../../utils/logging/loger";
 import { EditJobRolesInputDTO, EditJobRolesOutputDTO } from "../../dtos/jobRoles/jobRoles.edit.dto";
 import { IEditJobRoleUsecase } from "../../interfaces/jobRoles/iJobRoles.edit.usecase";
 
@@ -27,8 +28,11 @@ export class EditJobRoleUsecase implements IEditJobRoleUsecase {
         if(jobRole.createdById !== request.userId){
             throw new AppError(JobRoleMessages.error.CANNOT_EDIT_OTHER_COMPANY_JOBROLE, statusCode.FORBIDDEN)
         }
-        const existing = await this._jobRoleRepository.findActiveByName(request.name)
-        if(existing && existing.id !== request.id){
+        
+        const existing = await this._jobRoleRepository.findActiveByName(request.name, request.userId)
+        logger.info(existing, 'existing')
+        logger.info(jobRole, 'edited')
+        if(existing && existing.id.toString() !== jobRole.id.toString()){
             throw new AppError(JobRoleMessages.error.ALREADY_EXIST, statusCode.CONFLICT)
         }
 

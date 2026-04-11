@@ -31,7 +31,7 @@ export const updateProfileSchema = z.object({
     .optional(),
 
   teamSize: z
-    .number()
+    .coerce.number()
     .min(1, 'Team size must be at least 1'),
 
   about: z
@@ -70,6 +70,17 @@ export const updateProfileSchema = z.object({
     .trim()
     .email('Invalid email')
     .optional(),
+  certificateType: z.enum(['GST', 'COI']),
+  certificateNumber: z.string().trim().optional(),
+})
+.refine((data) => {
+  if(data.certificateType === 'GST'){
+    return !!data.certificateNumber && data.certificateNumber?.length === 15
+  }
+  return true
+},{
+  message: 'Invalid GST number',
+  path: ["certificateNumber"]
 })
 
 export const getCompanySchema = z.object({
