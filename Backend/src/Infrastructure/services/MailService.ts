@@ -28,12 +28,12 @@ export class MailService implements IMailService{
         })
     }
 
-    async sendRejectionEmail(email: string, companyName: string, reason: string): Promise<void> {
+    async sendRejectionEmail(email: string, companyName: string, reason: string, link: string): Promise<void> {
         await mailTransporter.sendMail({
             from: `"Hirix <${env.HIRIX_EMAIL}>`,
             to: email,
             subject: 'Update on your Hirix Registration',
-            html: CompanyRegisterRejectionEmailTemplate(companyName, reason)
+            html: CompanyRegisterRejectionEmailTemplate(companyName, reason, link)
         })
     }
 

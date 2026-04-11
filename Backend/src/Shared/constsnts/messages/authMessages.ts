@@ -91,6 +91,7 @@ export const authMessages = {
         COMPANY_REJECTED: 'Your account registration has been rejected by the admin.',
         EMAIL_VERIFICATION_REQUIRED: 'Email verification required. A verification link has been sent to your email.',
 
+        INVALID_CERTIFICATE_NUMBER: 'Invalid certificate number',
         // Admin Errors
         ADMIN_NOT_FOUND: "Admin not found"
     }

@@ -11,6 +11,7 @@ import SummeryCard from '../../components/layout/SummeryCard'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
 
 
+
 type CardProps = {
   title: string
   children: React.ReactNode
@@ -46,7 +47,7 @@ const AdminCompanyDetailPage: React.FC = () => {
   const { selectedCompany } = useSelector(
     (state: RootState) => state.userSlice
   )
-
+  const [isReasonModalOpen, setIsReasonModalOpen] = useState(false)
   const [rejectReason, setRejectReason] = useState<string>('')
 
   useEffect(() => {
@@ -106,6 +107,17 @@ const AdminCompanyDetailPage: React.FC = () => {
     })
   }
 
+  const handleApproveCompany = (id: string) => {
+    openModal({
+      title: 'Approve Company',
+      message: 'Approve this company?',
+      type: 'info',
+      onConfirm: () => {
+        dispatch(approveCompany({ id: id!, action: 'APPROVE'}))
+        closeModal()
+      },
+    })
+  }
   console.log('selectedCompany: ', selectedCompany)
 
   if (!selectedCompany) {
@@ -117,10 +129,8 @@ const AdminCompanyDetailPage: React.FC = () => {
       </InternalLayout>
     )
   }
-
   return (
     <InternalLayout title="" subTitle="" sidebarItems={adminSidebarItems}>
-      {/* BACK */}
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-gray-500 hover:text-[#6B4705] mb-6"
@@ -131,7 +141,6 @@ const AdminCompanyDetailPage: React.FC = () => {
         </span>
       </button>
 
-      {/* HEADER */}
       <div className="flex flex-col lg:flex-row justify-between items-center gap-6 mb-8">
         <div className="flex items-center gap-4">
           {selectedCompany.profileLogo ? (
@@ -157,38 +166,14 @@ const AdminCompanyDetailPage: React.FC = () => {
             <>
               <button
                 className="bg-[#6B4705] text-white px-5 py-2 rounded-lg hover:bg-[#C89A44]"
-                onClick={() =>
-                  openModal({
-                    title: 'Approve Company',
-                    message: 'Approve this company?',
-                    type: 'info',
-                    onConfirm: () => {
-                      dispatch(approveCompany({ id: id!, action: 'APPROVE'}))
-                      closeModal()
-                    },
-                  })
-                }
+                onClick={() => handleApproveCompany(id!)}
               >
                 Approve
               </button>
 
               <button
                 className="bg-[#AA0101] text-white px-5 py-2 rounded-lg hover:bg-red-700"
-                onClick={() => {
-                  const reason = window.prompt('Enter rejection reason:')
-
-                  if (!reason || !reason.trim()) {
-                    return 
-                  }
-
-                  dispatch(
-                    rejectCompany({
-                      id: id!,
-                      reason: reason.trim(),
-                      action: 'REJECT'
-                    })
-                  )
-                }}
+                onClick={() => setIsReasonModalOpen(true)}
               >
                 Reject
               </button>
@@ -197,7 +182,7 @@ const AdminCompanyDetailPage: React.FC = () => {
 
           {selectedCompany.status === 'rejected' && (
             <button
-              className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700"
+              className="bg-[#6B4705] text-white px-5 py-2 rounded-lg hover:bg-[#C89A44]"
               onClick={() =>
                 openModal({
                   title: 'Approve Company',
@@ -337,16 +322,64 @@ const AdminCompanyDetailPage: React.FC = () => {
         title={modalConfig.title}
         message={modalConfig.message}
         type={modalConfig.type}
-      >
-        {modalConfig.showInput && (
-          <textarea
-            className="w-full mt-4 border rounded-lg p-3 text-sm"
-            placeholder="Enter rejection reason..."
-            value={rejectReason}
-            onChange={(e) => setRejectReason(e.target.value)}
-          />
-        )}
-      </ConfirmationModal>
+      />
+
+{isReasonModalOpen && (
+  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-lg">
+      <h2 className="text-lg font-semibold mb-4 text-gray-800">
+        Enter Rejection Reason
+      </h2>
+
+      <textarea
+        className="w-full border rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+        rows={4}
+        placeholder="Type reason..."
+        value={rejectReason}
+        onChange={(e) => setRejectReason(e.target.value)}
+      />
+
+      <div className="flex justify-end gap-3 mt-5">
+        <button
+          onClick={() => {
+            setIsReasonModalOpen(false)
+            setRejectReason('')
+          }}
+          className="px-4 py-2 rounded-md border text-gray-600"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={() => {
+            if (!rejectReason.trim()) return
+
+            setIsReasonModalOpen(false)
+
+            // OPEN CONFIRMATION MODAL WITH REASON
+            openModal({
+              title: 'Confirm Rejection',
+              message: `Are you sure you want to reject?\n\nReason:\n${rejectReason}`,
+              type: 'danger',
+              onConfirm: () => {
+                dispatch(rejectCompany({
+                  id: id!,
+                  reason: rejectReason.trim(),
+                  action: 'REJECT'
+                }))
+                setRejectReason('')
+                closeModal()
+              }
+            })
+          }}
+          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </InternalLayout>
   )
 }

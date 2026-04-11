@@ -42,7 +42,7 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
             billingEmail: company.billingEmail,
             certificateType: company.certificateType,
             certificateNumber: company.certificateNumber,
-            certificate: company.certificate
+            certificate: company.certificate,
         }
     }
 }

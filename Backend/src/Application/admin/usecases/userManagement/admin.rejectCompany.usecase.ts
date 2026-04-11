@@ -1,6 +1,7 @@
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
+import { env } from "../../../../Infrastructure/config/env";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IMailService } from "../../../interface/service/IMailService";
@@ -28,7 +29,9 @@ export class AdminRejectCompanyUsecase implements IAdminRejectCompanyUsecase{
         company.setIsAdminVerified(false)
         await this._companyRepository.update(request.id, company)
 
-        await this._mailService.sendRejectionEmail(company.getEmail(), company.getName(), request.reason)
+        const loginLink = `${env.FRONTEND_URL}/login`
+
+        await this._mailService.sendRejectionEmail(company.getEmail(), company.getName(), request.reason, loginLink)
 
         return {
             id: company.getId(),

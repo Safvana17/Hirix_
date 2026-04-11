@@ -27,6 +27,7 @@ export interface CompanySettings extends Company {
   certificateType?: 'GST' | 'COI';
   certificateNumber: string;
   certificate: string;
+  certificateVerified: boolean;
   subscriptionPlan?: string
   maxCandidates?: number
   maxTestPerMonth?: string
