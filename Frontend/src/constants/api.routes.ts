@@ -78,6 +78,16 @@ export const API_ROUTES = {
       GET_ALL: (role: UserRole) =>
         `/${role}/practice-questions`,
     },
+    SUBSCRIPTION_PLAN: {
+      CREATE: '/admin/plan',
+      EDIT: (id: string) =>
+         `/admin/plan/${id}`,
+      DELETE: (id: string) => 
+        `/admin/plan/${id}`,
+      STATUS: (id: string) => 
+        `/admin/plan/${id}`,
+      GET_ALL: '/admin/plans'
+    }
   },
   COMMON: {
     QUESTION: {

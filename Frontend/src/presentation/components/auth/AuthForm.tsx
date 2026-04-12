@@ -10,7 +10,7 @@ import { loginUser, registerUser, googleLogin } from '../../../redux/slices/feat
 import toast from 'react-hot-toast'
 import { loginSchema, registerSchema } from '../../../lib/validation/authValidation'
 import { ZodError } from 'zod'
-import { requestRestoreAccountEmail } from '../../../redux/slices/features/settingsSlice.ts/companySettingsSlice'
+import { requestRestoreAccountEmail } from '../../../redux/slices/features/settingsSlice/companySettingsSlice'
 
 
 

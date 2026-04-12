@@ -4,7 +4,7 @@ import changePassswordImage from '../../../assets/images/changePassword.jpg'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
-import { changePassword } from '../../../redux/slices/features/settingsSlice.ts/companySettingsSlice'
+import { changePassword } from '../../../redux/slices/features/settingsSlice/companySettingsSlice'
 import { changePasswordSchema } from '../../../lib/validation/settingsValidator'
 import { ZodError } from 'zod'
 

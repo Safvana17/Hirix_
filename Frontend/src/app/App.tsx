@@ -15,6 +15,7 @@ import AdminCategory from '../presentation/pages/admin/AdminCategory'
 import AdminTestQuestions from '../presentation/pages/admin/AdminTestQuestions'
 import CompanyQuestion from '../presentation/pages/company/CompanyQuestion'
 import AdminPracticeLibrary from '../presentation/pages/admin/AdminPracticeLibrary'
+import AdminSubscriptions from '../presentation/pages/admin/AdminSubscriptions'
 
 
 
@@ -140,6 +141,12 @@ const App = () => {
           <Route path={ROUTES.ADMIN.PRACTICE_LIBRARY} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminPracticeLibrary />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.ADMIN.SUBSCRIPTIONS} element={
+            <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+              <AdminSubscriptions />
             </RoleRoute>
           } />
           

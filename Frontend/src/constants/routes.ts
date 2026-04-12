@@ -34,6 +34,7 @@ export const ROUTES = {
     COMPANY_DETAIL_PATH: (id: string) => `/admin/company/${id}`,
     CATEGORIES: '/admin/categories',
     QUESTIONS: '/admin/questions',
-    PRACTICE_LIBRARY: '/admin/practicelibrary'
+    PRACTICE_LIBRARY: '/admin/practicelibrary',
+    SUBSCRIPTIONS: '/admin/subscriptions',
   },
 }

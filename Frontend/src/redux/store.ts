@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from './slices/features/auth/authSlice'
 import userSlice from './slices/features/users/usersSlice'
-import CompanySettingsSlice from './slices/features/settingsSlice.ts/companySettingsSlice'
+import CompanySettingsSlice from './slices/features/settingsSlice/companySettingsSlice'
 import JobRoleSlice from './slices/features/jobRoles/jobRoleSlice'
 import CategorySlice from './slices/features/category/categorySlice'
 import questionSlice from './slices/features/question/questionSlice'
 import PracticeQuestionSlice from './slices/features/question/practiceQuestionSlice'
+import SubscriptionSlice from './slices/features/subscription/subscription'
+
 
 export const store = configureStore({
     reducer: {   
@@ -15,7 +17,8 @@ export const store = configureStore({
         jobRole: JobRoleSlice,
         category: CategorySlice,
         question: questionSlice,
-        practiceQuestion: PracticeQuestionSlice
+        practiceQuestion: PracticeQuestionSlice,
+        subscription: SubscriptionSlice
     }
 })
 

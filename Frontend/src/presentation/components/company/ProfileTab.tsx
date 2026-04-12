@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { z } from 'zod'
 import { updateProfileSchema } from '../../../lib/validation/settingsValidator'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { getCompanyProfile, updateProfile, uploadProfileImage } from '../../../redux/slices/features/settingsSlice.ts/companySettingsSlice'
+import { getCompanyProfile, updateProfile, uploadProfileImage } from '../../../redux/slices/features/settingsSlice/companySettingsSlice'
 import { Building2, File, Upload } from 'lucide-react'
 import toast from 'react-hot-toast'
 
