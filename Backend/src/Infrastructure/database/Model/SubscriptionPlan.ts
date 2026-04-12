@@ -1,16 +1,23 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
-import targetType from "../../../Domain/enums/subscription";
+import { BillingCycle, TargetType } from "../../../Domain/enums/subscription";
+
 
 export interface ISubscriptionPlan extends Document {
     _id: Types.ObjectId;
     planName: string;
     price: number;
-    target: targetType;
-    billingCycle: string;
+    target: TargetType;
+    billingCycle: BillingCycle;
     durationDays: number;
-    maxTestsPerMonth: number;
-    maxCandidates: number;
-    features: string[];
+    canCreateCustomQuestions: boolean;
+    canUseAdminQuestions: boolean;
+    maxTestsPerMonth: number | null;
+    maxCandidates: number | null;
+    maxInterviewsPerMonth: number | null;
+    maxJobRolesPerMonth: number | null;
+    canAccessPremiumQuestions: boolean;
+    maxPracticePerDay: number | null
+    hasDetailedFeedback: boolean
     isActive: boolean;
     isDeleted: boolean;
     createdAt: Date;
@@ -27,22 +34,46 @@ const subscriptionPlanSchema: Schema<ISubscriptionPlan> = new Schema ({
     },
     target: {
         type: String,
-        default: targetType.ALL
+        default: TargetType.ALL
     },
     billingCycle: {
-        type: String
+        type: String,
+        default: BillingCycle.MONTHLY
     },
     durationDays: {
         type: Number
     },
+    canCreateCustomQuestions: {
+        type: Boolean
+    },
+    canUseAdminQuestions: {
+        TYPE: Boolean
+    },
     maxTestsPerMonth: {
         type: Number,
+        default: null
     },
     maxCandidates: {
-        type: Number
+        type: Number,
+        default: null
     },
-    features: {
-        type: [String]
+    maxInterviewsPerMonth: {
+        type: Number,
+        default: null
+    },
+    maxJobRolesPerMonth: {
+        type: Number,
+        default: null
+    },
+    canAccessPremiumQuestions: {
+        type: Boolean
+    },
+    maxPracticePerDay: {
+        type: Number,
+        default: null
+    },
+    hasDetailedFeedback: {
+        type: Boolean
     },
     isActive: {
         type: Boolean

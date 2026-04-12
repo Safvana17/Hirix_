@@ -1,3 +1,4 @@
+import { Doc } from "zod/v4/core";
 import { SubscriptionPlanEntity } from "../../Domain/entities/SubscriptionPlan.entity";
 import { ISubscriptionPlan } from "../../Infrastructure/database/Model/SubscriptionPlan";
 
@@ -10,11 +11,17 @@ export class SubscriptionPlanMapper {
             doc.price,
             doc.billingCycle, 
             doc.durationDays,
+            doc.isActive,
+            doc.isDeleted,
+            doc.canCreateCustomQuestions,
+            doc.canUseAdminQuestions,
             doc.maxTestsPerMonth,
             doc.maxCandidates,
-            doc.features,
-            doc.isActive,
-            doc.isDeleted
+            doc.maxJobRolesPerMonth,
+            doc.maxInterviewsPerMonth,
+            doc.canAccessPremiumQuestions,
+            doc.maxPracticePerDay,
+            doc.hasDetailedFeedback
         )
 
         return plan
@@ -27,10 +34,17 @@ export class SubscriptionPlanMapper {
            price: entity.price,
            billingCycle: entity.billingCycle,
            durationDays: entity.durationDays,
+           isActive: entity.isActive,
+           isDeleted: entity.isDeleted,
+           canCreateCustomQuestions: entity.canCreateCustomQuestions,
+           canUseAdminQuestions: entity.canUseAdminQuestions,
            maxTestsPerMonth: entity.maxTestsPerMonth,
            maxCandidates: entity.maxCandidates,
-           isActive: entity.isActive,
-           isDeleted: entity.isDeleted
+           maxJobRolesPerMonth: entity.maxJobRolesPerMonth,
+           maxInterviewsPerMonth: entity.maxInterviewPerMonth,
+           canAccessPremiumQuestions: entity.canAccessPremiumQuestions,
+           maxPracticePerDay: entity.maxPracticePerDay,
+           hasDetailedFeedback: entity.hasDetailedFeedback
         }
     }
 }

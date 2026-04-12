@@ -1,5 +1,5 @@
 import  Express  from "express";
-import { iAdminQuestionController, iCategoryController, iTokenService, IUserManagementController } from "../../controllers/factory";
+import { iAdminQuestionController, iCategoryController, iSubscriptionPlanController, iTokenService, IUserManagementController } from "../../controllers/factory";
 import { authHandler } from "../../middlewares/authMiddleware";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
@@ -31,9 +31,12 @@ router.delete(ROUTES.ADMIN.CATEGORY.DELETE, authHandler(iTokenService), verifyCs
 router.put(ROUTES.ADMIN.CATEGORY.EDIT, authHandler(iTokenService), verifyCsrf,validate(editCategorySchema, 'body'), iCategoryController.editCategory)
 
 //questions
-router.post(ROUTES.ADMIN.QUESTION.CREATE,authHandler(iTokenService), validate(createQuestionSchema, 'body'), iAdminQuestionController.createQuestion)
+router.post(ROUTES.ADMIN.QUESTION.CREATE, authHandler(iTokenService), validate(createQuestionSchema, 'body'), iAdminQuestionController.createQuestion)
 router.get(ROUTES.ADMIN.QUESTION.GET_ALL, authHandler(iTokenService), iAdminQuestionController.getAllQuestions)
 router.get(ROUTES.ADMIN.PRACTICE_QUESTION.GET_ALL, authHandler(iTokenService), iAdminQuestionController.getAllPracticeQuestions)
 router.put(ROUTES.ADMIN.QUESTION.EDIT, authHandler(iTokenService), verifyCsrf, validate(editQuestionSchema, 'body'), iAdminQuestionController.editQuestion)
 router.delete(ROUTES.ADMIN.QUESTION.DELETE, authHandler(iTokenService), verifyCsrf, iAdminQuestionController.deleteQuestion)
+
+//plan
+router.post(ROUTES.ADMIN.SUBSCRIPTION_PLAN.CREATE, authHandler(iTokenService), verifyCsrf, iSubscriptionPlanController.createPlan)
 export default router;               

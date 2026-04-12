@@ -87,6 +87,13 @@ export const ROUTES = {
         PRACTICE_QUESTION: {
             GET_ALL: '/practice-questions',
             BY_ID: '/practice-question/:id'
+        },
+        SUBSCRIPTION_PLAN: {
+            CREATE: '/plan',
+            EDIT: '/plan/:id',
+            DELETE: '/plan/:id',
+            STATUS: '/plan/:id',
+            GET_ALL: '/plans'
         }
     }
 }

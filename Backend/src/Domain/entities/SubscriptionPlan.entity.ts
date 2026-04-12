@@ -1,29 +1,62 @@
-import targetType from "../enums/subscription";
+import { BillingCycle, TargetType } from "../enums/subscription";
 
 export class SubscriptionPlanEntity {
     id: string;
     planName: string;
-    target: targetType;
+    target: TargetType;
     price: number;
-    billingCycle: string;
+    billingCycle: BillingCycle;
     durationDays: number;
-    maxTestsPerMonth: number;
-    maxCandidates: number;
-    features: string[];
+
+    canCreateCustomQuestions?: boolean
+    canUseAdminQuestions?: boolean
+    maxTestsPerMonth?: number | null;
+    maxCandidates?: number | null;
+    maxJobRolesPerMonth?: number | null;
+    maxInterviewPerMonth?: number | null
+
+    canAccessPremiumQuestions?: boolean
+    maxPracticePerDay?: number | null
+    hasDetailedFeedback?: boolean
+
     isActive: boolean;
     isDeleted: boolean;
 
-    constructor(id: string, planName: string, target: targetType, price: number, billingCycle: string, durationDays: number, maxTestsPerMonth: number, maxCandidates: number, features: string[], isActive: boolean, isDeleted: boolean){
+    constructor(
+        id: string, 
+        planName: string, 
+        target: TargetType, 
+        price: number, 
+        billingCycle: BillingCycle, 
+        durationDays: number, 
+        isActive: boolean, 
+        isDeleted: boolean,
+        canCreateCustomQuestions?: boolean,
+        canUseAdminQuestions?: boolean,
+        maxTestsPerMonth?: number| null,
+        maxCandidates?: number | null,
+        maxJobRolesPerMonth?: number | null,
+        maxInterviewsPerMonth?: number | null,
+        canAccessPremiumQuestions?: boolean,
+        maxPracticePerDay?: number | null,
+        hasDetailedFeedback?: boolean
+    ){
         this.id = id
         this.planName = planName
         this.target = target
         this.price = price
         this.billingCycle = billingCycle
         this.durationDays = durationDays
-        this.maxTestsPerMonth = maxTestsPerMonth
-        this.maxCandidates = maxCandidates
-        this.features = features
         this.isActive = isActive
         this.isDeleted = isDeleted
+        this.canCreateCustomQuestions = canCreateCustomQuestions
+        this.canUseAdminQuestions = canUseAdminQuestions
+        this.maxTestsPerMonth = maxTestsPerMonth
+        this.maxCandidates = maxCandidates
+        this.maxJobRolesPerMonth = maxJobRolesPerMonth
+        this.maxInterviewPerMonth = maxInterviewsPerMonth
+        this.canAccessPremiumQuestions = canAccessPremiumQuestions
+        this.maxPracticePerDay = maxPracticePerDay
+        this.hasDetailedFeedback = hasDetailedFeedback
     }
 }

@@ -54,6 +54,10 @@ import { CompanyEditQuestionUsecase } from "../../../Application/company/usecase
 import { CompanyDeleteQuestionUsecase } from "../../../Application/company/usecases/question/company.deleteQuestion.usecase";
 import { AdminGetAllPracticeQuestionUsecase } from "../../../Application/admin/usecases/question/admin.getAllPracticeQuestions.usecase";
 import { CompanyVerifyRegisterOtpUsecase } from "../../../Application/company/usecases/auth/company.verifyRegisterOtp.usecase";
+import { AdminCreateSubscriptionPlnUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.create.usecase";
+
+
+
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
 import { OtpRepository } from "../../../Infrastructure/services/OtpStore";
@@ -63,6 +67,7 @@ import { AdminRepository } from "../../../Infrastructure/repositories/admin.repo
 import { JobRolesRepository } from "../../../Infrastructure/repositories/jobRoles.repository";
 import { CategoryRepository } from "../../../Infrastructure/repositories/category.repository";
 import { QuestionRepository } from "../../../Infrastructure/repositories/question.repository";
+import { SubscriptionPlanRepository } from "../../../Infrastructure/repositories/subscriptionPlan.repository";
 
 //services
 import { HashService } from "../../../Infrastructure/services/HashService";
@@ -86,6 +91,7 @@ import { AdminQestionController } from "./admin/adminQuestionController";
 import { CompanyQuestionController } from "./company/companyQuestionController";
 import { CandidateGetAllPracticeQuestionsUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getAllPracticeQuestion.usecase";
 import { PracticeLibraryController } from "./candidate/practiceQuestionController";
+import { SubscriptionPlanController } from "./admin/subscriptionPlanController";
 
 
 
@@ -96,6 +102,7 @@ const iOtpRepository = new OtpRepository(redisClient)
 const iJobRoleRepository = new JobRolesRepository()
 const iCategoryRepository = new CategoryRepository()
 const iQuestionRepository = new QuestionRepository()
+const iSubscriptionPlanRepository = new SubscriptionPlanRepository()
 
 
 const iHashService = new HashService()
@@ -331,6 +338,11 @@ const iAdminDeleteQuestion = new AdminDeleteQuestionUsecase(
 const iAdminGetAllPracticeQuestions = new AdminGetAllPracticeQuestionUsecase(
     iQuestionRepository
 )
+
+//plan
+const iAdminCreateSubscriptionPlan = new AdminCreateSubscriptionPlnUsecase(
+    iSubscriptionPlanRepository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -473,4 +485,8 @@ export const iCompanyQuestionController = new CompanyQuestionController(
 
 export const iPracticeLibraryController = new PracticeLibraryController (
     iCandidateGetAllPracticeQuestions
+)
+
+export const iSubscriptionPlanController = new SubscriptionPlanController (
+    iAdminCreateSubscriptionPlan
 )
