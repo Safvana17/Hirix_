@@ -55,7 +55,7 @@ import { CompanyDeleteQuestionUsecase } from "../../../Application/company/useca
 import { AdminGetAllPracticeQuestionUsecase } from "../../../Application/admin/usecases/question/admin.getAllPracticeQuestions.usecase";
 import { CompanyVerifyRegisterOtpUsecase } from "../../../Application/company/usecases/auth/company.verifyRegisterOtp.usecase";
 import { AdminCreateSubscriptionPlnUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.create.usecase";
-
+import { AdminGetAllSubscriptionPlanUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.getAll.usecase";
 
 
 //repositories
@@ -343,6 +343,9 @@ const iAdminGetAllPracticeQuestions = new AdminGetAllPracticeQuestionUsecase(
 const iAdminCreateSubscriptionPlan = new AdminCreateSubscriptionPlnUsecase(
     iSubscriptionPlanRepository
 )
+const IAdminGetAllSubscriptionPlan = new AdminGetAllSubscriptionPlanUsecase (
+    iSubscriptionPlanRepository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -488,5 +491,6 @@ export const iPracticeLibraryController = new PracticeLibraryController (
 )
 
 export const iSubscriptionPlanController = new SubscriptionPlanController (
-    iAdminCreateSubscriptionPlan
+    iAdminCreateSubscriptionPlan,
+    IAdminGetAllSubscriptionPlan
 )

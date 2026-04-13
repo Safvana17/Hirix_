@@ -47,7 +47,7 @@ const subscriptionPlanSchema: Schema<ISubscriptionPlan> = new Schema ({
         type: Boolean
     },
     canUseAdminQuestions: {
-        TYPE: Boolean
+        type: Boolean
     },
     maxTestsPerMonth: {
         type: Number,

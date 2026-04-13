@@ -39,4 +39,6 @@ router.delete(ROUTES.ADMIN.QUESTION.DELETE, authHandler(iTokenService), verifyCs
 
 //plan
 router.post(ROUTES.ADMIN.SUBSCRIPTION_PLAN.CREATE, authHandler(iTokenService), verifyCsrf, iSubscriptionPlanController.createPlan)
+router.get(ROUTES.ADMIN.SUBSCRIPTION_PLAN.GET_ALL, authHandler(iTokenService), iSubscriptionPlanController.getAllPlans)
+
 export default router;               
