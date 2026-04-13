@@ -1,4 +1,4 @@
-export type TargetType = 'company' | 'candidate' | 'all'
+export type TargetType = 'company' | 'candidate'
 export type BillingCycle = 'monthly' | 'yearly'
 
 export interface SubscriptionPlan {
@@ -39,3 +39,16 @@ export interface CreatePlanPayload {
 }
 
 export type ModalMode = 'create' | 'edit'
+
+
+export type getAllPlansParams = {
+  target?: TargetType
+  page?: number
+  limit?: number
+}
+
+export interface GetAllPlansResponse{
+    subscriptionPlans: SubscriptionPlan[]
+    totalPages: number
+    totalCount: number
+}
