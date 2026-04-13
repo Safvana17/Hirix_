@@ -13,7 +13,7 @@ export interface SubscriptionPlan {
     maxCandidates?: number | null;
     maxTestsPerMonth?: number | null;
     maxJobRolesPerMonth?: number | null;
-    maxInterviewsPerMonth?: number | null;
+    maxInterviewPerMonth?: number | null;
     canAccessPremiumQuestions?: boolean;
     maxPracticePerDay?: number | null;
     hasDetailedFeedback?: boolean;
@@ -21,7 +21,8 @@ export interface SubscriptionPlan {
     isDeleted: boolean
 }
 
-export interface CreatePlanPayload {
+export interface PlanPayload {
+    id: string;
     planName: string
     target: TargetType
     price: number
@@ -32,10 +33,12 @@ export interface CreatePlanPayload {
     maxCandidates?: number | null;
     maxTestsPerMonth?: number | null;
     maxJobRolesPerMonth?: number | null;
-    maxInterviewsPerMonth?: number | null;
+    maxInterviewPerMonth?: number | null;
     canAccessPremiumQuestions?: boolean;
     maxPracticePerDay?: number | null;
     hasDetailedFeedback?: boolean;
+    isActive?: boolean
+    isDeleted?: boolean
 }
 
 export type ModalMode = 'create' | 'edit'

@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import InternalLayout from '../../layouts/InternalLayout'
 import { adminSidebarItems } from '../../../constants/sidebarItems'
 import { Edit2Icon, Plus } from 'lucide-react'
-import type { CreatePlanPayload, ModalMode, TargetType } from '../../../types/subscription'
+import type { PlanPayload, ModalMode, TargetType } from '../../../types/subscription'
 import SubscriptionPlanModal from '../../components/modal/SubscriptionPlanModal'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { createPlan, getAllPlans } from '../../../redux/slices/features/subscription/subscription'
+import { createPlan, editPlan, getAllPlans } from '../../../redux/slices/features/subscription/subscription'
 import { Box, Card, Divider, Pagination, Stack, Tab, Tabs, Typography } from '@mui/material'
-import { Cancel, Check, CheckCircle, Edit } from '@mui/icons-material'
+import { Cancel, Check, CheckCircle } from '@mui/icons-material'
 import Close from '@mui/icons-material/Close'
 
 const targetType: TargetType[] = ['company', 'candidate']
@@ -33,6 +33,7 @@ const AdminSubscriptions: React.FC = () => {
 
   const [modalMode, setModalMode] = useState<ModalMode>('create')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedPlan, setSelectedPlan] = useState<PlanPayload | null>(null)
   const [target, setTarget] = useState<TargetType | ''>('')
   const [page, setPage] = useState(1)
 
@@ -50,15 +51,29 @@ const AdminSubscriptions: React.FC = () => {
   }
 
   const handleAddPlan = () => {
+    setSelectedPlan(null)
     setModalMode('create')
     setIsModalOpen(true)
   }
 
-  const handleSubmit = async (data: CreatePlanPayload) => {
+  const handleEditPlan = (item: PlanPayload) => {
+    setSelectedPlan(item)
+    setModalMode('edit')
+    setIsModalOpen(true)
+  }
+
+  console.log('plans: ', plans)
+
+  const handleSubmit = async (data: PlanPayload) => {
     try {
       if (modalMode === 'create') {
         await dispatch(createPlan({ data })).unwrap()
         toast.success('Plan created successfully')
+        setIsModalOpen(false)
+        await dispatch(getAllPlans({target: target || undefined, page, limit: 6}))
+      }else if(modalMode === 'edit'){
+        await dispatch(editPlan({data})).unwrap()
+        toast.success('Plan edited successfully')
         setIsModalOpen(false)
         await dispatch(getAllPlans({target: target || undefined, page, limit: 6}))
       }
@@ -221,7 +236,10 @@ const AdminSubscriptions: React.FC = () => {
                     </Stack>
 
                     <Box display="flex" justifyContent="space-between" mt={2}>
-                      <button className="flex items-center gap-2 bg-[#0B3358] text-white px-3 py-1 rounded-lg text-sm">
+                      <button 
+                        onClick={() => handleEditPlan(p)}
+                        className="flex items-center gap-2 bg-[#0B3358] text-white px-3 py-1 rounded-lg text-sm"
+                      >
                         <Edit2Icon className='w-3 h-3'/> Edit
                       </button>
 
@@ -266,8 +284,10 @@ const AdminSubscriptions: React.FC = () => {
         </div>
 
         <SubscriptionPlanModal
+          key={selectedPlan?.id || modalMode}
           isOpen={isModalOpen}
           mode={modalMode}
+          initialData={selectedPlan}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleSubmit}
         />

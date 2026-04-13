@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import type { ModalMode, CreatePlanPayload, TargetType, BillingCycle } from '../../../types/subscription'
+import type { ModalMode, PlanPayload, TargetType, BillingCycle } from '../../../types/subscription'
 import { ZodError } from 'zod'
 import { createSubscriptionPlanSchema } from '../../../lib/validation/subcriptionPlanValidator'
 
@@ -10,35 +10,37 @@ const durationMap: Record<BillingCycle, number> = {
 
 interface Props {
   isOpen: boolean
+  initialData: PlanPayload | null
   onClose: () => void
-  onSubmit: (data: CreatePlanPayload) => void
+  onSubmit: (data: PlanPayload) => void
   mode: ModalMode
 }
 
-const SubscriptionPlanModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, mode }) => {
+const SubscriptionPlanModal: React.FC<Props> = ({ isOpen, onClose,initialData, onSubmit, mode }) => {
 
-  const [formData, setFormData] = useState<CreatePlanPayload>({
-    planName: '',
-    target: 'company',
-    price: 0,
-    billingCycle: 'monthly',
-    durationDays: 30,
+  const [formData, setFormData] = useState<PlanPayload>({
+    id: initialData?.id || '',
+    planName: initialData?.planName || '',
+    target: initialData?.target || 'company',
+    price: initialData?.price || 0,
+    billingCycle: initialData?.billingCycle || 'monthly',
+    durationDays: initialData?.durationDays|| 30,
 
-    canCreateCustomQuestions: false,
-    canUseAdminQuestions: true,
-    maxTestsPerMonth: null,
-    maxCandidates: null,
-    maxInterviewsPerMonth: null,
-    maxJobRolesPerMonth: null,
+    canCreateCustomQuestions: initialData?.canCreateCustomQuestions|| false,
+    canUseAdminQuestions: initialData?.canUseAdminQuestions || true,
+    maxTestsPerMonth: initialData?.maxTestsPerMonth || null,
+    maxCandidates: initialData?.maxCandidates || null,
+    maxInterviewPerMonth: initialData?.maxInterviewPerMonth || null,
+    maxJobRolesPerMonth: initialData?.maxJobRolesPerMonth || null,
 
-    canAccessPremiumQuestions: false,
-    maxPracticePerDay: null,
-    hasDetailedFeedback: false
+    canAccessPremiumQuestions: initialData?.canAccessPremiumQuestions || false,
+    maxPracticePerDay: initialData?.maxPracticePerDay || null,
+    hasDetailedFeedback: initialData?.hasDetailedFeedback || false
   })
 
   const [localError, setLocalError] = useState<Record<string, string>>({})
 
-  const validate = (data: CreatePlanPayload) => {
+  const validate = (data: PlanPayload) => {
     try {
       createSubscriptionPlanSchema.parse(data)
       setLocalError({})
@@ -63,7 +65,7 @@ const SubscriptionPlanModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, mod
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const payload: CreatePlanPayload = {
+    const payload: PlanPayload = {
       ...formData,
       planName: formData.planName.trim(),
       durationDays: durationMap[formData.billingCycle]
@@ -215,11 +217,11 @@ const SubscriptionPlanModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, mod
                 <input
                   type="number"
                   className="border border-gray-300 p-2 rounded-lg w-full"
-                  value={formData.maxInterviewsPerMonth ?? ''}
+                  value={formData.maxInterviewPerMonth ?? ''}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      maxInterviewsPerMonth: e.target.value ? Number(e.target.value) : null
+                      maxInterviewPerMonth: e.target.value ? Number(e.target.value) : null
                     })
                   }
                 />

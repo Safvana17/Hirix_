@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { CreatePlanPayload, getAllPlansParams, GetAllPlansResponse, SubscriptionPlan, TargetType } from "../../../../types/subscription";
+import type { PlanPayload, getAllPlansParams, GetAllPlansResponse, SubscriptionPlan, TargetType } from "../../../../types/subscription";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
@@ -9,6 +9,7 @@ interface SubscriptionState {
     loading: boolean;
     error: string | null;
     plans: SubscriptionPlan[];
+    selectedPlan: SubscriptionPlan | null
     pagination: {
         plans: {
             totalPages: number;
@@ -21,6 +22,7 @@ const initialState: SubscriptionState = {
     loading: true,
     plans: [],
     error: null,
+    selectedPlan: null,
     pagination: {
         plans: {
             totalPages: 0,
@@ -31,7 +33,7 @@ const initialState: SubscriptionState = {
 
 export const createPlan = createAsyncThunk<
 SubscriptionPlan,
-{data: CreatePlanPayload},
+{data: PlanPayload},
 {rejectValue: string}
 >('subscription/create', async({data}, {rejectWithValue}) => {
     try {
@@ -60,6 +62,23 @@ getAllPlansParams | undefined,
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get all plans')
+    }
+})
+
+export const editPlan = createAsyncThunk<
+SubscriptionPlan,
+{data: PlanPayload},
+{rejectValue: string}
+>('subscription/editPlan', async({data}, {rejectWithValue}) =>{
+    try {
+        const response = await api.put(API_ROUTES.ADMIN.SUBSCRIPTION_PLAN.EDIT(data.id), data)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to edit subscription plan')
     }
 })
 
@@ -98,6 +117,17 @@ const subscriptionSlice = createSlice({
         .addCase(getAllPlans.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get all plans'
+        })
+        .addCase(editPlan.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(editPlan.fulfilled, (state, action) => {
+            state.loading = false
+            state.selectedPlan = action.payload
+        })
+        .addCase(editPlan.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to edit plan'
         })
     }
 })
