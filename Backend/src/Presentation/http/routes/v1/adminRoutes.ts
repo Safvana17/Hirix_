@@ -7,6 +7,7 @@ import { validate } from "../../middlewares/validate";
 import { createQuestionSchema, editQuestionSchema } from "../../validators/questionValidator";
 import { addCategorySchema, editCategorySchema } from "../../validators/categoryValidator";
 import { rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
+import { createSubscriptionPlanSchema } from "../../validators/subscriptionPlanValidator";
 
 const router = Express.Router()
 
@@ -38,7 +39,7 @@ router.put(ROUTES.ADMIN.QUESTION.EDIT, authHandler(iTokenService), verifyCsrf, v
 router.delete(ROUTES.ADMIN.QUESTION.DELETE, authHandler(iTokenService), verifyCsrf, iAdminQuestionController.deleteQuestion)
 
 //plan
-router.post(ROUTES.ADMIN.SUBSCRIPTION_PLAN.CREATE, authHandler(iTokenService), verifyCsrf, iSubscriptionPlanController.createPlan)
+router.post(ROUTES.ADMIN.SUBSCRIPTION_PLAN.CREATE, authHandler(iTokenService), verifyCsrf, validate(createSubscriptionPlanSchema, 'body'), iSubscriptionPlanController.createPlan)
 router.get(ROUTES.ADMIN.SUBSCRIPTION_PLAN.GET_ALL, authHandler(iTokenService), iSubscriptionPlanController.getAllPlans)
-
+router.put(ROUTES.ADMIN.SUBSCRIPTION_PLAN.EDIT, authHandler(iTokenService), verifyCsrf, validate(createSubscriptionPlanSchema, 'body'), iSubscriptionPlanController.editPlan)
 export default router;               

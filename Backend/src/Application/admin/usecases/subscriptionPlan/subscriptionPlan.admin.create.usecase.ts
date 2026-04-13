@@ -46,7 +46,7 @@ export class AdminCreateSubscriptionPlnUsecase implements ICreateSubscriptionPla
             }
         }
 
-        if(request.target === TargetType.COMPANY){
+        if(request.target === TargetType.CANDIDATE){
             if(!request.canAccessPremiumQuestions && request.hasDetailedFeedback){
                 throw new AppError(subscriptionPlanMessages.error.REQUIRES_PREMIUM_ACCESS, statusCode.BAD_REQUEST)
             }

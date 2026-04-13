@@ -10,5 +10,6 @@ export const subscriptionPlanMessages = {
         FEATURES_CANNOT_BE_EMPTY: 'Plan features cannot be empty',
         CANNOT_DENY_ADMIN_QUESTIONS_ACCESS: 'Company must atleast use admin questions',
         REQUIRES_PREMIUM_ACCESS: 'Detailed feedback requires premium access',
+        NOT_FOUND: 'Subscription plan not found',
     }
 }
