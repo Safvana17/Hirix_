@@ -57,6 +57,10 @@ import { CompanyVerifyRegisterOtpUsecase } from "../../../Application/company/us
 import { AdminCreateSubscriptionPlnUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.create.usecase";
 import { AdminGetAllSubscriptionPlanUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.getAll.usecase";
 import { AdminEditSubscriptionPlanUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.edit.usecase";
+import { AdminUpdateSubscriptionPlanStausUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.updateStatus.usecase";
+import { AdminDeleteSubscriptionPlanUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.delete.usecase";
+
+
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -349,6 +353,12 @@ const IAdminGetAllSubscriptionPlan = new AdminGetAllSubscriptionPlanUsecase (
 const IAdminEditSubscriptionPlan = new AdminEditSubscriptionPlanUsecase(
     iSubscriptionPlanRepository
 )
+const iAdminUpdatePlanStatus = new AdminUpdateSubscriptionPlanStausUsecase (
+    iSubscriptionPlanRepository
+)
+const iDeleteSubscriptionPlan = new AdminDeleteSubscriptionPlanUsecase(
+    iSubscriptionPlanRepository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -497,4 +507,6 @@ export const iSubscriptionPlanController = new SubscriptionPlanController (
     iAdminCreateSubscriptionPlan,
     IAdminGetAllSubscriptionPlan,
     IAdminEditSubscriptionPlan,
+    iAdminUpdatePlanStatus,
+    iDeleteSubscriptionPlan
 )

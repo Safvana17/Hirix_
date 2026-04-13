@@ -1,5 +1,5 @@
 import z from "zod";
-import { BillingCycle, TargetType } from "../../../Domain/enums/subscription";
+import { BillingCycle, SubscriptionStatus, TargetType } from "../../../Domain/enums/subscription";
 
 export const createSubscriptionPlanSchema = z.object({
   planName: z
@@ -70,4 +70,8 @@ export const PlanQuerySchema = z.object({
   limit: z
     .coerce.number()
     .default(10),
+})
+
+export const deletePlanSchema = z.object({
+  status: z.nativeEnum(SubscriptionStatus)
 })

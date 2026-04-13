@@ -8,12 +8,16 @@ import { PlanQuerySchema } from "../../validators/subscriptionPlanValidator";
 import { IAdminGetAllSubscriptionPlanUsecase } from "../../../../Application/admin/interfaces/subscriptionPlan/ISubscriptionPlan.admin.getAll.usecase";
 import { logger } from "../../../../utils/logging/loger";
 import { IAdminEditSubscriptionPlanUsecase } from "../../../../Application/admin/interfaces/subscriptionPlan/ISubscriptionPlan.admin.edit.usecase";
+import { IAdminUpdateSubscriptionPlanStatusUsecase } from "../../../../Application/admin/interfaces/subscriptionPlan/ISubscriptionPlan.admin.updateStatus.usecase";
+import { IAdminDeleteSubscriptionPlanUsecase } from "../../../../Application/admin/interfaces/subscriptionPlan/ISubscriptionPlan.admin.delete.usecase";
 
 export class SubscriptionPlanController {
     constructor (
         private _createSubcriptionPlan: ICreateSubscriptionPlanUsecase,
         private _getAllSubscriptionPlans: IAdminGetAllSubscriptionPlanUsecase,
         private _editSubscriptionPlan: IAdminEditSubscriptionPlanUsecase,
+        private _updatePanStatus: IAdminUpdateSubscriptionPlanStatusUsecase,
+        private _deletePlan: IAdminDeleteSubscriptionPlanUsecase
     ) {}
 
     createPlan = asyncHandler( async(req: Request, res: Response) => {
@@ -34,5 +38,20 @@ export class SubscriptionPlanController {
               : req.params.id
         const updatedPlan = await this._editSubscriptionPlan.execute({id: planId, ...req.body})
         return sendSuccess(res, statusCode.OK, '', updatedPlan.plan)
+    })
+
+    updateStatus = asyncHandler(async(req: Request, res: Response) => {
+        const planId = Array.isArray(req.params.id)
+              ? req.params.id[0]
+              : req.params.id   
+        await this._updatePanStatus.execute({id: planId, ...req.body})
+        return sendSuccess(res, statusCode.OK, '')    
+    })
+
+    deletePlan = asyncHandler(async(req: Request, res: Response) => {
+        const planId = Array.isArray(req.params.id)
+              ? req.params.id[0]
+              : req.params.id 
+        await this._deletePlan.execute({id: planId, ...req.body})   
     })
 }

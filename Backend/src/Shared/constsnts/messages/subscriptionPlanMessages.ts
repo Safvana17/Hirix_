@@ -11,5 +11,8 @@ export const subscriptionPlanMessages = {
         CANNOT_DENY_ADMIN_QUESTIONS_ACCESS: 'Company must atleast use admin questions',
         REQUIRES_PREMIUM_ACCESS: 'Detailed feedback requires premium access',
         NOT_FOUND: 'Subscription plan not found',
+        CANNOT_DEACTIVATE_FREE_PLAN: 'You cannot deactivate free plan',
+        ALREADY_DELETED: 'The plan is already deleted',
+        CANNOT_DELETE_ACTIVE_PLAN: 'You cannot delete active plan, first you need to deactivate it.',
     }
 }

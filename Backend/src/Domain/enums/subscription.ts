@@ -13,3 +13,8 @@ export const DurationDays: Record<BillingCycle, number> = {
     [BillingCycle.MONTHLY]: 30,
     [BillingCycle.YEARLY]: 365
 }
+
+export enum SubscriptionStatus {
+    ACTIVE = 'active',
+    INACTIVE = 'inactive'
+}
