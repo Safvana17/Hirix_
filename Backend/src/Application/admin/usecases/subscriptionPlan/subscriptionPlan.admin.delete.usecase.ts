@@ -1,3 +1,4 @@
+import { TargetType } from "../../../../Domain/enums/subscription";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
@@ -22,12 +23,14 @@ export class AdminDeleteSubscriptionPlanUsecase implements IAdminDeleteSubscript
         if(plan.isActive){
             throw new AppError(subscriptionPlanMessages.error.CANNOT_DELETE_ACTIVE_PLAN, statusCode.BAD_REQUEST)
         }
-
+        if(plan.planName.toLowerCase() === 'free'){
+            throw new AppError(subscriptionPlanMessages.error.CANNOT_DELETE_FREE_PLAN, statusCode.BAD_REQUEST)
+        }
         plan.isDeleted = true
         await this._subscriptionPlanRepository.update(plan.id, plan)
 
         return {
-            success: true
+            id: plan.id
         }
     }
 }

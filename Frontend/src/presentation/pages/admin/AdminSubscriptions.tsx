@@ -7,9 +7,9 @@ import SubscriptionPlanModal from '../../components/modal/SubscriptionPlanModal'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { createPlan, editPlan, getAllPlans, updateStatus } from '../../../redux/slices/features/subscription/subscription'
+import { createPlan, deletePlan, editPlan, getAllPlans, updateStatus } from '../../../redux/slices/features/subscription/subscription'
 import { Box, Card, Divider, Pagination, Stack, Tab, Tabs, Typography } from '@mui/material'
-import { Cancel, Check, CheckCircle } from '@mui/icons-material'
+import { Cancel, Check, CheckCircle, Delete } from '@mui/icons-material'
 import Close from '@mui/icons-material/Close'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
 
@@ -111,7 +111,7 @@ const AdminSubscriptions: React.FC = () => {
 
     openModal({
       title: `${actionText} Subscription Plan`,
-      message: `Are you sure you want to ${actionText.toLowerCase()} this subscription plan? This will ${newStatus === 'deactivate' ? 'prevent users from accessing' : 'restore their access to'} the platform.`,
+      message: `Are you sure you want to ${actionText.toLowerCase()} this subscription plan? This will make the plan ${newStatus === 'deactivate' ? 'unavailable for the new users' : 'available for the users to purchase and use'}.`,
       type: newStatus === 'deactivate' ? 'danger' : 'warning',
       onConfirm: async() => {
         try {
@@ -125,6 +125,22 @@ const AdminSubscriptions: React.FC = () => {
     })
   }
 
+  const handleDeletePlan = (id: string) => {
+    openModal({
+      title: 'Delete subscription plan',
+      message: 'Are you sure you wants to delete this subscription plan?.This will permanantly remove this from the platform.',
+      type: 'danger',
+      onConfirm: async() => {
+        try {
+          await dispatch(deletePlan({id})).unwrap()
+          toast.success('Subscription plan deleted successfully')
+          closeModal()
+        } catch (error) {
+          toast.error(typeof error === 'string' ? error : 'Failed to delete subscription plan')
+        }
+      }
+    })
+  }
   return (
     <InternalLayout
       title='Subscription'
@@ -290,7 +306,7 @@ const AdminSubscriptions: React.FC = () => {
                       })}
                     </Stack>
 
-                    <Box display="flex" justifyContent="space-between" mt={2}>
+                    <Box display="flex" justifyContent="space-evenly" gap={2} mt={2}>
                       <button 
                         onClick={() => handleEditPlan(p)}
                         className="flex items-center gap-2 bg-[#0B3358] text-white px-3 py-1 rounded-lg text-sm"
@@ -312,6 +328,12 @@ const AdminSubscriptions: React.FC = () => {
                                Activate
                             </>
                           )}
+                      </button>
+                      <button 
+                        onClick={() => handleDeletePlan(p.id)}
+                        className="flex items-center gap-2 bg-red-800 text-white px-3 py-1 rounded-lg text-sm"
+                      >
+                        <Delete className='w-3 h-3'/> Delete
                       </button>
                     </Box>
                   </Card>

@@ -86,9 +86,27 @@ export const updateStatus = createAsyncThunk<
 {id: string, status: boolean},
 UpdatePlanStatusPayload,
 {rejectValue: string}
->('subscription/updateStatus', async({id, status}, {rejectWithValue}) => {
+>('subscription/deletePlan', async({id, status}, {rejectWithValue}) => {
     try {
-        const response = await api.patch(API_ROUTES.ADMIN.SUBSCRIPTION_PLAN.DELETE(id), {status})
+        const response = await api.patch(API_ROUTES.ADMIN.SUBSCRIPTION_PLAN.STATUS(id), {status})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to update plan status')
+    }
+})
+
+export const deletePlan = createAsyncThunk<
+{id: string},
+{id: string},
+{rejectValue: string}
+>('subscription/updateStatus', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.delete(API_ROUTES.ADMIN.SUBSCRIPTION_PLAN.DELETE(id))
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -164,6 +182,13 @@ const subscriptionSlice = createSlice({
         .addCase(updateStatus.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to update status'
+        })
+        .addCase(deletePlan.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(deletePlan.fulfilled, (state, action) => {
+            state.loading = false
+            state.plans = state.plans.filter(p => p.id !== action.payload.id)
         })
     }
 })

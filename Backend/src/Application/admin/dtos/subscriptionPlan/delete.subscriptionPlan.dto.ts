@@ -3,5 +3,5 @@ export interface AdminDeleteSubscriptionPlanInputDTO {
 }
 
 export interface AdminDeleteSubscriptionPlanOutputDTO {
-    success: boolean
+    id: string
 }

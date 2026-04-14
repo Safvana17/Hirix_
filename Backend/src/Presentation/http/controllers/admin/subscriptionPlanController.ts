@@ -52,6 +52,7 @@ export class SubscriptionPlanController {
         const planId = Array.isArray(req.params.id)
               ? req.params.id[0]
               : req.params.id 
-        await this._deletePlan.execute({id: planId, ...req.body})   
+        const {id} =await this._deletePlan.execute({id: planId, ...req.body})   
+        return sendSuccess(res, statusCode.OK, '', {id})
     })
 }

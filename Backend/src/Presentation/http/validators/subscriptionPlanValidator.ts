@@ -72,6 +72,6 @@ export const PlanQuerySchema = z.object({
     .default(10),
 })
 
-export const deletePlanSchema = z.object({
+export const updatePlanSchema = z.object({
   status: z.nativeEnum(SubscriptionStatus)
 })
