@@ -42,7 +42,7 @@ router.delete(ROUTES.ADMIN.QUESTION.DELETE, authHandler(iTokenService), verifyCs
 router.post(ROUTES.ADMIN.SUBSCRIPTION_PLAN.CREATE, authHandler(iTokenService), verifyCsrf, validate(createSubscriptionPlanSchema, 'body'), iSubscriptionPlanController.createPlan)
 router.get(ROUTES.ADMIN.SUBSCRIPTION_PLAN.GET_ALL, authHandler(iTokenService), iSubscriptionPlanController.getAllPlans)
 router.put(ROUTES.ADMIN.SUBSCRIPTION_PLAN.EDIT, authHandler(iTokenService), verifyCsrf, validate(createSubscriptionPlanSchema, 'body'), iSubscriptionPlanController.editPlan)
-router.put(ROUTES.ADMIN.SUBSCRIPTION_PLAN.STATUS, authHandler(iTokenService), verifyCsrf, iSubscriptionPlanController.updateStatus)
+router.patch(ROUTES.ADMIN.SUBSCRIPTION_PLAN.STATUS, authHandler(iTokenService), verifyCsrf, iSubscriptionPlanController.updateStatus)
 router.delete(ROUTES.ADMIN.SUBSCRIPTION_PLAN.DELETE, authHandler(iTokenService), verifyCsrf, validate( deletePlanSchema ,'body'), iSubscriptionPlanController.deletePlan)
 
 

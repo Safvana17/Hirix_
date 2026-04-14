@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PlanPayload, getAllPlansParams, GetAllPlansResponse, SubscriptionPlan, TargetType } from "../../../../types/subscription";
+import type { PlanPayload, getAllPlansParams, GetAllPlansResponse, SubscriptionPlan, TargetType, UpdatePlanStatusPayload } from "../../../../types/subscription";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
@@ -82,6 +82,27 @@ SubscriptionPlan,
     }
 })
 
+export const updateStatus = createAsyncThunk<
+{id: string, status: boolean},
+UpdatePlanStatusPayload,
+{rejectValue: string}
+>('subscription/updateStatus', async({id, status}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.ADMIN.SUBSCRIPTION_PLAN.DELETE(id), {status})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to update plan status')
+    }
+})
+
+
+
+
 const subscriptionSlice = createSlice({
     name: 'subscription',
     initialState,
@@ -128,6 +149,21 @@ const subscriptionSlice = createSlice({
         .addCase(editPlan.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to edit plan'
+        })
+        .addCase(updateStatus.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(updateStatus.fulfilled, (state, action) => {
+            state.loading = false
+            const {id, status } = action.payload
+            const plan = state.plans.find(p => p.id === id)
+            if(plan){
+                plan.isActive = status
+            }
+        })
+        .addCase(updateStatus.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to update status'
         })
     }
 })

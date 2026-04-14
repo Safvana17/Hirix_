@@ -55,3 +55,12 @@ export interface GetAllPlansResponse{
     totalPages: number
     totalCount: number
 }
+
+export type UpdatePlanStatusPayload = {
+  id: string
+  status: 'activate' | 'deactivate' 
+}
+
+export type DeletePlanPayload = {
+  id: string
+}

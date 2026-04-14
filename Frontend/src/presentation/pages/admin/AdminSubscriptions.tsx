@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react'
 import InternalLayout from '../../layouts/InternalLayout'
 import { adminSidebarItems } from '../../../constants/sidebarItems'
 import { Edit2Icon, Plus } from 'lucide-react'
-import type { PlanPayload, ModalMode, TargetType } from '../../../types/subscription'
+import type { PlanPayload, ModalMode, TargetType, SubscriptionPlan } from '../../../types/subscription'
 import SubscriptionPlanModal from '../../components/modal/SubscriptionPlanModal'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { createPlan, editPlan, getAllPlans } from '../../../redux/slices/features/subscription/subscription'
+import { createPlan, editPlan, getAllPlans, updateStatus } from '../../../redux/slices/features/subscription/subscription'
 import { Box, Card, Divider, Pagination, Stack, Tab, Tabs, Typography } from '@mui/material'
 import { Cancel, Check, CheckCircle } from '@mui/icons-material'
 import Close from '@mui/icons-material/Close'
+import ConfirmationModal from '../../components/modal/ConfirmationModal'
 
 const targetType: TargetType[] = ['company', 'candidate']
 
@@ -36,6 +37,19 @@ const AdminSubscriptions: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<PlanPayload | null>(null)
   const [target, setTarget] = useState<TargetType | ''>('')
   const [page, setPage] = useState(1)
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    type: 'danger' | 'warning' | 'info';
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => { },
+    type: 'warning'
+  })
 
   const dispatch = useDispatch<AppDispatch>()
   const { plans, pagination } = useSelector((state: RootState) => state.subscription)
@@ -43,6 +57,14 @@ const AdminSubscriptions: React.FC = () => {
   useEffect(() => {
     dispatch(getAllPlans({ target: target || undefined, page, limit: 6 }))
   }, [target, page, dispatch])
+
+  const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+    setModalConfig({...config, isOpen: true})
+  }
+
+  const closeModal = () => {
+    setModalConfig(prev => ({...prev, isOpen: false}))
+  }
 
   const getFeaturesByTarget = (target: TargetType) => {
     if (target === "company") return COMPANY_FEATURES
@@ -80,6 +102,27 @@ const AdminSubscriptions: React.FC = () => {
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'Failed to perform operation')
     }
+  }
+
+  const handleUpdateStatus = (plan: SubscriptionPlan) => {
+    const planId = plan.id
+    const newStatus = plan.isActive ? 'deactivate' : 'activate'
+    const actionText = newStatus === 'deactivate' ? 'Deactivate' : 'Activate'
+
+    openModal({
+      title: `${actionText} Subscription Plan`,
+      message: `Are you sure you want to ${actionText.toLowerCase()} this subscription plan? This will ${newStatus === 'deactivate' ? 'prevent users from accessing' : 'restore their access to'} the platform.`,
+      type: newStatus === 'deactivate' ? 'danger' : 'warning',
+      onConfirm: async() => {
+        try {
+          await dispatch(updateStatus({id: planId, status: newStatus})).unwrap();
+          closeModal();
+          toast.success('Plan status updated successfully')
+        } catch (error) {
+          toast.error(typeof error === 'string' ? error : 'Failedto update plan status')
+        }
+      }
+    })
   }
 
   return (
@@ -168,6 +211,18 @@ const AdminSubscriptions: React.FC = () => {
                     }}
                   >
                     <Box display="flex" justifyContent="space-between" alignItems="center">
+                      <Box
+                        sx={{
+                          fontSize: 10,
+                          px: 1.2,
+                          py: 0.3,
+                          borderRadius: "20px",
+                          backgroundColor: p.isActive ? '#91f580' : '#f66b6b',
+                          color: "#fff"
+                        }}
+                      >
+                        {p.isActive ? 'Active' : 'Deactivated'}
+                      </Box>
                       <Typography fontWeight="bold">{p.planName}</Typography>
 
                       <Box
@@ -243,7 +298,9 @@ const AdminSubscriptions: React.FC = () => {
                         <Edit2Icon className='w-3 h-3'/> Edit
                       </button>
 
-                      <button className={`flex items-center gap-1 text-white px-3 py-1 rounded-lg text-sm ${p.isActive ? 'bg-[#840321]' : 'bg-[#014C0E]'}`}>
+                      <button 
+                        onClick={() => handleUpdateStatus(p)}
+                        className={`flex items-center gap-1 text-white px-3 py-1 rounded-lg text-sm ${p.isActive ? 'bg-[#840321]' : 'bg-[#014C0E]'}`}>
                         {p.isActive ? (
                             <>
                               <Cancel fontSize='small' />
@@ -290,6 +347,14 @@ const AdminSubscriptions: React.FC = () => {
           initialData={selectedPlan}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleSubmit}
+        />
+        <ConfirmationModal 
+            isOpen={modalConfig.isOpen}
+            onClose={closeModal}
+            onConfirm={modalConfig.onConfirm}
+            title={modalConfig.title}
+            message={modalConfig.message}
+            type={modalConfig.type}
         />
       </div>
     </InternalLayout>

@@ -15,6 +15,6 @@ export const DurationDays: Record<BillingCycle, number> = {
 }
 
 export enum SubscriptionStatus {
-    ACTIVE = 'active',
-    INACTIVE = 'inactive'
+    ACTIVE = 'activate',
+    INACTIVE = 'deactivate'
 }

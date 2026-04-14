@@ -6,5 +6,6 @@ export interface AdminUpdateSubscriptionPlanStatusInputDTO {
 }
 
 export interface AdminUpdateSubscriptionPlanStatusOutputDTO {
-    success: boolean
+    id: string
+    status: boolean
 }

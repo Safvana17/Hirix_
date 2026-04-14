@@ -14,5 +14,6 @@ export const subscriptionPlanMessages = {
         CANNOT_DEACTIVATE_FREE_PLAN: 'You cannot deactivate free plan',
         ALREADY_DELETED: 'The plan is already deleted',
         CANNOT_DELETE_ACTIVE_PLAN: 'You cannot delete active plan, first you need to deactivate it.',
+        UPDATE_STATUS_FAILED: 'Failed to update plan status',
     }
 }

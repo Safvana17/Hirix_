@@ -44,8 +44,8 @@ export class SubscriptionPlanController {
         const planId = Array.isArray(req.params.id)
               ? req.params.id[0]
               : req.params.id   
-        await this._updatePanStatus.execute({id: planId, ...req.body})
-        return sendSuccess(res, statusCode.OK, '')    
+        const {id, status } = await this._updatePanStatus.execute({id: planId, ...req.body})
+        return sendSuccess(res, statusCode.OK, '', {id, status})    
     })
 
     deletePlan = asyncHandler(async(req: Request, res: Response) => {
