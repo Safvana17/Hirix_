@@ -39,7 +39,10 @@ export const API_ROUTES = {
     JOBROLE_STATUS: (id: string) => 
       `/company/jobrole/${id}/status`,
     DELETE_JOB_ROLE: (id: string) => 
-      `/company/jobrole/${id}`
+      `/company/jobrole/${id}`,
+    SUBSCRIPTION: {
+      GET_ALL: `/company/plans`
+    }
   },
 
   ADMIN: {

@@ -7,8 +7,8 @@ import SubscriptionPlanModal from '../../components/modal/SubscriptionPlanModal'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { createPlan, deletePlan, editPlan, getAllPlans, updateStatus } from '../../../redux/slices/features/subscription/subscription'
-import { Box, Card, Divider, Pagination, Stack, Tab, Tabs, Typography } from '@mui/material'
+import { createPlan, deletePlan, editPlan, getAllPlans, updateStatus } from '../../../redux/slices/features/subscription/subscriptionPlanSlice'
+import { Box, Card, Divider, Pagination, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material'
 import { Cancel, Check, CheckCircle, Delete } from '@mui/icons-material'
 import Close from '@mui/icons-material/Close'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
@@ -52,7 +52,7 @@ const AdminSubscriptions: React.FC = () => {
   })
 
   const dispatch = useDispatch<AppDispatch>()
-  const { plans, pagination } = useSelector((state: RootState) => state.subscription)
+  const { plans, pagination } = useSelector((state: RootState) => state.subscriptionPlan)
 
   useEffect(() => {
     dispatch(getAllPlans({ target: target || undefined, page, limit: 6 }))
@@ -306,35 +306,40 @@ const AdminSubscriptions: React.FC = () => {
                       })}
                     </Stack>
 
-                    <Box display="flex" justifyContent="space-evenly" gap={2} mt={2}>
+                    <Box display="flex" gap={1} mt={2}>
+                      <Tooltip title='Edit plan'>
                       <button 
                         onClick={() => handleEditPlan(p)}
-                        className="flex items-center gap-2 bg-[#0B3358] text-white px-3 py-1 rounded-lg text-sm"
+                        className="flex-1 min-w-0 flex justify-center items-center gap-1 bg-[#0B3358] text-white px-3 py-1 rounded-lg text-sm"
                       >
                         <Edit2Icon className='w-3 h-3'/> Edit
                       </button>
-
+                      </Tooltip>
+                     <Tooltip title={p.isActive ? "Deactivate Plan" : "Activate Plan"}>
                       <button 
                         onClick={() => handleUpdateStatus(p)}
-                        className={`flex items-center gap-1 text-white px-3 py-1 rounded-lg text-sm ${p.isActive ? 'bg-[#840321]' : 'bg-[#014C0E]'}`}>
+                        className={`flex-1 min-w-0 justify-center items-center gap-1 text-white px-3 py-1 rounded-lg text-xs truncate ${p.isActive ? 'bg-[#840321]' : 'bg-[#014C0E]'}`}>
                         {p.isActive ? (
                             <>
-                              <Cancel fontSize='small' />
+                              <Cancel fontSize='inherit' />
                                 Deactivate
                             </>
                           ):(
                             <>
-                              <CheckCircle fontSize='small' />
+                              <CheckCircle fontSize='inherit' />
                                Activate
                             </>
                           )}
                       </button>
+                      </Tooltip>
+                      <Tooltip title='Delete plan'>
                       <button 
                         onClick={() => handleDeletePlan(p.id)}
-                        className="flex items-center gap-2 bg-red-800 text-white px-3 py-1 rounded-lg text-sm"
+                        className="flex-1 min-w-0 flex items-center justify-center gap-1 bg-red-800 text-white px-2 py-1 rounded-lg text-sm truncate"
                       >
-                        <Delete className='w-3 h-3'/> Delete
+                        <Delete fontSize='inherit'/> Delete
                       </button>
+                      </Tooltip>
                     </Box>
                   </Card>
                 ))}

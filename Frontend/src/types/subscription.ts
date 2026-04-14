@@ -50,6 +50,11 @@ export type getAllPlansParams = {
   limit?: number
 }
 
+export type userGetAllPlansParams = {
+  target: TargetType
+  page?: number
+  limit?: number
+}
 export interface GetAllPlansResponse{
     subscriptionPlans: SubscriptionPlan[]
     totalPages: number

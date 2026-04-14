@@ -20,7 +20,7 @@
     {label: 'Categories', icon: FolderTree, path: '/admin/categories'},
     {label: 'Questions', icon: HelpCircle, path: '/admin/questions'},
     {label: 'Practice Library', icon: Library, path: '/admin/practicelibrary'},
-    {label: 'Subscriptions', icon: CreditCard, path: '/admin/subscriptions'},
+    {label: 'Subscriptions', icon: CreditCard, path: '/admin/subscriptionS'},
     {label: 'Revenue', icon: DollarSign, path: '/admin/revenue'},
     {label: 'Reports', icon: BarChart3, path: '/admin/report'},
     {label: 'Settings', icon: Settings, path: '/admin/settings'},

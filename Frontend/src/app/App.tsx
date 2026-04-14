@@ -16,6 +16,7 @@ import AdminTestQuestions from '../presentation/pages/admin/AdminTestQuestions'
 import CompanyQuestion from '../presentation/pages/company/CompanyQuestion'
 import AdminPracticeLibrary from '../presentation/pages/admin/AdminPracticeLibrary'
 import AdminSubscriptions from '../presentation/pages/admin/AdminSubscriptions'
+import CompanySubscription from '../presentation/pages/company/CompanySubscription'
 
 
 
@@ -88,6 +89,12 @@ const App = () => {
           <Route path={ROUTES.COMPANY.QUESTIONS} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <CompanyQuestion />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.COMPANY.SUBSCRIPTION} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <CompanySubscription />
             </RoleRoute>
           } />
 

@@ -6,7 +6,8 @@ import JobRoleSlice from './slices/features/jobRoles/jobRoleSlice'
 import CategorySlice from './slices/features/category/categorySlice'
 import questionSlice from './slices/features/question/questionSlice'
 import PracticeQuestionSlice from './slices/features/question/practiceQuestionSlice'
-import SubscriptionSlice from './slices/features/subscription/subscription'
+import SubscriptionPlanSlice from './slices/features/subscription/subscriptionPlanSlice'
+import SubscriptionSlice from './slices/features/subscription/subscriptionSlice'
 
 
 export const store = configureStore({
@@ -18,6 +19,7 @@ export const store = configureStore({
         category: CategorySlice,
         question: questionSlice,
         practiceQuestion: PracticeQuestionSlice,
+        subscriptionPlan: SubscriptionPlanSlice,
         subscription: SubscriptionSlice
     }
 })

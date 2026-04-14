@@ -121,8 +121,8 @@ export const deletePlan = createAsyncThunk<
 
 
 
-const subscriptionSlice = createSlice({
-    name: 'subscription',
+const subscriptionPlanSlice = createSlice({
+    name: 'subscriptionPlan',
     initialState,
     reducers: {
         reset: (state) =>{
@@ -193,5 +193,5 @@ const subscriptionSlice = createSlice({
     }
 })
 
-export const { reset } = subscriptionSlice.actions
-export default subscriptionSlice.reducer
+export const { reset } = subscriptionPlanSlice.actions
+export default subscriptionPlanSlice.reducer
