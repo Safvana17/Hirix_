@@ -34,7 +34,7 @@ const subscriptionPlanSchema: Schema<ISubscriptionPlan> = new Schema ({
     },
     target: {
         type: String,
-        default: TargetType.ALL
+        default: TargetType.COMPANY
     },
     billingCycle: {
         type: String,

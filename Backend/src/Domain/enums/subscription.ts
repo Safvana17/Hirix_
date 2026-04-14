@@ -1,7 +1,6 @@
 export enum TargetType {
     CANDIDATE = 'candidate',
     COMPANY = 'company',
-    ALL = 'all'
 }
 
 export enum BillingCycle {

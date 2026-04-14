@@ -38,6 +38,9 @@ export const ROUTES = {
         CREATE: '/question',
         EDIT: '/question/:id',
         DELETE: '/question/:id'
+      },
+      SUBSCRIPTION: {
+        GET_ALL: '/plans',
       }
     },
 

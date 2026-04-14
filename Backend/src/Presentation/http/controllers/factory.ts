@@ -59,7 +59,7 @@ import { AdminGetAllSubscriptionPlanUsecase } from "../../../Application/admin/u
 import { AdminEditSubscriptionPlanUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.edit.usecase";
 import { AdminUpdateSubscriptionPlanStausUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.updateStatus.usecase";
 import { AdminDeleteSubscriptionPlanUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.delete.usecase";
-
+import { CompanyGetAllPlanUsecase } from "../../../Application/company/usecases/subscription/company.getAll.plan.usecase";
 
 
 //repositories
@@ -96,6 +96,7 @@ import { CompanyQuestionController } from "./company/companyQuestionController";
 import { CandidateGetAllPracticeQuestionsUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getAllPracticeQuestion.usecase";
 import { PracticeLibraryController } from "./candidate/practiceQuestionController";
 import { SubscriptionPlanController } from "./admin/subscriptionPlanController";
+import { CompanySubscriptionController } from "./company/subscriptionController";
 
 
 
@@ -305,6 +306,12 @@ const iCompanyEditQuestion = new CompanyEditQuestionUsecase(
 const iCompanyDeleteQuestion = new CompanyDeleteQuestionUsecase(
     iQuestionRepository
 )
+
+//subscription
+
+const iCompanyGetAllPlans = new CompanyGetAllPlanUsecase(
+    iSubscriptionPlanRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -509,4 +516,8 @@ export const iSubscriptionPlanController = new SubscriptionPlanController (
     IAdminEditSubscriptionPlan,
     iAdminUpdatePlanStatus,
     iDeleteSubscriptionPlan
+)
+
+export const iCompanySubscriptionController = new CompanySubscriptionController(
+    iCompanyGetAllPlans
 )

@@ -1,7 +1,7 @@
 import  Express  from "express";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { authHandler } from "../../middlewares/authMiddleware";
-import { iCompanyQuestionController, iCompanySettingsController, iJobRoleController, iTokenService } from "../../controllers/factory";
+import { iCompanyQuestionController, iCompanySettingsController, iCompanySubscriptionController, iJobRoleController, iTokenService } from "../../controllers/factory";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { upload } from "../../middlewares/imageUpload";
 import { validate } from "../../middlewares/validate";
@@ -24,7 +24,7 @@ router.put(ROUTES.COMPANY.SETTINGS.RESTORE, iCompanySettingsController.confirmRe
 
 //job role
 router.post(ROUTES.COMPANY.JOBROLE.CREATE, authHandler(iTokenService), verifyCsrf, validate(createJobRoleSchema, 'body'), iJobRoleController.createJobRole)
-router.get(ROUTES.COMPANY.JOBROLE.BASE, authHandler(iTokenService), verifyCsrf, iJobRoleController.getAllJobRoles)
+router.get(ROUTES.COMPANY.JOBROLE.BASE, authHandler(iTokenService), iJobRoleController.getAllJobRoles)
 router.put(ROUTES.COMPANY.JOBROLE.EDIT, authHandler(iTokenService), verifyCsrf, validate(EditJobRoleSchema, 'body'), iJobRoleController.editJobRole)
 router.put(ROUTES.COMPANY.JOBROLE.STATUS, authHandler(iTokenService), verifyCsrf, validate(updateJobRoleSchema, 'body'), iJobRoleController.updateStatus)
 router.delete(ROUTES.COMPANY.JOBROLE.DELETE, authHandler(iTokenService), verifyCsrf, iJobRoleController.deleteJobRole)
@@ -34,4 +34,9 @@ router.post(ROUTES.COMPANY.QUESTION.CREATE, authHandler(iTokenService), verifyCs
 router.get(ROUTES.COMPANY.QUESTION.BASE, authHandler(iTokenService), iCompanyQuestionController.getAllQuestions)
 router.put(ROUTES.COMPANY.QUESTION.EDIT, authHandler(iTokenService), verifyCsrf, validate(editQuestionSchema, 'body'), iCompanyQuestionController.editQuestion)
 router.delete(ROUTES.COMPANY.QUESTION.DELETE, authHandler(iTokenService), verifyCsrf, iCompanyQuestionController.deleteQuestion)
+
+//subscription
+router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_ALL, authHandler(iTokenService), iCompanySubscriptionController.getAllPlan)
+
+
 export default router;
