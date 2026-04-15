@@ -37,6 +37,6 @@ router.delete(ROUTES.COMPANY.QUESTION.DELETE, authHandler(iTokenService), verify
 
 //subscription
 router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_ALL, authHandler(iTokenService), iCompanySubscriptionController.getAllPlan)
-
+router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_CURRENT, authHandler(iTokenService), iCompanySubscriptionController.getCurrentPlan)
 
 export default router;

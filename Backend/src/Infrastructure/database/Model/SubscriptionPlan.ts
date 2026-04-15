@@ -8,7 +8,7 @@ export interface ISubscriptionPlan extends Document {
     price: number;
     target: TargetType;
     billingCycle: BillingCycle;
-    durationDays: number;
+    durationDays: number | null;
     canCreateCustomQuestions: boolean;
     canUseAdminQuestions: boolean;
     maxTestsPerMonth: number | null;
@@ -41,7 +41,8 @@ const subscriptionPlanSchema: Schema<ISubscriptionPlan> = new Schema ({
         default: BillingCycle.MONTHLY
     },
     durationDays: {
-        type: Number
+        type: Number,
+        default: null
     },
     canCreateCustomQuestions: {
         type: Boolean

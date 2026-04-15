@@ -1,4 +1,4 @@
-import { SubscriptionStatus } from "../../../../Domain/enums/subscription";
+import { SubscriptionPlanStatus } from "../../../../Domain/enums/subscription";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
@@ -18,12 +18,12 @@ export class AdminUpdateSubscriptionPlanStausUsecase implements IAdminUpdateSubs
             throw new AppError(subscriptionPlanMessages.error.NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        if(plan.planName.toLowerCase() === 'free' && request.status === SubscriptionStatus.INACTIVE){
+        if(plan.planName.toLowerCase() === 'free' && request.status === SubscriptionPlanStatus.INACTIVE){
             throw new AppError(subscriptionPlanMessages.error.CANNOT_DEACTIVATE_FREE_PLAN, statusCode.BAD_REQUEST)
         }
         logger.info(request.status)
 
-        const isActive = request.status === SubscriptionStatus.ACTIVE
+        const isActive = request.status === SubscriptionPlanStatus.ACTIVE
         plan.isActive = isActive
         logger.info(isActive, 'active or not')
         const updatedPlan = await this._subscriptionPlanRepository.update(plan.id, plan)

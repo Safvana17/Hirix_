@@ -1,5 +1,5 @@
 import { SubscriptionPlanEntity } from "../../../../Domain/entities/SubscriptionPlan.entity";
-import { DurationDays, TargetType } from "../../../../Domain/enums/subscription";
+import { BillingCycle, DurationDays, TargetType } from "../../../../Domain/enums/subscription";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
@@ -22,10 +22,15 @@ export class AdminCreateSubscriptionPlnUsecase implements ICreateSubscriptionPla
             throw new AppError(subscriptionPlanMessages.error.PRICE_MUST_BE_ZERO, statusCode.BAD_REQUEST)
         }
 
-        const expectedDurationDays = DurationDays[request.billingCycle]
-        if(request.durationDays !== expectedDurationDays){
-            throw new AppError(subscriptionPlanMessages.error.INVALID_DURATIONDAYS, statusCode.BAD_REQUEST)
+        if(request.price === 0 && request.billingCycle !== BillingCycle.FOREVER){
+           throw new AppError(subscriptionPlanMessages.error.INVALID_BILLING_CYCLE, statusCode.BAD_REQUEST)
         }
+        // const expectedDurationDays = DurationDays[request.billingCycle]
+        // if(request.durationDays !== expectedDurationDays){
+        //     throw new AppError(subscriptionPlanMessages.error.INVALID_DURATIONDAYS, statusCode.BAD_REQUEST)
+        // }
+
+        const durationDays = DurationDays[request.billingCycle]
 
         const limits = [
             request.maxTestsPerMonth,
@@ -58,7 +63,7 @@ export class AdminCreateSubscriptionPlnUsecase implements ICreateSubscriptionPla
             request.target,
             request.price,
             request.billingCycle,
-            request.durationDays,
+            durationDays,
             true,
             false,
             request.canCreateCustomQuestions ?? false,

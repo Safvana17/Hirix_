@@ -1,4 +1,3 @@
-import { Doc } from "zod/v4/core";
 import { SubscriptionPlanEntity } from "../../Domain/entities/SubscriptionPlan.entity";
 import { ISubscriptionPlan } from "../../Infrastructure/database/Model/SubscriptionPlan";
 

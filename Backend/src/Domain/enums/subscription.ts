@@ -5,15 +5,23 @@ export enum TargetType {
 
 export enum BillingCycle {
     MONTHLY = 'monthly',
-    YEARLY = 'yearly'
+    YEARLY = 'yearly',
+    FOREVER = 'forever'
 }
 
-export const DurationDays: Record<BillingCycle, number> = {
+export const DurationDays: Record<BillingCycle, number | null> = {
     [BillingCycle.MONTHLY]: 30,
-    [BillingCycle.YEARLY]: 365
+    [BillingCycle.YEARLY]: 365,
+    [BillingCycle.FOREVER]: null,
 }
 
-export enum SubscriptionStatus {
+export enum SubscriptionPlanStatus {
     ACTIVE = 'activate',
     INACTIVE = 'deactivate'
+}
+
+export enum subscriptionStatus {
+    ACTIVE = 'active',
+    EXPIRED = 'expired',
+    CANCELLED = 'cancelled'
 }

@@ -1,6 +1,6 @@
-// import { SubscriptionEntity } from "../entities/Subscription.entity";
-// import { IBaseRepository } from "./iBase.repository";
+import { SubscriptionEntity } from "../entities/Subscription.entity";
+import { IBaseRepository } from "./iBase.repository";
 
-// export interface ISubscriptionRepository extends IBaseRepository<SubscriptionEntity> {
-//    findbyowner(ownerid: string): Promise<>
-// }
+export interface ISubscriptionRepository extends IBaseRepository<SubscriptionEntity> {
+     findCurrentByUserId(userId: string): Promise<SubscriptionEntity | null>
+}

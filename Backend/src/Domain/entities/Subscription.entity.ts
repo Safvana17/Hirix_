@@ -1,4 +1,4 @@
-import { TargetType } from "../enums/subscription";
+import { subscriptionStatus, TargetType } from "../enums/subscription";
 
 export class SubscriptionEntity {
     id: string;
@@ -6,8 +6,9 @@ export class SubscriptionEntity {
     ownerId: string;
     planId: string;
     startDate: Date;
-    endDate: Date;
-    isActive: boolean;
+    endDate: Date | null;
+    status: subscriptionStatus;
+    isCurrent: boolean;
     paymentId?: string
 
     constructor(
@@ -16,8 +17,9 @@ export class SubscriptionEntity {
         ownerId: string,
         planId: string,
         startDate: Date,
-        endDate: Date,
-        isActive: boolean,
+        endDate: Date | null,
+        status: subscriptionStatus,
+        isCurrent: boolean,
         paymentId?: string
     ) {
         this.id = id;
@@ -26,7 +28,8 @@ export class SubscriptionEntity {
         this.planId = planId;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.isActive = isActive;
+        this.status = status
+        this.isCurrent = isCurrent;
         this.paymentId = paymentId 
     }
 }

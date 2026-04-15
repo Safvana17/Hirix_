@@ -1,5 +1,5 @@
 import z from "zod";
-import { BillingCycle, SubscriptionStatus, TargetType } from "../../../Domain/enums/subscription";
+import { BillingCycle, SubscriptionPlanStatus, TargetType } from "../../../Domain/enums/subscription";
 
 export const createSubscriptionPlanSchema = z.object({
   planName: z
@@ -14,8 +14,6 @@ export const createSubscriptionPlanSchema = z.object({
     .min(0, "Price cannot be negative"),
   billingCycle: z
     .nativeEnum(BillingCycle),
-  durationDays: z
-    .number(),
   maxCandidates: z
     .number()
     .min(1, "Candidate limit must be at least one")
@@ -48,17 +46,6 @@ export const createSubscriptionPlanSchema = z.object({
       path: ["price"],
     }
   )
- .refine((data) => {
-    const map = {
-      monthly: 30,
-      yearly: 365,
-    };
-    return data.durationDays === map[data.billingCycle];
-  },{
-    message: "Invalid duration for selected billing cycle",
-    path: ["durationDays"],
-  }
-);
 
 export const PlanQuerySchema = z.object({
   target: z
@@ -73,5 +60,5 @@ export const PlanQuerySchema = z.object({
 })
 
 export const updatePlanSchema = z.object({
-  status: z.nativeEnum(SubscriptionStatus)
+  status: z.nativeEnum(SubscriptionPlanStatus)
 })

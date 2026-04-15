@@ -6,7 +6,7 @@ export class SubscriptionPlanEntity {
     target: TargetType;
     price: number;
     billingCycle: BillingCycle;
-    durationDays: number;
+    durationDays: number | null;
 
     canCreateCustomQuestions?: boolean
     canUseAdminQuestions?: boolean
@@ -28,7 +28,7 @@ export class SubscriptionPlanEntity {
         target: TargetType, 
         price: number, 
         billingCycle: BillingCycle, 
-        durationDays: number, 
+        durationDays: number | null, 
         isActive: boolean, 
         isDeleted: boolean,
         canCreateCustomQuestions?: boolean,

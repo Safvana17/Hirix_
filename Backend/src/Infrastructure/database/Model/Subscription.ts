@@ -1,6 +1,5 @@
 import mongoose, { Types, Document, Schema, Model } from "mongoose";
-import { TargetType } from "../../../Domain/enums/subscription";
-import { ref } from "node:process";
+import { subscriptionStatus, TargetType } from "../../../Domain/enums/subscription";
 
 export interface ISubscription extends Document {
     id: Types.ObjectId
@@ -8,8 +7,9 @@ export interface ISubscription extends Document {
     ownerId: Types.ObjectId
     planId: Types.ObjectId
     startDate: Date
-    enddate: Date
-    isActive: boolean
+    endDate: Date | null
+    status: subscriptionStatus
+    isCurrent: boolean
     paymentId: string
     createdAt: Date
     updatedAt: Date
@@ -29,10 +29,14 @@ const SubscriptionSchema: Schema<ISubscription> = new Schema ({
     startDate: {
         type: Date
     },
-    enddate: {
-        type: Date
+    endDate: {
+        type: Date,
+        default: null
     },
-    isActive: {
+    status: {
+        type: String
+    },
+    isCurrent: {
         type: Boolean
     },
     paymentId: {

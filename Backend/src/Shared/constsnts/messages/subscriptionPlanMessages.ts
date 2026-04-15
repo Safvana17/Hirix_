@@ -16,5 +16,8 @@ export const subscriptionPlanMessages = {
         CANNOT_DELETE_ACTIVE_PLAN: 'You cannot delete active plan, first you need to deactivate it.',
         UPDATE_STATUS_FAILED: 'Failed to update plan status',
         CANNOT_DELETE_FREE_PLAN: 'You canot delete free plan',
+        CANNOT_FIND_SUBCRIPTION_DETAILS: 'Subcription details are not found',
+        MISSING_FREE_PLAN: 'Free plan for this target is missing',
+        INVALID_BILLING_CYCLE: 'For free plan billing cycle must be FOREVER'
     }
 }

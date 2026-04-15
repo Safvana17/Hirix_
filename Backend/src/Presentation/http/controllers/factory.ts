@@ -60,7 +60,7 @@ import { AdminEditSubscriptionPlanUsecase } from "../../../Application/admin/use
 import { AdminUpdateSubscriptionPlanStausUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.updateStatus.usecase";
 import { AdminDeleteSubscriptionPlanUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.delete.usecase";
 import { CompanyGetAllPlanUsecase } from "../../../Application/company/usecases/subscription/company.getAll.plan.usecase";
-
+import { CompanyGetCurrentPlanUsecase } from "../../../Application/company/usecases/subscription/company.getCurrentPlan.usecase";
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -97,6 +97,7 @@ import { CandidateGetAllPracticeQuestionsUsecase } from "../../../Application/ca
 import { PracticeLibraryController } from "./candidate/practiceQuestionController";
 import { SubscriptionPlanController } from "./admin/subscriptionPlanController";
 import { CompanySubscriptionController } from "./company/subscriptionController";
+import { SubscriptionRepository } from "../../../Infrastructure/repositories/subscription.repository";
 
 
 
@@ -108,6 +109,7 @@ const iJobRoleRepository = new JobRolesRepository()
 const iCategoryRepository = new CategoryRepository()
 const iQuestionRepository = new QuestionRepository()
 const iSubscriptionPlanRepository = new SubscriptionPlanRepository()
+const iSubscriptionRepository = new SubscriptionRepository
 
 
 const iHashService = new HashService()
@@ -184,7 +186,9 @@ const iRegisterCompany = new RegisterCompanyUsecase(
       iHashService,
       iOtpService,
       iOtpRepository,
-      iMailService
+      iMailService,
+      iSubscriptionPlanRepository,
+      iSubscriptionRepository
 )
 
 const iResendOtpCompny = new ResendOtpCompanyUsecase(
@@ -310,6 +314,11 @@ const iCompanyDeleteQuestion = new CompanyDeleteQuestionUsecase(
 //subscription
 
 const iCompanyGetAllPlans = new CompanyGetAllPlanUsecase(
+    iSubscriptionPlanRepository
+)
+const iCompanyGetCurrentPlan = new CompanyGetCurrentPlanUsecase(
+    iCompanyRepository,
+    iSubscriptionRepository,
     iSubscriptionPlanRepository
 )
 //admin
@@ -519,5 +528,6 @@ export const iSubscriptionPlanController = new SubscriptionPlanController (
 )
 
 export const iCompanySubscriptionController = new CompanySubscriptionController(
-    iCompanyGetAllPlans
+    iCompanyGetAllPlans,
+    iCompanyGetCurrentPlan
 )

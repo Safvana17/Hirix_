@@ -41,6 +41,7 @@ export const ROUTES = {
       },
       SUBSCRIPTION: {
         GET_ALL: '/plans',
+        GET_CURRENT: '/plan'
       }
     },
 

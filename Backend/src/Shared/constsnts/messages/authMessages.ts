@@ -87,6 +87,7 @@ export const authMessages = {
         COMPANY_ALREADY_EXISTS: "Company with this email already exists",
 
         COMPANY_BLOCKED: "Company is blocked by the admin",
+        MISSING_FREE_PLAN: 'Free plan is not configured',
 
         COMPANY_REJECTED: 'Your account registration has been rejected by the admin.',
         EMAIL_VERIFICATION_REQUIRED: 'Email verification required. A verification link has been sent to your email.',

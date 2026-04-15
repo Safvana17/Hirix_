@@ -5,7 +5,6 @@ import { TargetType } from "../../Domain/enums/subscription";
 import { ISubscriptionPlanRepository } from "../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { ISubscriptionPlan, SubscriptionPlanModel } from "../database/Model/SubscriptionPlan";
 import { BaseRepository } from "./base.repository";
-import { logger } from "../../utils/logging/loger";
 
 export class SubscriptionPlanRepository extends BaseRepository<SubscriptionPlanEntity, ISubscriptionPlan> implements ISubscriptionPlanRepository{
     constructor(){
@@ -39,13 +38,20 @@ export class SubscriptionPlanRepository extends BaseRepository<SubscriptionPlanE
                 .limit(query.limit)
                 .sort({createdAt: -1})
 
-        logger.info(documnet, 'from repository')
-
         return {
             data: documnet.map(d => this.mapToEntity(d)),
             totalCount,
             totalPages
         }
+    }
+
+    async findFreePlan(target: TargetType): Promise<SubscriptionPlanEntity | null> {
+        const document = await this._model.findOne({
+            target: target,
+            price: 0 
+        })
+        if(!document) return null
+        return this.mapToEntity(document)
     }
 
     protected mapToEntity(doc: ISubscriptionPlan): SubscriptionPlanEntity {

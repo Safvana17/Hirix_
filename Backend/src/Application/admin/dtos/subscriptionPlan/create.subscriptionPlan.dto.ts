@@ -6,7 +6,7 @@ export interface AdminCreateSubscriptionPlanInputDTO {
     target: TargetType;
     price: number;
     billingCycle: BillingCycle;
-    durationDays: number;
+    // durationDays: number;
     canCreateCustomQuestions?: boolean;
     canUseAdminQuestions?: boolean;
     maxCandidates?: number | null;
