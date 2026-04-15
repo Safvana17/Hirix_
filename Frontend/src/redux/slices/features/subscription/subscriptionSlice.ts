@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { GetAllPlansResponse, SubscriptionPlan, TargetType, userGetAllPlansParams } from "../../../../types/subscription";
+import type { CurrentPlan, GetAllPlansResponse, SubscriptionPlan, TargetType, userGetAllPlansParams } from "../../../../types/subscription";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
@@ -8,6 +8,7 @@ interface SubscriptionState {
     loading: boolean;
     error: string | null;
     plans: SubscriptionPlan[];
+    currentPlan: CurrentPlan | null
     pagination: {
         plans: {
             totalPages: number;
@@ -20,6 +21,7 @@ const initialState: SubscriptionState = {
     loading: true,
     plans: [],
     error: null,
+    currentPlan: null,
     pagination: {
         plans: {
             totalPages: 0,
@@ -38,7 +40,24 @@ userGetAllPlansParams,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log(response.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get all plans')
+    }
+})
+
+export const getCurrentPlan = createAsyncThunk<
+CurrentPlan,
+void,
+{rejectValue: string}
+>('userSubscription/getCurrentPlan', async(_, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.SUBSCRIPTION.GET_CURRENT)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log('current plan from slice',response.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -72,6 +91,17 @@ const subscriptionSlice = createSlice({
         .addCase(getAllPlans.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get all plans'
+        })
+        .addCase(getCurrentPlan.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(getCurrentPlan.fulfilled, (state, action) => {
+            state.loading = false
+            state.currentPlan = action.payload
+        })
+        .addCase(getCurrentPlan.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get current plan'
         })
     }
 })

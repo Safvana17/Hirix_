@@ -5,8 +5,7 @@ export const createSubscriptionPlanSchema = z.object({
   planName: z.string().min(1),
   target: z.enum(['company', 'candidate']),
   price: z.number().min(0),
-  billingCycle: z.enum(['monthly', 'yearly']),
-  durationDays: z.number(),
+  billingCycle: z.enum(['monthly', 'yearly', 'forever']),
 
   maxCandidates: z.number().min(1).nullable().optional(),
   maxTestsPerMonth: z.number().min(1).nullable().optional(),
@@ -26,16 +25,3 @@ export const createSubscriptionPlanSchema = z.object({
       path: ["price"],
     }
   )
- .refine(
-    (data) => {
-      const map = {
-        monthly: 30,
-        yearly: 365,
-      };
-      return data.durationDays === map[data.billingCycle];
-    },
-    {
-      message: "Invalid duration for selected billing cycle",
-      path: ["durationDays"],
-    }
-  );

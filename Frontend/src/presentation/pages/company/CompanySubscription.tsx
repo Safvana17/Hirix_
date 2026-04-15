@@ -3,9 +3,9 @@ import InternalLayout from '../../layouts/InternalLayout'
 import { companySidebarItems } from '../../../constants/sidebarItems'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { Box, Card, Pagination, Stack, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Card, LinearProgress, Pagination, Stack, Tooltip, Typography } from '@mui/material'
 import { Check, Close } from '@mui/icons-material'
-import { getAllPlans } from '../../../redux/slices/features/subscription/subscriptionSlice'
+import { getAllPlans, getCurrentPlan } from '../../../redux/slices/features/subscription/subscriptionSlice'
 
 
 const COMPANY_FEATURES = [
@@ -19,13 +19,23 @@ const COMPANY_FEATURES = [
 const CompanySubscription: React.FC= () => {
 
   const [page, setPage] = useState(1)
-  const {plans, pagination} = useSelector((state: RootState) => state.subscription)
+  const { user } = useSelector((state: RootState) => state.auth)
+  const {plans, pagination, currentPlan} = useSelector((state: RootState) => state.subscription)
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    dispatch(getAllPlans({target: 'company', page, limit: 6 }))
-  }, [page, dispatch])
+    if(user){
+      dispatch(getAllPlans({target: 'company', page, limit: 6 }))
+      dispatch(getCurrentPlan())
+    }
+  }, [user, page, dispatch])
   console.log('plans from company: ', plans)
+  console.log('current plan: ', currentPlan)
+
+  const getProgress = (used: number, limit: number | null) => {
+    if (!limit) return 10 
+    return Math.min((used / limit) * 100, 100)
+  }
   
  const getFeaturesByTarget = () => {
    return COMPANY_FEATURES
@@ -33,8 +43,123 @@ const CompanySubscription: React.FC= () => {
   return (
     <InternalLayout title='Subscription' subTitle='Manage you subscriptions and billings' sidebarItems={companySidebarItems}>
         <div>
-          <div className='bg-white rounded-xl px-3 shadow-lg'>
+          <div>
+            <Box
+              sx={{
+                backgroundColor: "#fff",
+                borderRadius: 3,
+                p: 3,
+                boxShadow: "0 4px 20px rgba(0,0,0,0.08)"
+              }}
+            >
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="subtitle2" color="text.secondary">
+                  Current Plan
+                </Typography>
 
+                <Box
+                  sx={{
+                    px: 2,
+                    py: 0.5,
+                    borderRadius: "20px",
+                    backgroundColor: currentPlan?.status === "active" ? "#16694c" : "#999",
+                    color: "#fff",
+                    fontSize: 12
+                  }}
+                >
+                  {currentPlan?.status}
+                </Box>
+              </Box>
+
+              <Box mt={1}>
+                <Typography variant="h5" fontWeight="bold">
+                  {currentPlan?.planName}
+                </Typography>
+
+                <Typography variant="body2" color="text.secondary">
+                  ₹ {currentPlan?.price} / {currentPlan?.billingCycle}
+                </Typography>
+              </Box>
+
+              <Box mt={1}>
+                {currentPlan?.endDate && (
+                  <>
+                <Typography variant="caption" color="text.secondary">
+                  Next billing date
+                </Typography>
+                <Typography variant="body2" fontWeight="bold">
+                  {currentPlan?.endDate.toLocaleDateString()}
+                </Typography>
+                </>
+                )}
+              </Box>
+
+              <Box mt={2}>
+                <Typography variant="caption">Candidates this month</Typography>
+
+                <LinearProgress
+                  variant="determinate"
+                  value={getProgress(4, currentPlan?.maxCandidates ?? null)}
+                  sx={{
+                    height: 6,
+                    borderRadius: 5,
+                    backgroundColor: "#eee",
+                    "& .MuiLinearProgress-bar": {
+                      backgroundColor: "#6B4705"
+                    }
+                  }}
+                />
+
+                <Typography variant="caption">
+                  {4} / {currentPlan?.maxCandidates ?? "unlimited"}
+                </Typography>
+              </Box>
+
+              <Box mt={2}>
+                <Typography variant="caption">Tests this month</Typography>
+
+                <LinearProgress
+                  variant="determinate"
+                  value={getProgress(1, currentPlan?.maxTestsPerMonth ?? null)}
+                  sx={{
+                    height: 6,
+                    borderRadius: 5,
+                    backgroundColor: "#eee",
+                    "& .MuiLinearProgress-bar": {
+                      backgroundColor: "#6B4705"
+                    }
+                  }}
+                />
+
+                <Typography variant="caption">
+                  {1} / {currentPlan?.maxTestsPerMonth ?? "unlimited"}
+                </Typography>
+              </Box> 
+
+              <Box mt={3} display="flex" gap={2}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#0B3358",
+                    borderRadius: 5,
+                    textTransform: "none"
+                  }}
+                >
+                  Manage Billing
+                </Button>
+
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#6B4705",
+                    borderRadius: 5,
+                    textTransform: "none"
+                  }}
+                >
+                  Download Invoice
+                </Button>
+              </Box>
+            </Box>
           </div>
           {plans.length > 0 ? (
             <>
@@ -139,10 +264,11 @@ const CompanySubscription: React.FC= () => {
                     </Stack>
 
                     <Box display="flex" gap={1} mt={2}>
-                      <Tooltip title='Edit plan'>
-                      <button>
+                      <button 
+                        disabled={currentPlan?.id === p.id}
+                        className={`w-full p-2 border rounded-lg text-white font-bold ${currentPlan.id === p.id ? 'border-green-800 bg-green-800 cursor-not-allowed' : 'border-[#6B4705] bg-[#6B4705]'}`}>
+                        {currentPlan?.id === p.id ? 'Current plan' : 'Upgrade'}
                       </button>
-                      </Tooltip>
                     </Box>
                   </Card>
                 ))}

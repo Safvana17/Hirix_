@@ -89,6 +89,7 @@ const AdminSubscriptions: React.FC = () => {
   const handleSubmit = async (data: PlanPayload) => {
     try {
       if (modalMode === 'create') {
+        console.log('from admin: ', data)
         await dispatch(createPlan({ data })).unwrap()
         toast.success('Plan created successfully')
         setIsModalOpen(false)

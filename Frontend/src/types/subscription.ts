@@ -1,5 +1,5 @@
 export type TargetType = 'company' | 'candidate'
-export type BillingCycle = 'monthly' | 'yearly'
+export type BillingCycle = 'monthly' | 'yearly' | 'forever'
 
 export interface SubscriptionPlan {
     id: string;
@@ -7,7 +7,7 @@ export interface SubscriptionPlan {
     target: TargetType;
     price: number;
     billingCycle: BillingCycle;
-    durationDays: number;
+    durationDays: number | null;
     canCreateCustomQuestions?: boolean;
     canUseAdminQuestions?: boolean;
     maxCandidates?: number | null;
@@ -27,7 +27,7 @@ export interface PlanPayload {
     target: TargetType
     price: number
     billingCycle: BillingCycle
-    durationDays: number
+    // durationDays: number | null
     canCreateCustomQuestions?: boolean;
     canUseAdminQuestions?: boolean;
     maxCandidates?: number | null;
@@ -68,4 +68,20 @@ export type UpdatePlanStatusPayload = {
 
 export type DeletePlanPayload = {
   id: string
+}
+
+export interface CurrentPlan {
+  id: string;
+  planName: string;
+  price: number;
+  startDate: Date;    
+  endDate: Date | null;
+  status: 'active' | 'expired' | 'cancelled';
+  billingCycle: BillingCycle;
+  maxTestsPerMonth: number | null;
+  maxCandidates: number | null;
+  maxInterviewPerMonth: number | null;
+  maxJobRolesPerMonth: number | null;
+  maxPracticePerDay: number | null;
+
 }

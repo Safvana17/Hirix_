@@ -41,7 +41,8 @@ export const API_ROUTES = {
     DELETE_JOB_ROLE: (id: string) => 
       `/company/jobrole/${id}`,
     SUBSCRIPTION: {
-      GET_ALL: `/company/plans`
+      GET_ALL: `/company/plans`,
+      GET_CURRENT: `/company/plan`
     }
   },
 

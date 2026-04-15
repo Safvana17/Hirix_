@@ -3,10 +3,11 @@ import type { ModalMode, PlanPayload, TargetType, BillingCycle } from '../../../
 import { ZodError } from 'zod'
 import { createSubscriptionPlanSchema } from '../../../lib/validation/subcriptionPlanValidator'
 
-const durationMap: Record<BillingCycle, number> = {
-  monthly: 30,
-  yearly: 365
-}
+// const durationMap: Record<BillingCycle, number|null> = {
+//   monthly: 30,
+//   yearly: 365,
+//   forever: null
+// }
 
 interface Props {
   isOpen: boolean
@@ -24,7 +25,6 @@ const SubscriptionPlanModal: React.FC<Props> = ({ isOpen, onClose,initialData, o
     target: initialData?.target || 'company',
     price: initialData?.price || 0,
     billingCycle: initialData?.billingCycle || 'monthly',
-    durationDays: initialData?.durationDays|| 30,
 
     canCreateCustomQuestions: initialData?.canCreateCustomQuestions|| false,
     canUseAdminQuestions: initialData?.canUseAdminQuestions || true,
@@ -68,11 +68,13 @@ const SubscriptionPlanModal: React.FC<Props> = ({ isOpen, onClose,initialData, o
     const payload: PlanPayload = {
       ...formData,
       planName: formData.planName.trim(),
-      durationDays: durationMap[formData.billingCycle]
     }
 
-    if (!validate(payload)) return
-
+    console.log('payload: ', payload)
+    if (!validate(payload)){
+       console.log('validation failed', localError)
+       return
+    }
     onSubmit(payload)
   }
 
@@ -122,6 +124,7 @@ const SubscriptionPlanModal: React.FC<Props> = ({ isOpen, onClose,initialData, o
               <option value="company">Company</option>
               <option value="candidate">Candidate</option>
             </select>
+            {localError.target && <p className="text-red-500 text-xs">{localError.target}</p>}
           </div>
 
           <div>
@@ -135,7 +138,9 @@ const SubscriptionPlanModal: React.FC<Props> = ({ isOpen, onClose,initialData, o
             >
               <option value="monthly">Monthly</option>
               <option value="yearly">Yearly</option>
+              <option value="forever">Forever</option>
             </select>
+            {localError.billingCycle && <p className="text-red-500 text-xs">{localError.billingCycle}</p>}
           </div>
         </div>
 
