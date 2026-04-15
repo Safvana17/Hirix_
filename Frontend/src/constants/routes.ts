@@ -16,7 +16,8 @@ export const ROUTES = {
     RESTORE: '/company/restore-account',
     JOB_ROLES: '/company/job-roles',
     QUESTIONS: '/company/questions',
-    SUBSCRIPTION: '/company/subscriptions'
+    SUBSCRIPTION: '/company/subscriptions',
+    PAYMENT: '/company/payment'
   },
 
   CANDIDATE: {

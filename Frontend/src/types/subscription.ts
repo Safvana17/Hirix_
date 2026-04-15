@@ -83,5 +83,8 @@ export interface CurrentPlan {
   maxInterviewPerMonth: number | null;
   maxJobRolesPerMonth: number | null;
   maxPracticePerDay: number | null;
-
+}
+ 
+export interface ChangePlanResponse {
+  isPaymentRequired: boolean
 }

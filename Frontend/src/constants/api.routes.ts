@@ -42,7 +42,8 @@ export const API_ROUTES = {
       `/company/jobrole/${id}`,
     SUBSCRIPTION: {
       GET_ALL: `/company/plans`,
-      GET_CURRENT: `/company/plan`
+      GET_CURRENT: `/company/plan`,
+      CHANGE_SUBSCRIPTION: `/company/change-subscription`
     }
   },
 

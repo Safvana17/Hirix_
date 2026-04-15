@@ -17,6 +17,7 @@ import CompanyQuestion from '../presentation/pages/company/CompanyQuestion'
 import AdminPracticeLibrary from '../presentation/pages/admin/AdminPracticeLibrary'
 import AdminSubscriptions from '../presentation/pages/admin/AdminSubscriptions'
 import CompanySubscription from '../presentation/pages/company/CompanySubscription'
+import CompanyPayemnt from '../presentation/components/company/CompanyPayemnt'
 
 
 
@@ -95,6 +96,12 @@ const App = () => {
           <Route path={ROUTES.COMPANY.SUBSCRIPTION} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <CompanySubscription />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.COMPANY.PAYMENT} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <CompanyPayemnt />
             </RoleRoute>
           } />
 

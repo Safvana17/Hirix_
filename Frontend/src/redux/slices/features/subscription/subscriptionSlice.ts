@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { CurrentPlan, GetAllPlansResponse, SubscriptionPlan, TargetType, userGetAllPlansParams } from "../../../../types/subscription";
+import type { ChangePlanResponse, CurrentPlan, GetAllPlansResponse, SubscriptionPlan, TargetType, userGetAllPlansParams } from "../../../../types/subscription";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
@@ -8,7 +8,8 @@ interface SubscriptionState {
     loading: boolean;
     error: string | null;
     plans: SubscriptionPlan[];
-    currentPlan: CurrentPlan | null
+    currentPlan: CurrentPlan | null;
+    isPaymentRequired: boolean;
     pagination: {
         plans: {
             totalPages: number;
@@ -22,6 +23,7 @@ const initialState: SubscriptionState = {
     plans: [],
     error: null,
     currentPlan: null,
+    isPaymentRequired: false,
     pagination: {
         plans: {
             totalPages: 0,
@@ -65,6 +67,24 @@ void,
     }
 })
 
+export const changeSubscription = createAsyncThunk<
+ChangePlanResponse,
+{planId: string},
+{rejectValue: string}
+>('subscription/changeSubscription', async({planId}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.COMPANY.SUBSCRIPTION.CHANGE_SUBSCRIPTION, {planId})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to change subscription')
+    }
+})
+
 
 
 const subscriptionSlice = createSlice({
@@ -102,6 +122,17 @@ const subscriptionSlice = createSlice({
         .addCase(getCurrentPlan.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get current plan'
+        })
+        .addCase(changeSubscription.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(changeSubscription.fulfilled, (state, action) => {
+            state.loading = false
+            state.isPaymentRequired = action.payload.isPaymentRequired
+        })
+        .addCase(changeSubscription.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to change subscription'
         })
     }
 })
