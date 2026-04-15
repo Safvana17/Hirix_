@@ -18,6 +18,9 @@ export const subscriptionPlanMessages = {
         CANNOT_DELETE_FREE_PLAN: 'You canot delete free plan',
         CANNOT_FIND_SUBCRIPTION_DETAILS: 'Subcription details are not found',
         MISSING_FREE_PLAN: 'Free plan for this target is missing',
-        INVALID_BILLING_CYCLE: 'For free plan billing cycle must be FOREVER'
+        INVALID_BILLING_CYCLE: 'For free plan billing cycle must be FOREVER',
+        INACTIVE_PLAN: 'The plan is deactivated',
+        DELETED_PLAN: 'The plan is deleted',
+        ALREADY_SUBSCRIBED: 'Already subscribed to this plan',
     }
 }

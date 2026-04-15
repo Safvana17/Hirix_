@@ -61,6 +61,11 @@ import { AdminUpdateSubscriptionPlanStausUsecase } from "../../../Application/ad
 import { AdminDeleteSubscriptionPlanUsecase } from "../../../Application/admin/usecases/subscriptionPlan/subscriptionPlan.admin.delete.usecase";
 import { CompanyGetAllPlanUsecase } from "../../../Application/company/usecases/subscription/company.getAll.plan.usecase";
 import { CompanyGetCurrentPlanUsecase } from "../../../Application/company/usecases/subscription/company.getCurrentPlan.usecase";
+import { CompanyChangeSubscriptionUsecase } from "../../../Application/company/usecases/subscription/company.changeSubscription.usecase";
+
+
+
+
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -321,6 +326,11 @@ const iCompanyGetCurrentPlan = new CompanyGetCurrentPlanUsecase(
     iSubscriptionRepository,
     iSubscriptionPlanRepository
 )
+const iCompanyChangeSubscription = new CompanyChangeSubscriptionUsecase(
+    iCompanyRepository,
+    iSubscriptionPlanRepository,
+    iSubscriptionRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -529,5 +539,6 @@ export const iSubscriptionPlanController = new SubscriptionPlanController (
 
 export const iCompanySubscriptionController = new CompanySubscriptionController(
     iCompanyGetAllPlans,
-    iCompanyGetCurrentPlan
+    iCompanyGetCurrentPlan,
+    iCompanyChangeSubscription
 )

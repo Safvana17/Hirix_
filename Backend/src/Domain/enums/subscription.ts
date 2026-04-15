@@ -25,3 +25,8 @@ export enum subscriptionStatus {
     EXPIRED = 'expired',
     CANCELLED = 'cancelled'
 }
+
+export enum SubscriptionProvider {
+    RAZORPAY = 'razorpay',
+    STRIPE = 'stripe'
+}

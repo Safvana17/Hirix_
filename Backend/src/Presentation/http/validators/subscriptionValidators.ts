@@ -11,3 +11,7 @@ export const UserPlanQuerySchema = z.object({
     .coerce.number()
     .default(10),
 })
+
+export const ChangeSubscriptionSchema = z.object({
+  planId: z.string().regex(/^[0-9a-fA-F]{24}$/)
+})
