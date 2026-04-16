@@ -1,6 +1,6 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import { TargetType } from "../../../Domain/enums/subscription";
-import { PaymentMethod, PaymentStatus } from "../../../Domain/enums/payment";
+import { PaymentStatus } from "../../../Domain/enums/payment";
 
 export interface IPayment extends Document {
     id: Types.ObjectId;
@@ -14,7 +14,6 @@ export interface IPayment extends Document {
     orderId: string;
     paymentId: string;
     signature: string;
-    method: PaymentMethod;
     description: string;
     invoiceUrl: string;
     failureReason: string;
@@ -56,10 +55,6 @@ const paymentSchema: Schema<IPayment> = new Schema({
     },
     signature: {
         type: String
-    },
-    method: {
-        type: String,
-        default: PaymentMethod.CARD
     },
     description: {
         type: String

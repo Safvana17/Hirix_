@@ -40,7 +40,7 @@ router.delete(ROUTES.COMPANY.QUESTION.DELETE, authHandler(iTokenService), verify
 router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_ALL, authHandler(iTokenService), iCompanySubscriptionController.getAllPlan)
 router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_CURRENT, authHandler(iTokenService), iCompanySubscriptionController.getCurrentPlan)
 router.post(ROUTES.COMPANY.SUBSCRIPTION.CHANGE_SUBSCRIPTION, authHandler(iTokenService), verifyCsrf, validate(ChangeSubscriptionSchema, 'body'), iCompanySubscriptionController.changePlan)
-router.post(ROUTES.COMPANY.SUBSCRIPTION.MAKE_PAYMENT, authHandler(iTokenService), verifyCsrf, validate(MakePaymentSchema, 'body'))
+router.post(ROUTES.COMPANY.SUBSCRIPTION.MAKE_PAYMENT, authHandler(iTokenService), verifyCsrf, validate(MakePaymentSchema, 'body'), iCompanySubscriptionController.makePayment)
 
 
 

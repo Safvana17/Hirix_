@@ -1,4 +1,4 @@
-import { PaymentMethod, PaymentStatus } from "../enums/payment";
+import { PaymentStatus } from "../enums/payment";
 import { TargetType } from "../enums/subscription";
 
 export class PaymentEntity {
@@ -13,7 +13,6 @@ export class PaymentEntity {
     orderId: string;
     paymentId: string;
     signature: string;
-    method: PaymentMethod;
     description: string;
     invoiceUrl: string;
     failureRason?: string;
@@ -31,7 +30,6 @@ export class PaymentEntity {
         orderId: string,
         paymentId: string,
         signature: string,
-        method: PaymentMethod,
         description: string,
         invoiceUrl: string,
         paymentDate: Date,
@@ -47,7 +45,6 @@ export class PaymentEntity {
         this.orderId = orderId;
         this.paymentId = paymentId;
         this.signature = signature;
-        this.method = method;
         this.description = description;
         this.invoiceUrl = invoiceUrl;
         this.paymentDate = paymentDate;

@@ -89,3 +89,9 @@ export interface ChangePlanResponse {
   newPlan: SubscriptionPlan
   isPaymentRequired: boolean
 }
+
+export interface MakePaymentResponse {
+  orderId: string;
+  amount: number;
+  currency: string;
+}

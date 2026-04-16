@@ -43,7 +43,9 @@ export const API_ROUTES = {
     SUBSCRIPTION: {
       GET_ALL: `/company/plans`,
       GET_CURRENT: `/company/plan`,
-      CHANGE_SUBSCRIPTION: `/company/change-subscription`
+      CHANGE_SUBSCRIPTION: `/company/change-subscription`,
+      MAKE_PAYMENT: '/company/subscription/payment',
+      CONFIRM_PAYMENT: '/company/subscription/confirm'
     }
   },
 

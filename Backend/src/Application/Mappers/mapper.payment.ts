@@ -16,7 +16,6 @@ export class PaymentMapper {
             doc.orderId,
             doc.paymentId,
             doc.signature,
-            doc.method,
             doc.description,
             doc.invoiceUrl,
             doc.paymentDate
@@ -39,7 +38,6 @@ export class PaymentMapper {
             orderId: entity.orderId,
             paymentId: entity.paymentId,
             signature: entity.signature,
-            method: entity.method,
             description: entity.description,
             invoiceUrl: entity.invoiceUrl,
             paymentDate: entity.paymentDate,

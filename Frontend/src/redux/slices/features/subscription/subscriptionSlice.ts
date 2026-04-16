@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { ChangePlanResponse, CurrentPlan, GetAllPlansResponse, SubscriptionPlan, TargetType, userGetAllPlansParams } from "../../../../types/subscription";
+import type { ChangePlanResponse, CurrentPlan, GetAllPlansResponse, MakePaymentResponse, SubscriptionPlan, TargetType, userGetAllPlansParams } from "../../../../types/subscription";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
@@ -87,7 +87,23 @@ ChangePlanResponse,
     }
 })
 
+export const makePayment = createAsyncThunk<
+MakePaymentResponse,
+{planId: string},
+{rejectValue: string}
+>('subscription/makePayment', async({planId}, {rejectWithValue}) => {
+    try {
+       const response = await api.post(API_ROUTES.COMPANY.SUBSCRIPTION.MAKE_PAYMENT, {planId})
+       if(!response.data.success){
+        return rejectWithValue('Invalid response')
+       } 
 
+       return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to make payment')
+    }
+})
 
 const subscriptionSlice = createSlice({
     name: 'subscription',
@@ -136,6 +152,16 @@ const subscriptionSlice = createSlice({
         .addCase(changeSubscription.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to change subscription'
+        })
+        .addCase(makePayment.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(makePayment.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(makePayment.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to make payment'
         })
     }
 })

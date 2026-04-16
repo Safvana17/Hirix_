@@ -68,7 +68,6 @@ export class CompanyMakePaymentUsecase implements ICompanyMakePaymentUsecase {
             order.orderId,
             '',
             '',
-            PaymentMethod.CARD,
             `Subscription for ${newPlan.planName}`,
             '',
             new Date()

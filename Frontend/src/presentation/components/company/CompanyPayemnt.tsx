@@ -2,10 +2,11 @@ import React from "react";
 import { Box, Button, Card, Typography, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../../redux/store";
 import { Check } from "@mui/icons-material";
 import HirixLogo from '../../../assets/images/Logo.jpeg'
+import { makePayment } from "../../../redux/slices/features/subscription/subscriptionSlice";
 
 
 const COMPANY_FEATURES = [
@@ -26,16 +27,34 @@ const CANDIDATE_FEATURES = [
 const CompanyPayment: React.FC = () => {
   const navigate = useNavigate();
   const { selectedPlan } = useSelector((state: RootState) => state.subscription)
+  const dispatch = useDispatch<AppDispatch>()
+
 
   const getFeatures = () => {
     if (selectedPlan?.target === "company") return COMPANY_FEATURES
     if (selectedPlan?.target === "candidate") return CANDIDATE_FEATURES
     return []
   }
-  const handlePayment = async () => {
+  const handlePayment = async (planId: string) => {
     try {
-      toast.success("Payment successful");
-      navigate("/company/subscriptions");
+      if(!planId) return
+      const order = await dispatch(makePayment({planId})).unwrap()
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY,
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Hirix',
+        description: selectedPlan?.planName,
+        order_id: order.orderId,
+
+        // handler: async (response)
+        theme: {
+          color: "#6B4705"
+        }
+      }
+      const rzp = new window.Razorpay(options)
+      rzp.open()
     } catch (err) {
       toast.error(typeof err === 'string' ? err :"Payment failed");
     }
@@ -152,7 +171,7 @@ const CompanyPayment: React.FC = () => {
                 textTransform: "none",
                 fontWeight: "bold",
               }}
-              onClick={handlePayment}
+              onClick={() => selectedPlan && handlePayment(selectedPlan.id)}
             >
               Confirm Payment
             </Button>
