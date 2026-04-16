@@ -23,7 +23,8 @@ export enum SubscriptionPlanStatus {
 export enum subscriptionStatus {
     ACTIVE = 'active',
     EXPIRED = 'expired',
-    CANCELLED = 'cancelled'
+    CANCELLED = 'cancelled',
+    PENDING = 'pending'
 }
 
 export enum SubscriptionProvider {

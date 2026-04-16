@@ -15,3 +15,6 @@ export const UserPlanQuerySchema = z.object({
 export const ChangeSubscriptionSchema = z.object({
   planId: z.string().regex(/^[0-9a-fA-F]{24}$/)
 })
+export const MakePaymentSchema = z.object({
+  planId: z.string().regex(/^[0-9a-fA-F]{24}$/)
+})

@@ -62,7 +62,7 @@ import { AdminDeleteSubscriptionPlanUsecase } from "../../../Application/admin/u
 import { CompanyGetAllPlanUsecase } from "../../../Application/company/usecases/subscription/company.getAll.plan.usecase";
 import { CompanyGetCurrentPlanUsecase } from "../../../Application/company/usecases/subscription/company.getCurrentPlan.usecase";
 import { CompanyChangeSubscriptionUsecase } from "../../../Application/company/usecases/subscription/company.changeSubscription.usecase";
-
+import { CompanyMakePaymentUsecase } from "../../../Application/company/usecases/subscription/company.makePayment.usecase";
 
 
 
@@ -77,6 +77,9 @@ import { JobRolesRepository } from "../../../Infrastructure/repositories/jobRole
 import { CategoryRepository } from "../../../Infrastructure/repositories/category.repository";
 import { QuestionRepository } from "../../../Infrastructure/repositories/question.repository";
 import { SubscriptionPlanRepository } from "../../../Infrastructure/repositories/subscriptionPlan.repository";
+import { PaymentRepository } from "../../../Infrastructure/repositories/payment.repository";
+
+
 
 //services
 import { HashService } from "../../../Infrastructure/services/HashService";
@@ -103,7 +106,7 @@ import { PracticeLibraryController } from "./candidate/practiceQuestionControlle
 import { SubscriptionPlanController } from "./admin/subscriptionPlanController";
 import { CompanySubscriptionController } from "./company/subscriptionController";
 import { SubscriptionRepository } from "../../../Infrastructure/repositories/subscription.repository";
-
+import { RazorpayService } from "../../../Infrastructure/services/RazorpayService";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -114,15 +117,15 @@ const iJobRoleRepository = new JobRolesRepository()
 const iCategoryRepository = new CategoryRepository()
 const iQuestionRepository = new QuestionRepository()
 const iSubscriptionPlanRepository = new SubscriptionPlanRepository()
-const iSubscriptionRepository = new SubscriptionRepository
-
+const iSubscriptionRepository = new SubscriptionRepository()
+const iPaymentRepository = new PaymentRepository()
 
 const iHashService = new HashService()
 const iOtpService = new OtpService()
 export const iTokenService = new TokenService()
 const iMailService = new MailService()
 const iGoogleAuthService = new GoogleAuthService()
-
+const iRazorpayService = new RazorpayService()
 
 //candidates
 const iVerifyRegisterCandidate = new VerifyRegisterCandidateOtpUsecase(
@@ -331,6 +334,15 @@ const iCompanyChangeSubscription = new CompanyChangeSubscriptionUsecase(
     iSubscriptionPlanRepository,
     iSubscriptionRepository
 )
+const iCompanyMakePayment = new CompanyMakePaymentUsecase(
+    iCompanyRepository,
+    iSubscriptionPlanRepository,
+    iRazorpayService,
+    iSubscriptionRepository,
+    iPaymentRepository
+)
+
+
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -540,5 +552,6 @@ export const iSubscriptionPlanController = new SubscriptionPlanController (
 export const iCompanySubscriptionController = new CompanySubscriptionController(
     iCompanyGetAllPlans,
     iCompanyGetCurrentPlan,
-    iCompanyChangeSubscription
+    iCompanyChangeSubscription,
+    iCompanyMakePayment
 )

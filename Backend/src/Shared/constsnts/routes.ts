@@ -42,7 +42,8 @@ export const ROUTES = {
       SUBSCRIPTION: {
         GET_ALL: '/plans',
         GET_CURRENT: '/plan',
-        CHANGE_SUBSCRIPTION: '/change-subscription'
+        CHANGE_SUBSCRIPTION: '/change-subscription',
+        MAKE_PAYMENT: '/subscription/payment'
       }
     },
 

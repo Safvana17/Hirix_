@@ -7,12 +7,14 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
 import { ICompanyGetCurrentPlanUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.getCurrentPlan.usecase";
 import { ICompanyChangeSubscriptionUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.changeSubscription.usecase";
+import { ICompanyMakePaymentUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.makePayment.usecase";
 
 export class CompanySubscriptionController {
     constructor (
         private _getAllPlans: ICompanyGetAllPlanUsecase,
         private _getCurrentPlan: ICompanyGetCurrentPlanUsecase,
-        private _changeSubscription: ICompanyChangeSubscriptionUsecase
+        private _changeSubscription: ICompanyChangeSubscriptionUsecase,
+        private _makePayment: ICompanyMakePaymentUsecase
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
@@ -32,5 +34,11 @@ export class CompanySubscriptionController {
         const companyId = req.user.id
         const changedPlan = await this._changeSubscription.execute({companyId, ...req.body})
         return sendSuccess(res, statusCode.OK, '', changedPlan)
+    })
+
+    makePayment = asyncHandler(async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        const result = await this._makePayment.execute({companyId, ...req.body})
+        return sendSuccess(res, statusCode.OK, '', result)
     })
 }

@@ -8,7 +8,7 @@ import { validate } from "../../middlewares/validate";
 import { createQuestionSchema, editQuestionSchema } from "../../validators/questionValidator";
 import { createJobRoleSchema, EditJobRoleSchema, updateJobRoleSchema} from "../../validators/jobRoleValidator";
 import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updateProfileSchema } from "../../validators/settingsValidator";
-import { ChangeSubscriptionSchema } from "../../validators/subscriptionValidators";
+import { ChangeSubscriptionSchema, MakePaymentSchema } from "../../validators/subscriptionValidators";
 
 const router = Express.Router()
 
@@ -40,4 +40,18 @@ router.delete(ROUTES.COMPANY.QUESTION.DELETE, authHandler(iTokenService), verify
 router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_ALL, authHandler(iTokenService), iCompanySubscriptionController.getAllPlan)
 router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_CURRENT, authHandler(iTokenService), iCompanySubscriptionController.getCurrentPlan)
 router.post(ROUTES.COMPANY.SUBSCRIPTION.CHANGE_SUBSCRIPTION, authHandler(iTokenService), verifyCsrf, validate(ChangeSubscriptionSchema, 'body'), iCompanySubscriptionController.changePlan)
+router.post(ROUTES.COMPANY.SUBSCRIPTION.MAKE_PAYMENT, authHandler(iTokenService), verifyCsrf, validate(MakePaymentSchema, 'body'))
+
+
+
+
+
+
+
+
+
+
+
+
+
 export default router;
