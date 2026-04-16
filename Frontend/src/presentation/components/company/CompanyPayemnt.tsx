@@ -1,139 +1,173 @@
-// import React from "react";
-// import {
-//   Box,
-//   Button,
-//   Card,
-//   TextField,
-//   Typography,
-//   Divider,
-// } from "@mui/material";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import toast from "react-hot-toast";
+import React from "react";
+import { Box, Button, Card, Typography, Divider } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../redux/store";
+import { Check } from "@mui/icons-material";
+import HirixLogo from '../../../assets/images/Logo.jpeg'
 
-// const CompanyPayment: React.FC = () => {
-//   const { state } = useLocation();
-//   const navigate = useNavigate();
 
-//   const { planName, amount } = state || {};
+const COMPANY_FEATURES = [
+  { key: "canUseAdminQuestions", label: "Use admin questions", type: "boolean" },
+  { key: "canCreateCustomQuestions", label: "Create custom questions", type: "boolean" },
+  { key: "maxTestsPerMonth", label: (v: number | null) => v ? `Up to ${v} tests/month` : "Unlimited tests", type: "limit" },
+  { key: "maxCandidates", label: (v: number | null) => v ? `Up to ${v} candidates` : "Unlimited candidates", type: "limit" },
+  { key: "maxJobRolesPerMonth", label: (v: number | null) => v ? `${v} job roles/month` : "Unlimited job roles", type: "limit" },
+  { key: "maxInterviewPerMonth", label: (v: number | null) => v ? `${v} interviews/month` : "Unlimited interviews", type: "limit" },
+]
 
-//   const handlePayment = async () => {
-//     try {
-//       // simulate success
-//       toast.success("Payment successful");
+const CANDIDATE_FEATURES = [
+  { key: "canAccessPremiumQuestions", label: "Access premium questions", type: "boolean" },
+  { key: "hasDetailedFeedback", label: "Detailed feedback", type: "boolean" },
+  { key: "maxPracticePerDay", label: (v: number | null) => v ? `${v} practices/day` : "Unlimited practice", type: "limit" },
+]
 
-//       // TODO: call backend confirm API
+const CompanyPayment: React.FC = () => {
+  const navigate = useNavigate();
+  const { selectedPlan } = useSelector((state: RootState) => state.subscription)
 
-//       navigate("/company/subscription");
-//     } catch (err) {
-//       toast.error(typeof err === 'string' ? err :"Payment failed");
-//     }
-//   };
+  const getFeatures = () => {
+    if (selectedPlan?.target === "company") return COMPANY_FEATURES
+    if (selectedPlan?.target === "candidate") return CANDIDATE_FEATURES
+    return []
+  }
+  const handlePayment = async () => {
+    try {
+      toast.success("Payment successful");
+      navigate("/company/subscriptions");
+    } catch (err) {
+      toast.error(typeof err === 'string' ? err :"Payment failed");
+    }
+  };
 
-//   return (
-//     <Box
-//       display="grid"
-//       gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
-//       minHeight="100vh"
-//     >
-//       {/* LEFT SIDE (SUMMARY) */}
-//  <Box
-//   sx={{
-//     backgroundColor: "#0f172a",
-//     color: "#fff",
-//     p: 5,
-//     display: "flex",
-//     flexDirection: "column",
-//     justifyContent: "center",
-//   }}
-// >
-//   <Typography variant="h6" gutterBottom color="gray">
-//     Subscription Summary
-//   </Typography>
+  return (
+    <Box
+      display="grid"
+      gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+      minHeight="100vh"
+    >
+      <Box
+        sx={{
+          backgroundColor: "#0f172a",
+          color: "#fff",
+          p: 5,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <Typography variant="h5" gutterBottom color="gray">
+          Subscription Summary
+        </Typography>
 
-//   <Typography variant="h4" fontWeight="bold">
-//     {planName}
-//   </Typography>
+        <Typography variant="h4" fontWeight="bold">
+          {selectedPlan?.planName}
+        </Typography>
 
-//   <Typography mt={1} fontSize={14} color="gray">
-//     Billed monthly
-//   </Typography>
+        <Typography mt={1} fontSize={14} color="gray">
+          Billed {selectedPlan?.billingCycle}
+        </Typography>
 
-//   <Divider sx={{ my: 3, borderColor: "#333" }} />
+        <Divider sx={{ my: 3, borderColor: "#333" }} />
 
-//   {/* FEATURES */}
-//   <Box display="flex" flexDirection="column" gap={1}>
-//     <Typography variant="body2">✔ Premium features access</Typography>
-//     <Typography variant="body2">✔ Priority support</Typography>
-//     <Typography variant="body2">✔ Advanced analytics</Typography>
-//   </Box>
+        <Box display="flex" flexDirection="column" gap={1}>
+          {getFeatures().map((feature) => {
+            const value = selectedPlan?.[feature.key as keyof typeof selectedPlan]
+            if (feature.type === "boolean" && value) {
+              return (
+                <Typography key={feature.key} variant="body2">
+                  <Check sx={{color: 'green'}} /> 
+                  {typeof feature.label === "string" ? feature.label : ""}
+                </Typography>
+              )
+            }
+            if (feature.type === "limit") {
+              return (
+                <Typography key={feature.key} variant="body2">
+                  <Check sx={{color: 'green'}} /> 
+                  {typeof feature.label === "function"
+                    ? feature.label(value as number | null)
+                    : feature.label}
+                </Typography>
+              )
+            }
+            return null
+          })}
+        </Box>
 
-//   <Divider sx={{ my: 3, borderColor: "#333" }} />
+        <Divider sx={{ my: 3, borderColor: "#333" }} />
+        <Box display="flex" justifyContent="space-between">
+          <Typography color="gray">Subtotal</Typography>
+          <Typography>₹{selectedPlan?.price}</Typography>
+        </Box>
+        <Divider sx={{ my: 2, borderColor: "#333" }} />
+        <Box display="flex" justifyContent="space-between">
+          <Typography fontWeight="bold">Total</Typography>
+          <Typography fontWeight="bold" fontSize={18}>
+            ₹{selectedPlan?.price}
+          </Typography>
+        </Box>
+        <Typography mt={2} fontSize={12} color="gray">
+          Secure payment powered by Razorpay
+        </Typography>
+      </Box>
 
-//   {/* BILLING BREAKDOWN */}
-//   <Box display="flex" justifyContent="space-between">
-//     <Typography color="gray">Subtotal</Typography>
-//     <Typography>₹{amount}</Typography>
-//   </Box>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        p={3}
+      >
+        <Box
+          display='flex'
+          flexDirection='column'
+          alignItems='center'
+          gap={2}
+          width="100%"
+          maxWidth={420}
+        >
+          <Box display='flex' alignItems='center' gap={1} mb={5}>
+            <img
+              src={HirixLogo}
+              alt="hirix_logo"
+              className="w-12 h-12 rounded-md"
+            />
+            <Typography fontSize={28} fontWeight='bold'>
+              HiriX
+            </Typography>
+          </Box>
+          <Card sx={{ p: 4, width: "100%", maxWidth: 420 }}>
+            <Typography variant="h6">Complete Payment</Typography>
+            <Typography variant="body2" mt={2} color="text.secondary">
+              Click below to securely complete your payment using Razorpay.
+            </Typography>
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 3,
+                backgroundColor: "#6B4705",
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: "bold",
+              }}
+              onClick={handlePayment}
+            >
+              Confirm Payment
+            </Button>
+            <Button
+              fullWidth
+              sx={{ mt: 1 }}
+              onClick={() => navigate(-1)}
+            >
+              Cancel
+            </Button>
+          </Card>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
 
-//   <Box display="flex" justifyContent="space-between" mt={1}>
-//     <Typography color="gray">Tax</Typography>
-//     <Typography>₹0</Typography>
-//   </Box>
-
-//   <Divider sx={{ my: 2, borderColor: "#333" }} />
-
-//   <Box display="flex" justifyContent="space-between">
-//     <Typography fontWeight="bold">Total</Typography>
-//     <Typography fontWeight="bold" fontSize={18}>
-//       ₹{amount}
-//     </Typography>
-//   </Box>
-
-//   <Typography mt={2} fontSize={12} color="gray">
-//     Secure payment powered by Razorpay
-//   </Typography>
-// </Box>
-
-//       {/* RIGHT SIDE (FORM) */}
-//       <Box
-//         display="flex"
-//         justifyContent="center"
-//         alignItems="center"
-//         p={3}
-//       >
-// <Card sx={{ p: 4, width: "100%", maxWidth: 420 }}>
-//   <Typography variant="h6">Complete Payment</Typography>
-
-//   <Typography variant="body2" mt={2} color="text.secondary">
-//     Click below to securely complete your payment using Razorpay.
-//   </Typography>
-
-//   <Button
-//     fullWidth
-//     variant="contained"
-//     sx={{
-//       mt: 3,
-//       backgroundColor: "#6B4705",
-//       borderRadius: 2,
-//       textTransform: "none",
-//       fontWeight: "bold",
-//     }}
-//     onClick={handlePayment}
-//   >
-//     Pay ₹{amount}
-//   </Button>
-
-//   <Button
-//     fullWidth
-//     sx={{ mt: 1 }}
-//     onClick={() => navigate("/company/subscription")}
-//   >
-//     Cancel
-//   </Button>
-// </Card>
-//       </Box>
-//     </Box>
-//   );
-// };
-
-// export default CompanyPayment;
+export default CompanyPayment;

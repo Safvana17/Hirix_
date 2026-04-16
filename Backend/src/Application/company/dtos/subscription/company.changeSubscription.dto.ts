@@ -1,4 +1,5 @@
-import { BillingCycle, subscriptionStatus } from "../../../../Domain/enums/subscription";
+import { SubscriptionPlanEntity } from "../../../../Domain/entities/SubscriptionPlan.entity";
+// import { BillingCycle, subscriptionStatus } from "../../../../Domain/enums/subscription";
 
 
 export interface CompanyChangeSubscriptionInputDTO {
@@ -8,5 +9,6 @@ export interface CompanyChangeSubscriptionInputDTO {
 }
 
 export interface CompanyChangeSubscriptionOutputDTO {
+    newPlan: SubscriptionPlanEntity
     isPaymentRequired: boolean
 }

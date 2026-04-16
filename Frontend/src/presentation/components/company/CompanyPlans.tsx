@@ -39,11 +39,7 @@ const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, set
        try {
          const response = await dispatch(changeSubscription({planId})).unwrap()
          if(response.isPaymentRequired){
-          navigate('/company/payment', {
-            state: {
-              planId
-            }
-          })
+          navigate('/company/payment')
          }else{
           toast.success('Your subscription plan changed successfully')
          }

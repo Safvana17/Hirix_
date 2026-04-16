@@ -86,5 +86,6 @@ export interface CurrentPlan {
 }
  
 export interface ChangePlanResponse {
+  newPlan: SubscriptionPlan
   isPaymentRequired: boolean
 }

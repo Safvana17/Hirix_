@@ -9,6 +9,7 @@ interface SubscriptionState {
     error: string | null;
     plans: SubscriptionPlan[];
     currentPlan: CurrentPlan | null;
+    selectedPlan: SubscriptionPlan | null;
     isPaymentRequired: boolean;
     pagination: {
         plans: {
@@ -24,6 +25,7 @@ const initialState: SubscriptionState = {
     error: null,
     currentPlan: null,
     isPaymentRequired: false,
+    selectedPlan: null,
     pagination: {
         plans: {
             totalPages: 0,
@@ -129,6 +131,7 @@ const subscriptionSlice = createSlice({
         .addCase(changeSubscription.fulfilled, (state, action) => {
             state.loading = false
             state.isPaymentRequired = action.payload.isPaymentRequired
+            state.selectedPlan = action.payload.newPlan
         })
         .addCase(changeSubscription.rejected, (state, action) => {
             state.loading = false

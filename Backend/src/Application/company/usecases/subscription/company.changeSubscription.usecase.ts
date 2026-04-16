@@ -64,6 +64,7 @@ export class CompanyChangeSubscriptionUsecase implements ICompanyChangeSubscript
            })
         }
         return{
+            newPlan: newPlan,
             isPaymentRequired: newPlan.price !== 0
         }
     }

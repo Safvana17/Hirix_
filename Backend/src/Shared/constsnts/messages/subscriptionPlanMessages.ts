@@ -22,5 +22,6 @@ export const subscriptionPlanMessages = {
         INACTIVE_PLAN: 'The plan is deactivated',
         DELETED_PLAN: 'The plan is deleted',
         ALREADY_SUBSCRIBED: 'Already subscribed to this plan',
+        DOESNOT_REQUIRE_PAYMENT: 'Free plan does not require payment',
     }
 }
