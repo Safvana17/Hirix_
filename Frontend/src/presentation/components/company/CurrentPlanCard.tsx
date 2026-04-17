@@ -12,9 +12,7 @@ const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
     if (!limit) return 10 
     return Math.min((used / limit) * 100, 100)
   }
-  const handleChangePlan = () => {
-    
-  }
+  
   return (
     <div>
             <Box

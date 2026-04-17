@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { ChangePlanResponse, ConfirmPaymentArgs, CurrentPlan, GetAllPlansResponse, MakePaymentResponse, SubscriptionPlan, TargetType, userGetAllPlansParams } from "../../../../types/subscription";
+import type { ChangePlanResponse, ConfirmPaymentArgs, CurrentPlan, GetAllPlansResponse, GetBillingHistoryParams, GetBillingHistoryResponse, MakePaymentResponse, Payment, PaymentStatus, SubscriptionPlan, TargetType, userGetAllPlansParams } from "../../../../types/subscription";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
@@ -11,8 +11,13 @@ interface SubscriptionState {
     currentPlan: CurrentPlan | null;
     selectedPlan: SubscriptionPlan | null;
     isPaymentRequired: boolean;
+    payments: Payment[]
     pagination: {
         plans: {
+            totalPages: number;
+            totalCount: number;
+        },
+        payment: {
             totalPages: number;
             totalCount: number;
         }
@@ -26,10 +31,15 @@ const initialState: SubscriptionState = {
     currentPlan: null,
     isPaymentRequired: false,
     selectedPlan: null,
+    payments: [],
     pagination: {
         plans: {
             totalPages: 0,
             totalCount: 0
+        },
+        payment: {
+            totalCount: 0,
+            totalPages: 0
         }
     }
 }
@@ -141,6 +151,24 @@ export const markFailure = createAsyncThunk<
     }
 })
 
+export const getBillingHistory = createAsyncThunk<
+GetBillingHistoryResponse,
+GetBillingHistoryParams,
+{rejectValue: string}
+>('subscription/billinhHistory', async(params: {status?: PaymentStatus, page: number, limit: number} | undefined, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.SUBSCRIPTION.GET_BILLING_HISTORY, {params})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get billinh history')
+    }
+})
+
 const subscriptionSlice = createSlice({
     name: 'subscription',
     initialState,
@@ -218,6 +246,15 @@ const subscriptionSlice = createSlice({
         .addCase(markFailure.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to mark payment as failed'
+        })
+        .addCase(getBillingHistory.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(getBillingHistory.fulfilled, (state, action) => {
+            state.loading = false
+            state.payments = action.payload.payments
+            state.pagination.payment.totalCount = action.payload.totalCount
+            state.pagination.payment.totalPages = action.payload.totalPages
         })
     }
 })

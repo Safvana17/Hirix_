@@ -143,6 +143,7 @@ const AdminCandidates : React.FC = () => {
                pagination={{
                 currentPage,
                 totalPages: pagination.users.totalPages,
+                totalCount: pagination.users.totalCount,
                 onPageChange: (page) => setCurrentPage(page)
                }}
             >

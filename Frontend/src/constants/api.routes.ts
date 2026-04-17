@@ -47,6 +47,7 @@ export const API_ROUTES = {
       MAKE_PAYMENT: '/company/subscription/payment',
       CONFIRM_PAYMENT: '/company/subscription/confirm',
       MARK_FAILURE: '/company/subscription/failure',
+      GET_BILLING_HISTORY: '/company/subscription/billing-history',
     }
   },
 

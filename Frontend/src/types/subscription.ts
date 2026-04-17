@@ -1,5 +1,6 @@
 export type TargetType = 'company' | 'candidate'
 export type BillingCycle = 'monthly' | 'yearly' | 'forever'
+export type PaymentStatus = 'pending' | 'failed' | 'success'
 
 export interface SubscriptionPlan {
     id: string;
@@ -101,4 +102,26 @@ export interface ConfirmPaymentArgs {
   orderId: string;
   paymentId: string;
   signature: string;
+}
+
+export interface Payment {
+    id: string
+    amount: number;
+    currency: string;
+    status: PaymentStatus;
+    orderId: string;
+    paymentId: string;
+    description: string;
+    invoiceUrl: string;
+    paymentDate: Date;
+}
+export type GetBillingHistoryParams = {
+  status?: PaymentStatus
+  page: number
+  limit: number
+}
+export interface GetBillingHistoryResponse{
+    payments: Payment[]
+    totalPages: number
+    totalCount: number
 }
