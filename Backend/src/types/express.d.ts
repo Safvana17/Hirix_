@@ -7,7 +7,8 @@ declare module 'express-serve-static-core' {
             cookies: {
                accessToken?: string,
                refreshToken?: string
-            }
+            },
+            validatedQuery?: unknown
         }
 }
 

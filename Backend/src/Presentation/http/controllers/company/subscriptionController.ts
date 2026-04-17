@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ICompanyGetAllPlanUsecase } from "../../../../Application/company/interfaces/subscription/ICompanyGetAllPlanUsecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
-import { UserPlanQuerySchema } from "../../validators/subscriptionValidators";
+import { PaymentQuery, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
@@ -10,6 +10,8 @@ import { ICompanyChangeSubscriptionUsecase } from "../../../../Application/compa
 import { ICompanyMakePaymentUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.makePayment.usecase";
 import { ICompanyConfirmPaymentUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.confirmPyment.usecase";
 import { ICompanyPaymentFailureUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.paymentFailure.usecase";
+import { IGetCompanyBillingHistoryUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.getBillingHistory.usecase";
+
 
 export class CompanySubscriptionController {
     constructor (
@@ -19,6 +21,7 @@ export class CompanySubscriptionController {
         private _makePayment: ICompanyMakePaymentUsecase,
         private _confirmPayment: ICompanyConfirmPaymentUsecase,
         private _paymentFailure: ICompanyPaymentFailureUsecase,
+        private _getBillingHistory: IGetCompanyBillingHistoryUsecase,
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
@@ -56,5 +59,13 @@ export class CompanySubscriptionController {
         const companyId = req.user.id
         await this._paymentFailure.execute({companyId, orderId: req.body.orderId})
         return sendSuccess(res, statusCode.OK, '')
+    })
+
+    getBillingHistory = asyncHandler(async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        const {status, page, limit} = req.validatedQuery as PaymentQuery
+        const { payments, totalCount, totalPages } = await this._getBillingHistory.execute({userId: companyId, status, page, limit})
+        logger.info(payments, 'from subscription controller')
+        return sendSuccess(res, statusCode.OK, '', {payments, totalCount, totalPages})
     })
 }

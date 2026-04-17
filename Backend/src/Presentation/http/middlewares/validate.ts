@@ -33,7 +33,11 @@ export const validate =
     [K in typeof property]: z.infer<T>;
   } => {
     const parsed = schema.parse(req[property]);
+    if(property === 'query'){
+      req.validatedQuery = parsed
+    }else{
     req[property] = parsed;
+    }
     next();
   };
 

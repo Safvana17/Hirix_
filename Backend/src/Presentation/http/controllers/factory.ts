@@ -65,7 +65,7 @@ import { CompanyChangeSubscriptionUsecase } from "../../../Application/company/u
 import { CompanyMakePaymentUsecase } from "../../../Application/company/usecases/subscription/company.makePayment.usecase";
 import { CompanyConfirmPaymentUsecase } from "../../../Application/company/usecases/subscription/company.confirmPayment.usecase";
 import { CompanyPaymentFailureUsecase } from "../../../Application/company/usecases/subscription/company.paymentFailure.usecase";
-
+import { CompanyGetBillingHistoryUsecase } from "../../../Application/company/usecases/subscription/company.getBillingHistory.usecase";
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -353,7 +353,10 @@ const iCompanyMarkFailure = new CompanyPaymentFailureUsecase(
     iPaymentRepository,
     iSubscriptionRepository
 )
-
+const iCompanyGetBillingHistory = new CompanyGetBillingHistoryUsecase (
+    iCompanyRepository,
+    iPaymentRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -566,5 +569,6 @@ export const iCompanySubscriptionController = new CompanySubscriptionController(
     iCompanyChangeSubscription,
     iCompanyMakePayment,
     iCompanyConfirmPayment,
-    iCompanyMarkFailure
+    iCompanyMarkFailure,
+    iCompanyGetBillingHistory,
 )
