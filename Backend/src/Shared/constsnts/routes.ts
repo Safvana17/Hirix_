@@ -43,7 +43,9 @@ export const ROUTES = {
         GET_ALL: '/plans',
         GET_CURRENT: '/plan',
         CHANGE_SUBSCRIPTION: '/change-subscription',
-        MAKE_PAYMENT: '/subscription/payment'
+        MAKE_PAYMENT: '/subscription/payment',
+        CONFIRM_PYMENT: '/subscription/confirm',
+        MARK_FAILURE: '/subscription/failure',
       }
     },
 

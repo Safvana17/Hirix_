@@ -18,3 +18,14 @@ export const ChangeSubscriptionSchema = z.object({
 export const MakePaymentSchema = z.object({
   planId: z.string().regex(/^[0-9a-fA-F]{24}$/)
 })
+
+export const ConfirmPaymnetSchema = z.object({
+  planId: z.string().regex(/^[0-9a-fA-F]{24}$/),
+  orderId: z.string(),
+  paymentId: z.string(),
+  signature: z.string()
+})
+
+export const MarkFailureSchema = z.object({
+  orderId: z.string()
+})

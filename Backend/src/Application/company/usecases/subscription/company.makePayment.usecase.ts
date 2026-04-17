@@ -1,6 +1,6 @@
 import { PaymentEntity } from "../../../../Domain/entities/Payment.entity";
 import { SubscriptionEntity } from "../../../../Domain/entities/Subscription.entity";
-import { PaymentMethod, PaymentStatus } from "../../../../Domain/enums/payment";
+import { PaymentStatus } from "../../../../Domain/enums/payment";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";

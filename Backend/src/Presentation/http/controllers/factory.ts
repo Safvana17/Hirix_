@@ -63,8 +63,8 @@ import { CompanyGetAllPlanUsecase } from "../../../Application/company/usecases/
 import { CompanyGetCurrentPlanUsecase } from "../../../Application/company/usecases/subscription/company.getCurrentPlan.usecase";
 import { CompanyChangeSubscriptionUsecase } from "../../../Application/company/usecases/subscription/company.changeSubscription.usecase";
 import { CompanyMakePaymentUsecase } from "../../../Application/company/usecases/subscription/company.makePayment.usecase";
-
-
+import { CompanyConfirmPaymentUsecase } from "../../../Application/company/usecases/subscription/company.confirmPayment.usecase";
+import { CompanyPaymentFailureUsecase } from "../../../Application/company/usecases/subscription/company.paymentFailure.usecase";
 
 
 //repositories
@@ -341,7 +341,18 @@ const iCompanyMakePayment = new CompanyMakePaymentUsecase(
     iSubscriptionRepository,
     iPaymentRepository
 )
-
+const iCompanyConfirmPayment = new CompanyConfirmPaymentUsecase(
+    iCompanyRepository,
+    iPaymentRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
+    iRazorpayService
+)
+const iCompanyMarkFailure = new CompanyPaymentFailureUsecase(
+    iCompanyRepository,
+    iPaymentRepository,
+    iSubscriptionRepository
+)
 
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
@@ -553,5 +564,7 @@ export const iCompanySubscriptionController = new CompanySubscriptionController(
     iCompanyGetAllPlans,
     iCompanyGetCurrentPlan,
     iCompanyChangeSubscription,
-    iCompanyMakePayment
+    iCompanyMakePayment,
+    iCompanyConfirmPayment,
+    iCompanyMarkFailure
 )

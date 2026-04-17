@@ -23,5 +23,7 @@ export const subscriptionPlanMessages = {
         DELETED_PLAN: 'The plan is deleted',
         ALREADY_SUBSCRIBED: 'Already subscribed to this plan',
         DOESNOT_REQUIRE_PAYMENT: 'Free plan does not require payment',
+        PAYMENT_NOT_FOUND: 'Payment not found',
+        INVALID_PAYMENT_SIGNATURE: 'Invalid payment signature',
     }
 }

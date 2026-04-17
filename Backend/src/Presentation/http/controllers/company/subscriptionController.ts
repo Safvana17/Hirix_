@@ -8,13 +8,17 @@ import { logger } from "../../../../utils/logging/loger";
 import { ICompanyGetCurrentPlanUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.getCurrentPlan.usecase";
 import { ICompanyChangeSubscriptionUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.changeSubscription.usecase";
 import { ICompanyMakePaymentUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.makePayment.usecase";
+import { ICompanyConfirmPaymentUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.confirmPyment.usecase";
+import { ICompanyPaymentFailureUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.paymentFailure.usecase";
 
 export class CompanySubscriptionController {
     constructor (
         private _getAllPlans: ICompanyGetAllPlanUsecase,
         private _getCurrentPlan: ICompanyGetCurrentPlanUsecase,
         private _changeSubscription: ICompanyChangeSubscriptionUsecase,
-        private _makePayment: ICompanyMakePaymentUsecase
+        private _makePayment: ICompanyMakePaymentUsecase,
+        private _confirmPayment: ICompanyConfirmPaymentUsecase,
+        private _paymentFailure: ICompanyPaymentFailureUsecase,
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
@@ -40,5 +44,17 @@ export class CompanySubscriptionController {
         const companyId = req.user.id
         const result = await this._makePayment.execute({companyId, ...req.body})
         return sendSuccess(res, statusCode.OK, '', result)
+    })
+
+    confirmPayment = asyncHandler(async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        await this._confirmPayment.execute({companyId, ...req.body})
+        return sendSuccess(res, statusCode.OK, '')
+    })
+
+    markFailed = asyncHandler(async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        await this._paymentFailure.execute({companyId, orderId: req.body.orderId})
+        return sendSuccess(res, statusCode.OK, '')
     })
 }
