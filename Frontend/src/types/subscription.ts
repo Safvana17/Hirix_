@@ -95,3 +95,10 @@ export interface MakePaymentResponse {
   amount: number;
   currency: string;
 }
+
+export interface ConfirmPaymentArgs {
+  planId: string;
+  orderId: string;
+  paymentId: string;
+  signature: string;
+}

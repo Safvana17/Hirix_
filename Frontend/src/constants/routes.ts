@@ -27,6 +27,10 @@ export const ROUTES = {
     DASHBOARD: '/candidate/dashboard',
   },
 
+  COMMON: {
+    PAYMENT_STATUS: '/payment-status'
+  },
+
   ADMIN: {
     LOGIN: '/admin/login',
     DASHBOARD: '/admin/dashboard',

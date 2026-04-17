@@ -61,7 +61,7 @@ const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
                   Next billing date
                 </Typography>
                 <Typography variant="body2" fontWeight="bold">
-                  {currentPlan?.endDate.toLocaleDateString()}
+                  {new Date(currentPlan?.endDate).toLocaleDateString()}
                 </Typography>
                 </>
                 )}
@@ -110,7 +110,7 @@ const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
               </Box> 
 
               <Box mt={3} display="flex" gap={2}>
-                <Button
+                {/* <Button
                   onClick={handleChangePlan}
                   variant="contained"
                   sx={{
@@ -120,7 +120,7 @@ const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
                   }}
                 >
                   Change Plan
-                </Button>
+                </Button> */}
                {currentPlan?.price !== 0 &&(
                 <Button
                   variant="contained"

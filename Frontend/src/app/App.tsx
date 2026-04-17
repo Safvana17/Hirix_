@@ -18,6 +18,7 @@ import AdminPracticeLibrary from '../presentation/pages/admin/AdminPracticeLibra
 import AdminSubscriptions from '../presentation/pages/admin/AdminSubscriptions'
 import CompanySubscription from '../presentation/pages/company/CompanySubscription'
 import CompanyPayemnt from '../presentation/components/company/CompanyPayemnt'
+import PaymentStatus from '../presentation/components/common/PaymentStatus'
 
 
 
@@ -163,6 +164,13 @@ const App = () => {
               <AdminSubscriptions />
             </RoleRoute>
           } />
+          
+          <Route path={ROUTES.COMMON.PAYMENT_STATUS} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY, ROLES.COMPANY]}>
+              <PaymentStatus />
+            </RoleRoute>
+          } />
+
           
         </Routes>
        </Suspense>

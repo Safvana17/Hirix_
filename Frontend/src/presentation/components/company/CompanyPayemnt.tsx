@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../redux/store";
 import { Check } from "@mui/icons-material";
 import HirixLogo from '../../../assets/images/Logo.jpeg'
-import { makePayment } from "../../../redux/slices/features/subscription/subscriptionSlice";
+import { confirmPayment, makePayment, markFailure } from "../../../redux/slices/features/subscription/subscriptionSlice";
 
 
 const COMPANY_FEATURES = [
@@ -48,12 +48,42 @@ const CompanyPayment: React.FC = () => {
         description: selectedPlan?.planName,
         order_id: order.orderId,
 
-        // handler: async (response)
+        handler: async (response: {
+          razorpay_order_id: string
+          razorpay_payment_id: string
+          razorpay_signature: string
+          planId: string
+        }) => {
+          try {
+            if(!selectedPlan) {
+              console.log('not selected plan')
+              return
+            }
+            await dispatch(confirmPayment({
+              orderId: response.razorpay_order_id,
+              paymentId: response.razorpay_payment_id,
+              signature: response.razorpay_signature,
+              planId: selectedPlan.id
+            })).unwrap()
+            toast.success('Payment confirmation success')
+            navigate("/payment-status?status=success")
+          } catch (error) {
+            toast.error(typeof error === 'string' ? error : 'Payment verification failed')
+          }
+        },
         theme: {
           color: "#6B4705"
         }
       }
       const rzp = new window.Razorpay(options)
+      rzp.on('payment.failed', async(response) => {
+        const orderId = response.error?.metadata?.order_id
+        if(orderId){
+          await dispatch(markFailure({orderId})).unwrap()
+          toast.error('Payment failed')
+          navigate("/payment-status?status=failed")
+        }
+      })
       rzp.open()
     } catch (err) {
       toast.error(typeof err === 'string' ? err :"Payment failed");

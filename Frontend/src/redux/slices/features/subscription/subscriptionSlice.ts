@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { ChangePlanResponse, CurrentPlan, GetAllPlansResponse, MakePaymentResponse, SubscriptionPlan, TargetType, userGetAllPlansParams } from "../../../../types/subscription";
+import type { ChangePlanResponse, ConfirmPaymentArgs, CurrentPlan, GetAllPlansResponse, MakePaymentResponse, SubscriptionPlan, TargetType, userGetAllPlansParams } from "../../../../types/subscription";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
@@ -105,6 +105,42 @@ MakePaymentResponse,
     }
 })
 
+export const confirmPayment = createAsyncThunk<
+{success: boolean},
+ConfirmPaymentArgs,
+{rejectValue: string}
+>('subscription/confirmPayment', async(confirmPaymentArgs, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.COMPANY.SUBSCRIPTION.CONFIRM_PAYMENT, confirmPaymentArgs)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to confirm payment')
+    }
+})
+
+export const markFailure = createAsyncThunk<
+{success: boolean},
+{orderId: string},
+{rejectValue: string}
+>('subscription/markFailure', async({orderId}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMPANY.SUBSCRIPTION.MARK_FAILURE, {orderId})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to mark payment as failed')
+    }
+})
+
 const subscriptionSlice = createSlice({
     name: 'subscription',
     initialState,
@@ -162,6 +198,26 @@ const subscriptionSlice = createSlice({
         .addCase(makePayment.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to make payment'
+        })
+        .addCase(confirmPayment.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(confirmPayment.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(confirmPayment.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to confirm payment'
+        })
+        .addCase(markFailure.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(markFailure.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(markFailure.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to mark payment as failed'
         })
     }
 })
