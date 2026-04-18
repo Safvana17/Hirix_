@@ -10,7 +10,7 @@ export interface CompanyGetAllQuestionsInputDTO{
     type?: QuestionType;
     category?: string;
     role: userRole;
-    userId?: string;
+    userId: string;
     page: number;
     limit: number;
 }

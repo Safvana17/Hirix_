@@ -11,6 +11,7 @@ interface QuestionState {
     error: string | null
     questions: Question[]
     selctedQuestion: Question | null
+    featureLocked: boolean
     pagination: {
         question: {
             totalCount: number
@@ -24,6 +25,7 @@ const initialState: QuestionState = {
     questions: [],
     error: null,
     selctedQuestion: null,
+    featureLocked: false,
     pagination:{
         question:{
             totalCount: 0,
@@ -52,12 +54,14 @@ Question,
 export const getAllQuestions = createAsyncThunk<
 getAllQuestionsResponse,
 {params: getAllQuestionsParams | undefined, role: UserRole},
-{rejectValue: string}
+{rejectValue: {message: string, code?: string}}
 >('question/getAll', async({params,role}, {rejectWithValue}) => {
     try {
         const response = await api.get(API_ROUTES.COMMON.QUESTION.GET_ALL(role), {params})
         if(!response.data.success){
-            return rejectWithValue('Invalid response')
+            return rejectWithValue({
+                message: 'Invalid response'
+            })
         }
         const data = response.data.data
 
@@ -69,8 +73,18 @@ getAllQuestionsResponse,
         }
     } catch (error) {
         console.log("ERROR OCCURRED:", error)
-        const err = error as AxiosError<{message: string}>
-        return rejectWithValue(err.response?.data.message || 'Failed to get all questions')
+        const err = error as AxiosError<{message: string, code?: string}>
+        // if(err.response?.status === 403){
+        //     return rejectWithValue({
+        //         type: 'FEATURE_LOCKED',
+        //         feature: err.response.data.data.feature
+        //     })
+        // }
+        console.log("err: ", err.response?.data.code)
+        return rejectWithValue({
+            message: err.response?.data.message || 'Failed to get all questions',
+            code: err.response?.data.code
+        })
     }
 })
 
@@ -140,7 +154,10 @@ const questionSlice = createSlice({
          })
          .addCase(getAllQuestions.rejected, (state, action) => {
             state.loading = false
-            state.error = action.payload || 'Failed to get all questions'
+            if(action.payload?.code === 'FEATURE_LOCKED'){
+                state.featureLocked = true
+            }
+            state.error = action.payload?.message || 'Failed to get all questions'
          })
          .addCase(editQuestions.pending, (state) => {
             state.loading = true

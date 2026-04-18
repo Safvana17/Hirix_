@@ -17,7 +17,8 @@ export const errorHandler: ErrorRequestHandler = (
         req.log.error({error: error.message}, 'AppError')
         res.status(error.statusCode).json({
             success: false,
-            message: error.message
+            message: error.message,
+            code: error.code
         })
         return
     }else if(error instanceof ZodError){

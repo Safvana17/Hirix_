@@ -10,9 +10,11 @@ import QuestionModal from '../../components/modal/QuestionModal'
 import toast from 'react-hot-toast'
 import { createQuestion, deleteQuestion, editQuestions, getAllQuestions } from '../../../redux/slices/features/question/questionSlice'
 import { Box, Card, Chip, Divider, IconButton, InputAdornment, MenuItem, Pagination, Tab, Tabs, TextField, Typography } from '@mui/material'
-import { Delete, Edit, Search, Visibility } from '@mui/icons-material'
+import { Delete, Edit, Lock, Search, Visibility } from '@mui/icons-material'
 import { useDebounce } from '../../../hooks/useDebounce'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
+import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../../constants/routes'
 
 
 const questionDifficulty: QuestionDifficulty[] = ['easy', 'medium', 'hard']
@@ -44,8 +46,9 @@ const CompanyQuestion: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const {categories} = useSelector((state: RootState) => state.category)
-  const {questions, pagination } = useSelector((state: RootState) => state.question)
+  const {questions, pagination, featureLocked } = useSelector((state: RootState) => state.question)
   const { user } = useSelector((state: RootState) => state.auth)
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -114,6 +117,7 @@ const CompanyQuestion: React.FC = () => {
         toast.error(typeof error === 'string' ? error : 'Failed to create question')
       }
   }
+
   return (
     <InternalLayout title='Questions' subTitle='Manage assessment question library' sidebarItems={companySidebarItems}>
        <div>
@@ -358,6 +362,26 @@ const CompanyQuestion: React.FC = () => {
                 <Pagination count={pagination.question.totalPages} page={page} onChange={(_, v) => setPage(v)} />
               </Box>
             </div>
+            {featureLocked && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+                <div className="bg-white rounded-2xl p-6 text-center shadow-xl max-w-sm w-full">
+                  <div className="text-4xl mb-3"><Lock /></div>
+                  <h2 className="text-lg font-semibold mb-2">
+                    Upgrade to unlock
+                  </h2>
+                  <p className="text-gray-500 mb-4">
+                    This feature is available only for premium plans.
+                  </p>
+
+                  <button
+                    onClick={() => navigate(ROUTES.COMPANY.SUBSCRIPTION)}
+                    className="bg-[#6B4705] text-white px-4 py-2 rounded-lg font-medium"
+                  >
+                    View Plans
+                  </button>
+                </div>
+              </div>
+            )}
             <QuestionModal 
                isOpen={isModalOpen}
                key={selectedQuestion?.id || modalMode}

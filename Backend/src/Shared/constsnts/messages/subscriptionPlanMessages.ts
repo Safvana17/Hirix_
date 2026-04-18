@@ -28,5 +28,6 @@ export const subscriptionPlanMessages = {
         INCORRECT_SUBSCRIPTION_ID: 'Requested subscription id is not correct',
         NOT_CURRENT_SUBSCRIPTION: 'Requested subscription is not current subscription',
         CANNOT_CANCEL_FREE_PLAN: 'You cannot cancel free plan',
+        CANNOT_CREATE_QUESTION: 'You don’t have access to create questions on your current plan',
     }
 }

@@ -321,7 +321,10 @@ const iCompanyCreateQuestion = new CompanyCreateQuestionUsecase(
     iCategoryRepository
 )
 const iCompanyGetAllQuestions = new CompanyGetAllQuestionsUsecase (
-    iQuestionRepository
+    iCompanyRepository,
+    iQuestionRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
 )
 const iCompanyEditQuestion = new CompanyEditQuestionUsecase(
     iQuestionRepository,
