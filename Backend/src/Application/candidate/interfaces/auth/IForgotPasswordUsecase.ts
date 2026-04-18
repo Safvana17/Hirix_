@@ -1,4 +1,4 @@
-import { ForgotPasswordInputDTO, ForgotPasswordOutputDTO } from "../../dtos/forgotpassword.candidate.dto";
+import { ForgotPasswordInputDTO, ForgotPasswordOutputDTO } from "../../dtos/auth/forgotpassword.candidate.dto";
 
 export interface IForgotPasswordUsecase {
     execute(request: ForgotPasswordInputDTO): Promise<ForgotPasswordOutputDTO>

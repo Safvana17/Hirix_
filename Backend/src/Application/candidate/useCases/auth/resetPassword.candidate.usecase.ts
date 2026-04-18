@@ -1,5 +1,5 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
-import { ResetPasswordInputDTO, ResetPasswordOutputDTO } from "../../dtos/resetpassword.candidate.dto";
+import { ResetPasswordInputDTO, ResetPasswordOutputDTO } from "../../dtos/auth/resetpassword.candidate.dto";
 import { IResetPasswordUsecase } from "../../interfaces/auth/IResetPasswordUsecase";
 import { IHashService } from "../../../interface/service/IHashService";
 import { IOtpService } from "../../../interface/service/IOtpService";

@@ -1,6 +1,6 @@
 import candidateEntity from "../../../../Domain/entities/candidate.entity";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
-import { RegisterCandidateInputDTO, RegisterCandidateOutputDTO } from "../../dtos/register.candidate.dto";
+import { RegisterCandidateInputDTO, RegisterCandidateOutputDTO } from "../../dtos/auth/register.candidate.dto";
 import { IOtpService } from "../../../interface/service/IOtpService"
 import { IHashService } from "../../../interface/service/IHashService"
 import { IMailService } from "../../../interface/service/IMailService";

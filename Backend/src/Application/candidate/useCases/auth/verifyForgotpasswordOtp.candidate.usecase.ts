@@ -5,7 +5,7 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IOtpService } from "../../../interface/service/IOtpService";
 import { IOtpStore } from "../../../interface/service/IOtpStore";
 import { ITokenService } from "../../../interface/service/ITokenService";
-import { verifyCandidateForgotPasswordOtpInputDTO, verifyCandidateForgotPasswordOtpOutputDTO } from "../../dtos/verifyOtpForForgotpassword.candidate.dto";
+import { verifyCandidateForgotPasswordOtpInputDTO, verifyCandidateForgotPasswordOtpOutputDTO } from "../../dtos/auth/verifyOtpForForgotpassword.candidate.dto";
 import { ICandidateVerifyOtpForForgotPassswordUsecase } from "../../interfaces/auth/IVerifyOtpForForgotPassword";
 
 export class VerifyCandidateForgotPasswordOtpUsecase implements ICandidateVerifyOtpForForgotPassswordUsecase {

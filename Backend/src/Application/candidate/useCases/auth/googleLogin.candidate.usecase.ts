@@ -9,7 +9,7 @@ import { logger } from "../../../../utils/logging/loger";
 import { IGoogleAuthService } from "../../../interface/service/IGoogleAuthService";
 import { IHashService } from "../../../interface/service/IHashService";
 import { ITokenService } from "../../../interface/service/ITokenService";
-import { LoginCandidateOutputDTO } from "../../dtos/login.candidate.dto";
+import { LoginCandidateOutputDTO } from "../../dtos/auth/login.candidate.dto";
 import { IGoogleLoginUsecase } from "../../interfaces/auth/IGoogleLoginUsecase";
 
 

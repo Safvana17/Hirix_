@@ -1,5 +1,5 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
-import { ResendOtpInputDTO, ResendOtpOutputDTO } from "../../dtos/resendotp.candidate.dto";
+import { ResendOtpInputDTO, ResendOtpOutputDTO } from "../../dtos/auth/resendotp.candidate.dto";
 import { IResendOtpUsecase } from "../../interfaces/auth/IResendOtpUsecase";
 import { IMailService } from "../../../interface/service/IMailService";
 import { IOtpService } from "../../../interface/service/IOtpService";

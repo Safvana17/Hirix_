@@ -1,5 +1,5 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
-import { ForgotPasswordInputDTO, ForgotPasswordOutputDTO } from "../../dtos/forgotpassword.candidate.dto";
+import { ForgotPasswordInputDTO, ForgotPasswordOutputDTO } from "../../dtos/auth/forgotpassword.candidate.dto";
 import { IForgotPasswordUsecase } from "../../interfaces/auth/IForgotPasswordUsecase";
 import { IMailService } from "../../../interface/service/IMailService";
 import { IOtpService } from "../../../interface/service/IOtpService";

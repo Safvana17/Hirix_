@@ -1,4 +1,4 @@
-import { verifyRegisterCandidateOtpInputDTO, verifyRegisterCandidateOtpOutputDTO } from "../../dtos/verifyRegister.candidate.dto";
+import { verifyRegisterCandidateOtpInputDTO, verifyRegisterCandidateOtpOutputDTO } from "../../dtos/auth/verifyRegister.candidate.dto";
 
 export interface IVerifyRegisterCandidate {
     execute(request: verifyRegisterCandidateOtpInputDTO): Promise<verifyRegisterCandidateOtpOutputDTO>

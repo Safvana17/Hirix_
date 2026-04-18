@@ -1,5 +1,5 @@
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
-import { verifyRegisterCandidateOtpInputDTO, verifyRegisterCandidateOtpOutputDTO } from "../../dtos/verifyRegister.candidate.dto";
+import { verifyRegisterCandidateOtpInputDTO, verifyRegisterCandidateOtpOutputDTO } from "../../dtos/auth/verifyRegister.candidate.dto";
 import { IVerifyRegisterCandidate } from "../../interfaces/auth/IVerifyRegisterCandidate";
 import { IOtpService } from "../../../interface/service/IOtpService";
 import { IOtpStore } from "../../../interface/service/IOtpStore";

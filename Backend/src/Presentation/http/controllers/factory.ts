@@ -68,7 +68,7 @@ import { CompanyPaymentFailureUsecase } from "../../../Application/company/useca
 import { CompanyGetBillingHistoryUsecase } from "../../../Application/company/usecases/subscription/company.getBillingHistory.usecase";
 import { CompanyCancelSubscriptionUsecase } from "../../../Application/company/usecases/subscription/company.cancelSubscription.usecase";
 import { CompanyDownloadInvoiceUsecase } from "../../../Application/company/usecases/subscription/company.downloadInvoice.usecase";
-
+import { CandidateGetAllPlanUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getAllPlan.usecase";
 
 
 
@@ -120,6 +120,7 @@ import { CompanySubscriptionController } from "./company/subscriptionController"
 import { SubscriptionRepository } from "../../../Infrastructure/repositories/subscription.repository";
 import { RazorpayService } from "../../../Infrastructure/services/RazorpayService";
 import { PdfService } from "../../../Infrastructure/services/PdfService";
+import { CandidateSubscriptionController } from "./candidate/subscriptionController";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -200,6 +201,11 @@ const iCandidateGoogleLogin = new CandidateGoogleLoginUsecase(
 //practice
 const iCandidateGetAllPracticeQuestions = new CandidateGetAllPracticeQuestionsUsecase(
     iQuestionRepository
+)
+
+//subscription
+const iCandidateGetAllPlans = new CandidateGetAllPlanUsecase(
+    iSubscriptionPlanRepository
 )
 
 //company
@@ -608,4 +614,8 @@ export const iCompanySubscriptionController = new CompanySubscriptionController(
     iCompanyGetBillingHistory,
     iCompanyCancelSubscription,
     iCompanyGetInvoice
+)
+
+export const iCandidateSubscriptionController = new CandidateSubscriptionController(
+    iCandidateGetAllPlans
 )

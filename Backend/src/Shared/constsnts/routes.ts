@@ -63,6 +63,17 @@ export const ROUTES = {
         VERIFY_OTP_RESET: '/candidate/verifyotpforforgotpassword',
         PRACTICE: {
             GET_ALL: '/practice-questions'
+        },
+        SUBSCRIPTION: {
+            GET_ALL: '/plans',
+            GET_CURRENT: '/plan',
+            CHANGE_SUBSCRIPTION: '/change-subscription',
+            MAKE_PAYMENT: '/subscription/payment',
+            CONFIRM_PYMENT: '/subscription/confirm',
+            MARK_FAILURE: '/subscription/failure',
+            GET_BILLING_HISTORY: '/subscription/billing-history',
+            CANCEL: '/subscription/:id/cancel',
+            INVOICE: '/subscription/:id/invoice'
         }
     },
 

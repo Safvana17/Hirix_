@@ -1,4 +1,4 @@
-import userRole from "../../../Domain/enums/userRole.enum"
+import userRole from "../../../../Domain/enums/userRole.enum"
 
 export interface LoginCandidateInputDTO { 
     email: string

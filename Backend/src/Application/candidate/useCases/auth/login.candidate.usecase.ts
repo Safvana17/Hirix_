@@ -2,7 +2,7 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
-import { LoginCandidateInputDTO, LoginCandidateOutputDTO } from "../../dtos/login.candidate.dto";
+import { LoginCandidateInputDTO, LoginCandidateOutputDTO } from "../../dtos/auth/login.candidate.dto";
 import { IHashService } from "../../../interface/service/IHashService";
 import { ITokenService } from "../../../interface/service/ITokenService";
 

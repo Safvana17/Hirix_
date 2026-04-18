@@ -1,4 +1,4 @@
-import { GoogleAuthDTO } from "../../Application/candidate/dtos/login.candidate.dto";
+import { GoogleAuthDTO } from "../../Application/candidate/dtos/auth/login.candidate.dto";
 import { IGoogleAuthService } from "../../Application/interface/service/IGoogleAuthService";
 import { OAuth2Client } from "google-auth-library";
 import { env } from "../config/env";
