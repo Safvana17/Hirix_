@@ -48,6 +48,7 @@ export const ROUTES = {
         MARK_FAILURE: '/subscription/failure',
         GET_BILLING_HISTORY: '/subscription/billing-history',
         CANCEL: '/subscription/:id/cancel',
+        INVOICE: '/subscription/:id/invoice'
       }
     },
 

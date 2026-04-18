@@ -67,7 +67,7 @@ import { CompanyConfirmPaymentUsecase } from "../../../Application/company/useca
 import { CompanyPaymentFailureUsecase } from "../../../Application/company/usecases/subscription/company.paymentFailure.usecase";
 import { CompanyGetBillingHistoryUsecase } from "../../../Application/company/usecases/subscription/company.getBillingHistory.usecase";
 import { CompanyCancelSubscriptionUsecase } from "../../../Application/company/usecases/subscription/company.cancelSubscription.usecase";
-
+import { CompanyDownloadInvoiceUsecase } from "../../../Application/company/usecases/subscription/company.downloadInvoice.usecase";
 
 
 
@@ -119,6 +119,7 @@ import { SubscriptionPlanController } from "./admin/subscriptionPlanController";
 import { CompanySubscriptionController } from "./company/subscriptionController";
 import { SubscriptionRepository } from "../../../Infrastructure/repositories/subscription.repository";
 import { RazorpayService } from "../../../Infrastructure/services/RazorpayService";
+import { PdfService } from "../../../Infrastructure/services/PdfService";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -138,6 +139,7 @@ export const iTokenService = new TokenService()
 const iMailService = new MailService()
 const iGoogleAuthService = new GoogleAuthService()
 const iRazorpayService = new RazorpayService()
+const iPdfService = new PdfService()
 
 //candidates
 const iVerifyRegisterCandidate = new VerifyRegisterCandidateOtpUsecase(
@@ -377,6 +379,13 @@ const iCompanyCancelSubscription = new CompanyCancelSubscriptionUsecase(
     iSubscriptionRepository,
     iSubscriptionPlanRepository
 )
+const iCompanyGetInvoice = new CompanyDownloadInvoiceUsecase(
+    iCompanyRepository,
+    iPaymentRepository,
+    iSubscriptionPlanRepository,
+    iSubscriptionRepository,
+    iPdfService
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -592,4 +601,5 @@ export const iCompanySubscriptionController = new CompanySubscriptionController(
     iCompanyMarkFailure,
     iCompanyGetBillingHistory,
     iCompanyCancelSubscription,
+    iCompanyGetInvoice
 )

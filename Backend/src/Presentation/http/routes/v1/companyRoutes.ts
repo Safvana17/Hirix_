@@ -8,7 +8,7 @@ import { validate } from "../../middlewares/validate";
 import { createQuestionSchema, editQuestionSchema } from "../../validators/questionValidator";
 import { createJobRoleSchema, EditJobRoleSchema, updateJobRoleSchema} from "../../validators/jobRoleValidator";
 import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updateProfileSchema } from "../../validators/settingsValidator";
-import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema } from "../../validators/subscriptionValidators";
+import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema } from "../../validators/subscriptionValidators";
 
 const router = Express.Router()
 
@@ -45,7 +45,7 @@ router.post(ROUTES.COMPANY.SUBSCRIPTION.CONFIRM_PYMENT, authHandler(iTokenServic
 router.patch(ROUTES.COMPANY.SUBSCRIPTION.MARK_FAILURE, authHandler(iTokenService), verifyCsrf, validate(MarkFailureSchema, 'body'), iCompanySubscriptionController.markFailed)
 router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_BILLING_HISTORY, authHandler(iTokenService), validate(PaymnetQuerySchema, 'query'), iCompanySubscriptionController.getBillingHistory)
 router.patch(ROUTES.COMPANY.SUBSCRIPTION.CANCEL, authHandler(iTokenService),verifyCsrf, validate(CancelSubscriptionSchema, 'params'), iCompanySubscriptionController.cancelSubscription)
-
+router.get(ROUTES.COMPANY.SUBSCRIPTION.INVOICE, authHandler(iTokenService), validate(GetInvoiceSchema, 'params'), iCompanySubscriptionController.getInvoice)
 
 
 
