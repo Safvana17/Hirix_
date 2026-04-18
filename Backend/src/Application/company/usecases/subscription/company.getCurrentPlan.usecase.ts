@@ -57,6 +57,7 @@ export class CompanyGetCurrentPlanUsecase implements ICompanyGetCurrentPlanUseca
 
         return {
             id: currentPlan.id,
+            subscriptionId: subscription.id,
             planName: currentPlan.planName,
             price: currentPlan.price,
             billingCycle: currentPlan.billingCycle,

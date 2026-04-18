@@ -1,10 +1,11 @@
 import { BillingCycle, subscriptionStatus } from "../../../../Domain/enums/subscription";
 
-export interface CompanyGetCurrentPlanInputDTO {
-    id: string
+export interface CompanyCancelSubscriptionInputDTO {
+    companyId: string
+    subscriptionId: string
 }
 
-export interface CompanyGetCurrentPlanOutputDTO {
+export interface CompanyCancelSubscriptionOutputDTO {
   id: string,
   subscriptionId: string;
   planName: string;

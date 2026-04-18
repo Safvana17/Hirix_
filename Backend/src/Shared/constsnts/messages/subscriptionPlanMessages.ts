@@ -25,5 +25,8 @@ export const subscriptionPlanMessages = {
         DOESNOT_REQUIRE_PAYMENT: 'Free plan does not require payment',
         PAYMENT_NOT_FOUND: 'Payment not found',
         INVALID_PAYMENT_SIGNATURE: 'Invalid payment signature',
+        INCORRECT_SUBSCRIPTION_ID: 'Requested subscription id is not correct',
+        NOT_CURRENT_SUBSCRIPTION: 'Requested subscription is not current subscription',
+        CANNOT_CANCEL_FREE_PLAN: 'You cannot cancel free plan',
     }
 }

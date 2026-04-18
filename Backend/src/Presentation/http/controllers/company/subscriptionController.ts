@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ICompanyGetAllPlanUsecase } from "../../../../Application/company/interfaces/subscription/ICompanyGetAllPlanUsecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
-import { PaymentQuery, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
+import { CancelSubscriptionParam, PaymentQuery, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
@@ -11,6 +11,7 @@ import { ICompanyMakePaymentUsecase } from "../../../../Application/company/inte
 import { ICompanyConfirmPaymentUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.confirmPyment.usecase";
 import { ICompanyPaymentFailureUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.paymentFailure.usecase";
 import { IGetCompanyBillingHistoryUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.getBillingHistory.usecase";
+import { ICompanyCancelSubscriptionUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.cancelSubscription.usecase";
 
 
 export class CompanySubscriptionController {
@@ -22,6 +23,7 @@ export class CompanySubscriptionController {
         private _confirmPayment: ICompanyConfirmPaymentUsecase,
         private _paymentFailure: ICompanyPaymentFailureUsecase,
         private _getBillingHistory: IGetCompanyBillingHistoryUsecase,
+        private _cancelSubscription: ICompanyCancelSubscriptionUsecase,
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
@@ -67,5 +69,12 @@ export class CompanySubscriptionController {
         const { payments, totalCount, totalPages } = await this._getBillingHistory.execute({userId: companyId, status, page, limit})
         logger.info(payments, 'from subscription controller')
         return sendSuccess(res, statusCode.OK, '', {payments, totalCount, totalPages})
+    })
+
+    cancelSubscription = asyncHandler(async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        const { id }= req.validateParams as CancelSubscriptionParam
+        const currentPlan = await this._cancelSubscription.execute({companyId, subscriptionId: id})
+        return sendSuccess(res, statusCode.OK, '', currentPlan)
     })
 }

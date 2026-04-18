@@ -46,7 +46,8 @@ export const ROUTES = {
         MAKE_PAYMENT: '/subscription/payment',
         CONFIRM_PYMENT: '/subscription/confirm',
         MARK_FAILURE: '/subscription/failure',
-        GET_BILLING_HISTORY: '/subscription/billing-history'
+        GET_BILLING_HISTORY: '/subscription/billing-history',
+        CANCEL: '/subscription/:id/cancel',
       }
     },
 

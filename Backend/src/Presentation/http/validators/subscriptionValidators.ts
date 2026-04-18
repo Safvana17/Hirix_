@@ -37,3 +37,8 @@ export const PaymnetQuerySchema = z.object({
     limit: z.coerce.number().default(10)
 })
 export type PaymentQuery = z.infer<typeof PaymnetQuerySchema>
+
+export const CancelSubscriptionSchema = z.object({
+  id: z.string()
+})
+export type CancelSubscriptionParam = z.infer<typeof CancelSubscriptionSchema>

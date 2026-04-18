@@ -35,12 +35,27 @@ export const validate =
     const parsed = schema.parse(req[property]);
     if(property === 'query'){
       req.validatedQuery = parsed
+    }else if(property === 'params'){
+      req.validateParams = parsed
     }else{
-    req[property] = parsed;
+      req[property] = parsed;
     }
     next();
   };
 
+
+//   import { RequestHandler } from "express";
+
+
+// export const validateRequest =
+//   (schema: { params?: ZodTypeAny; body?: ZodTypeAny; query?: ZodTypeAny }): RequestHandler =>
+//   (req, res, next) => {
+//     if (schema.params) req.params = schema.params.parse(req.params);
+//     if (schema.body) req.body = schema.body.parse(req.body);
+//     if (schema.query) req.query = schema.query.parse(req.query);
+
+//     next();
+//   };
 
 // import { Request, Response, NextFunction } from "express";
 // import { z, ZodType } from "zod";

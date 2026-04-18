@@ -8,8 +8,9 @@ declare module 'express-serve-static-core' {
                accessToken?: string,
                refreshToken?: string
             },
-            validatedQuery?: unknown
+            validatedQuery?: unknown,
+            validateParams?: unknown
         }
 }
-
+ 
 export {}
