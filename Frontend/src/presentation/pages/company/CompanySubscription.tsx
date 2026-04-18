@@ -4,12 +4,13 @@ import { companySidebarItems } from '../../../constants/sidebarItems'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import { Box, Typography } from '@mui/material'
-import { getAllPlans, getBillingHistory, getCurrentPlan } from '../../../redux/slices/features/subscription/subscriptionSlice'
+import { getAllPlans, getBillingHistory, getCurrentPlan, getInvoice } from '../../../redux/slices/features/subscription/subscriptionSlice'
 import CurrentPlanCard from '../../components/company/CurrentPlanCard'
 import CompanyPlans from '../../components/company/CompanyPlans'
 import DataTableMui from '../../components/ui/DataTableMui'
 import type { Payment } from '../../../types/subscription'
 import type { Column } from '../../../types/table'
+import toast from 'react-hot-toast'
 
 
 const CompanySubscription: React.FC= () => {
@@ -29,6 +30,21 @@ const CompanySubscription: React.FC= () => {
     }
   }, [user, page, dispatch,currentPage, pageSize])
 
+  const handleDownloadInvoice = async(paymentId: string) => {
+    try {
+      const blob = await dispatch(getInvoice({id: paymentId})).unwrap()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `invoice-${paymentId}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to download invoice')
+    }
+  }
 
 const columns: Column<Payment>[] = [
   { header: 'Description', key: 'description', render: (val) => <span>{val as string}</span>,},
@@ -56,6 +72,14 @@ const columns: Column<Payment>[] = [
     render: (val) => new Date(val).toLocaleString(),
   },
   {header: 'Order ID',key: 'orderId',render: (val) => ( <span>{val.toString().slice(0,6)}...{val.toString().slice(-4)}</span>)},
+  {header: 'Invoice', key: 'invoiceUrl', render: (_, row) => (
+    <button
+      onClick={() => handleDownloadInvoice(row.id)}
+      className='px-3 py-1 bg-[#6B4705] text-white rounded-md text-sm'
+    >
+      Download
+    </button>
+  )}
 
 ];
   

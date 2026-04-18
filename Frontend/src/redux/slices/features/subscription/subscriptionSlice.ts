@@ -187,6 +187,24 @@ CurrentPlan,
     }
 })
 
+export const getInvoice = createAsyncThunk<
+Blob,
+{id: string},
+{rejectValue: string}
+>('subscription/getInvoice', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.SUBSCRIPTION.INVOICE(id), {
+            responseType: 'blob'
+        })
+        console.log('response', response)
+        console.log('pdf', response.data)
+        return response.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get invoice')
+    }
+})
+
 const subscriptionSlice = createSlice({
     name: 'subscription',
     initialState,
@@ -284,6 +302,16 @@ const subscriptionSlice = createSlice({
         .addCase(cancelSubscription.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to cancel subscription'
+        })
+        .addCase(getInvoice.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(getInvoice.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(getInvoice.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get invoice'
         })
     }
 })

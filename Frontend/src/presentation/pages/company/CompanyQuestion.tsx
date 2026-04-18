@@ -122,7 +122,7 @@ const CompanyQuestion: React.FC = () => {
     <InternalLayout title='Questions' subTitle='Manage assessment question library' sidebarItems={companySidebarItems}>
        <div>
            <div className='flex justify-end mb-5'>
-              <button onClick={handleAddQuestion} className='bg-[#795003] rounded-xl font-bold text-white p-3 flex items-center gap-2'>
+              <button onClick={handleAddQuestion} disabled={featureLocked} className='bg-[#795003] rounded-xl font-bold text-white p-3 flex items-center gap-2'>
                 <Plus className='w-4 h-4' />
                 Add Question
               </button>

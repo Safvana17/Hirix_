@@ -49,7 +49,9 @@ export const API_ROUTES = {
       MARK_FAILURE: '/company/subscription/failure',
       GET_BILLING_HISTORY: '/company/subscription/billing-history',
       CANCEL: (id: string) =>
-        `/company/subscription/${id}/cancel`
+        `/company/subscription/${id}/cancel`,
+      INVOICE: (id: string) => 
+        `company/subscription/${id}/invoice`,
     }
   },
 
