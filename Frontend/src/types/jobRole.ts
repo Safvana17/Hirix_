@@ -38,6 +38,7 @@ export interface GetAllJobRolesResponse{
     jobRoles: JobRole[]
     totalPages: number
     totalCount: number
+    featureLocked: boolean
 }
 
 export type UpdateJobRoleStatusPayload = {

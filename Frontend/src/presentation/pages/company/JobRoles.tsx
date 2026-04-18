@@ -23,7 +23,7 @@ const JobRoles: React.FC= () => {
     const [selectedJobRole, setSelectedJobRole] = useState<JobRole | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
     const dispatch = useDispatch<AppDispatch>()
-    const { loading, pagination, jobRoles} = useSelector((state: RootState) => state.jobRole)
+    const { loading, pagination, jobRoles, featureLocked} = useSelector((state: RootState) => state.jobRole)
     const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
     const [modalConfig, setModalConfig] = useState<{
@@ -92,7 +92,12 @@ const JobRoles: React.FC= () => {
                 await dispatch(getAllJobRoles())
             }
         } catch (error) {
-            toast.error(typeof error === 'string' ? error : 'Failed to create job role')
+            const err = error as {message: string, code: string}
+            if(err.code === 'FEATURE_LOCKED'){
+                toast.error('You’ve reached your monthly limit. Upgrade to unlock more access.')
+            }else{
+                toast.error(typeof error === 'string' ? error : 'Failed to create job role')
+            }
         }
     }
 
@@ -192,7 +197,7 @@ const JobRoles: React.FC= () => {
     <InternalLayout title='Job Roles' subTitle='Manage your open positions and requirements' sidebarItems={companySidebarItems}>
         <div>
             <div className='flex justify-end mb-5'>
-                <button onClick={handleCreateJobRole} className='bg-[#795003] rounded-xl font-bold text-white p-3 flex items-center gap-2'>
+                <button onClick={handleCreateJobRole} disabled={featureLocked} className={`bg-[#795003] rounded-xl font-bold text-white p-3 flex items-center gap-2 disabled:bg-[#E6DECF]`}>
                     <Plus className='w-4 h-4' />
                     Add Job Role
                 </button>
@@ -234,6 +239,7 @@ const JobRoles: React.FC= () => {
                pagination={{
                 currentPage,
                 totalPages: pagination.jobRole.totalPages,
+                totalCount: pagination.jobRole.totalCount,
                 onPageChange: (page) => setCurrentPage(page)
                }}
             >

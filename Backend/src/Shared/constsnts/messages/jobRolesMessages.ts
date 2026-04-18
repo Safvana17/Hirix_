@@ -13,5 +13,6 @@ export const JobRoleMessages = {
         UPDATE_JOBROLE_STATUS_FAILED: 'Failed to update job role status',
         FAILED_DELETE_JOBROLE: 'Failed to delete job role',
         CANNOT_EDIT_OTHER_COMPANY_JOBROLE:'You can edit only job roles created by you',
+        JOBROLE_LIMIT_EXCEEDED: 'Your job role limit exceeded',
     }
 }

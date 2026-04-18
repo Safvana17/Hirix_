@@ -20,8 +20,8 @@ export class JobRolesController {
     ) {}
 
     createJobRole = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const userId = req.user.id
-        const jobRole = await this._createJobRole.execute({...req.body, userId})
+        const companyId = req.user.id
+        const jobRole = await this._createJobRole.execute({...req.body, companyId})
         return sendSuccess(res, statusCode.OK, JobRoleMessages.success.JOB_ROLE_CREATED, {jobRole})
     })
     getAllJobRoles = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -29,8 +29,8 @@ export class JobRolesController {
         // validate(JobRoleQuerySchema, req.query)
         const userId = req.user.id
         // const query = req.query as unknown as { page: number, limit: number, search: string, status: string}
-        const { jobRoles, totalCount, totalPages } = await this._getAllJobRoles.execute({...parsed, userId})
-        return sendSuccess(res, statusCode.OK, '', {jobRoles, totalCount, totalPages})
+        const { jobRoles, totalCount, totalPages, featureLocked } = await this._getAllJobRoles.execute({...parsed, userId})
+        return sendSuccess(res, statusCode.OK, '', {jobRoles, totalCount, totalPages, featureLocked})
     })
 
     editJobRole = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

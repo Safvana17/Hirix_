@@ -21,5 +21,6 @@ export interface JobRolesQueryDTO {
 export interface PaginatedJobRolesDTO {
     jobRoles: GetAllJobRolesOutputDTO[];
     totalPages: number;
-    totalCount: number
+    totalCount: number;
+    featureLocked: boolean
 }

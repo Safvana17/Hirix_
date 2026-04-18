@@ -67,6 +67,19 @@ export class JobRolesRepository extends BaseRepository<JobRolesEntity, IJobRoles
             totalCount
         }
     }
+
+    async CountJobRoleInMonth(companyId: string, startOfMonth: Date, endOfMonth: Date): Promise<number> {
+
+        return await this._model.countDocuments({
+            createdById: companyId,
+            isDeleted: false,
+            createdAt: {
+                $gt: startOfMonth,
+                $lt: endOfMonth,
+            }
+        })
+    }
+
     protected mapToEntity(doc: IJobRoles): JobRolesEntity {
         return JobRoleMapper.toEntity(doc)
     }

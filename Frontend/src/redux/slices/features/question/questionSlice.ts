@@ -74,12 +74,6 @@ getAllQuestionsResponse,
     } catch (error) {
         console.log("ERROR OCCURRED:", error)
         const err = error as AxiosError<{message: string, code?: string}>
-        // if(err.response?.status === 403){
-        //     return rejectWithValue({
-        //         type: 'FEATURE_LOCKED',
-        //         feature: err.response.data.data.feature
-        //     })
-        // }
         console.log("err: ", err.response?.data.code)
         return rejectWithValue({
             message: err.response?.data.message || 'Failed to get all questions',

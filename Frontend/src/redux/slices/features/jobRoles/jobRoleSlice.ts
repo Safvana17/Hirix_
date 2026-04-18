@@ -10,6 +10,7 @@ interface jobRoleState {
     error: string | null;
     jobRoles: JobRole[]
     selectedJobRole: JobRole | null;
+    featureLocked: boolean;
     pagination: {
         jobRole: {
             totalPages: number;
@@ -23,6 +24,7 @@ const initialState: jobRoleState = {
     error: null,
     jobRoles: [],
     selectedJobRole: null,
+    featureLocked: false,
     pagination: {
         jobRole: {
             totalPages: 0,
@@ -34,18 +36,20 @@ const initialState: jobRoleState = {
 export const createJobRole = createAsyncThunk<
 JobRole,
 createJobRolePayload,
-{rejectValue: string}
+{rejectValue: {message: string, code?: string}}
 >('company/createJobRole', async(createJobRolePayload, {rejectWithValue}) => {
     try {
         const response = await api.post(API_ROUTES.COMPANY.JOB_ROLE, createJobRolePayload)
-        if(!response.data.success){
-            return rejectWithValue('Invalid Response')
-        }
-
+        // if(!response.data.success){
+        //     return rejectWithValue({message: "Invalid response"})
+        // }
         return response.data.data
     } catch (error) {
-       const err = error as AxiosError<{message: string}>
-       return rejectWithValue(err.response?.data?.message || 'Failed to create job role')  
+       const err = error as AxiosError<{message: string, code: string}>
+       return rejectWithValue({
+          message: err.response?.data?.message || 'Failed to create job role',
+          code: err.response?.data.code
+       })  
     }
 })
 
@@ -144,7 +148,10 @@ const jobRoleSlice = createSlice({
          })
          .addCase(createJobRole.rejected, (state, action) => {
             state.loading = false
-            state.error = action.payload || 'Failed to add job role'
+            if(action.payload?.code === 'FEATURE_LOCKED'){
+                state.featureLocked = true
+            }
+            state.error = action.payload?.message || 'Failed to add job role'
          })
          .addCase(getAllJobRoles.pending, (state) => {
             state.loading = true
@@ -156,6 +163,7 @@ const jobRoleSlice = createSlice({
             )
             state.pagination.jobRole.totalCount = action.payload.totalCount
             state.pagination.jobRole.totalPages = action.payload.totalPages
+            state.featureLocked = action.payload.featureLocked
          })
          .addCase(getAllJobRoles.rejected, (state, action) => {
             state.loading = false

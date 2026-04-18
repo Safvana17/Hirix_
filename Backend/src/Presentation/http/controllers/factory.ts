@@ -301,9 +301,15 @@ const iConfirmRestoreAccount = new ConfirmRestoreAccountUsecase(
 
 //company job role
 const iCreateJobRole = new CreateJobRolesUsecase(
+    iCompanyRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
     iJobRoleRepository
 )
 const iGetAllJobRoles = new GetAllJobRolesUsecase (
+    iCompanyRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
     iJobRoleRepository
 )
 const iEditJobRole = new EditJobRoleUsecase(
