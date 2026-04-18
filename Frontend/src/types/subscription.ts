@@ -73,6 +73,7 @@ export type DeletePlanPayload = {
 
 export interface CurrentPlan {
   id: string;
+  subscriptionId: string;
   planName: string;
   price: number;
   startDate: Date;    

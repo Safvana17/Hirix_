@@ -165,7 +165,25 @@ GetBillingHistoryParams,
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
-        return rejectWithValue(err.response?.data.message || 'Failed to get billinh history')
+        return rejectWithValue(err.response?.data.message || 'Failed to get billing history')
+    }
+})
+
+export const cancelSubscription = createAsyncThunk<
+CurrentPlan,
+{id: string},
+{rejectValue: string}
+>('subscription/cancel', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMPANY.SUBSCRIPTION.CANCEL(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to cancel subscription')
     }
 })
 
@@ -255,6 +273,17 @@ const subscriptionSlice = createSlice({
             state.payments = action.payload.payments
             state.pagination.payment.totalCount = action.payload.totalCount
             state.pagination.payment.totalPages = action.payload.totalPages
+        })
+        .addCase(cancelSubscription.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(cancelSubscription.fulfilled, (state, action) => {
+            state.loading = false
+            state.currentPlan = action.payload
+        })
+        .addCase(cancelSubscription.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to cancel subscription'
         })
     }
 })

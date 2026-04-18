@@ -48,6 +48,8 @@ export const API_ROUTES = {
       CONFIRM_PAYMENT: '/company/subscription/confirm',
       MARK_FAILURE: '/company/subscription/failure',
       GET_BILLING_HISTORY: '/company/subscription/billing-history',
+      CANCEL: (id: string) =>
+        `/company/subscription/${id}/cancel`
     }
   },
 
