@@ -112,6 +112,10 @@ export const API_ROUTES = {
         `/${role}/question/${id}`,
       GET_ALL: (role: UserRole) => 
         `/${role}/questions`
+    },
+    SUBSCRIPTION: {
+      GET_ALL: (role: UserRole) => 
+        `/${role}/plans`
     }
   }
 }

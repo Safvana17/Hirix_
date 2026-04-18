@@ -25,6 +25,7 @@ export const ROUTES = {
     FORGOT_PASSWORD: '/candidate/forgotpassword',
     RESET_PASSWORD: '/candidate/resetpassword',
     DASHBOARD: '/candidate/dashboard',
+    SUBSCRIPTION: '/candidate/subscription',
   },
 
   COMMON: {

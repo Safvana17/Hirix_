@@ -1,72 +1,77 @@
 import React from 'react'
 import { Box, Card, Pagination, Stack, Typography } from '@mui/material'
 import { Check, Close } from '@mui/icons-material'
-import type { CurrentPlan, SubscriptionPlan } from '../../../types/subscription'
-import { useDispatch, useSelector } from 'react-redux'
-import type { AppDispatch, RootState } from '../../../redux/store'
-import toast from 'react-hot-toast'
-import { changeSubscription } from '../../../redux/slices/features/subscription/subscriptionSlice'
-import { useNavigate } from 'react-router-dom'
+import type { SubscriptionPlan } from '../../../types/subscription'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../../../redux/store'
+// import toast from 'react-hot-toast'
+// import { changeSubscription } from '../../../redux/slices/features/subscription/subscriptionSlice'
+// import { useNavigate } from 'react-router-dom'
 
-interface CompanyPlansProps {
+interface CandidatePlansProps {
     plans: SubscriptionPlan[]
-    currentPlan : CurrentPlan | null
+    // currentPlan : CurrentPlan | null
     page: number
     setPage: (page: number) => void
 }
 
-const COMPANY_FEATURES = [
-  { key: "canUseAdminQuestions", label: "Use admin questions", type: "boolean" },
-  { key: "canCreateCustomQuestions", label: "Create custom questions", type: "boolean" },
-  { key: "maxTestsPerMonth", label: (v: number | null) => v ? `Up to ${v} tests/month` : "Unlimited tests", type: "limit" },
-  { key: "maxCandidates", label: (v: number | null) => v ? `Up to ${v} candidates` : "Unlimited candidates", type: "limit" },
-  { key: "maxJobRolesPerMonth", label: (v: number | null) => v ? `${v} job roles/month` : "Unlimited job roles", type: "limit" },
-  { key: "maxInterviewPerMonth", label: (v: number | null) => v ? `${v} interviews/month` : "Unlimited interviews", type: "limit" },
+const CANDIDATE_FEATURES = [
+  { key: "canAccessPremiumQuestions", label: "Access premium questions", type: "boolean" },
+  { key: "hasDetailedFeedback", label: "Detailed feedback", type: "boolean" },
+  { key: "maxPracticePerDay", label: (v: number | null) => v ? `${v} practices/day` : "Unlimited practice", type: "limit" },
 ]
 
 
-const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, setPage}) => {
+const CandidateSubscriptionPlans: React.FC<CandidatePlansProps>= ({plans, page, setPage}) => {
 
   const { pagination } = useSelector((state: RootState) => state.subscription)
-  const dispatch = useDispatch<AppDispatch>()
-  const navigate =useNavigate()
+//   const dispatch = useDispatch<AppDispatch>()
+//   const navigate =useNavigate()
 
   const getFeaturesByTarget = () => {
-    return COMPANY_FEATURES
+    return CANDIDATE_FEATURES
   }
 
-  const handleChangeSubscription = async(planId: string) => {
-       try {
-         const response = await dispatch(changeSubscription({planId})).unwrap()
-         if(response.isPaymentRequired){
-          navigate('/company/payment')
-         }else{
-          toast.success('Your subscription plan changed successfully')
-         }
-       } catch (error) {
-        toast.error(typeof error === 'string' ? error : 'Failed to change subscription')
-       }
-  }
+//   const handleChangeSubscription = async(planId: string) => {
+//        try {
+//          const response = await dispatch(changeSubscription({planId})).unwrap()
+//          if(response.isPaymentRequired){
+//           navigate('/company/payment')
+//          }else{
+//           toast.success('Your subscription plan changed successfully')
+//          }
+//        } catch (error) {
+//         toast.error(typeof error === 'string' ? error : 'Failed to change subscription')
+//        }
+//   }
   return (
     <div>
       <Box
         display="grid"
-        gridTemplateColumns="repeat(auto-fill, minmax(260px, 1fr))"
+        gridTemplateColumns="repeat(auto-fill, minmax(320px, 2fr))"
         gap={2}
-        mt={2}
+        mt={4}
+        px={3}
+        ml={4}
       >
         {plans.map((p) => (
           <Card
             key={p.id}
             sx={{
-              p: 2,
-              borderRadius: 3,
+              p: 3,
+              borderRadius: 4,
               backgroundColor: "#fff",
-              border: "1px solid #e0e0e0",
+              border: p.isActive ? "2px solid #4caf50" : "1px solid #e0e0e0",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              minHeight: 260
+              minHeight: 360,
+              transition: "all 0.3s ease",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+              "&:hover": {
+                transform: "translateY(-6px)",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+               }
             }}
           >
             <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -89,7 +94,7 @@ const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, set
                       px: 1.2,
                       py: 0.3,
                       borderRadius: "20px",
-                      backgroundColor: p.target === 'company' ?  "#6B4705" : '#0B3358',
+                      backgroundColor: p.target === 'candidate' ?  "#6B4705" : '#0B3358',
                       color: "#fff",
                       textTransform: "capitalize"
                     }}
@@ -142,10 +147,11 @@ const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, set
               </Stack>
               <Box display="flex" gap={1} mt={2}>
                 <button 
-                  onClick={ () => handleChangeSubscription(p.id)}
-                  disabled={currentPlan?.id === p.id}
-                  className={`w-full p-2 border rounded-lg text-white font-bold cursor-pointer ${currentPlan?.id === p.id ? 'border-green-800 bg-green-800 cursor-not-allowed' : 'border-[#6B4705] bg-[#6B4705]'}`}>
-                  {currentPlan?.id === p.id ? 'Current plan' : 'Upgrade'}
+                //   onClick={ () => handleChangeSubscription(p.id)}
+                //   disabled={currentPlan?.id === p.id}
+                  className={`w-full p-2 border rounded-lg text-white font-bold cursor-pointer`}>
+                  {/* {currentPlan?.id === p.id ? 'Current plan' : 'Upgrade'} */}
+                  Upgrade
                 </button>
               </Box>
           </Card>
@@ -166,4 +172,4 @@ const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, set
   )
 }
 
-export default CompanyPlans
+export default CandidateSubscriptionPlans

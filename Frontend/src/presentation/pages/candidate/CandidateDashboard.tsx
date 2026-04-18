@@ -1,76 +1,3 @@
-// import React, { useEffect, useState } from 'react'
-// import CandidateHeader from '../../components/layout/CandidateHeader'
-// import CandidatePracticeQuestions from '../../components/candidate/CandidatePracticeQuestions'
-// import { useDispatch, useSelector } from 'react-redux'
-// import type { AppDispatch, RootState } from '../../../redux/store'
-// import { getAllPracticeQuestions } from '../../../redux/slices/features/question/practiceQuestionSlice'
-// import { useDebounce } from '../../../hooks/useDebounce'
-// import type { QuestionDifficulty, QuestionType } from '../../../types/question'
-
-// // const CandidateDashboard: React.FC = () => {
-// //   const [searchTerm, setSearchTerm] = useState('')
-// //   const {PracticeQuestions, pagination} = useSelector((state: RootState) => state.practiceQuestion)
-// //   const dispatch = useDispatch<AppDispatch>()
-// //   const debouncedSearchTerm = useDebounce(searchTerm, 500)
-
-// //   useEffect(() => {
-// //     dispatch(getAllPracticeQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page,limit: 10}, role: user!.role}))
-// //   })
-// //   return (
-// //     <div className='min-h-screen bg-gradient-to-b from-[#021A30] to-[#0B0707]'>
-// //       <CandidateHeader />
-// //       <CandidatePracticeQuestions questions={PracticeQuestions} />
-// //     </div>
-// //   )
-// // }
-
-// const CandidateDashboard: React.FC = () => {
-//   const [type, setType] = useState<QuestionType | ''>('');
-//   const [difficulty, setDifficulty] = useState<QuestionDifficulty | ''>('');
-//   const [searchTerm, setSearchTerm] = useState('');
-//   const [page, setPage] = useState(1)
-
-
-//   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-
-//   const { PracticeQuestions, pagination } = useSelector(
-//     (state: RootState) => state.practiceQuestion
-//   );
-//   const { user } = useSelector((state: RootState) => state.auth)
-//   const dispatch = useDispatch<AppDispatch>();
-
-//   useEffect(() => {
-//     dispatch(
-//       getAllPracticeQuestions({
-//         params: {
-//           search: debouncedSearchTerm,
-//           type: type || undefined,
-//           difficulty: difficulty || undefined,
-//           page,
-//           limit: 10,
-//         },
-//         role: user!.role,
-//       })
-//     );
-//   }, [debouncedSearchTerm, type, difficulty,user, dispatch, page]);
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-b from-[#021A30] to-[#0B0707]">
-//       <CandidateHeader />
-//       <CandidatePracticeQuestions
-//         questions={PracticeQuestions}
-//         type={type}
-//         setType={setType}
-//         difficulty={difficulty}
-//         setDifficulty={setDifficulty}
-//       />
-//     </div>
-//   );
-// };
-
-// export default CandidateDashboard
-
-
 import React, { useEffect, useState } from 'react';
 import CandidateHeader from '../../components/layout/CandidateHeader';
 import CandidatePracticeQuestions from '../../components/candidate/CandidatePracticeQuestions';
@@ -79,6 +6,7 @@ import type { AppDispatch, RootState } from '../../../redux/store';
 import { getAllPracticeQuestions } from '../../../redux/slices/features/question/practiceQuestionSlice';
 import { useDebounce } from '../../../hooks/useDebounce';
 import type { QuestionType, QuestionDifficulty } from '../../../types/question';
+
 
 const CandidateDashboard: React.FC = () => {
   const [type, setType] = useState<QuestionType | ''>('');
@@ -128,6 +56,8 @@ const CandidateDashboard: React.FC = () => {
         setType={setType}
         difficulty={difficulty}
         setDifficulty={setDifficulty}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
       />
 
       {pagination.PracticeQuestion.totalPages > 1 && (
