@@ -120,6 +120,8 @@ export const API_ROUTES = {
          `/${role}/plan`,
       CHANGE_SUBSCRIPTION: (role: UserRole) =>
          `/${role}/change-subscription`,
+      MAKE_PAYMENT:(role: UserRole) =>
+         `/${role}/subscription/payment`,
     }
   }
 }

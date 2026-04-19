@@ -27,6 +27,7 @@ const CANDIDATE_FEATURES = [
 const PaymentPage: React.FC = () => {
   const navigate = useNavigate();
   const { selectedPlan } = useSelector((state: RootState) => state.subscription)
+  const { user } = useSelector((state: RootState) => state.auth)
   const dispatch = useDispatch<AppDispatch>()
 
 
@@ -37,8 +38,8 @@ const PaymentPage: React.FC = () => {
   }
   const handlePayment = async (planId: string) => {
     try {
-      if(!planId) return
-      const order = await dispatch(makePayment({planId})).unwrap()
+      if(!planId || !user) return
+      const order = await dispatch(makePayment({planId, role: user.role })).unwrap()
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY,

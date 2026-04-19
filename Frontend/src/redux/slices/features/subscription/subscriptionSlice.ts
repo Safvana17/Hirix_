@@ -100,11 +100,11 @@ ChangePlanResponse,
 
 export const makePayment = createAsyncThunk<
 MakePaymentResponse,
-{planId: string},
+{planId: string, role: UserRole},
 {rejectValue: string}
->('subscription/makePayment', async({planId}, {rejectWithValue}) => {
+>('subscription/makePayment', async({planId, role}, {rejectWithValue}) => {
     try {
-       const response = await api.post(API_ROUTES.COMPANY.SUBSCRIPTION.MAKE_PAYMENT, {planId})
+       const response = await api.post(API_ROUTES.COMMON.SUBSCRIPTION.MAKE_PAYMENT(role), {planId})
        if(!response.data.success){
         return rejectWithValue('Invalid response')
        } 
