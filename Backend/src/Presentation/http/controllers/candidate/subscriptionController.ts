@@ -7,6 +7,7 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { ICandidateGetCurrentPlanUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getCurrentPlan.usecase";
 import { ICandidateChangeSubscriptionUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.changeSubscription.usecase";
 import { ICandidateMakePaymentUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.makePayment.usecase";
+import { ICandidateConfirmPaymentUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.confirmPayment.usecase";
 
 export class CandidateSubscriptionController {
     constructor(
@@ -14,6 +15,7 @@ export class CandidateSubscriptionController {
         private _getCurrentPlan: ICandidateGetCurrentPlanUsecase,
         private _changeSubscription: ICandidateChangeSubscriptionUsecase,
         private _makePayment: ICandidateMakePaymentUsecase,
+        private _confirmPayment: ICandidateConfirmPaymentUsecase,
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
@@ -38,5 +40,11 @@ export class CandidateSubscriptionController {
         const candidateId = req.user.id
         const result = await this._makePayment.execute({candidateId, ...req.body})
         return sendSuccess(res, statusCode.OK, '', result)
+    })
+
+    confirmPayment = asyncHandler(async(req: Request, res: Response) => {
+        const candidateId = req.user.id
+        await this._confirmPayment.execute({candidateId, ...req.body})
+        return sendSuccess(res, statusCode.OK, '')
     })
 }

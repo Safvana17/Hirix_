@@ -69,7 +69,7 @@ import { CompanyGetBillingHistoryUsecase } from "../../../Application/company/us
 import { CompanyCancelSubscriptionUsecase } from "../../../Application/company/usecases/subscription/company.cancelSubscription.usecase";
 import { CompanyDownloadInvoiceUsecase } from "../../../Application/company/usecases/subscription/company.downloadInvoice.usecase";
 import { CandidateGetAllPlanUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getAllPlan.usecase";
-
+import { CandidateConfirmPaymentUsecase } from "../../../Application/candidate/useCases/subscription/candidate.confirmPayment.usecase";
 
 
 
@@ -229,7 +229,13 @@ const iCandidateMakePayment = new CandidateMakePaymentUsecase(
     iSubscriptionRepository,
     iPaymentRepository
 )
-
+const iCandidateConfirmPayment = new CandidateConfirmPaymentUsecase(
+    iCandidateRepository,
+    iPaymentRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
+    iRazorpayService,
+)
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
       iCompanyRepository,
@@ -643,4 +649,5 @@ export const iCandidateSubscriptionController = new CandidateSubscriptionControl
     iCandidateGetCurrentPlan,
     iCandidateChangeSubscription,
     iCandidateMakePayment,
+    iCandidateConfirmPayment,
 )
