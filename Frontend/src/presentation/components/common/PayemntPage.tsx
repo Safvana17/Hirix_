@@ -61,13 +61,16 @@ const PaymentPage: React.FC = () => {
               return
             }
             await dispatch(confirmPayment({
-              orderId: response.razorpay_order_id,
-              paymentId: response.razorpay_payment_id,
-              signature: response.razorpay_signature,
-              planId: selectedPlan.id
+              data:{
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+                planId: selectedPlan.id
+              }, 
+              role: user.role
             })).unwrap()
             toast.success('Payment confirmation success')
-            navigate("/payment-status?status=success")
+            navigate("/payment-status?status=success", {state: user.role})
           } catch (error) {
             toast.error(typeof error === 'string' ? error : 'Payment verification failed')
           }

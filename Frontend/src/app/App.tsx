@@ -172,7 +172,7 @@ const App = () => {
           } />
           
           <Route path={ROUTES.COMMON.PAYMENT_STATUS} element={
-            <RoleRoute allowedRoles={[ROLES.COMPANY, ROLES.COMPANY]}>
+            <RoleRoute allowedRoles={[ROLES.COMPANY, ROLES.CANDIDATE]}>
               <PaymentStatus />
             </RoleRoute>
           } />

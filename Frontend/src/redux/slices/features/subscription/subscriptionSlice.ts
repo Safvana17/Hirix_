@@ -118,11 +118,11 @@ MakePaymentResponse,
 
 export const confirmPayment = createAsyncThunk<
 {success: boolean},
-ConfirmPaymentArgs,
+{data: ConfirmPaymentArgs, role: UserRole},
 {rejectValue: string}
->('subscription/confirmPayment', async(confirmPaymentArgs, {rejectWithValue}) => {
+>('subscription/confirmPayment', async({data, role}, {rejectWithValue}) => {
     try {
-        const response = await api.post(API_ROUTES.COMPANY.SUBSCRIPTION.CONFIRM_PAYMENT, confirmPaymentArgs)
+        const response = await api.post(API_ROUTES.COMMON.SUBSCRIPTION.CONFIRM_PAYMENT(role), data)
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }

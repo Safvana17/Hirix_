@@ -3,7 +3,7 @@ import { Box, Button, Card, Divider, Stack, Typography } from '@mui/material'
 import { motion } from 'framer-motion'
 
 import React from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { ROUTES } from '../../../constants/routes'
 
 const AnimatedCard = motion(Card)
@@ -12,7 +12,9 @@ const AnimatedCard = motion(Card)
 const PaymentStatus: React.FC= () => {
   const [params] = useSearchParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const status = params.get("status") || 'failed' 
+  const role = location.state.role
   
   const isSuccess = status === 'success'
 
@@ -69,7 +71,7 @@ const PaymentStatus: React.FC= () => {
               variant="contained"
               fullWidth
               sx={{ borderRadius: 3, py: 1.2, background: "#6B4705", }}
-              onClick={() => window.location.href = ROUTES.COMPANY.DASHBOARD}
+              onClick={() => window.location.href = role === 'company' ? ROUTES.COMPANY.DASHBOARD : ROUTES.CANDIDATE.DASHBOARD}
             >
               Go to Dashboard
             </Button>

@@ -122,6 +122,16 @@ export const API_ROUTES = {
          `/${role}/change-subscription`,
       MAKE_PAYMENT:(role: UserRole) =>
          `/${role}/subscription/payment`,
+      CONFIRM_PAYMENT: (role: UserRole) =>
+         `/${role}/subscription/confirm`,
+      MARK_FAILURE: (role: UserRole) =>
+        `/${role}/subscription/failure`,
+      GET_BILLING_HISTORY: (role: UserRole) =>
+        `/${role}/subscription/billing-history`,
+      CANCEL: (id: string, role: UserRole) =>
+        `/${role}/subscription/${id}/cancel`,
+      INVOICE: (id: string, role: UserRole) => 
+        `/${role}/subscription/${id}/invoice`,
     }
   }
 }
