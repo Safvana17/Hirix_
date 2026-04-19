@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { ChangePlanResponse, ConfirmPaymentArgs, CurrentPlan, GetAllPlansResponse, GetBillingHistoryParams, GetBillingHistoryResponse, MakePaymentResponse, Payment, PaymentStatus, SubscriptionPlan, userGetAllPlansParams } from "../../../../types/subscription";
+import type { ChangePlanResponse, ConfirmPaymentArgs, CurrentPlan, GetAllPlansResponse, GetBillingHistoryParams, GetBillingHistoryResponse, MakePaymentResponse, Payment, SubscriptionPlan, userGetAllPlansParams } from "../../../../types/subscription";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { UserRole } from "../../../../constants/role";
+
 
 interface SubscriptionState {
     loading: boolean;
@@ -154,11 +155,11 @@ export const markFailure = createAsyncThunk<
 
 export const getBillingHistory = createAsyncThunk<
 GetBillingHistoryResponse,
-GetBillingHistoryParams,
+{data: GetBillingHistoryParams | undefined, role: UserRole},
 {rejectValue: string}
->('subscription/billinhHistory', async(params: {status?: PaymentStatus, page: number, limit: number} | undefined, {rejectWithValue}) => {
+>('subscription/billinhHistory', async({data, role}, {rejectWithValue}) => {
     try {
-        const response = await api.get(API_ROUTES.COMPANY.SUBSCRIPTION.GET_BILLING_HISTORY, {params})
+        const response = await api.get(API_ROUTES.COMMON.SUBSCRIPTION.GET_BILLING_HISTORY(role), {data})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
