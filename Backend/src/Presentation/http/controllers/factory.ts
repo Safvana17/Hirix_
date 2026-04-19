@@ -122,6 +122,7 @@ import { RazorpayService } from "../../../Infrastructure/services/RazorpayServic
 import { PdfService } from "../../../Infrastructure/services/PdfService";
 import { CandidateSubscriptionController } from "./candidate/subscriptionController";
 import { CandidateGetCurrentPlanUsecse } from "../../../Application/candidate/useCases/subscription/candidate.getCurrentPlan.usecase";
+import { CandidateChangeSubscriptionUsecase } from "../../../Application/candidate/useCases/subscription/candidate.changeSubscription.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -211,6 +212,11 @@ const iCandidateGetAllPlans = new CandidateGetAllPlanUsecase(
     iSubscriptionPlanRepository
 )
 const iCandidateGetCurrentPlan = new CandidateGetCurrentPlanUsecse(
+    iCandidateRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
+)
+const iCandidateChangeSubscription = new CandidateChangeSubscriptionUsecase(
     iCandidateRepository,
     iSubscriptionRepository,
     iSubscriptionPlanRepository
@@ -626,5 +632,6 @@ export const iCompanySubscriptionController = new CompanySubscriptionController(
 
 export const iCandidateSubscriptionController = new CandidateSubscriptionController(
     iCandidateGetAllPlans,
-    iCandidateGetCurrentPlan
+    iCandidateGetCurrentPlan,
+    iCandidateChangeSubscription,
 )
