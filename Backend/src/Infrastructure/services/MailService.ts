@@ -7,6 +7,7 @@ import { CompanyRegisterRejectionEmailTemplate } from "../emailTemplates/Company
 import { CompanyVerificationLinkTemplate } from "../emailTemplates/CompanyVerificationTemplate";
 import { accountDeletionEmailTemplate } from "../emailTemplates/AccountDeleteionTemplate";
 import { companyRestoreAccountTemplate } from "../emailTemplates/RestoreAccountEmailTemplate";
+import { subscriptionReminderTemplate } from "../emailTemplates/SubscriptionReminderTemplate";
 
 export class MailService implements IMailService{
     async sentOtp(email: string, otp: string): Promise<void> {
@@ -60,6 +61,14 @@ export class MailService implements IMailService{
             to: email,
             subject: 'Your Account is Scheduled for deletion',
             html: companyRestoreAccountTemplate(companyName, restoreLink)
+        })
+    }
+    async sendSubscriptionReminder(email: string, name: string, planName: string, endDate: string): Promise<void> {
+        await mailTransporter.sendMail({
+            from: `"Hirix" <${env.HIRIX_EMAIL}>`,
+            to: email,
+            subject: 'Important: Your Hirix subscription expires in 3 days',
+            html: subscriptionReminderTemplate(name, planName, endDate)
         })
     }
 }

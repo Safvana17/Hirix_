@@ -20,6 +20,32 @@ export class SubscriptionRepository extends BaseRepository<SubscriptionEntity, I
         return this.mapToEntity(document)
     }
 
+    async findExpiringSoon(expiringDate: Date): Promise<SubscriptionEntity[] | null> {
+        const documents = await this._model.find({
+            endDate: {
+                $gte: new Date(expiringDate.setHours(0, 0, 0)),
+                $lte: new Date(expiringDate.setHours(23, 59, 59))
+            },
+            status: 'active'
+        })
+
+        if(!documents) return null
+        return documents.map(d => this.mapToEntity(d))
+    }
+
+    async findExpiredActive(): Promise<SubscriptionEntity[] | null> {
+        const now = new Date()
+        const documents = await this._model.find({
+            endDate: {
+                $lte: now
+            },
+            status: 'active'
+        })
+
+        if(!documents) return null
+        return documents.map(d => this.mapToEntity(d))
+    }
+
     protected mapToEntity(doc: ISubscription): SubscriptionEntity {
         return SubscriptionMapper.toEntity(doc)
     }

@@ -5,4 +5,5 @@ export interface IMailService {
     sendCompanyVerificationEmail(email: string, companyName: string, verificationLink: string): Promise<void>
     sendAccountDeletionEmail(email: string, companyName: string): Promise<void>
     sendAccountRestoreEmail(email: string, companyName: string, restoreLink: string): Promise<void>
+    sendSubscriptionReminder(email: string, name: string, planName: string, endDate: string): Promise<void>
 }
