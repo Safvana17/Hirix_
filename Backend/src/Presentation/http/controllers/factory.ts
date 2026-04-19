@@ -123,6 +123,7 @@ import { PdfService } from "../../../Infrastructure/services/PdfService";
 import { CandidateSubscriptionController } from "./candidate/subscriptionController";
 import { CandidateGetCurrentPlanUsecse } from "../../../Application/candidate/useCases/subscription/candidate.getCurrentPlan.usecase";
 import { CandidateChangeSubscriptionUsecase } from "../../../Application/candidate/useCases/subscription/candidate.changeSubscription.usecase";
+import { CandidateMakePaymentUsecase } from "../../../Application/candidate/useCases/subscription/candidate.makePayment.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -220,6 +221,13 @@ const iCandidateChangeSubscription = new CandidateChangeSubscriptionUsecase(
     iCandidateRepository,
     iSubscriptionRepository,
     iSubscriptionPlanRepository
+)
+const iCandidateMakePayment = new CandidateMakePaymentUsecase(
+    iCandidateRepository,
+    iSubscriptionPlanRepository,
+    iRazorpayService,
+    iSubscriptionRepository,
+    iPaymentRepository
 )
 
 //company
@@ -634,4 +642,5 @@ export const iCandidateSubscriptionController = new CandidateSubscriptionControl
     iCandidateGetAllPlans,
     iCandidateGetCurrentPlan,
     iCandidateChangeSubscription,
+    iCandidateMakePayment,
 )
