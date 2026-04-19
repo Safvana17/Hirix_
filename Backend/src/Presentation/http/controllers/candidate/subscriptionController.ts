@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ICandidateGetAllPlansUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getAllPlans.usecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
-import { UserPlanQuerySchema } from "../../validators/subscriptionValidators";
+import { PaymentQuery, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { ICandidateGetCurrentPlanUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getCurrentPlan.usecase";
@@ -9,6 +9,7 @@ import { ICandidateChangeSubscriptionUsecase } from "../../../../Application/can
 import { ICandidateMakePaymentUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.makePayment.usecase";
 import { ICandidateConfirmPaymentUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.confirmPayment.usecase";
 import { ICandidateMarkPaymentFailureUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.markPaymentFailure.usecase";
+import { ICandidateGetBillingHistoryUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getBillingHistory.usecase";
 
 export class CandidateSubscriptionController {
     constructor(
@@ -18,6 +19,7 @@ export class CandidateSubscriptionController {
         private _makePayment: ICandidateMakePaymentUsecase,
         private _confirmPayment: ICandidateConfirmPaymentUsecase,
         private _markFailure: ICandidateMarkPaymentFailureUsecase,
+        private _getBillingHistory: ICandidateGetBillingHistoryUsecase,
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
@@ -54,5 +56,12 @@ export class CandidateSubscriptionController {
         const candidateId = req.user.id
         await this._markFailure.execute({candidateId, orderId: req.body.orderId})
         return sendSuccess(res, statusCode.OK, '')
+    })
+
+    getBillingHistory = asyncHandler(async(req: Request, res: Response) => {
+        const candidateId = req.user.id
+        const {status, page, limit} = req.validatedQuery as PaymentQuery
+        const { payments, totalCount, totalPages } = await this._getBillingHistory.execute({userId: candidateId, status, page, limit})
+        return sendSuccess(res, statusCode.OK, '', {payments, totalCount, totalPages})
     })
 }

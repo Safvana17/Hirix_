@@ -3,7 +3,7 @@ import { ROUTES } from '../../../../Shared/constsnts/routes'
 import { authHandler } from '../../middlewares/authMiddleware'
 import { iCandidateSubscriptionController, iPracticeLibraryController, iTokenService } from '../../controllers/factory'
 import { verifyCsrf } from '../../middlewares/csrfVerify'
-import { ChangeSubscriptionSchema, ConfirmPaymnetSchema, MakePaymentSchema, MarkFailureSchema } from '../../validators/subscriptionValidators'
+import { ChangeSubscriptionSchema, ConfirmPaymnetSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
 
 
@@ -19,7 +19,7 @@ router.post(ROUTES.CANDIDATE.SUBSCRIPTION.CHANGE_SUBSCRIPTION, authHandler(iToke
 router.post(ROUTES.CANDIDATE.SUBSCRIPTION.MAKE_PAYMENT, authHandler(iTokenService), verifyCsrf, validate(MakePaymentSchema, 'body'), iCandidateSubscriptionController.makePayment)
 router.post(ROUTES.CANDIDATE.SUBSCRIPTION.CONFIRM_PYMENT, authHandler(iTokenService), verifyCsrf, validate(ConfirmPaymnetSchema, 'body'), iCandidateSubscriptionController.confirmPayment)
 router.patch(ROUTES.CANDIDATE.SUBSCRIPTION.MARK_FAILURE, authHandler(iTokenService), verifyCsrf, validate(MarkFailureSchema, 'body'), iCandidateSubscriptionController.markFailed)
-
+router.get(ROUTES.CANDIDATE.SUBSCRIPTION.GET_BILLING_HISTORY, authHandler(iTokenService), validate(PaymnetQuerySchema, 'query'), iCandidateSubscriptionController.getBillingHistory)
 
 
 
