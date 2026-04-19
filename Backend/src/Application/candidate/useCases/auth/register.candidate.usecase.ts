@@ -10,6 +10,9 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
+import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
+import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
+import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 
 export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
     constructor(
@@ -17,7 +20,9 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
         private hashService: IHashService,
         private otpService: IOtpService,
         private otpStore: IOtpStore,
-        private mailService: IMailService
+        private mailService: IMailService,
+        private _subscriptionRepository: ISubscriptionRepository,
+        private _subscriptionPlanRepository: ISubscriptionPlanRepository
     ) {}
 
     /**
@@ -36,9 +41,23 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
 
         const hashedPassword = await this.hashService.hash(request.password)
         const candidate = new candidateEntity("",request.name, request.email, hashedPassword, false, false, UserStatus.PENDING)
+        const freePlan = await this._subscriptionPlanRepository.findFreePlan(TargetType.CANDIDATE)
+        if(!freePlan){
+            throw new AppError(authMessages.error.MISSING_FREE_PLAN, statusCode.SERVER_ERROR)
+        }
 
         const savedCandidate = await this.candidateRepository.create(candidate)
-
+        await this._subscriptionRepository.create({
+            id: '',
+            ownerType: TargetType.CANDIDATE,
+            ownerId: savedCandidate.id,
+            planId: freePlan.id!,
+            startDate: new Date(),
+            endDate: null,
+            status: subscriptionStatus.ACTIVE,
+            isCurrent: true,
+        })
+        
         const otp = this.otpService.generate()
         const hashedOtp = await this.otpService.hash(otp)
 

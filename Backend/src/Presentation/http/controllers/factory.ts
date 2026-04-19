@@ -121,6 +121,7 @@ import { SubscriptionRepository } from "../../../Infrastructure/repositories/sub
 import { RazorpayService } from "../../../Infrastructure/services/RazorpayService";
 import { PdfService } from "../../../Infrastructure/services/PdfService";
 import { CandidateSubscriptionController } from "./candidate/subscriptionController";
+import { CandidateGetCurrentPlanUsecse } from "../../../Application/candidate/useCases/subscription/candidate.getCurrentPlan.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -154,7 +155,9 @@ const iRegisterCandidate = new RegisterCandidateUsecase(
     iHashService,
     iOtpService,
     iOtpRepository,
-    iMailService
+    iMailService,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
 )
 
 const iResendOtp = new ResendOtpUsecase(
@@ -205,6 +208,11 @@ const iCandidateGetAllPracticeQuestions = new CandidateGetAllPracticeQuestionsUs
 
 //subscription
 const iCandidateGetAllPlans = new CandidateGetAllPlanUsecase(
+    iSubscriptionPlanRepository
+)
+const iCandidateGetCurrentPlan = new CandidateGetCurrentPlanUsecse(
+    iCandidateRepository,
+    iSubscriptionRepository,
     iSubscriptionPlanRepository
 )
 
@@ -617,5 +625,6 @@ export const iCompanySubscriptionController = new CompanySubscriptionController(
 )
 
 export const iCandidateSubscriptionController = new CandidateSubscriptionController(
-    iCandidateGetAllPlans
+    iCandidateGetAllPlans,
+    iCandidateGetCurrentPlan
 )
