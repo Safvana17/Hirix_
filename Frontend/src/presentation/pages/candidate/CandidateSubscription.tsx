@@ -30,6 +30,7 @@ const CandidateSubscription: React.FC= () => {
   }, [dispatch, page, user, currentPage, pageSize])
   console.log('current plan: ', currentPlan)
 
+  if(!user) return
   const columns: Column<Payment>[] = [
     { header: 'Description', key: 'description', render: (val) => <span>{val as string}</span>,},
     {
@@ -80,7 +81,7 @@ const CandidateSubscription: React.FC= () => {
         </button>
 
         <div className="space-y-6">
-          <CandidateCurrentPlanCard currentPlan={currentPlan} />
+          <CandidateCurrentPlanCard currentPlan={currentPlan} role={user.role}/>
 
           {plans.length > 0 ? (
             <CandidateSubscriptionPlans

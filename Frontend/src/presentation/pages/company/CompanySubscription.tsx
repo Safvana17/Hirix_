@@ -30,6 +30,7 @@ const CompanySubscription: React.FC= () => {
     }
   }, [user, page, dispatch,currentPage, pageSize])
 
+  if(!user) return
   const handleDownloadInvoice = async(paymentId: string) => {
     try {
       const blob = await dispatch(getInvoice({id: paymentId})).unwrap()
@@ -87,7 +88,7 @@ const columns: Column<Payment>[] = [
   return (
     <InternalLayout title='Subscription' subTitle='Manage you subscriptions and billings' sidebarItems={companySidebarItems}>
         <div>
-          <CurrentPlanCard currentPlan={currentPlan} />
+          <CurrentPlanCard currentPlan={currentPlan} role={user?.role}/>
           {plans.length > 0 ? (
             <CompanyPlans plans={plans} currentPlan={currentPlan} page={page} setPage={setPage}/>
           ) : (

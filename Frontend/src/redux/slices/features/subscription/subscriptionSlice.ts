@@ -173,11 +173,11 @@ GetBillingHistoryResponse,
 
 export const cancelSubscription = createAsyncThunk<
 CurrentPlan,
-{id: string},
+{id: string, role: UserRole},
 {rejectValue: string}
->('subscription/cancel', async({id}, {rejectWithValue}) => {
+>('subscription/cancel', async({id, role}, {rejectWithValue}) => {
     try {
-        const response = await api.patch(API_ROUTES.COMPANY.SUBSCRIPTION.CANCEL(id))
+        const response = await api.patch(API_ROUTES.COMMON.SUBSCRIPTION.CANCEL(id, role))
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }

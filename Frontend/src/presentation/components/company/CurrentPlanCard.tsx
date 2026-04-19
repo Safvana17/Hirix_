@@ -6,12 +6,14 @@ import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
 import { cancelSubscription } from '../../../redux/slices/features/subscription/subscriptionSlice'
 import toast from 'react-hot-toast'
+import type { UserRole } from '../../../constants/role'
 
 interface CurrentPlanCardProps {
     currentPlan: CurrentPlan | null
+    role: UserRole | null
 }
 
-const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
+const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan, role}) => {
   const dispatch = useDispatch<AppDispatch>()
     const [modalConfig, setModalConfig] = useState<{
         isOpen: boolean;
@@ -47,8 +49,9 @@ const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
             message: `Are you sure you wants to cancel your current subscription? You will be moved into free plan`,
             type: 'danger',
             onConfirm: async() => {
-                try {   
-                  await dispatch(cancelSubscription({id})).unwrap()
+                try {  
+                  if(!role) return 
+                  await dispatch(cancelSubscription({id, role})).unwrap()
                   toast.success('Your subscription cancelled successfully')
                   closeModal();
                 } catch (error) {
