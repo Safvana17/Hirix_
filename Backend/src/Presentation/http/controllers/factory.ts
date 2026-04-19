@@ -127,6 +127,7 @@ import { CandidateMakePaymentUsecase } from "../../../Application/candidate/useC
 import { CandidateMarkPaymentFailureUsecase } from "../../../Application/candidate/useCases/subscription/candidate.markPaymentFailure.usecase";
 import { CandidateGetBillingHistoryUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getBillingHistory.usecase";
 import { CandidateCancelSubscriptionUsecase } from "../../../Application/candidate/useCases/subscription/candidate.cancelSubscription.usecase";
+import { CandidateGetInvoiceUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getInvoice.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -252,6 +253,13 @@ const iCandidateCancelSubscription = new CandidateCancelSubscriptionUsecase(
     iCandidateRepository,
     iSubscriptionRepository,
     iSubscriptionPlanRepository
+)
+const iCandidateGetInvoice = new CandidateGetInvoiceUsecase(
+    iCandidateRepository,
+    iPaymentRepository,
+    iSubscriptionPlanRepository,
+    iSubscriptionRepository,
+    iPdfService
 )
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -670,4 +678,5 @@ export const iCandidateSubscriptionController = new CandidateSubscriptionControl
     iCandidateMarkFailure,
     iCandidateGetBillingHistory,
     iCandidateCancelSubscription,
+    iCandidateGetInvoice
 )

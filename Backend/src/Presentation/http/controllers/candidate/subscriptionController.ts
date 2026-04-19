@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ICandidateGetAllPlansUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getAllPlans.usecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
-import { CancelSubscriptionParam, PaymentQuery, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
+import { CancelSubscriptionParam, getInvoiceParam, PaymentQuery, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { ICandidateGetCurrentPlanUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getCurrentPlan.usecase";
@@ -11,6 +11,7 @@ import { ICandidateConfirmPaymentUsecase } from "../../../../Application/candida
 import { ICandidateMarkPaymentFailureUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.markPaymentFailure.usecase";
 import { ICandidateGetBillingHistoryUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getBillingHistory.usecase";
 import { ICandidateCancelSubscriptionUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.cancelSubscription.usecase";
+import { ICandidateGetInvoiceUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getInvoice.usecase";
 
 export class CandidateSubscriptionController {
     constructor(
@@ -22,6 +23,7 @@ export class CandidateSubscriptionController {
         private _markFailure: ICandidateMarkPaymentFailureUsecase,
         private _getBillingHistory: ICandidateGetBillingHistoryUsecase,
         private _CancelSubscription: ICandidateCancelSubscriptionUsecase,
+        private _getInvoice: ICandidateGetInvoiceUsecase
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
@@ -72,5 +74,18 @@ export class CandidateSubscriptionController {
         const { id }= req.validateParams as CancelSubscriptionParam
         const currentPlan = await this._CancelSubscription.execute({ candidateId, subscriptionId: id})
         return sendSuccess(res, statusCode.OK, '', currentPlan)
+    })
+
+    getInvoice = asyncHandler(async(req: Request, res: Response) => {
+        const candidateId = req.user.id
+        const { id } = req.params as getInvoiceParam
+        const result = await this._getInvoice.execute({candidateId, paymentId: id})
+        res.setHeader('Content-Type', result.mimeType)
+        res.setHeader(
+            'Content-Disposition',
+            `attachment; filename=${result.fileName}`
+        )
+
+        return res.send(result.buffer)
     })
 }
