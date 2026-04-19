@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CandidateHeader from '../../components/layout/CandidateHeader'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { getAllPlans, getBillingHistory, getCurrentPlan } from '../../../redux/slices/features/subscription/subscriptionSlice'
+import { getAllPlans, getBillingHistory, getCurrentPlan, getInvoice } from '../../../redux/slices/features/subscription/subscriptionSlice'
 import CandidateSubscriptionPlans from '../../components/candidate/CandidateSubscriptionPlans'
 import { Box, Typography } from '@mui/material'
 import CandidateCurrentPlanCard from '../../components/candidate/CandidateCurrentPlanCard'
@@ -11,6 +11,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import type { Column } from '../../../types/table'
 import type { Payment } from '../../../types/subscription'
 import DataTableMui from '../../components/ui/DataTableMui'
+import toast from 'react-hot-toast'
 
 const CandidateSubscription: React.FC= () => {
   const [page, setPage] = useState(1)
@@ -31,6 +32,22 @@ const CandidateSubscription: React.FC= () => {
   console.log('current plan: ', currentPlan)
 
   if(!user) return
+  const handleDownloadInvoice = async(paymentId: string) => {
+    try {
+      const blob = await dispatch(getInvoice({id: paymentId, role: user?.role})).unwrap()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `invoice-${paymentId}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to download invoice')
+    }
+  }
+
   const columns: Column<Payment>[] = [
     { header: 'Description', key: 'description', render: (val) => <span>{val as string}</span>,},
     {
@@ -57,14 +74,14 @@ const CandidateSubscription: React.FC= () => {
       render: (val) => new Date(val).toLocaleString(),
     },
     {header: 'Order ID',key: 'orderId',render: (val) => ( <span>{val.toString().slice(0,6)}...{val.toString().slice(-4)}</span>)},
-    // {header: 'Invoice', key: 'invoiceUrl', render: (_, row) => (
-    //   <button
-    //     // onClick={() => handleDownloadInvoice(row.id)}
-    //     className='px-3 py-1 bg-[#6B4705] text-white rounded-md text-sm'
-    //   >
-    //     Download
-    //   </button>
-    // )}
+    {header: 'Invoice', key: 'invoiceUrl', render: (_, row) => (
+      <button
+        onClick={() => handleDownloadInvoice(row.id)}
+        className='px-3 py-1 bg-[#021A30] text-white rounded-md text-sm'
+      >
+        Download
+      </button>
+    )}
 
   ];
 

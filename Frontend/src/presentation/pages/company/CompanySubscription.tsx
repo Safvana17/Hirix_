@@ -33,7 +33,7 @@ const CompanySubscription: React.FC= () => {
   if(!user) return
   const handleDownloadInvoice = async(paymentId: string) => {
     try {
-      const blob = await dispatch(getInvoice({id: paymentId})).unwrap()
+      const blob = await dispatch(getInvoice({id: paymentId, role: user.role})).unwrap()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url

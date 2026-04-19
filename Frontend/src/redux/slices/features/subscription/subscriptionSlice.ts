@@ -191,11 +191,11 @@ CurrentPlan,
 
 export const getInvoice = createAsyncThunk<
 Blob,
-{id: string},
+{id: string, role: UserRole},
 {rejectValue: string}
->('subscription/getInvoice', async({id}, {rejectWithValue}) => {
+>('subscription/getInvoice', async({id, role}, {rejectWithValue}) => {
     try {
-        const response = await api.get(API_ROUTES.COMPANY.SUBSCRIPTION.INVOICE(id), {
+        const response = await api.get(API_ROUTES.COMMON.SUBSCRIPTION.INVOICE(id, role), {
             responseType: 'blob'
         })
         console.log('response', response)
