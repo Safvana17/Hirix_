@@ -124,6 +124,7 @@ import { CandidateSubscriptionController } from "./candidate/subscriptionControl
 import { CandidateGetCurrentPlanUsecse } from "../../../Application/candidate/useCases/subscription/candidate.getCurrentPlan.usecase";
 import { CandidateChangeSubscriptionUsecase } from "../../../Application/candidate/useCases/subscription/candidate.changeSubscription.usecase";
 import { CandidateMakePaymentUsecase } from "../../../Application/candidate/useCases/subscription/candidate.makePayment.usecase";
+import { CandidateMarkPaymentFailureUsecase } from "../../../Application/candidate/useCases/subscription/candidate.markPaymentFailure.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -235,6 +236,11 @@ const iCandidateConfirmPayment = new CandidateConfirmPaymentUsecase(
     iSubscriptionRepository,
     iSubscriptionPlanRepository,
     iRazorpayService,
+)
+const iCandidateMarkFailure = new CandidateMarkPaymentFailureUsecase(
+    iCandidateRepository,
+    iPaymentRepository,
+    iSubscriptionRepository
 )
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -650,4 +656,5 @@ export const iCandidateSubscriptionController = new CandidateSubscriptionControl
     iCandidateChangeSubscription,
     iCandidateMakePayment,
     iCandidateConfirmPayment,
+    iCandidateMarkFailure,
 )

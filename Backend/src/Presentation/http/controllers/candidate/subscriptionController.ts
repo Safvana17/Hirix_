@@ -8,6 +8,7 @@ import { ICandidateGetCurrentPlanUsecase } from "../../../../Application/candida
 import { ICandidateChangeSubscriptionUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.changeSubscription.usecase";
 import { ICandidateMakePaymentUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.makePayment.usecase";
 import { ICandidateConfirmPaymentUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.confirmPayment.usecase";
+import { ICandidateMarkPaymentFailureUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.markPaymentFailure.usecase";
 
 export class CandidateSubscriptionController {
     constructor(
@@ -16,6 +17,7 @@ export class CandidateSubscriptionController {
         private _changeSubscription: ICandidateChangeSubscriptionUsecase,
         private _makePayment: ICandidateMakePaymentUsecase,
         private _confirmPayment: ICandidateConfirmPaymentUsecase,
+        private _markFailure: ICandidateMarkPaymentFailureUsecase,
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
@@ -45,6 +47,12 @@ export class CandidateSubscriptionController {
     confirmPayment = asyncHandler(async(req: Request, res: Response) => {
         const candidateId = req.user.id
         await this._confirmPayment.execute({candidateId, ...req.body})
+        return sendSuccess(res, statusCode.OK, '')
+    })
+
+    markFailed = asyncHandler(async(req: Request, res: Response) => {
+        const candidateId = req.user.id
+        await this._markFailure.execute({candidateId, orderId: req.body.orderId})
         return sendSuccess(res, statusCode.OK, '')
     })
 }
