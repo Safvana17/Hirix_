@@ -19,7 +19,7 @@ const PaymentStatus: React.FC= () => {
   const isSuccess = status === 'success'
 
   const handleRetry = () => {
-    navigate("/company/payment")
+    navigate(role === 'company' ? ROUTES.COMPANY.SUBSCRIPTION : ROUTES.CANDIDATE.SUBSCRIPTION)
   }
   
   return (
@@ -91,7 +91,7 @@ const PaymentStatus: React.FC= () => {
                 variant="outlined"
                 fullWidth
                 sx={{ borderRadius: 3, py: 1.2, borderColor: 'red', color: 'red' }}
-                onClick={() => window.location.href = ROUTES.COMPANY.SUBSCRIPTION}
+                onClick={() => window.location.href = role === 'company' ?  ROUTES.COMPANY.SUBSCRIPTION: ROUTES.CANDIDATE.SUBSCRIPTION}
               >
                 CANCEL
               </Button>

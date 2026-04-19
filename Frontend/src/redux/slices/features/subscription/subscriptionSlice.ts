@@ -136,11 +136,11 @@ export const confirmPayment = createAsyncThunk<
 
 export const markFailure = createAsyncThunk<
 {success: boolean},
-{orderId: string},
+{orderId: string, role: UserRole},
 {rejectValue: string}
->('subscription/markFailure', async({orderId}, {rejectWithValue}) => {
+>('subscription/markFailure', async({orderId, role}, {rejectWithValue}) => {
     try {
-        const response = await api.patch(API_ROUTES.COMPANY.SUBSCRIPTION.MARK_FAILURE, {orderId})
+        const response = await api.patch(API_ROUTES.COMMON.SUBSCRIPTION.MARK_FAILURE(role), {orderId})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }

@@ -83,9 +83,9 @@ const PaymentPage: React.FC = () => {
       rzp.on('payment.failed', async(response) => {
         const orderId = response.error?.metadata?.order_id
         if(orderId){
-          await dispatch(markFailure({orderId})).unwrap()
+          await dispatch(markFailure({orderId, role: user.role})).unwrap()
           toast.error('Payment failed')
-          navigate("/payment-status?status=failed")
+          navigate("/payment-status?status=failed", { state: user.role})
         }
       })
       rzp.open()
