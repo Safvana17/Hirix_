@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Card, Pagination, Stack, Typography } from '@mui/material'
 import { Check, Close } from '@mui/icons-material'
-import type { SubscriptionPlan } from '../../../types/subscription'
+import type { CurrentPlan, SubscriptionPlan } from '../../../types/subscription'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../../../redux/store'
 // import toast from 'react-hot-toast'
@@ -10,7 +10,7 @@ import type { RootState } from '../../../redux/store'
 
 interface CandidatePlansProps {
     plans: SubscriptionPlan[]
-    // currentPlan : CurrentPlan | null
+    currentPlan : CurrentPlan | null
     page: number
     setPage: (page: number) => void
 }
@@ -22,7 +22,7 @@ const CANDIDATE_FEATURES = [
 ]
 
 
-const CandidateSubscriptionPlans: React.FC<CandidatePlansProps>= ({plans, page, setPage}) => {
+const CandidateSubscriptionPlans: React.FC<CandidatePlansProps>= ({plans, page, currentPlan, setPage}) => {
 
   const { pagination } = useSelector((state: RootState) => state.subscription)
 //   const dispatch = useDispatch<AppDispatch>()
@@ -31,6 +31,7 @@ const CandidateSubscriptionPlans: React.FC<CandidatePlansProps>= ({plans, page, 
   const getFeaturesByTarget = () => {
     return CANDIDATE_FEATURES
   }
+  console.log('candidate current plan: ', currentPlan)
 
 //   const handleChangeSubscription = async(planId: string) => {
 //        try {
@@ -61,7 +62,7 @@ const CandidateSubscriptionPlans: React.FC<CandidatePlansProps>= ({plans, page, 
               p: 3,
               borderRadius: 4,
               backgroundColor: "#fff",
-              border: p.isActive ? "2px solid #4caf50" : "1px solid #e0e0e0",
+              border:"1px solid #e0e0e0",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -147,11 +148,11 @@ const CandidateSubscriptionPlans: React.FC<CandidatePlansProps>= ({plans, page, 
               </Stack>
               <Box display="flex" gap={1} mt={2}>
                 <button 
-                //   onClick={ () => handleChangeSubscription(p.id)}
-                //   disabled={currentPlan?.id === p.id}
-                  className={`w-full p-2 border rounded-lg text-white font-bold cursor-pointer`}>
-                  {/* {currentPlan?.id === p.id ? 'Current plan' : 'Upgrade'} */}
-                  Upgrade
+                  // onClick={ () => handleChangeSubscription(p.id)}
+                  disabled={currentPlan?.id === p.id}
+                  className={`w-full p-2 border rounded-lg text-white font-bold cursor-pointer ${currentPlan?.id === p.id ? 'border-green-800 bg-green-800 cursor-not-allowed' : 'border-[#0B3861] bg-[#0B3861]'}`}
+                >
+                  {currentPlan?.id === p.id ? 'Current plan' : 'Upgrade'}
                 </button>
               </Box>
           </Card>

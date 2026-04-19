@@ -25,7 +25,7 @@ const CompanySubscription: React.FC= () => {
   useEffect(() => {
     if(user){
       dispatch(getAllPlans({params:{target: 'company', page, limit: 6}, role: user.role }))
-      dispatch(getCurrentPlan())
+      dispatch(getCurrentPlan({role: user.role}))
       dispatch(getBillingHistory({page: currentPage, limit: pageSize}))
     }
   }, [user, page, dispatch,currentPage, pageSize])

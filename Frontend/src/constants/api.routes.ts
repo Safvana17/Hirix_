@@ -115,7 +115,9 @@ export const API_ROUTES = {
     },
     SUBSCRIPTION: {
       GET_ALL: (role: UserRole) => 
-        `/${role}/plans`
+        `/${role}/plans`,
+      GET_CURRENT: (role: UserRole) =>
+         `/${role}/plan`,
     }
   }
 }

@@ -64,11 +64,11 @@ GetAllPlansResponse,
 
 export const getCurrentPlan = createAsyncThunk<
 CurrentPlan,
-void,
+{role: UserRole},
 {rejectValue: string}
->('userSubscription/getCurrentPlan', async(_, {rejectWithValue}) => {
+>('userSubscription/getCurrentPlan', async({role}, {rejectWithValue}) => {
     try {
-        const response = await api.get(API_ROUTES.COMPANY.SUBSCRIPTION.GET_CURRENT)
+        const response = await api.get(API_ROUTES.COMMON.SUBSCRIPTION.GET_CURRENT(role))
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }

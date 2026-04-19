@@ -1,62 +1,62 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Button, LinearProgress, Typography } from '@mui/material'
 import type { CurrentPlan } from '../../../types/subscription'
-import ConfirmationModal from '../modal/ConfirmationModal'
-import { useDispatch } from 'react-redux'
-import type { AppDispatch } from '../../../redux/store'
-import { cancelSubscription } from '../../../redux/slices/features/subscription/subscriptionSlice'
-import toast from 'react-hot-toast'
+// import ConfirmationModal from '../modal/ConfirmationModal'
+// import { useDispatch } from 'react-redux'
+// import type { AppDispatch } from '../../../redux/store'
+// import { cancelSubscription } from '../../../redux/slices/features/subscription/subscriptionSlice'
+// import toast from 'react-hot-toast'
 
 interface CurrentPlanCardProps {
     currentPlan: CurrentPlan | null
 }
 
-const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
-  const dispatch = useDispatch<AppDispatch>()
-    const [modalConfig, setModalConfig] = useState<{
-        isOpen: boolean;
-        title: string;
-        message: string;
-        onConfirm: () => void;
-        type: 'danger' | 'warning' | 'info';
-    }>({
-        isOpen: false,
-        title: '',
-        message: '',
-        onConfirm: () => { },
-        type: 'warning'
-    })
+const CandidateCurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
+//   const dispatch = useDispatch<AppDispatch>()
+//     const [modalConfig, setModalConfig] = useState<{
+//         isOpen: boolean;
+//         title: string;
+//         message: string;
+//         onConfirm: () => void;
+//         type: 'danger' | 'warning' | 'info';
+//     }>({
+//         isOpen: false,
+//         title: '',
+//         message: '',
+//         onConfirm: () => { },
+//         type: 'warning'
+//     })
 
   const getProgress = (used: number, limit: number | null) => {
     if (!limit) return 10 
     return Math.min((used / limit) * 100, 100)
   }
 
-    const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
-        setModalConfig({...config, isOpen: true})
-    }
+    // const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+    //     setModalConfig({...config, isOpen: true})
+    // }
 
-    const closeModal = () => {
-        setModalConfig(prev => ({...prev, isOpen: false}))
-    }
+    // const closeModal = () => {
+    //     setModalConfig(prev => ({...prev, isOpen: false}))
+    // }
 
 
-  const handleCancelSubscription = (id: string) => {
-        openModal({
-            title: `Cancel Subscription`,
-            message: `Are you sure you wants to cancel your current subscription? You will be moved into free plan`,
-            type: 'danger',
-            onConfirm: async() => {
-                try {   
-                  await dispatch(cancelSubscription({id})).unwrap()
-                  toast.success('Your subscription cancelled successfully')
-                  closeModal();
-                } catch (error) {
-                  toast.error(typeof error === 'string' ? error : 'Failed to cancel subscription')
-                }
-            }
-        })
-  }
+//   const handleCancelSubscription = (id: string) => {
+//         openModal({
+//             title: `Cancel Subscription`,
+//             message: `Are you sure you wants to cancel your current subscription? You will be moved into free plan`,
+//             type: 'danger',
+//             onConfirm: async() => {
+//                 try {   
+//                   await dispatch(cancelSubscription({id})).unwrap()
+//                   toast.success('Your subscription cancelled successfully')
+//                   closeModal();
+//                 } catch (error) {
+//                   toast.error(typeof error === 'string' ? error : 'Failed to cancel subscription')
+//                 }
+//             }
+//         })
+//   }
   
   return (
     <div>
@@ -105,7 +105,7 @@ const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
             </>
           )}
         </Box>
-        <Box mt={2}>
+        {/* <Box mt={2}>
           <Typography variant="caption">Candidates this month</Typography>
             <LinearProgress
               variant="determinate"
@@ -122,12 +122,12 @@ const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
             <Typography variant="caption">
               {4} / {currentPlan?.maxCandidates ?? "unlimited"}
             </Typography>
-        </Box>
+        </Box> */}
         <Box mt={2}>
-          <Typography variant="caption">Tests this month</Typography>
+          <Typography variant="caption">Practice per day</Typography>
             <LinearProgress
               variant="determinate"
-              value={getProgress(1, currentPlan?.maxTestsPerMonth ?? null)}
+              value={getProgress(1, currentPlan?.maxPracticePerDay ?? null)}
               sx={{
                 height: 6,
                 borderRadius: 5,
@@ -138,7 +138,7 @@ const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
               }}
             />
           <Typography variant="caption">
-            {1} / {currentPlan?.maxTestsPerMonth ?? "unlimited"}
+            {1} / {currentPlan?.maxPracticePerDay ?? "unlimited"}
           </Typography>
         </Box> 
         <Box mt={3} display="flex" gap={2}>
@@ -155,7 +155,7 @@ const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
             </Button> */}
             {currentPlan?.price !== 0 &&(
               <Button
-                onClick={() => currentPlan && handleCancelSubscription(currentPlan.subscriptionId)}
+                // onClick={() => currentPlan && handleCancelSubscription(currentPlan.subscriptionId)}
                 variant="contained"
                 sx={{
                   backgroundColor: "#740303",
@@ -168,16 +168,16 @@ const CurrentPlanCard: React.FC<CurrentPlanCardProps>= ({currentPlan}) => {
             )}
             </Box>
           </Box>
-          <ConfirmationModal 
+          {/* <ConfirmationModal 
             isOpen={modalConfig.isOpen}
             onClose={closeModal}
             onConfirm={modalConfig.onConfirm}
             title={modalConfig.title}
             message={modalConfig.message}
             type={modalConfig.type}
-          />
+          /> */}
     </div>
   )
 }
 
-export default CurrentPlanCard
+export default CandidateCurrentPlanCard
