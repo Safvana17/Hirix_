@@ -82,11 +82,11 @@ CurrentPlan,
 
 export const changeSubscription = createAsyncThunk<
 ChangePlanResponse,
-{planId: string},
+{planId: string, role: UserRole},
 {rejectValue: string}
->('subscription/changeSubscription', async({planId}, {rejectWithValue}) => {
+>('subscription/changeSubscription', async({planId, role}, {rejectWithValue}) => {
     try {
-        const response = await api.post(API_ROUTES.COMPANY.SUBSCRIPTION.CHANGE_SUBSCRIPTION, {planId})
+        const response = await api.post(API_ROUTES.COMMON.SUBSCRIPTION.CHANGE_SUBSCRIPTION(role), {planId})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }

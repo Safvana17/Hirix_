@@ -17,9 +17,9 @@ import CompanyQuestion from '../presentation/pages/company/CompanyQuestion'
 import AdminPracticeLibrary from '../presentation/pages/admin/AdminPracticeLibrary'
 import AdminSubscriptions from '../presentation/pages/admin/AdminSubscriptions'
 import CompanySubscription from '../presentation/pages/company/CompanySubscription'
-import CompanyPayemnt from '../presentation/components/company/CompanyPayemnt'
 import PaymentStatus from '../presentation/components/common/PaymentStatus'
 import CandidateSubscription from '../presentation/pages/candidate/CandidateSubscription'
+import PaymentPage from '../presentation/components/common/PayemntPage'
 
 
 
@@ -101,9 +101,9 @@ const App = () => {
             </RoleRoute>
           } />
 
-          <Route path={ROUTES.COMPANY.PAYMENT} element={
-            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
-              <CompanyPayemnt />
+          <Route path={ROUTES.COMMON.PAYMENT} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY, ROLES.CANDIDATE]}>
+              <PaymentPage />
             </RoleRoute>
           } />
 

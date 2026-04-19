@@ -118,6 +118,8 @@ export const API_ROUTES = {
         `/${role}/plans`,
       GET_CURRENT: (role: UserRole) =>
          `/${role}/plan`,
+      CHANGE_SUBSCRIPTION: (role: UserRole) =>
+         `/${role}/change-subscription`,
     }
   }
 }

@@ -24,7 +24,7 @@ const CANDIDATE_FEATURES = [
   { key: "maxPracticePerDay", label: (v: number | null) => v ? `${v} practices/day` : "Unlimited practice", type: "limit" },
 ]
 
-const CompanyPayment: React.FC = () => {
+const PaymentPage: React.FC = () => {
   const navigate = useNavigate();
   const { selectedPlan } = useSelector((state: RootState) => state.subscription)
   const dispatch = useDispatch<AppDispatch>()
@@ -219,4 +219,4 @@ const CompanyPayment: React.FC = () => {
   );
 };
 
-export default CompanyPayment;
+export default PaymentPage;

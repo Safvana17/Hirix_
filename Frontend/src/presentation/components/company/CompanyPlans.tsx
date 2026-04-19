@@ -7,6 +7,7 @@ import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
 import { changeSubscription } from '../../../redux/slices/features/subscription/subscriptionSlice'
 import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../../constants/routes'
 
 interface CompanyPlansProps {
     plans: SubscriptionPlan[]
@@ -28,6 +29,7 @@ const COMPANY_FEATURES = [
 const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, setPage}) => {
 
   const { pagination } = useSelector((state: RootState) => state.subscription)
+  const { user } = useSelector((state: RootState) => state.auth)
   const dispatch = useDispatch<AppDispatch>()
   const navigate =useNavigate()
 
@@ -37,9 +39,10 @@ const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, set
 
   const handleChangeSubscription = async(planId: string) => {
        try {
-         const response = await dispatch(changeSubscription({planId})).unwrap()
+         if(!user) return
+         const response = await dispatch(changeSubscription({planId, role: user.role})).unwrap()
          if(response.isPaymentRequired){
-          navigate('/company/payment')
+          navigate(ROUTES.COMMON.PAYMENT)
          }else{
           toast.success('Your subscription plan changed successfully')
          }

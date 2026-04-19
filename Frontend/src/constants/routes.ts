@@ -17,7 +17,6 @@ export const ROUTES = {
     JOB_ROLES: '/company/job-roles',
     QUESTIONS: '/company/questions',
     SUBSCRIPTION: '/company/subscriptions',
-    PAYMENT: '/company/payment'
   },
 
   CANDIDATE: {
@@ -29,7 +28,8 @@ export const ROUTES = {
   },
 
   COMMON: {
-    PAYMENT_STATUS: '/payment-status'
+    PAYMENT_STATUS: '/payment-status',
+    PAYMENT: '/payment'
   },
 
   ADMIN: {

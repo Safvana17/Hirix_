@@ -2,11 +2,12 @@ import React from 'react'
 import { Box, Card, Pagination, Stack, Typography } from '@mui/material'
 import { Check, Close } from '@mui/icons-material'
 import type { CurrentPlan, SubscriptionPlan } from '../../../types/subscription'
-import { useSelector } from 'react-redux'
-import type { RootState } from '../../../redux/store'
-// import toast from 'react-hot-toast'
-// import { changeSubscription } from '../../../redux/slices/features/subscription/subscriptionSlice'
-// import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import type { AppDispatch, RootState } from '../../../redux/store'
+import toast from 'react-hot-toast'
+import { changeSubscription } from '../../../redux/slices/features/subscription/subscriptionSlice'
+import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../../constants/routes'
 
 interface CandidatePlansProps {
     plans: SubscriptionPlan[]
@@ -25,26 +26,28 @@ const CANDIDATE_FEATURES = [
 const CandidateSubscriptionPlans: React.FC<CandidatePlansProps>= ({plans, page, currentPlan, setPage}) => {
 
   const { pagination } = useSelector((state: RootState) => state.subscription)
-//   const dispatch = useDispatch<AppDispatch>()
-//   const navigate =useNavigate()
+  const { user } = useSelector((state: RootState) => state.auth)
+  const dispatch = useDispatch<AppDispatch>()
+  const navigate =useNavigate()
 
   const getFeaturesByTarget = () => {
     return CANDIDATE_FEATURES
   }
   console.log('candidate current plan: ', currentPlan)
 
-//   const handleChangeSubscription = async(planId: string) => {
-//        try {
-//          const response = await dispatch(changeSubscription({planId})).unwrap()
-//          if(response.isPaymentRequired){
-//           navigate('/company/payment')
-//          }else{
-//           toast.success('Your subscription plan changed successfully')
-//          }
-//        } catch (error) {
-//         toast.error(typeof error === 'string' ? error : 'Failed to change subscription')
-//        }
-//   }
+  const handleChangeSubscription = async(planId: string) => {
+       try {
+        if(!user) return
+         const response = await dispatch(changeSubscription({planId, role: user.role })).unwrap()
+         if(response.isPaymentRequired){
+          navigate(ROUTES.COMMON.PAYMENT)
+         }else{
+          toast.success('Your subscription plan changed successfully')
+         }
+       } catch (error) {
+        toast.error(typeof error === 'string' ? error : 'Failed to change subscription')
+       }
+  }
   return (
     <div>
       <Box
@@ -53,7 +56,6 @@ const CandidateSubscriptionPlans: React.FC<CandidatePlansProps>= ({plans, page, 
         gap={2}
         mt={4}
         px={3}
-        ml={4}
       >
         {plans.map((p) => (
           <Card
@@ -148,7 +150,7 @@ const CandidateSubscriptionPlans: React.FC<CandidatePlansProps>= ({plans, page, 
               </Stack>
               <Box display="flex" gap={1} mt={2}>
                 <button 
-                  // onClick={ () => handleChangeSubscription(p.id)}
+                  onClick={ () => handleChangeSubscription(p.id)}
                   disabled={currentPlan?.id === p.id}
                   className={`w-full p-2 border rounded-lg text-white font-bold cursor-pointer ${currentPlan?.id === p.id ? 'border-green-800 bg-green-800 cursor-not-allowed' : 'border-[#0B3861] bg-[#0B3861]'}`}
                 >
