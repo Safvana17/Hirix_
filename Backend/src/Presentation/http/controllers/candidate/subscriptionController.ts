@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ICandidateGetAllPlansUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getAllPlans.usecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
-import { PaymentQuery, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
+import { CancelSubscriptionParam, PaymentQuery, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { ICandidateGetCurrentPlanUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getCurrentPlan.usecase";
@@ -10,6 +10,7 @@ import { ICandidateMakePaymentUsecase } from "../../../../Application/candidate/
 import { ICandidateConfirmPaymentUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.confirmPayment.usecase";
 import { ICandidateMarkPaymentFailureUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.markPaymentFailure.usecase";
 import { ICandidateGetBillingHistoryUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getBillingHistory.usecase";
+import { ICandidateCancelSubscriptionUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.cancelSubscription.usecase";
 
 export class CandidateSubscriptionController {
     constructor(
@@ -20,6 +21,7 @@ export class CandidateSubscriptionController {
         private _confirmPayment: ICandidateConfirmPaymentUsecase,
         private _markFailure: ICandidateMarkPaymentFailureUsecase,
         private _getBillingHistory: ICandidateGetBillingHistoryUsecase,
+        private _CancelSubscription: ICandidateCancelSubscriptionUsecase,
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
@@ -63,5 +65,12 @@ export class CandidateSubscriptionController {
         const {status, page, limit} = req.validatedQuery as PaymentQuery
         const { payments, totalCount, totalPages } = await this._getBillingHistory.execute({userId: candidateId, status, page, limit})
         return sendSuccess(res, statusCode.OK, '', {payments, totalCount, totalPages})
+    })
+
+    cancelSubscription = asyncHandler(async(req: Request, res: Response) => {
+        const candidateId = req.user.id
+        const { id }= req.validateParams as CancelSubscriptionParam
+        const currentPlan = await this._CancelSubscription.execute({ candidateId, subscriptionId: id})
+        return sendSuccess(res, statusCode.OK, '', currentPlan)
     })
 }
