@@ -4,6 +4,7 @@ import QuestionType from "../../../../Domain/enums/questionType";
 
 
 export interface CandidateGetAllPracticeQuestionsInputDTO{
+    candidateId: string;
     search?: string;
     difficulty?: QuestionDifficulty;
     type?: QuestionType;

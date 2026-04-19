@@ -1,4 +1,4 @@
-import Express, { Router } from 'express'
+import Express from 'express'
 import { ROUTES } from '../../../../Shared/constsnts/routes'
 import { authHandler } from '../../middlewares/authMiddleware'
 import { iCandidateSubscriptionController, iPracticeLibraryController, iTokenService } from '../../controllers/factory'

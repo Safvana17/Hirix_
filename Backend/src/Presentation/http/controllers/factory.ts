@@ -209,6 +209,9 @@ const iCandidateGoogleLogin = new CandidateGoogleLoginUsecase(
 )
 //practice
 const iCandidateGetAllPracticeQuestions = new CandidateGetAllPracticeQuestionsUsecase(
+    iCandidateRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
     iQuestionRepository
 )
 

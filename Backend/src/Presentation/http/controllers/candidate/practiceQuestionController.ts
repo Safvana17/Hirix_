@@ -11,8 +11,9 @@ export class PracticeLibraryController{
     ) {}
 
     getAllPracticeQuestions = asyncHandler( async(req: Request, res: Response, next: NextFunction) => {
+        const candidateId = req.user.id
         const parsed = getAllQuestionSchema.parse(req.query)
-        const { practiceQuestions, totalCount, totalPages } = await this._getAllQuestions.execute(parsed)
+        const { practiceQuestions, totalCount, totalPages } = await this._getAllQuestions.execute({...parsed, candidateId})
         return sendSuccess(res, statusCode.OK, '', {practiceQuestions, totalCount, totalPages})
     })
 }
