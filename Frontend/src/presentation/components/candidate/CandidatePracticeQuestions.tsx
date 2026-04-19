@@ -1,7 +1,9 @@
 import React from 'react';
-import { Box, Tab, Tabs, TextField, MenuItem, Typography } from '@mui/material';
+import { Box, Tab, Tabs, TextField, MenuItem, Typography, Pagination } from '@mui/material';
 import type { QuestionType, QuestionDifficulty, Question } from '../../../types/question';
 import CandidateQuestionCard from '../../pages/candidate/CandidateQuestionCard';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../redux/store';
 
 const questionType: QuestionType[] = ['mcq', 'coding', 'descriptive'];
 const questionDifficulty: QuestionDifficulty[] = ['easy', 'medium', 'hard'];
@@ -14,6 +16,8 @@ interface CandidatePracticeQuestionsProps {
   setDifficulty: React.Dispatch<React.SetStateAction<QuestionDifficulty | ''>>;
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  page: number
+  setPage: (page: number) => void
 }
 
 const CandidatePracticeQuestions: React.FC<CandidatePracticeQuestionsProps> = ({
@@ -24,7 +28,12 @@ const CandidatePracticeQuestions: React.FC<CandidatePracticeQuestionsProps> = ({
   setDifficulty,
   searchTerm,
   setSearchTerm,
+  page,
+  setPage
 }) => {
+
+  const { pagination } = useSelector((state: RootState) => state.practiceQuestion)
+  console.log('pagination: ', pagination)
   return (
     <Box p={4}>
       <Box mb={3}>
@@ -127,6 +136,33 @@ const CandidatePracticeQuestions: React.FC<CandidatePracticeQuestionsProps> = ({
             </Typography>
           </Box>
         )}
+      </Box>
+      <Box display="flex" justifyContent="center" mt={3}>
+        <Pagination
+          count={pagination.PracticeQuestion.totalPages || 1}
+          page={page}
+          onChange={(_, v) => setPage(v)}
+          sx={{
+            "& .MuiPaginationItem-root": {
+              color: "#fff", 
+              borderColor: "#6B4705",
+            },
+            "& .MuiPaginationItem-root:hover": {
+              backgroundColor: "#6B4705",
+              color: "#fff",
+            },
+            "& .Mui-selected": {
+              backgroundColor: "#6B4705 !important",
+              color: "#fff",
+            },
+            "& .MuiPaginationItem-ellipsis": {
+              color: "#aaa",
+            },
+            "& .MuiPaginationItem-icon": {
+              color: "#fff",
+            }
+          }}
+        />
       </Box>
     </Box>
   );

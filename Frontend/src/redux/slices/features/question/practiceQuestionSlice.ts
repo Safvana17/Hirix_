@@ -41,6 +41,7 @@ getAllQuestionsResponse,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
+        console.log('response from slice: ', response)
         return {
             questions: response.data.data.practiceQuestions.map((q:Question) => q),
             totalCount: response.data.data.totalCount,
@@ -51,6 +52,7 @@ getAllQuestionsResponse,
         return rejectWithValue(err.response?.data.message || 'Failed to get all practice questions')
     }
 })
+
 const PraticeQuestionSlice = createSlice({
     name: 'PracticeQuestion',
     initialState,

@@ -8,6 +8,7 @@ import { CompanyVerificationLinkTemplate } from "../emailTemplates/CompanyVerifi
 import { accountDeletionEmailTemplate } from "../emailTemplates/AccountDeleteionTemplate";
 import { companyRestoreAccountTemplate } from "../emailTemplates/RestoreAccountEmailTemplate";
 import { subscriptionReminderTemplate } from "../emailTemplates/SubscriptionReminderTemplate";
+import { logger } from "../../utils/logging/loger";
 
 export class MailService implements IMailService{
     async sentOtp(email: string, otp: string): Promise<void> {
@@ -70,6 +71,7 @@ export class MailService implements IMailService{
             subject: 'Important: Your Hirix subscription expires in 3 days',
             html: subscriptionReminderTemplate(name, planName, endDate)
         })
+        logger.info('mail sent')
     }
 }
 
