@@ -28,7 +28,7 @@ export class ResendOtpCompanyUsecase implements IResendOtpCompanyUsecase{
         const hashedOtp = await this.otpService.hash(otp)
 
         await this.otpStore.saveOtp(companyId, hashedOtp, 120)
-        await this.mailService.sentOtp(company.getEmail(), hashedOtp)
+        // await this.mailService.sentOtp(company.getEmail(), hashedOtp)
 
         return {
             success: true

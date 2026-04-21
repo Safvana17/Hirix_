@@ -13,6 +13,8 @@ import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 
 export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
     constructor(
@@ -20,6 +22,7 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
         private hashService: IHashService,
         private otpService: IOtpService,
         private otpStore: IOtpStore,
+        private _processNotificationUsecase: IAdminProcessNotificationUsecase,
         private mailService: IMailService,
         private _subscriptionRepository: ISubscriptionRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository
@@ -63,8 +66,26 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
 
         await this.otpStore.saveOtp(savedCandidate.getId()!, hashedOtp, 120)
 
-        await this.mailService.sentOtp(savedCandidate.getEmail(), otp)
+        // await this.mailService.sentOtp(savedCandidate.getEmail(), otp)
 
+        await this._processNotificationUsecase.execute({
+            event: NotificationEvents.REGISTER_OTP_REQUESTED,
+            recipients: [
+                {
+                    recipientId: savedCandidate.id,
+                    recipientType: savedCandidate.getRole(),
+                    email: savedCandidate.getEmail()
+                }
+            ],
+            variables: {
+                candidateNname: savedCandidate.getName(),
+                otp,
+                expirySeconds: '120'
+            },
+            metaData: {
+                candidateId: savedCandidate.id
+            }
+        })
         return {
             success: true
         }

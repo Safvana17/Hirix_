@@ -132,6 +132,9 @@ import { TemplateRepository } from "../../../Infrastructure/repositories/templat
 import { AdminSettingsController } from "./admin/settingsController";
 import { AdminGetAllTemplatesUsecase } from "../../../Application/admin/usecases/settings/admin.getAllTemplates.usecase";
 import { NotificationRuleRepository } from "../../../Infrastructure/repositories/notificationRule.repository";
+import { AdminProcessNotificationEventUsecase } from "../../../Application/admin/usecases/settings/admin.processNotificationEvent.usecase";
+import { RenderTemplateService } from "../../../Infrastructure/services/RenderTemplateService";
+import { NotificationRepository } from "../../../Infrastructure/repositories/notification.repository";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -146,6 +149,8 @@ const iSubscriptionRepository = new SubscriptionRepository()
 const iPaymentRepository = new PaymentRepository()
 const iTemplateREpository = new TemplateRepository()
 const iNotificationRuleRepository = new NotificationRuleRepository()
+const iNotificationRepository = new NotificationRepository()
+
 
 
 
@@ -156,7 +161,16 @@ const iMailService = new MailService()
 const iGoogleAuthService = new GoogleAuthService()
 const iRazorpayService = new RazorpayService()
 const iPdfService = new PdfService()
+const iTemplateRenderService = new RenderTemplateService()
 
+//notification
+const iProcessNotification = new AdminProcessNotificationEventUsecase(
+    iNotificationRepository,
+    iNotificationRuleRepository,
+    iTemplateREpository,
+    iMailService,
+    iTemplateRenderService
+)
 //candidates
 const iVerifyRegisterCandidate = new VerifyRegisterCandidateOtpUsecase(
     iCandidateRepository,
@@ -169,6 +183,7 @@ const iRegisterCandidate = new RegisterCandidateUsecase(
     iHashService,
     iOtpService,
     iOtpRepository,
+    iProcessNotification,
     iMailService,
     iSubscriptionRepository,
     iSubscriptionPlanRepository

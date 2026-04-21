@@ -32,7 +32,7 @@ export class SendRestoreAccountEmailUsecase implements ISendRestoreAccountEmailU
         const restoreAccountLink = `${env.FRONTEND_URL}/company/restore-account?token=${restoreToken}`
         logger.info({link: restoreAccountLink}, 'Restore account link')
 
-        await this._mailService.sendAccountRestoreEmail(company.getEmail(), company.getName(), restoreAccountLink)
+        // await this._mailService.sendAccountRestoreEmail(company.getEmail(), company.getName(), restoreAccountLink)
 
         return { success: true}
     }

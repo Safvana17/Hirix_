@@ -28,7 +28,7 @@ export class AdminApproveCompanyUsecase implements IAdminApproveCompanyUsecase {
         company.setIsAdminVerified(true)
         await this._companyRepository.update(request.id, company)
 
-        await this._mailService.sendApprovalEmail(company.getEmail(), company.getName())
+        // await this._mailService.sendApprovalEmail(company.getEmail(), company.getName())
         return {
             id: company.getId(),
             role: company.getRole(),

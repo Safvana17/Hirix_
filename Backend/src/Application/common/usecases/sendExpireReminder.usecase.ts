@@ -29,8 +29,8 @@ export class SendExpireSubscriptionReminderUsecase implements ISendExpireSubscri
             const repository = await this._repositoryRegistry.get(sub.ownerType)
             const user = await repository?.findById(sub.ownerId) 
             if(!user) continue
-            const endDate = sub.endDate!
-            await this._mailService.sendSubscriptionReminder(user.getEmail(), user.getName(), plan.planName, endDate.toLocaleDateString())
+            // const endDate = sub.endDate!
+            // await this._mailService.sendSubscriptionReminder(user.getEmail(), user.getName(), plan.planName, endDate.toLocaleDateString())
         }
     }
 }

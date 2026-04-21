@@ -34,7 +34,7 @@ export class ResendOtpUsecase implements IResendOtpUsecase {
 
         await this.otpStore.saveOtp(candidateId, hashedOtp, 120)
 
-        await this.mailService.sentOtp(request.email, hashedOtp)
+        // await this.mailService.sentOtp(request.email, hashedOtp)
 
         return {
             success: true

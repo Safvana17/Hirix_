@@ -31,7 +31,7 @@ export class AdminRejectCompanyUsecase implements IAdminRejectCompanyUsecase{
 
         const loginLink = `${env.FRONTEND_URL}/login`
 
-        await this._mailService.sendRejectionEmail(company.getEmail(), company.getName(), request.reason, loginLink)
+        // await this._mailService.sendRejectionEmail(company.getEmail(), company.getName(), request.reason, loginLink)
 
         return {
             id: company.getId(),

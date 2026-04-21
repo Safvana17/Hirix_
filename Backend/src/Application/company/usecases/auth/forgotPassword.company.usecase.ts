@@ -30,7 +30,7 @@ export class CompanyForgotPasswordUsecase implements ICompanyForgotPasswordUseca
         const hashedOtp = await this.otpService.hash(otp)
 
         await this.otpStore.saveOtp(id, hashedOtp, 120)
-        await this.mailService.sentOtp(company.getEmail(), otp)
+        // await this.mailService.sentOtp(company.getEmail(), otp)
 
         return {success: true}
     }

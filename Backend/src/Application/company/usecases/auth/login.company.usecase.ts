@@ -65,10 +65,10 @@ export class LoginCompanyUsecase implements ILoginCompanyUsecase{
         }
 
         if(!company.isUserVerified()) {
-            const verificationToken = this._tokenService.generateAccessToken({id, email: company.getEmail(), role: company.getRole()})
+            // const verificationToken = this._tokenService.generateAccessToken({id, email: company.getEmail(), role: company.getRole()})
 
-            const verificationLink = `${env.FRONTEND_URL}/company/verifyemail?token=${verificationToken}`
-            await this._mailService.sendCompanyVerificationEmail(company.getEmail(), company.getName(), verificationLink)
+            // const verificationLink = `${env.FRONTEND_URL}/company/verifyemail?token=${verificationToken}`
+            // await this._mailService.sendCompanyVerificationEmail(company.getEmail(), company.getName(), verificationLink)
             throw new AppError(authMessages.error.EMAIL_VERIFICATION_REQUIRED, statusCode.FORBIDDEN)
         }
 

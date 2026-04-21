@@ -60,7 +60,7 @@ export class RegisterCompanyUsecase implements ICompanyRegisterUsecase {
         const hashedOtp = await this._otpService.hash(otp)
 
         await this._otpStore.saveOtp(savedCompany.getId()!, hashedOtp, 120)
-        await this._mailService.sentOtp(savedCompany.getEmail(), otp)
+        // await this._mailService.sentOtp(savedCompany.getEmail(), otp)
 
         return {
             success: true

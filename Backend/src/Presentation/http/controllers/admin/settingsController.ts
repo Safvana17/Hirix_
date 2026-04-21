@@ -50,7 +50,8 @@ export class AdminSettingsController {
     })
 
     updateNotificationRule = asyncHandler(async(req: Request, res: Response) => {
-        const updateRule = await this._updateNotificationRule.execute(req.body)
+        const ruleId = req.params.id
+        const updateRule = await this._updateNotificationRule.execute({id: ruleId, ...req.body})
         return sendSuccess(res, statusCode.OK, '', updateRule)
     })
 }

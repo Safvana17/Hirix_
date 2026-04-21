@@ -35,7 +35,7 @@ export class DeleteAccountUsecase implements IDeleteAccountUsecase {
         company.deleteFeedback = request.feedback
         await this._companyRepository.update(company.id, company)
 
-        await this._mailService.sendAccountDeletionEmail(company.getEmail(), company.getName())
+        // await this._mailService.sendAccountDeletionEmail(company.getEmail(), company.getName())
 
         return { success: true}
     }
