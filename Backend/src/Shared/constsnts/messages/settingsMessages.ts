@@ -18,5 +18,6 @@ export const settingsMessages = {
       ACCOUNT_DEACTIVATED: 'Your account is deactivated, You can restore it within 30 days.',
       NOT_COMPANY: 'Only company can send restore request',
       GST_NUMBER_REQUIRED: 'GST number is required',
+      TEMPLATE_ALREADY_EXISTING: 'Template with given key is already existing',
     }
 }

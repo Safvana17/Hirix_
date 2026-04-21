@@ -70,7 +70,7 @@ import { CompanyCancelSubscriptionUsecase } from "../../../Application/company/u
 import { CompanyDownloadInvoiceUsecase } from "../../../Application/company/usecases/subscription/company.downloadInvoice.usecase";
 import { CandidateGetAllPlanUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getAllPlan.usecase";
 import { CandidateConfirmPaymentUsecase } from "../../../Application/candidate/useCases/subscription/candidate.confirmPayment.usecase";
-
+import { AdminCreateEmailTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.createEmailTemplate.usecase";
 
 
 
@@ -128,6 +128,8 @@ import { CandidateMarkPaymentFailureUsecase } from "../../../Application/candida
 import { CandidateGetBillingHistoryUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getBillingHistory.usecase";
 import { CandidateCancelSubscriptionUsecase } from "../../../Application/candidate/useCases/subscription/candidate.cancelSubscription.usecase";
 import { CandidateGetInvoiceUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getInvoice.usecase";
+import { TemplateRepository } from "../../../Infrastructure/repositories/template.repository";
+import { AdminSettingsController } from "./admin/settingsController";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -140,6 +142,9 @@ const iQuestionRepository = new QuestionRepository()
 const iSubscriptionPlanRepository = new SubscriptionPlanRepository()
 const iSubscriptionRepository = new SubscriptionRepository()
 const iPaymentRepository = new PaymentRepository()
+const iTemplateREpository = new TemplateRepository()
+
+
 
 const iHashService = new HashService()
 const iOtpService = new OtpService()
@@ -508,6 +513,11 @@ const iAdminUpdatePlanStatus = new AdminUpdateSubscriptionPlanStausUsecase (
 const iDeleteSubscriptionPlan = new AdminDeleteSubscriptionPlanUsecase(
     iSubscriptionPlanRepository
 )
+
+//settings
+const iAdminCreateTemplate = new AdminCreateEmailTemplateUsecase(
+    iTemplateREpository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -682,4 +692,8 @@ export const iCandidateSubscriptionController = new CandidateSubscriptionControl
     iCandidateGetBillingHistory,
     iCandidateCancelSubscription,
     iCandidateGetInvoice
+)
+
+export const iAdminSettingsController = new AdminSettingsController(
+    iAdminCreateTemplate
 )

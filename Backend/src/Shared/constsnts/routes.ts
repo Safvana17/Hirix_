@@ -116,6 +116,12 @@ export const ROUTES = {
             DELETE: '/plan/:id',
             STATUS: '/plan/:id',
             GET_ALL: '/plans'
+        },
+        EMAIL_TEMPLATE: {
+            CREATE: '/email-template',
+            EDIT: '/email-template/:id',
+            DELETE: '/email-template/:id',
+            BY_ID: '/email-template/:id',
         }
     }
 }

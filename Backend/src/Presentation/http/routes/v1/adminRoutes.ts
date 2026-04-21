@@ -1,5 +1,5 @@
 import  Express  from "express";
-import { iAdminQuestionController, iCategoryController, iSubscriptionPlanController, iTokenService, IUserManagementController } from "../../controllers/factory";
+import { iAdminQuestionController, iAdminSettingsController, iCategoryController, iSubscriptionPlanController, iTokenService, IUserManagementController } from "../../controllers/factory";
 import { authHandler } from "../../middlewares/authMiddleware";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
@@ -8,6 +8,7 @@ import { createQuestionSchema, editQuestionSchema } from "../../validators/quest
 import { addCategorySchema, editCategorySchema } from "../../validators/categoryValidator";
 import { rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
 import { createSubscriptionPlanSchema, updatePlanSchema } from "../../validators/subscriptionPlanValidator";
+import { CreateTemplateSchema } from "../../validators/adminSettingsValidator";
 
 const router = Express.Router()
 
@@ -45,7 +46,8 @@ router.put(ROUTES.ADMIN.SUBSCRIPTION_PLAN.EDIT, authHandler(iTokenService), veri
 router.patch(ROUTES.ADMIN.SUBSCRIPTION_PLAN.STATUS, authHandler(iTokenService), verifyCsrf, validate(updatePlanSchema, 'body'), iSubscriptionPlanController.updateStatus)
 router.delete(ROUTES.ADMIN.SUBSCRIPTION_PLAN.DELETE, authHandler(iTokenService), verifyCsrf, iSubscriptionPlanController.deletePlan)
 
-
+//Email templates
+router.post(ROUTES.ADMIN.EMAIL_TEMPLATE.CREATE, authHandler(iTokenService), verifyCsrf, validate(CreateTemplateSchema, 'body'), iAdminSettingsController.createTemplate)
 
 
 
