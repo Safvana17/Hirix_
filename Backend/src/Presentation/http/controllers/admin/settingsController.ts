@@ -6,11 +6,13 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IAdminGetAllTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.getAllTemplates.usecase";
 import { GetAllTemplateQuery } from "../../validators/adminSettingsValidator";
 import { logger } from "../../../../utils/logging/loger";
+import { IAdminEditTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.editTemplate.usecase";
 
 export class AdminSettingsController {
     constructor(
         private _createEmailTemplate: IAdminCreateEmailTemplateUsecase,
         private _getAllTemplates: IAdminGetAllTemplateUsecase,
+        private _EditTemplate: IAdminEditTemplateUsecase,
     ) {}
 
     createTemplate = asyncHandler(async(req: Request, res: Response) => {
@@ -23,5 +25,11 @@ export class AdminSettingsController {
         logger.info(query, 'from controller')
         const { templates, totalPages, totalCount } = await this._getAllTemplates.execute({...query})
         return sendSuccess(res, statusCode.OK, '', {templates, totalPages, totalCount})
+    })
+
+    editTemplate = asyncHandler( async(req: Request, res: Response) => {
+        const templateId = req.params.id
+        const updatedTemplate = await this._EditTemplate.execute({id: templateId, ...req.body})
+        return sendSuccess(res, statusCode.OK, '', updatedTemplate)
     })
 }

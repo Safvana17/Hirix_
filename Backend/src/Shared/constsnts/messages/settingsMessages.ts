@@ -19,5 +19,8 @@ export const settingsMessages = {
       NOT_COMPANY: 'Only company can send restore request',
       GST_NUMBER_REQUIRED: 'GST number is required',
       TEMPLATE_ALREADY_EXISTING: 'Template with given key is already existing',
+      TEMPLATE_NOT_FOUND: 'Template not found',
+      TEMPLATE_KEY_MISMATCH: 'Incorrect key',
+      
     }
 }

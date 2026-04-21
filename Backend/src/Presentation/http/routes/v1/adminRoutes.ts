@@ -8,7 +8,7 @@ import { createQuestionSchema, editQuestionSchema } from "../../validators/quest
 import { addCategorySchema, editCategorySchema } from "../../validators/categoryValidator";
 import { rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
 import { createSubscriptionPlanSchema, updatePlanSchema } from "../../validators/subscriptionPlanValidator";
-import { CreateTemplateSchema, getAllTemplateQSchema } from "../../validators/adminSettingsValidator";
+import { TemplateSchema, getAllTemplateQSchema } from "../../validators/adminSettingsValidator";
 
 const router = Express.Router()
 
@@ -47,9 +47,9 @@ router.patch(ROUTES.ADMIN.SUBSCRIPTION_PLAN.STATUS, authHandler(iTokenService), 
 router.delete(ROUTES.ADMIN.SUBSCRIPTION_PLAN.DELETE, authHandler(iTokenService), verifyCsrf, iSubscriptionPlanController.deletePlan)
 
 //Email templates
-router.post(ROUTES.ADMIN.EMAIL_TEMPLATE.CREATE, authHandler(iTokenService), verifyCsrf, validate(CreateTemplateSchema, 'body'), iAdminSettingsController.createTemplate)
+router.post(ROUTES.ADMIN.EMAIL_TEMPLATE.CREATE, authHandler(iTokenService), verifyCsrf, validate(TemplateSchema, 'body'), iAdminSettingsController.createTemplate)
 router.get(ROUTES.ADMIN.EMAIL_TEMPLATE.GET_aLL, authHandler(iTokenService), validate(getAllTemplateQSchema, 'query'), iAdminSettingsController.getAllTemplates)
-
+router.put(ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT, authHandler(iTokenService), verifyCsrf, validate(TemplateSchema, 'body'), iAdminSettingsController.editTemplate)
 
 
 

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const CreateTemplateSchema = z.object({
+export const TemplateSchema = z.object({
   key: z.string().min(3).max(100),
   name: z.string().min(3).max(100),
   channel: z.enum(['EMAIL', 'IN_APP']),

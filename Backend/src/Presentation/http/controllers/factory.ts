@@ -71,7 +71,7 @@ import { CompanyDownloadInvoiceUsecase } from "../../../Application/company/usec
 import { CandidateGetAllPlanUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getAllPlan.usecase";
 import { CandidateConfirmPaymentUsecase } from "../../../Application/candidate/useCases/subscription/candidate.confirmPayment.usecase";
 import { AdminCreateEmailTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.createEmailTemplate.usecase";
-
+import { AdminEditTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.editTemplate.usecase";
 
 
 
@@ -522,6 +522,9 @@ const iAdminCreateTemplate = new AdminCreateEmailTemplateUsecase(
 const iAdminGetAllTemplates = new AdminGetAllTemplatesUsecase(
     iTemplateREpository
 )
+const iAdminEditTemplate = new AdminEditTemplateUsecase(
+    iTemplateREpository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -700,5 +703,6 @@ export const iCandidateSubscriptionController = new CandidateSubscriptionControl
 
 export const iAdminSettingsController = new AdminSettingsController(
     iAdminCreateTemplate,
-    iAdminGetAllTemplates
+    iAdminGetAllTemplates,
+    iAdminEditTemplate
 )
