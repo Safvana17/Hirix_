@@ -2,7 +2,7 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import { ITemplateRepository } from "../../../../Domain/repositoryInterface/iTemplate.repository";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
-import { AdminEditTemplateInputDTO, AdminEditTemplateOutputDTO } from "../../dtos/settings/admin.editTemplate.usecase";
+import { AdminEditTemplateInputDTO, AdminEditTemplateOutputDTO } from "../../dtos/settings/admin.editTemplate.dto";
 import { IAdminEditTemplateUsecase } from "../../interfaces/settings/IAdmin.editTemplate.usecase";
 
 export class AdminEditTemplateUsecase implements IAdminEditTemplateUsecase {
@@ -24,6 +24,13 @@ export class AdminEditTemplateUsecase implements IAdminEditTemplateUsecase {
         template.subject = request.subject
         template.body = request.body
         template.title = request.title ?? null
+        template.footerText = request.footerText
+        template.ctaText = request.ctaText
+        template.ctaUrl = request.ctaUrl
+        template.otpLabel = request.otpLabel
+        template.showOtpBox = request.showOtpBox
+        template.supportText = request.supportText
+        template.expiryText = request.expiryText
 
         const updatedTemplate = await this._templateRepository.update(template.id, template)
 

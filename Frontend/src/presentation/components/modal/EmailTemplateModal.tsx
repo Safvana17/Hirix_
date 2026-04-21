@@ -4,11 +4,14 @@ import {
   Button,
   Chip,
   FormControl,
+  FormControlLabel,
   IconButton,
   InputLabel,
   MenuItem,
   Modal,
   Select,
+  Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material'
@@ -47,6 +50,13 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
     subject:template?.subject || '',
     title: template?.title || '',
     body: template?.body || '',
+    footerText: template?.footerText || '',
+    ctaText: template?.ctaText || '',
+    ctaUrl: template?.ctaUrl || '',
+    showOtpBox: template?.showOtpBox || false,
+    otpLabel: template?.otpLabel || '',
+    expiryText: template?.expiryText || '',
+    supportText: template?.supportText || '',
     isActive: template?.isActive || true
   })
 
@@ -66,13 +76,20 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
     if(mode === 'create'){
         onSubmit({
           id: '',
-        key: form.key,
-        name: form.name,
-        channel: form.channel as TemplateChannel,
-        subject: form.subject ?? null,
-        title: form.title ?? null,
-        body: form.body,
-        isActive: form.isActive
+          key: form.key,
+          name: form.name,
+          channel: form.channel as TemplateChannel,
+          subject: form.subject ?? null,
+          title: form.title ?? null,
+          body: form.body,
+          footerText: form.footerText,
+          ctaText: form.ctaText,
+          ctaUrl: form.ctaUrl,
+          showOtpBox: form.showOtpBox,
+          otpLabel: form.otpLabel,
+          expiryText: form.expiryText,
+          supportText: form.supportText,
+          isActive: form.isActive
         })
     }else if(mode === 'edit' && template){
       onSubmit({
@@ -83,6 +100,13 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
         subject: form.subject,
         title: form.title,
         body: form.body,
+        footerText: form.footerText,
+        ctaText: form.ctaText,
+        ctaUrl: form.ctaUrl,
+        showOtpBox: form.showOtpBox,
+        otpLabel: form.otpLabel,
+        expiryText: form.expiryText,
+        supportText: form.supportText,
         isActive: form.isActive
       })
     }
@@ -201,6 +225,77 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
               },
             }}
             helperText="Use placeholders like {{companyName}}, {{candidateName}}"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={form.showOtpBox || false}
+                onChange={(e) => handleChange('showOtpBox', e.target.checked)}
+              />
+            }
+            label="Include OTP Section"
+          />
+
+          {form.showOtpBox && (
+            <Stack spacing={2}>
+              <TextField
+                label="OTP Label"
+                value={form.otpLabel || ''}
+                onChange={(e) => handleChange('otpLabel', e.target.value)}
+                fullWidth
+              />
+
+              <TextField
+                label="Expiry Text (use {{expiryTime}})"
+                value={form.expiryText || ''}
+                onChange={(e) => handleChange('expiryText', e.target.value)}
+                fullWidth
+              />
+            </Stack>
+          )}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={!!form.ctaText}
+                onChange={(e) =>
+                  handleChange('ctaText', e.target.checked ? '' : undefined)
+                }
+              />
+            }
+            label="Include Button"
+          />
+
+          {form.ctaText !== undefined && (
+            <Stack spacing={2}>
+              <TextField
+                label="Button Text"
+                value={form.ctaText || ''}
+                onChange={(e) => handleChange('ctaText', e.target.value)}
+                fullWidth
+              />
+
+              <TextField
+                label="Button URL (can use variables like {{loginUrl}})"
+                value={form.ctaUrl || ''}
+                onChange={(e) => handleChange('ctaUrl', e.target.value)}
+                fullWidth
+              />
+            </Stack>
+          )}
+          <TextField
+            label="Footer Text"
+            value={form.footerText || ''}
+            onChange={(e) => handleChange('footerText', e.target.value)}
+            multiline
+            rows={2}
+            fullWidth
+          />
+
+          <TextField
+            label="Support Text"
+            value={form.supportText || ''}
+            onChange={(e) => handleChange('supportText', e.target.value)}
+            fullWidth
           />
           {mode === 'view' && (
             <Box display="flex" justifyContent="flex-start">

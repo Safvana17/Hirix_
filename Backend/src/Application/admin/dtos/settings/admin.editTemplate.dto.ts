@@ -9,6 +9,13 @@ export interface AdminEditTemplateInputDTO {
     subject: string;
     body: string
     title?: string
+    footerText?: string;
+    ctaText?: string
+    ctaUrl?: string
+    showOtpBox?: boolean
+    otpLabel?: string
+    expiryText?: string
+    supportText?: string
 }
 
 export interface AdminEditTemplateOutputDTO {

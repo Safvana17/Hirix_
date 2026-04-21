@@ -4,14 +4,21 @@ export const TemplateSchema = z.object({
   key: z.string().min(3).max(100),
   name: z.string().min(3).max(100),
   channel: z.enum(['EMAIL', 'IN_APP']),
-  subject: z.string().nullable().optional(),
-  title: z.string().nullable().optional(),
+  subject: z.string().min(1).optional(),
+  title: z.string().optional(),
   body: z.string().min(1),
-})
+  footerText: z.string().optional(),
+  ctaText: z.string().optional(),
+  ctaUrl: z.string().optional(),
+  showOtpBox: z.boolean().optional(),
+  otpLabel: z.string().optional(),
+  expiryText: z.string().optional(),
+  supportText: z.string().optional(),
+});
 
 export const getAllTemplateQSchema = z.object({
-  page: z.coerce.number(),
-  limit: z.coerce.number(),
+  page: z.coerce.number().default(1),
+  limit: z.coerce.number().optional(),
   isActive: z.boolean().optional()
 })
 export type GetAllTemplateQuery = z.infer< typeof getAllTemplateQSchema>

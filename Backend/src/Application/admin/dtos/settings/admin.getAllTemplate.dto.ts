@@ -2,7 +2,7 @@ import { TemplateEntity } from "../../../../Domain/entities/Template.entity"
 
 export interface AdminGetAllTemplatesInputDTO {
     page: number
-    limit: number
+    limit?: number
     isActive?: boolean
 }
 

@@ -135,6 +135,7 @@ import { NotificationRuleRepository } from "../../../Infrastructure/repositories
 import { AdminProcessNotificationEventUsecase } from "../../../Application/admin/usecases/settings/admin.processNotificationEvent.usecase";
 import { RenderTemplateService } from "../../../Infrastructure/services/RenderTemplateService";
 import { NotificationRepository } from "../../../Infrastructure/repositories/notification.repository";
+import { TextFormatService } from "../../../Infrastructure/services/TextFormatService";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -162,6 +163,7 @@ const iGoogleAuthService = new GoogleAuthService()
 const iRazorpayService = new RazorpayService()
 const iPdfService = new PdfService()
 const iTemplateRenderService = new RenderTemplateService()
+const iTextFormatService = new TextFormatService()
 
 //notification
 const iProcessNotification = new AdminProcessNotificationEventUsecase(
@@ -169,7 +171,8 @@ const iProcessNotification = new AdminProcessNotificationEventUsecase(
     iNotificationRuleRepository,
     iTemplateREpository,
     iMailService,
-    iTemplateRenderService
+    iTemplateRenderService,
+    iTextFormatService
 )
 //candidates
 const iVerifyRegisterCandidate = new VerifyRegisterCandidateOtpUsecase(

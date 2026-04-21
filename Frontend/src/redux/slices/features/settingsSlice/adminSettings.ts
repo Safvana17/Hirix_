@@ -3,11 +3,14 @@ import type { TemplatePayload, EmailTemplate, GetAllTemplatesArgs, GetAllTemplat
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
+import type { CreateNotificationRulePayload, NotificationRule } from "../../../../types/notification";
 
 interface AdminSettingsState {
     loading: boolean;
     templates: EmailTemplate[];
-    selectedTemplate: EmailTemplate[] | null;
+    notificationRules: NotificationRule[];
+    selectedTemplate: EmailTemplate | null;
+    selectedRule: NotificationRule | null;
     error: string | null;
     pagination: {
         templates: {
@@ -20,7 +23,9 @@ interface AdminSettingsState {
 const initialState: AdminSettingsState = {
     loading: true,
     templates: [],
+    notificationRules: [],
     selectedTemplate: null,
+    selectedRule: null,
     error: null,
     pagination: {
         templates: {
@@ -73,6 +78,7 @@ EmailTemplate,
 {rejectValue: string}
 >('settings/editTemplate', async({data, id}, {rejectWithValue}) => {
     try {
+        console.log('from slice data: ', data)
         const response = await api.put(API_ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT(id), data)
         if(!response.data.success){
             return rejectWithValue('Invalid response')
@@ -81,6 +87,23 @@ EmailTemplate,
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to edit email template')
+    }
+})
+
+export const createNotificationRule = createAsyncThunk<
+void,
+CreateNotificationRulePayload,
+{rejectValue: string}
+>('settings/createRule', async(CreateNotificationPayload, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.ADMIN.NOTIFICATION_RULE.CREATE, CreateNotificationPayload)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to create notification rule')
     }
 })
 
@@ -122,6 +145,16 @@ const adminSettingsSlice = createSlice({
             if(index != -1){
                 state.templates[index] = action.payload
             }
+         })
+         .addCase(createNotificationRule.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(createNotificationRule.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(createNotificationRule.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to create notification rule'
          })
     },
 })

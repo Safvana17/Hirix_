@@ -47,7 +47,7 @@ export default function TemplatePage() {
         setFormModalOpen(false)
       }
       if(mode === 'edit'){
-         await dispatch(editEmailTemplate({data: payload, id: payload.id}))
+         await dispatch(editEmailTemplate({data: payload, id: payload.id})).unwrap()
          toast.success('Email template edited successfully')
          setFormModalOpen(false)
       }

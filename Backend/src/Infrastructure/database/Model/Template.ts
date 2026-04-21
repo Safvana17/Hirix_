@@ -1,5 +1,5 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
-import { NotificationChannel } from "../../../Domain/enums/notification";
+import { EmailLayoutType, NotificationChannel } from "../../../Domain/enums/notification";
 
 
 export interface ITemplate extends Document{
@@ -10,6 +10,14 @@ export interface ITemplate extends Document{
     subject: string | null;
     title: string | null;
     body: string;
+    footerText?: string;
+    ctaText?: string;
+    ctaUrl?: string;
+    showOtpBox?: boolean;
+    otpLabel?: string;
+    expiryText?: string;
+    supportText?: string;
+    layOutType?: EmailLayoutType;
     isActive: boolean;
     isDeleted: boolean;
     createdAt: Date;
@@ -52,6 +60,32 @@ const TemplateSchema: Schema<ITemplate> = new Schema ({
     isDeleted: {
         type: Boolean,
         default: false
+    },
+    footerText: {
+        type: String
+    },
+    ctaText: {
+        type: String
+    },
+    ctaUrl: {
+        type: String
+    },
+    showOtpBox: {
+        type: Boolean,
+        default: false
+    },
+    otpLabel: {
+        type: String
+    },
+    expiryText: {
+        type: String
+    },
+    supportText:{
+        type: String
+    },
+    layOutType:{
+        type: String,
+        enum: ['COMMON']
     }
 }, {
     timestamps: true

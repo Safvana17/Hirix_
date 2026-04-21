@@ -35,6 +35,7 @@ export class AdminSettingsController {
 
     editTemplate = asyncHandler( async(req: Request, res: Response) => {
         const templateId = req.params.id
+        logger.info(req.body, 'from controller')
         const updatedTemplate = await this._EditTemplate.execute({id: templateId, ...req.body})
         return sendSuccess(res, statusCode.OK, '', updatedTemplate)
     })

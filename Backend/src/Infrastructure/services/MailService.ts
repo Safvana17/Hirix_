@@ -10,7 +10,7 @@
 // import { subscriptionReminderTemplate } from "../emailTemplates/SubscriptionReminderTemplate";
 // import { logger } from "../../utils/logging/loger";
 
-import { IMailService, SendMailDTO } from "../../Application/interface/service/IMailService";
+import { BuildEmailLayoutInput, IMailService, SendMailDTO } from "../../Application/interface/service/IMailService";
 import { env } from "../config/env";
 import { mailTransporter } from "../config/mail.config";
 
@@ -88,5 +88,57 @@ export class MailService implements IMailService {
             subject: dto.subject,
             html: dto.html
         })
+    }
+ build(input: BuildEmailLayoutInput): string {
+    const otpSection = input.showOtpBox && input.otpCode
+        ? `<div style="text-align:center; margin: 30px 0 20px 0;">
+            ${ input.otpLabel ? `<p style="margin: 0 0 10px 0; font-size: 14px; color: #4b5563;">${input.otpLabel}</p>` : ''}
+            <span style="display:inline-block; font-size:32px; font-weight:bold; letter-spacing:8px; padding:12px 24px; background:#f3f4f6; border-radius:8px; border:1px dashed #9ca3af; color:#111827;">
+              ${input.otpCode}
+            </span>
+          </div>
+            ${ input.expiryText ? `<p style="font-size:14px; color:#6b7280; text-align:center; margin: 0 0 20px 0;">${input.expiryText}</p>` : '' }` 
+        : '';
+    const ctaSection = input.ctaText && input.ctaUrl
+        ? `<div style="text-align:center; margin: 24px 0;">
+            <a
+              href="${input.ctaUrl}"
+              style="display:inline-block; padding:12px 22px; background:#2563eb; color:#ffffff; text-decoration:none; border-radius:8px; font-weight:600; font-size:14px;"
+            >
+              ${input.ctaText}
+            </a>
+          </div>`
+        : '';
+    const footerTextSection = input.footerText
+        ? `<p style="font-size:14px; color:#6b7280; margin: 24px 0 0 0;">${input.footerText}</p>` : '';
+    const supportSection = input.supportEmail
+        ? ` <p style="font-size:14px; color:#4b5563; margin: 24px 0 0 0;">
+              ${input.supportText ?? 'Need help? Contact us at'}
+              <a href="mailto:${input.supportEmail}" style="color:#2563eb; text-decoration:none; margin-left:4px;">
+                ${input.supportEmail}
+              </a>
+            </p>`
+        : '';
+    return `
+        <div style="font-family: Arial, sans-serif; background-color: #f4f6f8; padding: 30px 16px;">
+            <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; padding: 32px; border: 1px solid #e5e7eb;">
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <h2 style="margin: 0; font-size: 24px; color: #111827;">${input.title}</h2>
+                </div>
+                <div style="font-size: 15px; color: #374151; line-height: 1.8;">
+                    ${input.body}
+                </div> 
+                ${otpSection}
+                ${ctaSection}
+                ${footerTextSection}
+                ${supportSection}
+                <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid #e5e7eb;">
+                    <p style="margin: 0; font-size: 14px; color: #6b7280;">
+                        Thanks,<br />
+                        The ${input.platformName} Team
+                    </p>
+                </div>
+            </div>
+        </div>`
     }
 }

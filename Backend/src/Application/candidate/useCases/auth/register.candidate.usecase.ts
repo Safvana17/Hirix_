@@ -70,17 +70,16 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
 
         await this._processNotificationUsecase.execute({
             event: NotificationEvents.REGISTER_OTP_REQUESTED,
-            recipients: [
-                {
-                    recipientId: savedCandidate.id,
-                    recipientType: savedCandidate.getRole(),
-                    email: savedCandidate.getEmail()
-                }
-            ],
+            recipients: [{
+                recipientId: savedCandidate.id,
+                recipientType: savedCandidate.getRole(),
+                email: savedCandidate.getEmail()
+            }],
             variables: {
-                candidateNname: savedCandidate.getName(),
-                otp,
-                expirySeconds: '120'
+                userName: savedCandidate.getName(),
+                otpCode: otp,
+                expiryTime: '120',
+                platformName: 'Hirix'
             },
             metaData: {
                 candidateId: savedCandidate.id

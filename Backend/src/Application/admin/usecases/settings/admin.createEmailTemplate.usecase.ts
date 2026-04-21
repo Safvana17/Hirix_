@@ -27,7 +27,16 @@ export class AdminCreateEmailTemplateUsecase implements IAdminCreateEmailTemplat
             true,
             false
         )
-        await this._templateRepository.create(template)
+        const savedTemplate = await this._templateRepository.create(template)
+        savedTemplate.footerText = request.footerText
+        savedTemplate.ctaText = request.ctaText
+        savedTemplate.ctaUrl = request.ctaUrl
+        savedTemplate.showOtpBox = request.showOtpBox
+        savedTemplate.otpLabel = request.otpLabel
+        savedTemplate.expiryText = request.expiryText
+        savedTemplate.supportText = request.supportText
+
+        await this._templateRepository.update(savedTemplate.id, savedTemplate)
         return {
             success: true
         }

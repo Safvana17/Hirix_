@@ -1,5 +1,7 @@
 export type NotificationChannel = 'EMAIL' | 'IN_APP'
 
+export type EmailLayoutType = 'COMMON'
+
 
 export const NotificationEvents = {
     REGISTER_OTP_REQUESTED: 'REGISTER_OTP_REQUESTED',

@@ -8,6 +8,13 @@ export interface EmailTemplate {
     subject: string | null;
     title: string | null;
     body: string;
+    footerText?: string
+    ctaText?: string
+    ctaUrl?: string
+    showOtpBox?: boolean
+    otpLabel?: string
+    expiryText?: string
+    supportText?: string
     isActive: boolean;
     isDeleted: boolean;
 }
@@ -18,8 +25,15 @@ export interface TemplatePayload {
     name: string;
     channel: TemplateChannel;
     subject?: string | null;
-    title?: string | null;
+    title?: string | null;  
     body: string;
+    footerText?: string
+    ctaText?: string
+    ctaUrl?: string
+    showOtpBox?: boolean
+    otpLabel?: string
+    expiryText?: string
+    supportText?: string
     isActive: boolean;
 }
 
@@ -33,8 +47,8 @@ export interface TemplatePayload {
 
 export interface GetAllTemplatesArgs {
     isActive?: boolean
-    page: number
-    limit: number
+    page?: number
+    limit?: number
 }
 
 export interface GetAllTemplatesResponse {

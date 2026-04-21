@@ -14,6 +14,22 @@ export interface SendMailDTO {
   html: string
 }
 
+export interface BuildEmailLayoutInput {
+    title: string
+    body: string
+    platformName: string
+    footerText?: string
+    ctaText?: string
+    ctaUrl?: string
+    otpCode?: string
+    otpLabel?: string
+    expiryText?: string
+    supportEmail?: string
+    supportText?: string
+    showOtpBox?: boolean
+}
+
 export interface IMailService {
   send(dto: SendMailDTO): Promise<void>
+  build(request: BuildEmailLayoutInput): string
 }

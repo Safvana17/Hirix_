@@ -110,6 +110,12 @@ export const API_ROUTES = {
       BY_ID: (id: string) => 
         `/admin/email-template/${id}`,
       GET_ALL: '/admin/email-templates',
+    },
+    NOTIFICATION_RULE: {
+      CREATE: '/admin/notification-rule',
+      EDIT: (id: string) =>
+        `/admin/notification-rule/${id}`,
+      GET_ALL: '/admin/notification-rules',
     }
   },
   COMMON: {
