@@ -2,17 +2,18 @@ import { useEffect, useState } from 'react'
 import { Box, Button, Typography, Grid, Pagination } from '@mui/material'
 import TemplateModal from '../modal/EmailTemplateModal'
 import TemplateCard from './EmailTemplateCard'
-import type { CreateTemplatePayload } from '../../../types/template'
+import type { TemplatePayload, EmailTemplate } from '../../../types/template'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
-import { createEmailTemplate, getAllTemplates } from '../../../redux/slices/features/settingsSlice/adminSettings'
+import { createEmailTemplate, editEmailTemplate, getAllTemplates } from '../../../redux/slices/features/settingsSlice/adminSettings'
 
 
 export default function TemplatePage() {
   const dispatch = useDispatch<AppDispatch>()
   const [formModalOpen, setFormModalOpen] = useState<boolean>(false)
-  const [mode, setMode] = useState<'create' | 'edit'>('create')
+  const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate | null>(null)
+  const [mode, setMode] = useState<'create' | 'edit' | 'view'>('create')
   const [page, setPage ] = useState(1)
   const { templates, pagination } = useSelector((state: RootState) => state.AdminSettings)
 
@@ -21,18 +22,30 @@ export default function TemplatePage() {
   }, [dispatch, page])
 
   const handleOpenCreate = (): void => {
+    setSelectedTemplate(null)
     setMode('create')
     setFormModalOpen(true)
   }
   console.log('from templates: ', templates)
 
-  const handleSubmit = async (payload: CreateTemplatePayload) => {
+  const handleEditTemplate = (template: EmailTemplate) => {
+    setSelectedTemplate(template)
+    setMode('edit')
+    setFormModalOpen(true)
+  }
+  const handleSubmit = async (payload: TemplatePayload) => {
     try {
       if (mode === 'create') {
         await dispatch(createEmailTemplate(payload)).unwrap()
         toast.success('Email template added successfully')
         setFormModalOpen(false)
       }
+      if(mode === 'edit'){
+         await dispatch(editEmailTemplate({data: payload, id: payload.id}))
+         toast.success('Email template edited successfully')
+         setFormModalOpen(false)
+      }
+      await dispatch(getAllTemplates({params: { page, limit:9}}))
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'Failed to create email templates')
     }
@@ -78,16 +91,17 @@ export default function TemplatePage() {
         </Box>
       ) : (
         <>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} alignItems='stretch'>
           {templates.map((template) => (
             <Grid
               key={template.id}
               size={{ xs: 12, md: 6, lg: 4 }}
+              sx={{display: 'flex'}}
             >
               <TemplateCard
                 template={template}
                 onView={(t) => console.log('view', t)}
-                onEdit={(t) => console.log('edit', t)}
+                onEdit={() => handleEditTemplate(template)}
               />
             </Grid>
           ))}
@@ -98,8 +112,10 @@ export default function TemplatePage() {
       </>
       )}
       <TemplateModal
+        key={selectedTemplate?.id || mode}
         open={formModalOpen}
         mode={mode}
+        template={selectedTemplate}
         onClose={() => setFormModalOpen(false)}
         onSubmit={handleSubmit}
       />

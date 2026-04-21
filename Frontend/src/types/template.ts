@@ -12,15 +12,23 @@ export interface EmailTemplate {
     isDeleted: boolean;
 }
 
-export interface CreateTemplatePayload {
+export interface TemplatePayload {
+    id: string
     key: string
     name: string;
     channel: TemplateChannel;
     subject?: string | null;
     title?: string | null;
     body: string
-    isActive?: boolean
 }
+
+// export interface editTemplatePayload {
+//     id: string;
+//     name: string;
+//     subject?: string | null;
+//     title?: string | null;
+//     body: string
+// }
 
 export interface GetAllTemplatesArgs {
     isActive?: boolean

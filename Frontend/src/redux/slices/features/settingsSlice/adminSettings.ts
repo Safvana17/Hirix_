@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { CreateTemplatePayload, EmailTemplate, GetAllTemplatesArgs, GetAllTemplatesResponse } from "../../../../types/template";
+import type { TemplatePayload, EmailTemplate, GetAllTemplatesArgs, GetAllTemplatesResponse } from "../../../../types/template";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
@@ -33,7 +33,7 @@ const initialState: AdminSettingsState = {
 
 export const createEmailTemplate = createAsyncThunk<
 void,
-CreateTemplatePayload,
+TemplatePayload,
 {rejectValue: string}
 >('settings/createTemplate', async(createEmailTemplate, {rejectWithValue}) => {
     try {
@@ -67,7 +67,22 @@ GetAllTemplatesResponse,
     }
 })
 
-
+export const editEmailTemplate = createAsyncThunk<
+EmailTemplate,
+{data: TemplatePayload, id: string},
+{rejectValue: string}
+>('settings/editTemplate', async({data, id}, {rejectWithValue}) => {
+    try {
+        const response = await api.put(API_ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT(id), data)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to edit email template')
+    }
+})
 
 const adminSettingsSlice = createSlice({
     name: 'AdminSettings',
@@ -97,6 +112,16 @@ const adminSettingsSlice = createSlice({
          .addCase(getAllTemplates.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get all templates'
+         })
+         .addCase(editEmailTemplate.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(editEmailTemplate.fulfilled, (state, action) => {
+            state.loading = false
+            const index = state.templates.findIndex(t => t.id === action.payload.id)
+            if(index != -1){
+                state.templates[index] = action.payload
+            }
          })
     },
 })

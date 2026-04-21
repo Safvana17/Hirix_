@@ -10,15 +10,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import type { CreateTemplatePayload, TemplateChannel } from '../../../types/template'
+import type { TemplatePayload, EmailTemplate, TemplateChannel } from '../../../types/template'
 
 interface TemplateModalProps {
   open: boolean
-  mode: 'create' | 'edit'
-//   template: EmailTemplate | null
-//   loading: boolean
+  mode: 'create' | 'edit' | 'view'
+  template: EmailTemplate | null
   onClose: () => void
-  onSubmit: (payload: CreateTemplatePayload) => void
+  onSubmit: (payload: TemplatePayload) => void
 }
 
 const modalStyle = {
@@ -36,45 +35,20 @@ const modalStyle = {
   p: 4
 }
 
-const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, onClose, onSubmit }: TemplateModalProps)  =>{
-  const [form, setForm] = useState<CreateTemplatePayload>({
-    key: '',
-    name: '',
-    channel: 'EMAIL',
-    subject: '',
-    title: '',
-    body: '',
-    isActive: true
+const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, onClose, onSubmit }: TemplateModalProps)  =>{
+  const [form, setForm] = useState<TemplatePayload>({
+    id: template?.id || '',
+    key: template?.key || '',
+    name: template?.name || '',
+    channel:template?.channel || 'EMAIL',
+    subject:template?.subject || '',
+    title: template?.title || '',
+    body: template?.body || '',
   })
 
-//   useEffect(() => {
-//     if (mode === 'edit' && template) {
-//       setForm({
-//         key: template.key,
-//         name: template.name,
-//         channel: template.channel,
-//         subject: template.subject,
-//         title: template.title,
-//         body: template.body,
-//         isActive: template.isActive
-//       })
-//       return
-//     }
-
-//     setForm({
-//       key: '',
-//       name: '',
-//       channel: 'EMAIL',
-//       subject: '',
-//       title: '',
-//       body: '',
-//       isActive: true
-//     })
-//   }, [mode, template, open])
-
-  const handleChange = <K extends keyof CreateTemplatePayload>(
+  const handleChange = <K extends keyof TemplatePayload>(
     key: K,
-    value: CreateTemplatePayload[K]
+    value: TemplatePayload[K]
   ): void => {
     setForm((prev) => ({
       ...prev,
@@ -87,6 +61,7 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, onClose, on
     console.log('data from modal:', form)
     if(mode === 'create'){
         onSubmit({
+          id: '',
         key: form.key,
         name: form.name,
         channel: form.channel as TemplateChannel,
@@ -94,6 +69,16 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, onClose, on
         title: form.title ?? null,
         body: form.body,
         })
+    }else if(mode === 'edit' && template){
+      onSubmit({
+        id: template.id,
+        key: form.key,
+        name: form.name,
+        channel: form.channel,
+        subject: form.subject,
+        title: form.title,
+        body: form.body
+      })
     }
   }
 
