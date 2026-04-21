@@ -73,7 +73,7 @@ import { CandidateConfirmPaymentUsecase } from "../../../Application/candidate/u
 import { AdminCreateEmailTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.createEmailTemplate.usecase";
 import { AdminEditTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.editTemplate.usecase";
 import { AdminCreateNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.createNotificationRule.usecase";
-
+import { AdminGetAllNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.getAllNotificationRule.usecase";
 
 
 
@@ -531,6 +531,9 @@ const iAdminCreateNotificationRule = new AdminCreateNotificationRuleUsecase (
     iNotificationRuleRepository,
     iTemplateREpository
 )
+const iAdminGetAllNotificationRule = new AdminGetAllNotificationRuleUsecase(
+    iNotificationRuleRepository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -711,5 +714,6 @@ export const iAdminSettingsController = new AdminSettingsController(
     iAdminCreateTemplate,
     iAdminGetAllTemplates,
     iAdminEditTemplate,
-    iAdminCreateNotificationRule
+    iAdminCreateNotificationRule,
+    iAdminGetAllNotificationRule
 )

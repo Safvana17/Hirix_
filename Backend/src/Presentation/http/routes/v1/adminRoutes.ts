@@ -53,7 +53,7 @@ router.put(ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT, authHandler(iTokenService), verifyC
 
 //notification rule
 router.post(ROUTES.ADMIN.NOTIFICATION_RULE.CREATE, authHandler(iTokenService), verifyCsrf, validate(CreateNotificationRuleSchema, 'body'), iAdminSettingsController.createNotificationRule)
-
+router.get(ROUTES.ADMIN.NOTIFICATION_RULE.GET_ALL, authHandler(iTokenService), iAdminSettingsController.getAllRules)
 
 
 

@@ -8,6 +8,7 @@ import { GetAllTemplateQuery } from "../../validators/adminSettingsValidator";
 import { logger } from "../../../../utils/logging/loger";
 import { IAdminEditTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.editTemplate.usecase";
 import { IAdminCreateNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.createNotificationRule.usecase";
+import { IAdminGetAllNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.getAllNotificationRule";
 
 export class AdminSettingsController {
     constructor(
@@ -15,6 +16,7 @@ export class AdminSettingsController {
         private _getAllTemplates: IAdminGetAllTemplateUsecase,
         private _EditTemplate: IAdminEditTemplateUsecase,
         private _createNotificationRule: IAdminCreateNotificationRuleUsecase,
+        private _getAllNotificationRule: IAdminGetAllNotificationRuleUsecase,
     ) {}
 
     createTemplate = asyncHandler(async(req: Request, res: Response) => {
@@ -38,5 +40,10 @@ export class AdminSettingsController {
     createNotificationRule = asyncHandler(async(req: Request, res: Response) => {
         const result = await this._createNotificationRule.execute(req.body)
         return sendSuccess(res, statusCode.OK, '', result)
+    })
+
+    getAllRules = asyncHandler(async(req: Request, res: Response) => {
+        const rules = await this._getAllNotificationRule.execute()
+        return sendSuccess(res, statusCode.OK, '', rules)
     })
 }
