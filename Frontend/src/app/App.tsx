@@ -20,6 +20,7 @@ import CompanySubscription from '../presentation/pages/company/CompanySubscripti
 import PaymentStatus from '../presentation/components/common/PaymentStatus'
 import CandidateSubscription from '../presentation/pages/candidate/CandidateSubscription'
 import PaymentPage from '../presentation/components/common/PayemntPage'
+import AdminSettings from '../presentation/pages/admin/AdminSettings'
 
 
 
@@ -168,6 +169,12 @@ const App = () => {
           <Route path={ROUTES.ADMIN.SUBSCRIPTIONS} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminSubscriptions />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.ADMIN.SETTINGS} element={
+            <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+              <AdminSettings />
             </RoleRoute>
           } />
           

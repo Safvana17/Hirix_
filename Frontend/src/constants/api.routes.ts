@@ -40,19 +40,19 @@ export const API_ROUTES = {
       `/company/jobrole/${id}/status`,
     DELETE_JOB_ROLE: (id: string) => 
       `/company/jobrole/${id}`,
-    SUBSCRIPTION: {
-      GET_ALL: `/company/plans`,
-      GET_CURRENT: `/company/plan`,
-      CHANGE_SUBSCRIPTION: `/company/change-subscription`,
-      MAKE_PAYMENT: '/company/subscription/payment',
-      CONFIRM_PAYMENT: '/company/subscription/confirm',
-      MARK_FAILURE: '/company/subscription/failure',
-      GET_BILLING_HISTORY: '/company/subscription/billing-history',
-      CANCEL: (id: string) =>
-        `/company/subscription/${id}/cancel`,
-      INVOICE: (id: string) => 
-        `company/subscription/${id}/invoice`,
-    }
+    // SUBSCRIPTION: {
+    //   GET_ALL: `/company/plans`,
+    //   GET_CURRENT: `/company/plan`,
+    //   CHANGE_SUBSCRIPTION: `/company/change-subscription`,
+    //   MAKE_PAYMENT: '/company/subscription/payment',
+    //   CONFIRM_PAYMENT: '/company/subscription/confirm',
+    //   MARK_FAILURE: '/company/subscription/failure',
+    //   GET_BILLING_HISTORY: '/company/subscription/billing-history',
+    //   CANCEL: (id: string) =>
+    //     `/company/subscription/${id}/cancel`,
+    //   INVOICE: (id: string) => 
+    //     `company/subscription/${id}/invoice`,
+    // }
   },
 
   ADMIN: {
@@ -100,6 +100,16 @@ export const API_ROUTES = {
       STATUS: (id: string) => 
         `/admin/plan/${id}`,
       GET_ALL: '/admin/plans'
+    },
+    EMAIL_TEMPLATE: {
+      CREATE: '/admin/email-template',
+      EDIT: (id: string) => 
+        `/admin/email-template/${id}`,
+      DELETE: (id: string) => 
+        `/admin/email-template/${id}`,
+      BY_ID: (id: string) => 
+        `/admin/email-template/${id}`,
+      GET_ALL: '/admin/email-templates',
     }
   },
   COMMON: {

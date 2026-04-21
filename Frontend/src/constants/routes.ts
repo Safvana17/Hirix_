@@ -43,5 +43,6 @@ export const ROUTES = {
     QUESTIONS: '/admin/questions',
     PRACTICE_LIBRARY: '/admin/practicelibrary',
     SUBSCRIPTIONS: '/admin/subscriptions',
+    SETTINGS: '/admin/settings',
   },
 }

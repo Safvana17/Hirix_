@@ -8,6 +8,8 @@ import questionSlice from './slices/features/question/questionSlice'
 import PracticeQuestionSlice from './slices/features/question/practiceQuestionSlice'
 import SubscriptionPlanSlice from './slices/features/subscription/subscriptionPlanSlice'
 import SubscriptionSlice from './slices/features/subscription/subscriptionSlice'
+import AdminSettingsSlice from './slices/features/settingsSlice/adminSettings'
+
 
 
 export const store = configureStore({
@@ -20,7 +22,8 @@ export const store = configureStore({
         question: questionSlice,
         practiceQuestion: PracticeQuestionSlice,
         subscriptionPlan: SubscriptionPlanSlice,
-        subscription: SubscriptionSlice
+        subscription: SubscriptionSlice,
+        AdminSettings: AdminSettingsSlice
     }
 })
 
