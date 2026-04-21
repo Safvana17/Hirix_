@@ -7,12 +7,14 @@ import { IAdminGetAllTemplateUsecase } from "../../../../Application/admin/inter
 import { GetAllTemplateQuery } from "../../validators/adminSettingsValidator";
 import { logger } from "../../../../utils/logging/loger";
 import { IAdminEditTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.editTemplate.usecase";
+import { IAdminCreateNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.createNotificationRule.usecase";
 
 export class AdminSettingsController {
     constructor(
         private _createEmailTemplate: IAdminCreateEmailTemplateUsecase,
         private _getAllTemplates: IAdminGetAllTemplateUsecase,
         private _EditTemplate: IAdminEditTemplateUsecase,
+        private _createNotificationRule: IAdminCreateNotificationRuleUsecase,
     ) {}
 
     createTemplate = asyncHandler(async(req: Request, res: Response) => {
@@ -31,5 +33,10 @@ export class AdminSettingsController {
         const templateId = req.params.id
         const updatedTemplate = await this._EditTemplate.execute({id: templateId, ...req.body})
         return sendSuccess(res, statusCode.OK, '', updatedTemplate)
+    })
+
+    createNotificationRule = asyncHandler(async(req: Request, res: Response) => {
+        const result = await this._createNotificationRule.execute(req.body)
+        return sendSuccess(res, statusCode.OK, '', result)
     })
 }

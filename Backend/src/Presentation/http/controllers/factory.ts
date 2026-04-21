@@ -72,7 +72,7 @@ import { CandidateGetAllPlanUsecase } from "../../../Application/candidate/useCa
 import { CandidateConfirmPaymentUsecase } from "../../../Application/candidate/useCases/subscription/candidate.confirmPayment.usecase";
 import { AdminCreateEmailTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.createEmailTemplate.usecase";
 import { AdminEditTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.editTemplate.usecase";
-
+import { AdminCreateNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.createNotificationRule.usecase";
 
 
 
@@ -131,6 +131,7 @@ import { CandidateGetInvoiceUsecase } from "../../../Application/candidate/useCa
 import { TemplateRepository } from "../../../Infrastructure/repositories/template.repository";
 import { AdminSettingsController } from "./admin/settingsController";
 import { AdminGetAllTemplatesUsecase } from "../../../Application/admin/usecases/settings/admin.getAllTemplates.usecase";
+import { NotificationRuleRepository } from "../../../Infrastructure/repositories/notificationRule.repository";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -144,6 +145,7 @@ const iSubscriptionPlanRepository = new SubscriptionPlanRepository()
 const iSubscriptionRepository = new SubscriptionRepository()
 const iPaymentRepository = new PaymentRepository()
 const iTemplateREpository = new TemplateRepository()
+const iNotificationRuleRepository = new NotificationRuleRepository()
 
 
 
@@ -525,6 +527,10 @@ const iAdminGetAllTemplates = new AdminGetAllTemplatesUsecase(
 const iAdminEditTemplate = new AdminEditTemplateUsecase(
     iTemplateREpository
 )
+const iAdminCreateNotificationRule = new AdminCreateNotificationRuleUsecase (
+    iNotificationRuleRepository,
+    iTemplateREpository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -704,5 +710,6 @@ export const iCandidateSubscriptionController = new CandidateSubscriptionControl
 export const iAdminSettingsController = new AdminSettingsController(
     iAdminCreateTemplate,
     iAdminGetAllTemplates,
-    iAdminEditTemplate
+    iAdminEditTemplate,
+    iAdminCreateNotificationRule
 )

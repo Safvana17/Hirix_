@@ -21,6 +21,8 @@ export const settingsMessages = {
       TEMPLATE_ALREADY_EXISTING: 'Template with given key is already existing',
       TEMPLATE_NOT_FOUND: 'Template not found',
       TEMPLATE_KEY_MISMATCH: 'Incorrect key',
-      
+      INVALID_NOTIFICATION_CHANNEL: 'Template channel does not match requested channel',
+      INACTIVE_TEMPLATE: 'Inactive template',
+      DELETED_TEMPLATE: 'Template is deleted',
     }
 }

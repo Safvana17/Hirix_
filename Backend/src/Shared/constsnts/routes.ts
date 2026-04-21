@@ -123,6 +123,11 @@ export const ROUTES = {
             DELETE: '/email-template/:id',
             BY_ID: '/email-template/:id',
             GET_aLL: '/email-templates'
+        },
+        NOTIFICATION_RULE: {
+            CREATE: '/notification-rule',
+            EDIT: '/notification-rule/:id',
+            GET_ALL: '/notification-rules'
         }
     }
 }

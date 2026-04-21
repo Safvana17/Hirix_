@@ -14,5 +14,11 @@ export const getAllTemplateQSchema = z.object({
   limit: z.coerce.number(),
   isActive: z.boolean().optional()
 })
-
 export type GetAllTemplateQuery = z.infer< typeof getAllTemplateQSchema>
+
+export const CreateNotificationRuleSchema = z.object({
+  event: z.string().min(1),
+  channel: z.enum(['EMAIL', 'IN_APP']),
+  templateKey: z.string().min(1),
+  isActive: z.boolean().optional()
+})
