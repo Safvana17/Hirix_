@@ -19,7 +19,8 @@ export interface TemplatePayload {
     channel: TemplateChannel;
     subject?: string | null;
     title?: string | null;
-    body: string
+    body: string;
+    isActive: boolean;
 }
 
 // export interface editTemplatePayload {

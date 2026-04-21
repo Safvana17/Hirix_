@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {
   Box,
   Button,
+  Chip,
   FormControl,
   InputLabel,
   MenuItem,
@@ -44,6 +45,7 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
     subject:template?.subject || '',
     title: template?.title || '',
     body: template?.body || '',
+    isActive: template?.isActive || true
   })
 
   const handleChange = <K extends keyof TemplatePayload>(
@@ -68,6 +70,7 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
         subject: form.subject ?? null,
         title: form.title ?? null,
         body: form.body,
+        isActive: form.isActive
         })
     }else if(mode === 'edit' && template){
       onSubmit({
@@ -77,7 +80,8 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
         channel: form.channel,
         subject: form.subject,
         title: form.title,
-        body: form.body
+        body: form.body,
+        isActive: form.isActive
       })
     }
   }
@@ -93,6 +97,11 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
           <TextField
             label="Template Name"
             value={form.name}
+            slotProps={{
+              input: {
+                readOnly: mode === 'view',
+              },
+            }}
             onChange={(e) => handleChange('name', e.target.value)}
             fullWidth
           />
@@ -102,7 +111,11 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
             value={form.key}
             onChange={(e) => handleChange('key', e.target.value)}
             fullWidth
-            disabled={mode === 'edit'}
+            slotProps={{
+              input: {
+                readOnly: mode === 'view',
+              },
+            }}
             helperText="Example: company_approved_email"
           />
 
@@ -111,7 +124,11 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
             <Select
               value={form.channel}
               label="Channel"
-              disabled={mode === 'edit'}
+              slotProps={{
+                input: {
+                  readOnly: mode === 'view',
+                },
+              }}
               onChange={(e) =>
                 handleChange('channel', e.target.value as TemplateChannel)
               }
@@ -125,6 +142,11 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
             <TextField
               label="Subject"
               value={form.subject ?? ''}
+              slotProps={{
+                input: {
+                  readOnly: mode === 'view',
+                },
+              }}
               onChange={(e) => handleChange('subject', e.target.value)}
               fullWidth
             />
@@ -134,6 +156,11 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
             <TextField
               label="Title"
               value={form.title ?? ''}
+              slotProps={{
+                input: {
+                  readOnly: mode === 'view',
+                },
+              }}
               onChange={(e) => handleChange('title', e.target.value)}
               fullWidth
             />
@@ -146,17 +173,33 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
             fullWidth
             multiline
             minRows={8}
+            slotProps={{
+              input: {
+                readOnly: mode === 'view',
+              },
+            }}
             helperText="Use placeholders like {{companyName}}, {{candidateName}}"
           />
+          {mode === 'view' && (
+            <Box display="flex" justifyContent="flex-start">
+              <Chip
+                label={form.isActive ? 'Active' : 'Inactive'}
+                color={form.isActive ? 'success' : 'default'}
+                variant={form.isActive ? 'filled' : 'outlined'}
+              />
+            </Box>
+          )}
 
-          <Box display="flex" justifyContent="flex-end" gap={1.5}>
-            <Button variant="contained" onClick={onClose} sx={{backgroundColor: '#0a2e50'}}>
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={handleSubmit} sx={{backgroundColor: '#4F3503'}}>
-              {mode === 'create' ? 'Create' : 'Update'}
-            </Button>
-          </Box>
+          {mode !== 'view' && (
+            <Box display="flex" justifyContent="flex-end" gap={1.5}>
+              <Button variant="contained" onClick={onClose} sx={{backgroundColor: '#0a2e50'}}>
+                Cancel
+              </Button>
+              <Button variant="contained" onClick={handleSubmit} sx={{backgroundColor: '#4F3503'}}>
+                {mode === 'create' ? 'Create' : 'Update'}
+              </Button>
+            </Box>
+          )}
         </Box>
       </Box>
     </Modal>

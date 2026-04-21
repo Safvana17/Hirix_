@@ -33,6 +33,12 @@ export default function TemplatePage() {
     setMode('edit')
     setFormModalOpen(true)
   }
+
+  const handleViewTemplate = (template: EmailTemplate) => {
+    setSelectedTemplate(template)
+    setMode('view')
+    setFormModalOpen(true)
+  }
   const handleSubmit = async (payload: TemplatePayload) => {
     try {
       if (mode === 'create') {
@@ -100,7 +106,7 @@ export default function TemplatePage() {
             >
               <TemplateCard
                 template={template}
-                onView={(t) => console.log('view', t)}
+                onView={() => handleViewTemplate(template)}
                 onEdit={() => handleEditTemplate(template)}
               />
             </Grid>
