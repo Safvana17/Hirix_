@@ -1,23 +1,30 @@
-import { useState } from 'react'
-import { Box, Button, Typography, Grid } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { Box, Button, Typography, Grid, Pagination } from '@mui/material'
 import TemplateModal from '../modal/EmailTemplateModal'
 import TemplateCard from './EmailTemplateCard'
 import type { CreateTemplatePayload } from '../../../types/template'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
-import { createEmailTemplate } from '../../../redux/slices/features/settingsSlice/adminSettings'
+import { createEmailTemplate, getAllTemplates } from '../../../redux/slices/features/settingsSlice/adminSettings'
+
 
 export default function TemplatePage() {
   const dispatch = useDispatch<AppDispatch>()
   const [formModalOpen, setFormModalOpen] = useState<boolean>(false)
   const [mode, setMode] = useState<'create' | 'edit'>('create')
-  const { templates } = useSelector((state: RootState) => state.AdminSettings)
+  const [page, setPage ] = useState(1)
+  const { templates, pagination } = useSelector((state: RootState) => state.AdminSettings)
+
+  useEffect(() => {
+    dispatch(getAllTemplates({params: { page, limit:9}}))
+  }, [dispatch, page])
 
   const handleOpenCreate = (): void => {
     setMode('create')
     setFormModalOpen(true)
   }
+  console.log('from templates: ', templates)
 
   const handleSubmit = async (payload: CreateTemplatePayload) => {
     try {
@@ -25,8 +32,6 @@ export default function TemplatePage() {
         await dispatch(createEmailTemplate(payload)).unwrap()
         toast.success('Email template added successfully')
         setFormModalOpen(false)
-
-        // you said you will fetch later → so no local push needed
       }
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'Failed to create email templates')
@@ -35,7 +40,6 @@ export default function TemplatePage() {
 
   return (
     <Box p={3}>
-      {/* HEADER */}
       <Box display="flex" justifyContent="flex-end" mb={3}>
         <Button
           variant="contained"
@@ -51,7 +55,6 @@ export default function TemplatePage() {
         </Button>
       </Box>
 
-      {/* EMPTY STATE */}
       {templates.length === 0 ? (
         <Box
           sx={{
@@ -74,7 +77,7 @@ export default function TemplatePage() {
           </Typography>
         </Box>
       ) : (
-        /* TEMPLATE CARDS */
+        <>
         <Grid container spacing={2}>
           {templates.map((template) => (
             <Grid
@@ -89,9 +92,11 @@ export default function TemplatePage() {
             </Grid>
           ))}
         </Grid>
+        <Box display="flex" justifyContent="center" mt={3}>
+          <Pagination count={pagination.templates.totalPages} page={page} onChange={(_, v) => setPage(v)} />
+        </Box>
+      </>
       )}
-
-      {/* MODAL */}
       <TemplateModal
         open={formModalOpen}
         mode={mode}

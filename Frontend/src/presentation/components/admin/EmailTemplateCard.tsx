@@ -50,7 +50,7 @@ export default function TemplateCard({
         <Typography variant="body2">Title: {template.title}</Typography>
       )}
 
-      <Typography
+      {/* <Typography
         variant="body2"
         color="text.secondary"
         sx={{
@@ -61,13 +61,13 @@ export default function TemplateCard({
         }}
       >
         {template.body}
-      </Typography>
+      </Typography> */}
 
       <Box display="flex" gap={1} mt={1}>
-        <Button variant="outlined" onClick={() => onView(template)}>
+        <Button variant="contained" sx={{backgroundColor: "#4F3503"}} onClick={() => onView(template)}>
           View
         </Button>
-        <Button variant="contained" onClick={() => onEdit(template)}>
+        <Button variant="contained" sx={{backgroundColor: '#0B3358'}} onClick={() => onEdit(template)}>
           Edit
         </Button>
       </Box>

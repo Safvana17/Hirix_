@@ -21,3 +21,15 @@ export interface CreateTemplatePayload {
     body: string
     isActive?: boolean
 }
+
+export interface GetAllTemplatesArgs {
+    isActive?: boolean
+    page: number
+    limit: number
+}
+
+export interface GetAllTemplatesResponse {
+    templates: EmailTemplate[]
+    totalPages: number
+    totalCount: number
+}
