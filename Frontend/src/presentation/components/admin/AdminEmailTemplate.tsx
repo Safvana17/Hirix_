@@ -108,6 +108,8 @@ export default function TemplatePage() {
                 template={template}
                 onView={() => handleViewTemplate(template)}
                 onEdit={() => handleEditTemplate(template)}
+                onDelete={(t) => console.log(t)}
+                onToggleStatus={(t) => console.log(t)}
               />
             </Grid>
           ))}

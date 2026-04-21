@@ -4,6 +4,7 @@ import {
   Button,
   Chip,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Modal,
@@ -12,6 +13,7 @@ import {
   Typography,
 } from '@mui/material'
 import type { TemplatePayload, EmailTemplate, TemplateChannel } from '../../../types/template'
+import { Close } from '@mui/icons-material';
 
 interface TemplateModalProps {
   open: boolean
@@ -89,9 +91,29 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={modalStyle}>
-        <Typography variant="h6" fontWeight={700} mb={3}>
-          {mode === 'create' ? 'Create Template' : 'Edit Template'}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={3}
+      >
+        <Typography variant="h6" fontWeight={700}>
+          {mode === 'create'
+            ? 'Create Template'
+            : mode === 'edit'
+            ? 'Edit Template'
+            : 'View Template'}
         </Typography>
+
+        <IconButton
+          onClick={onClose}
+          sx={{
+            color: '#000',
+          }}
+        >
+          <Close />
+        </IconButton>
+      </Box>
 
         <Box display="flex" flexDirection="column" gap={2.5}>
           <TextField
