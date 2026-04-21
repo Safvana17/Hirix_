@@ -202,10 +202,10 @@ export default function NotificationRuleModal({
           />
 
           <Box display="flex" justifyContent="flex-end" gap={1.5}>
-            <Button variant="outlined" onClick={onClose}>
+            <Button variant="contained" sx={{backgroundColor: '#5e0808'}} onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleSubmit}>
+            <Button variant="contained" sx={{backgroundColor: "#4F3503"}} onClick={handleSubmit}>
               {mode === 'create' ? 'Create' : 'Update'}
             </Button>
           </Box>

@@ -107,6 +107,25 @@ CreateNotificationRulePayload,
     }
 })
 
+export const getAllRules = createAsyncThunk<
+NotificationRule[],
+void,
+{rejectValue: string}
+>('settings/getAllRules', async(_, {rejectWithValue}) => {
+    try {
+        console.log('from slice: ', createEmailTemplate)
+        const response = await api.get(API_ROUTES.ADMIN.NOTIFICATION_RULE.GET_ALL)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log('from slice rule: ', response.data)
+        return response.data.data.rules
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get all notification rules')
+    }
+})
+
 const adminSettingsSlice = createSlice({
     name: 'AdminSettings',
     initialState,
@@ -155,6 +174,17 @@ const adminSettingsSlice = createSlice({
          .addCase(createNotificationRule.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to create notification rule'
+         })
+         .addCase(getAllRules.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getAllRules.fulfilled, (state, action) => {
+            state.loading = false
+            state.notificationRules = action.payload
+         })
+         .addCase(getAllRules.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get all rules'
          })
     },
 })
