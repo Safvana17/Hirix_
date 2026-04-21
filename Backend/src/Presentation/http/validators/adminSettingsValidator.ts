@@ -8,3 +8,11 @@ export const CreateTemplateSchema = z.object({
   title: z.string().nullable().optional(),
   body: z.string().min(1),
 })
+
+export const getAllTemplateQSchema = z.object({
+  page: z.coerce.number(),
+  limit: z.coerce.number(),
+  isActive: z.boolean().optional()
+})
+
+export type GetAllTemplateQuery = z.infer< typeof getAllTemplateQSchema>

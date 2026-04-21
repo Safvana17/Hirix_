@@ -130,6 +130,7 @@ import { CandidateCancelSubscriptionUsecase } from "../../../Application/candida
 import { CandidateGetInvoiceUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getInvoice.usecase";
 import { TemplateRepository } from "../../../Infrastructure/repositories/template.repository";
 import { AdminSettingsController } from "./admin/settingsController";
+import { AdminGetAllTemplatesUsecase } from "../../../Application/admin/usecases/settings/admin.getAllTemplates.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -518,6 +519,9 @@ const iDeleteSubscriptionPlan = new AdminDeleteSubscriptionPlanUsecase(
 const iAdminCreateTemplate = new AdminCreateEmailTemplateUsecase(
     iTemplateREpository
 )
+const iAdminGetAllTemplates = new AdminGetAllTemplatesUsecase(
+    iTemplateREpository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -695,5 +699,6 @@ export const iCandidateSubscriptionController = new CandidateSubscriptionControl
 )
 
 export const iAdminSettingsController = new AdminSettingsController(
-    iAdminCreateTemplate
+    iAdminCreateTemplate,
+    iAdminGetAllTemplates
 )

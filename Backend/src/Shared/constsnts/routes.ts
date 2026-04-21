@@ -122,6 +122,7 @@ export const ROUTES = {
             EDIT: '/email-template/:id',
             DELETE: '/email-template/:id',
             BY_ID: '/email-template/:id',
+            GET_aLL: '/email-templates'
         }
     }
 }

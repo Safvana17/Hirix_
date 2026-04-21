@@ -8,7 +8,7 @@ import { createQuestionSchema, editQuestionSchema } from "../../validators/quest
 import { addCategorySchema, editCategorySchema } from "../../validators/categoryValidator";
 import { rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
 import { createSubscriptionPlanSchema, updatePlanSchema } from "../../validators/subscriptionPlanValidator";
-import { CreateTemplateSchema } from "../../validators/adminSettingsValidator";
+import { CreateTemplateSchema, getAllTemplateQSchema } from "../../validators/adminSettingsValidator";
 
 const router = Express.Router()
 
@@ -48,7 +48,7 @@ router.delete(ROUTES.ADMIN.SUBSCRIPTION_PLAN.DELETE, authHandler(iTokenService),
 
 //Email templates
 router.post(ROUTES.ADMIN.EMAIL_TEMPLATE.CREATE, authHandler(iTokenService), verifyCsrf, validate(CreateTemplateSchema, 'body'), iAdminSettingsController.createTemplate)
-
+router.get(ROUTES.ADMIN.EMAIL_TEMPLATE.GET_aLL, authHandler(iTokenService), validate(getAllTemplateQSchema, 'query'), iAdminSettingsController.getAllTemplates)
 
 
 
