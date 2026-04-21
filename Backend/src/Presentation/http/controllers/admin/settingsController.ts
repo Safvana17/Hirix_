@@ -9,6 +9,7 @@ import { logger } from "../../../../utils/logging/loger";
 import { IAdminEditTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.editTemplate.usecase";
 import { IAdminCreateNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.createNotificationRule.usecase";
 import { IAdminGetAllNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.getAllNotificationRule";
+import { IAdminUpdateNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.updateNotificationRule.usecase";
 
 export class AdminSettingsController {
     constructor(
@@ -17,6 +18,7 @@ export class AdminSettingsController {
         private _EditTemplate: IAdminEditTemplateUsecase,
         private _createNotificationRule: IAdminCreateNotificationRuleUsecase,
         private _getAllNotificationRule: IAdminGetAllNotificationRuleUsecase,
+        private _updateNotificationRule: IAdminUpdateNotificationRuleUsecase,
     ) {}
 
     createTemplate = asyncHandler(async(req: Request, res: Response) => {
@@ -45,5 +47,10 @@ export class AdminSettingsController {
     getAllRules = asyncHandler(async(req: Request, res: Response) => {
         const rules = await this._getAllNotificationRule.execute()
         return sendSuccess(res, statusCode.OK, '', rules)
+    })
+
+    updateNotificationRule = asyncHandler(async(req: Request, res: Response) => {
+        const updateRule = await this._updateNotificationRule.execute(req.body)
+        return sendSuccess(res, statusCode.OK, '', updateRule)
     })
 }

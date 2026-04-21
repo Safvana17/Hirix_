@@ -8,7 +8,7 @@ import { createQuestionSchema, editQuestionSchema } from "../../validators/quest
 import { addCategorySchema, editCategorySchema } from "../../validators/categoryValidator";
 import { rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
 import { createSubscriptionPlanSchema, updatePlanSchema } from "../../validators/subscriptionPlanValidator";
-import { CreateNotificationRuleSchema, TemplateSchema, getAllTemplateQSchema } from "../../validators/adminSettingsValidator";
+import { CreateNotificationRuleSchema, TemplateSchema, UpdateNotificationRuleSchema, getAllTemplateQSchema } from "../../validators/adminSettingsValidator";
 
 const router = Express.Router()
 
@@ -54,7 +54,7 @@ router.put(ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT, authHandler(iTokenService), verifyC
 //notification rule
 router.post(ROUTES.ADMIN.NOTIFICATION_RULE.CREATE, authHandler(iTokenService), verifyCsrf, validate(CreateNotificationRuleSchema, 'body'), iAdminSettingsController.createNotificationRule)
 router.get(ROUTES.ADMIN.NOTIFICATION_RULE.GET_ALL, authHandler(iTokenService), iAdminSettingsController.getAllRules)
-
+router.put(ROUTES.ADMIN.NOTIFICATION_RULE.EDIT, authHandler(iTokenService), verifyCsrf, validate(UpdateNotificationRuleSchema, 'body'), iAdminSettingsController.updateNotificationRule)
 
 
 

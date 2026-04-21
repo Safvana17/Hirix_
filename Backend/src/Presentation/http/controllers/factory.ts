@@ -74,7 +74,7 @@ import { AdminCreateEmailTemplateUsecase } from "../../../Application/admin/usec
 import { AdminEditTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.editTemplate.usecase";
 import { AdminCreateNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.createNotificationRule.usecase";
 import { AdminGetAllNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.getAllNotificationRule.usecase";
-
+import { AdminUpdateNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.updateNotificationRule.usecase";
 
 
 
@@ -534,6 +534,10 @@ const iAdminCreateNotificationRule = new AdminCreateNotificationRuleUsecase (
 const iAdminGetAllNotificationRule = new AdminGetAllNotificationRuleUsecase(
     iNotificationRuleRepository
 )
+const iAdminUpdateNotificationRule = new AdminUpdateNotificationRuleUsecase(
+    iNotificationRuleRepository,
+    iTemplateREpository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -715,5 +719,6 @@ export const iAdminSettingsController = new AdminSettingsController(
     iAdminGetAllTemplates,
     iAdminEditTemplate,
     iAdminCreateNotificationRule,
-    iAdminGetAllNotificationRule
+    iAdminGetAllNotificationRule,
+    iAdminUpdateNotificationRule,
 )

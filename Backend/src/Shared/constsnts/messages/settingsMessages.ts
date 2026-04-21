@@ -24,5 +24,7 @@ export const settingsMessages = {
       INVALID_NOTIFICATION_CHANNEL: 'Template channel does not match requested channel',
       INACTIVE_TEMPLATE: 'Inactive template',
       DELETED_TEMPLATE: 'Template is deleted',
+      INVALID_TEMPLATE_ID: 'Invalid template id',
+      NOTIFICATION_RULE_NOT_FOUND: 'Notifictaion rule not found',
     }
 }

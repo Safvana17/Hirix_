@@ -22,3 +22,9 @@ export const CreateNotificationRuleSchema = z.object({
   templateKey: z.string().min(1),
   isActive: z.boolean().optional()
 })
+
+export const UpdateNotificationRuleSchema = z.object({
+  templateKey: z.string().min(1).optional(),
+  channel: z.enum(['EMAIL', 'IN_APP']),
+  isActive: z.boolean().optional()
+})
