@@ -116,7 +116,7 @@ export const API_ROUTES = {
       EDIT: (id: string) =>
         `/admin/notification-rule/${id}`,
       GET_ALL: '/admin/notification-rules',
-    }
+    },
   },
   COMMON: {
     QUESTION: {
@@ -148,6 +148,10 @@ export const API_ROUTES = {
         `/${role}/subscription/${id}/cancel`,
       INVOICE: (id: string, role: UserRole) => 
         `/${role}/subscription/${id}/invoice`,
+    },
+    NOTIFICATION : {
+      GET_NOTIFICATIONS: (role: UserRole) => 
+      `/${role}/my-notifications`
     }
   }
 }

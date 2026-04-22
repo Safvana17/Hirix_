@@ -3,7 +3,8 @@ import type { TemplatePayload, EmailTemplate, GetAllTemplatesArgs, GetAllTemplat
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
-import type { CreateNotificationRulePayload, NotificationRule, UpdateNotificationRulePayload } from "../../../../types/notification";
+import type { CreateNotificationRulePayload, Notification, NotificationRule, UpdateNotificationRulePayload } from "../../../../types/notification";
+import type { UserRole } from "../../../../constants/role";
 
 interface AdminSettingsState {
     loading: boolean;
@@ -11,6 +12,7 @@ interface AdminSettingsState {
     notificationRules: NotificationRule[];
     selectedTemplate: EmailTemplate | null;
     selectedRule: NotificationRule | null;
+    notifications: Notification[];
     error: string | null;
     pagination: {
         templates: {
@@ -26,6 +28,7 @@ const initialState: AdminSettingsState = {
     notificationRules: [],
     selectedTemplate: null,
     selectedRule: null,
+    notifications: [],
     error: null,
     pagination: {
         templates: {
@@ -143,6 +146,24 @@ UpdateNotificationRulePayload,
     }
 })
 
+export const getMyNotification = createAsyncThunk<
+Notification[],
+{role: UserRole},
+{rejectValue: string}
+>('settings/getMyNotification', async({role}, {rejectWithValue}) => {
+    try {
+        console.log('from slice: ', createEmailTemplate)
+        const response = await api.get(API_ROUTES.COMMON.NOTIFICATION.GET_NOTIFICATIONS(role))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log('from slice rule: ', response.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get notifications')
+    }
+})
 const adminSettingsSlice = createSlice({
     name: 'AdminSettings',
     initialState,
@@ -216,6 +237,17 @@ const adminSettingsSlice = createSlice({
          .addCase(editNotificationRule.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to edit notification rule'
+         })
+         .addCase(getMyNotification.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getMyNotification.fulfilled, (state, action) => {
+            state.loading = false
+            state.notifications = action.payload
+         })
+         .addCase(getMyNotification.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get my notifications'
          })
     },
 })

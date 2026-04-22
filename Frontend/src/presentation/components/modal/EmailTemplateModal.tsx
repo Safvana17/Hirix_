@@ -59,6 +59,7 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
     supportText: template?.supportText || '',
     isActive: template?.isActive || true
   })
+  const [showButtonSection, setShowButtonSection] = useState(!!template?.ctaText || !!template?.ctaUrl)
 
   const handleChange = <K extends keyof TemplatePayload>(
     key: K,
@@ -68,6 +69,17 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
       ...prev,
       [key]: value
     }))
+  }
+
+  const handleToggleButton = (checked: boolean) => {
+    setShowButtonSection(checked)
+    if(!checked){
+      setForm((prev) => ({
+        ...prev,
+        ctaText: '',
+        ctaUrl: ''
+      }))
+    }
   }
 
   const handleSubmit = (e: React.FormEvent): void => {
@@ -226,6 +238,8 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
             }}
             helperText="Use placeholders like {{companyName}}, {{candidateName}}"
           />
+          {form.channel === 'EMAIL' && (
+            <>
           <FormControlLabel
             control={
               <Switch
@@ -256,16 +270,14 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
           <FormControlLabel
             control={
               <Switch
-                checked={!!form.ctaText}
-                onChange={(e) =>
-                  handleChange('ctaText', e.target.checked ? '' : undefined)
-                }
+                checked={showButtonSection}
+                onChange={(e) =>handleToggleButton(e.target.checked )}
               />
             }
             label="Include Button"
           />
 
-          {form.ctaText !== undefined && (
+          {showButtonSection && (
             <Stack spacing={2}>
               <TextField
                 label="Button Text"
@@ -297,6 +309,8 @@ const  TemplateModal: React.FC <TemplateModalProps> = ({ open, mode, template, o
             onChange={(e) => handleChange('supportText', e.target.value)}
             fullWidth
           />
+          </>
+          )}
           {mode === 'view' && (
             <Box display="flex" justifyContent="flex-start">
               <Chip

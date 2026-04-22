@@ -1,3 +1,5 @@
+import type { UserRole } from "../constants/role";
+
 export type NotificationChannel = 'EMAIL' | 'IN_APP'
 
 export interface NotificationRuleBase {
@@ -18,4 +20,15 @@ export interface UpdateNotificationRulePayload {
     id: string
     templateKey?: string
     isActive?: boolean
+}
+
+export interface Notification {
+    id: string;
+    recipientId: string;
+    recipientType: UserRole;
+    event: string;
+    title: string;
+    message: string;
+    isRead: boolean;
+    metaData: Record<string, string>;
 }
