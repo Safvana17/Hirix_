@@ -138,6 +138,7 @@ import { NotificationRepository } from "../../../Infrastructure/repositories/not
 import { TextFormatService } from "../../../Infrastructure/services/TextFormatService";
 import { UnifiedGetMyNotificationsUsecase } from "../../../Application/common/usecases/unified.getMyNotifications.usecase";
 import { UnifiedSettingsController } from "./common/unifiedSettingsController";
+import { UnifiedMarkAllAsReadUsecase } from "../../../Application/common/usecases/unified.markAllAsRead.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -618,6 +619,10 @@ const iGetMyNotification = new UnifiedGetMyNotificationsUsecase(
     repositoryRegistry,
     iNotificationRepository
 )
+const iMarkAllAsRead = new UnifiedMarkAllAsReadUsecase (
+    repositoryRegistry,
+    iNotificationRepository
+)
 
 //controller
 export const iUnifiedController = new UnifiedAuthController(
@@ -750,5 +755,6 @@ export const iAdminSettingsController = new AdminSettingsController(
 )
 
 export const iUnifiedSettingsController = new UnifiedSettingsController(
-    iGetMyNotification
+    iGetMyNotification,
+    iMarkAllAsRead
 )

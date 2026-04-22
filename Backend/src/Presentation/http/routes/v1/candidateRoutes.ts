@@ -26,6 +26,6 @@ router.get(ROUTES.CANDIDATE.SUBSCRIPTION.INVOICE, authHandler(iTokenService), va
 
 //notifications
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
-
+router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iUnifiedSettingsController.markAllAsRead)
 
 export default router

@@ -49,7 +49,7 @@ router.get(ROUTES.COMPANY.SUBSCRIPTION.INVOICE, authHandler(iTokenService), vali
 
 //notifications
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
-
+router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iUnifiedSettingsController.markAllAsRead)
 
 
 

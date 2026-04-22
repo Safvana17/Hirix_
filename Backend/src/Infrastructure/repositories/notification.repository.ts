@@ -14,8 +14,15 @@ export class NotificationRepository extends BaseRepository<NotificationEntity, I
         return documents.map(d => this.mapToEntity(d))
     }
 
-    async markAsRead(id: string): Promise<void> {
-        await this._model.findByIdAndUpdate(id, {isRead: true})
+    async markAllAsRead(recipientId: string): Promise<void> {
+        await this._model.updateMany(
+            {
+                recipientId,
+                isRead: false
+            }, {
+                $set: {isRead: true}
+            }
+        )
     }
     
     protected mapToEntity(doc: INotification): NotificationEntity {
