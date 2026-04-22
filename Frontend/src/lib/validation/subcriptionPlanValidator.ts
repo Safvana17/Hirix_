@@ -2,7 +2,7 @@ import z from "zod";
 
 
 export const createSubscriptionPlanSchema = z.object({
-  planName: z.string().min(1),
+  planName: z.string().min(1, 'Invalid name'),
   target: z.enum(['company', 'candidate']),
   price: z.number().min(0),
   billingCycle: z.enum(['monthly', 'yearly', 'forever']),

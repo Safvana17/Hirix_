@@ -19,7 +19,6 @@ export const updateProfileSchema = z.object({
   domain: z
     .string()
     .trim()
-    .regex(/^[a-z0-9-]+\.[a-z]{2,}$/, 'Invalid domain')
     .optional(),
 
   website: z

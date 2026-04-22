@@ -52,6 +52,7 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if(!validate()) return
 
         const formattedSkills = formData.skills
             .split(',')
@@ -63,7 +64,6 @@ const JobRoleModal: React.FC<JobRoleModalProps> = ({
           return;
         }
 
-        if(!validate()) return
 
         if( mode === 'create'){
             onSave({

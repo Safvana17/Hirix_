@@ -13,6 +13,7 @@ export const addCategorySchema = z.object({
 })
 
 export const CategoryQuerySchema = z.object({
+    search: z.string().optional(),
     page: z.coerce.number().default(1),
     limit: z.coerce.number().default(1)
 })

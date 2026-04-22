@@ -1,3 +1,4 @@
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
@@ -6,6 +7,7 @@ import { authMessages } from "../../../../Shared/constsnts/messages/authMessages
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { IMailService } from "../../../interface/service/IMailService";
 import { ITokenService } from "../../../interface/service/ITokenService";
 import { SendRestoreAccountEmailInputDTO, SendRestoreAccountEmailOutputDTO } from "../../dtos/settings/deleteAccount.company.dto";
@@ -15,7 +17,8 @@ export class SendRestoreAccountEmailUsecase implements ISendRestoreAccountEmailU
     constructor(
         private _companyRepository: ICompanyRepository,
         private _mailService: IMailService,
-        private _tokenService: ITokenService
+        private _tokenService: ITokenService,
+        private _processNotification: IAdminProcessNotificationUsecase
     ) {}
 
     async execute(request: SendRestoreAccountEmailInputDTO): Promise<SendRestoreAccountEmailOutputDTO> {
@@ -32,7 +35,19 @@ export class SendRestoreAccountEmailUsecase implements ISendRestoreAccountEmailU
         const restoreAccountLink = `${env.FRONTEND_URL}/company/restore-account?token=${restoreToken}`
         logger.info({link: restoreAccountLink}, 'Restore account link')
 
-        // await this._mailService.sendAccountRestoreEmail(company.getEmail(), company.getName(), restoreAccountLink)
+        await this._processNotification.execute({
+            event: NotificationEvents.ACCOUNT_RESTORE,
+            recipients: [{
+                recipientId: company.id,
+                recipientType: company.getRole(),
+                email: company.getEmail()
+            }],
+            variables: {
+                companyName: company.getName(),
+                platformName: "Hirix",
+                frontendUrl: restoreAccountLink
+            }
+        })
 
         return { success: true}
     }

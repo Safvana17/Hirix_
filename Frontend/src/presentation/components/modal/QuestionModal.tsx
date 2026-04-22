@@ -20,6 +20,8 @@ import type { ModalMode, Question, QuestionFormData, TestCase } from '../../../t
 import type { Category } from '../../../types/category';
 import { Close } from '@mui/icons-material';
 import type { UserRole } from '../../../constants/role';
+import { questionSchema } from '../../../lib/validation/questionValidator';
+import { ZodError } from 'zod';
 
 const questionTypes = [
   { label: 'MCQ', value: 'mcq' },
@@ -55,6 +57,7 @@ interface QuestionModalProps {
     isPremium: initialData?.isPremium || false,
     isPractice: initialData?.isPractice || false,
   });
+  const [localError, setLocalError] = useState<Record<string, string>>({})
 
   console.log('initial data: ', initialData)
 
@@ -88,7 +91,27 @@ interface QuestionModalProps {
   const addOptions = () => {
     handleChange('options', [...formData.options, ''])
   }
+    const validate = () => {
+        try {
+        questionSchema.parse(formData)
+        setLocalError({})
+        return true
+
+        } catch (error) {
+        if(error instanceof ZodError){
+            const errors: Record<string, string> = {}
+            error.issues.forEach((issue) => {
+            const field = issue.path[0] 
+            if(typeof field === 'string' ||typeof field === 'number')
+            errors[field] = issue.message
+            })
+            setLocalError(errors)
+        }
+        return false
+        }
+    }
   const handleSubmit = () => {
+    if(!validate()) return
     if(onSave) onSave(formData);
   };
 
@@ -118,6 +141,7 @@ interface QuestionModalProps {
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
             />
+            {localError.title && <p className='text-[#FBBEBE] text-sm'>{localError.title}</p>}
           </Grid>
 
           <Grid size={12}>
@@ -132,6 +156,7 @@ interface QuestionModalProps {
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
             />
+            {localError.description && <p className='text-[#FBBEBE] text-sm'>{localError.description}</p>}
           </Grid>
 
           <Grid size={6}>
@@ -149,6 +174,7 @@ interface QuestionModalProps {
                 <MenuItem key={t.value} value={t.value}>{t.label}</MenuItem>
               ))}
             </TextField>
+            {localError.type && <p className='text-[#FBBEBE] text-sm'>{localError.type}</p>}
           </Grid>
 
           <Grid size={6}>
@@ -166,6 +192,7 @@ interface QuestionModalProps {
                 <MenuItem key={d} value={d}>{d}</MenuItem>
               ))}
             </TextField>
+            {localError.difficulty && <p className='text-[#FBBEBE] text-sm'>{localError.difficulty}</p>}
           </Grid>
 
           <Grid size={12}>
@@ -181,6 +208,7 @@ interface QuestionModalProps {
                 <TextField {...params} label="Category" />
               )}
             />
+            {localError.category && <p className='text-[#FBBEBE] text-sm'>{localError.category}</p>}
           </Grid>
           {formData.type === 'mcq' && (
             <Grid size={12}>
@@ -197,7 +225,9 @@ interface QuestionModalProps {
                   value={opt}
                   onChange={(e) => handleOptionChange(index, e.target.value)}
                 />
+                
               ))}
+              {localError.options && <p className='text-[#FBBEBE] text-sm'>{localError.options}</p>}
 
               <TextField
                 label="Correct Answer"
@@ -209,6 +239,7 @@ interface QuestionModalProps {
                 value={formData.answer}
                 onChange={(e) => handleChange('answer', e.target.value)}
               />
+              {localError.answer && <p className='text-[#FBBEBE] text-sm'>{localError.answer}</p>}
               {mode !== 'view' &&
                 <Button onClick={addOptions}>Add Options</Button>
               }
@@ -229,6 +260,7 @@ interface QuestionModalProps {
                     value={tc.input}
                     onChange={(e) => handleTestCaseChange(index, 'input', e.target.value)}
                   />
+                  {localError.input && <p className='text-[#FBBEBE] text-sm'>{localError.input}</p>}
                   <TextField
                     label="Output"
                     fullWidth
@@ -238,6 +270,7 @@ interface QuestionModalProps {
                     value={tc.expectedOutput}
                     onChange={(e) => handleTestCaseChange(index, 'expectedOutput', e.target.value)}
                   />
+                  {localError.output && <p className='text-[#FBBEBE] text-sm'>{localError.output}</p>}
                 </Box>
               ))}
               {mode !== 'view' &&

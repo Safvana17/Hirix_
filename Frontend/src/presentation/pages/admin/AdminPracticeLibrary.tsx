@@ -256,7 +256,6 @@ const AdminPracticeLibrary: React.FC= () => {
                       </Box>
                     </Box>
 
-                    {/* RIGHT ACTIONS */}
                     <Box display="flex" alignItems="center" gap={1}>
                       <IconButton size="small" onClick={() => handleViewQuestion(q)}>
                         <Visibility />

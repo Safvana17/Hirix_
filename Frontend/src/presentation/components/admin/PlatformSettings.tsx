@@ -1,6 +1,6 @@
 import { useState } from "react";
-import {Box,TextField,Switch,FormControlLabel,Button,Tabs,Tab,Paper, Avatar } from "@mui/material";
-import UploadIcon from "@mui/icons-material/Upload";
+import {Box,TextField,Tabs,Tab,Paper } from "@mui/material";
+// import UploadIcon from "@mui/icons-material/Upload";
 
 export default function SettingsPage() {
   const [tab, setTab] = useState(0);
@@ -17,22 +17,22 @@ export default function SettingsPage() {
     logo: null,
   });
 
-  const handleChange = (key, value) => {
-    setSettings((prev) => ({ ...prev, [key]: value }));
-  };
+  // const handleChange = (key, value) => {
+  //   setSettings((prev) => ({ ...prev, [key]: value }));
+  // };
 
-  const handleLogoUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      handleChange("logo", url);
-    }
-  };
+  // const handleLogoUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const url = URL.createObjectURL(file);
+  //     handleChange("logo", url);
+  //   }
+  // };
 
-  const handleSave = () => {
-    console.log("Saving settings:", settings);
-    // TODO: API call
-  };
+  // const handleSave = () => {
+  //   console.log("Saving settings:", settings);
+  //   // TODO: API call
+  // };
 
   return (
     <Box sx={{backgroundColor: '#fff'}} p={3} mx="auto">
@@ -40,8 +40,8 @@ export default function SettingsPage() {
 
       <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mb: 2 }}>
         <Tab label="General" />
-        <Tab label="Branding" />
-        <Tab label="Security" />
+        {/* <Tab label="Branding" />
+        <Tab label="Security" /> */}
       </Tabs>
       {tab === 0 && (
         <Paper sx={{ p: 3 }}>
@@ -49,10 +49,11 @@ export default function SettingsPage() {
             fullWidth
             label="Platform Name"
             margin="normal"
+            disabled
             value={settings.platformName}
-            onChange={(e) =>
-              handleChange("platformName", e.target.value)
-            }
+            // onChange={(e) =>
+            //   handleChange("platformName", e.target.value)
+            // }
           />
 
           <TextField
@@ -60,9 +61,10 @@ export default function SettingsPage() {
             label="Support Email"
             margin="normal"
             value={settings.supportEmail}
-            onChange={(e) =>
-              handleChange("supportEmail", e.target.value)
-            }
+            disabled
+            // onChange={(e) =>
+            //   handleChange("supportEmail", e.target.value)
+            // }
           />
 
           <TextField
@@ -75,7 +77,7 @@ export default function SettingsPage() {
         </Paper>
       )}
 
-      {tab === 1 && (
+      {/* {tab === 1 && (
         <Paper sx={{ p: 3 }}>
           <Box display="flex" alignItems="center" gap={2}>
             <Avatar
@@ -96,10 +98,10 @@ export default function SettingsPage() {
             </Button>
           </Box>
         </Paper>
-      )}
+      )} */}
 
       {/* FEATURES */}
-      {tab === 2 && (
+      {/* {tab === 2 && (
         <Paper sx={{ p: 3 }}>
           <FormControlLabel
             control={
@@ -111,9 +113,9 @@ export default function SettingsPage() {
               />
             }
             label="Coding Tests"
-          />
+          /> */}
 
-          <FormControlLabel
+          {/* <FormControlLabel
             control={
               <Switch
                 checked={settings.enableVideo}
@@ -123,9 +125,9 @@ export default function SettingsPage() {
               />
             }
             label="Video Interviews"
-          />
+          /> */}
 
-          <FormControlLabel
+          {/* <FormControlLabel
             control={
               <Switch
                 checked={settings.enablePractice}
@@ -137,10 +139,10 @@ export default function SettingsPage() {
             label="Practice Mode"
           />
         </Paper>
-      )}
+      )} */}
 
       {/* SECURITY */}
-      {tab === 3 && (
+      {/* {tab === 3 && (
         <Paper sx={{ p: 3 }}>
           <TextField
             fullWidth
@@ -151,9 +153,9 @@ export default function SettingsPage() {
             onChange={(e) =>
               handleChange("sessionTimeout", Number(e.target.value))
             }
-          />
+          /> */}
 
-          <FormControlLabel
+          {/* <FormControlLabel
             control={
               <Switch
                 checked={settings.allowRegistration}
@@ -163,9 +165,9 @@ export default function SettingsPage() {
               />
             }
             label="Allow Registration"
-          />
+          /> */}
 
-          <FormControlLabel
+          {/* <FormControlLabel
             control={
               <Switch
                 checked={settings.requireEmailVerification}
@@ -180,13 +182,13 @@ export default function SettingsPage() {
             label="Require Email Verification"
           />
         </Paper>
-      )}
+      )} */}
 
-      <Box mt={3} display="flex" justifyContent="flex-end">
+      {/* <Box mt={3} display="flex" justifyContent="flex-end">
         <Button variant="contained" onClick={handleSave}>
           Save Changes
         </Button>
-      </Box>
+      </Box> */}
     </Box>
 
     // </Box>

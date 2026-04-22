@@ -1,11 +1,7 @@
 import { z } from "zod";
 
-
-
-
 const QuestionTypeEnum = z.enum(['mcq', 'descriptive', 'coding']);
 const QuestionDifficultyEnum = z.enum(['easy', 'medium', 'hard']);
-
 
 export const testCaseSchema = z.object({
   input: z.string().min(1, "Test case input is required"),
@@ -13,7 +9,6 @@ export const testCaseSchema = z.object({
   explanation: z.string().optional(),
   isHidden: z.boolean().optional()
 });
-
 
 export const questionSchema = z.object({
   title: z.string().min(1, "Title is required"),

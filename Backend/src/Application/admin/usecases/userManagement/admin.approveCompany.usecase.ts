@@ -1,3 +1,4 @@
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
@@ -5,13 +6,15 @@ import { authMessages } from "../../../../Shared/constsnts/messages/authMessages
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IMailService } from "../../../interface/service/IMailService";
 import { AdminApproveCompanyInputDTO, UpdateStatusOutputDTO } from '../../dtos/userManagement/updateStatus.admin.dto'
+import { IAdminProcessNotificationUsecase } from "../../interfaces/settings/IAdmin.processNotification.usecase";
 import { IAdminApproveCompanyUsecase } from "../../interfaces/userManagement/iAdmin.approveCompany.usecase";
 
 
 export class AdminApproveCompanyUsecase implements IAdminApproveCompanyUsecase {
     constructor(
          private _companyRepository: ICompanyRepository,
-         private _mailService: IMailService
+         private _mailService: IMailService,
+         private _processNotification: IAdminProcessNotificationUsecase
     ) {}
 
     /**
@@ -27,8 +30,19 @@ export class AdminApproveCompanyUsecase implements IAdminApproveCompanyUsecase {
         company.setStatus(UserStatus.ACTIVE)
         company.setIsAdminVerified(true)
         await this._companyRepository.update(request.id, company)
-
-        // await this._mailService.sendApprovalEmail(company.getEmail(), company.getName())
+        await this._processNotification.execute({
+            event: NotificationEvents.COMPANY_APPROVED,
+            recipients: [{
+                recipientId: company.id,
+                recipientType: company.getRole(),
+                email: company.getEmail()
+            }],
+            variables: {
+                companyName: company.getName(),
+                platformName: "Hirix",
+                frontendURL: 'http://localhost:5173/login'
+            }
+        })
         return {
             id: company.getId(),
             role: company.getRole(),

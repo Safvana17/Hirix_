@@ -1,4 +1,5 @@
 import CompanyEntity from "../../../../Domain/entities/company.entity";
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
@@ -7,6 +8,7 @@ import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { IHashService } from "../../../interface/service/IHashService";
 import { IMailService } from "../../../interface/service/IMailService";
 import { IOtpService } from "../../../interface/service/IOtpService";
@@ -20,6 +22,7 @@ export class RegisterCompanyUsecase implements ICompanyRegisterUsecase {
         private hasheService: IHashService,
         private _otpService: IOtpService,
         private _otpStore: IOtpStore,
+        private _processNotificationUsecase: IAdminProcessNotificationUsecase,
         private _mailService: IMailService,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
         private _subscriptionRepository: ISubscriptionRepository
@@ -60,7 +63,23 @@ export class RegisterCompanyUsecase implements ICompanyRegisterUsecase {
         const hashedOtp = await this._otpService.hash(otp)
 
         await this._otpStore.saveOtp(savedCompany.getId()!, hashedOtp, 120)
-        // await this._mailService.sentOtp(savedCompany.getEmail(), otp)
+        await this._processNotificationUsecase.execute({
+            event: NotificationEvents.REGISTER_OTP_REQUESTED,
+            recipients: [{
+                recipientId: savedCompany.id,
+                recipientType: savedCompany.getRole(),
+                email: savedCompany.getEmail()
+            }],
+            variables: {
+                userName: savedCompany.getName(),
+                otpCode: otp,
+                expiryTime: '120',
+                platformName: 'Hirix'
+            },
+            metaData: {
+                candidateId: savedCompany.id
+            }
+        })
 
         return {
             success: true

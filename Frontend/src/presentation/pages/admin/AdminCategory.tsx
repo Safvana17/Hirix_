@@ -9,17 +9,20 @@ import { createCategory, deleteCategory, editCategory, getAllCategories } from '
 import toast from 'react-hot-toast'
 import { buildTree } from '../../../utils/buildTree'
 import  CategoryTree  from '../../components/admin/CategoryTree'
-import { Plus } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
 import { Pagination } from '@mui/material'
+import { useDebounce } from '../../../hooks/useDebounce'
 
 
 const AdminCategory: React.FC = () => {
 
     const [isModelOpen, setIsModalOpen] = useState(false)
+    const [searchTerm, setSearchTerm] = useState('')
     const [page, setPage] = useState(1)
     const [modalMode, setModalMode] = useState<ModalMode>('create')
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
+    const debouncedSerchTerm = useDebounce(searchTerm, 500)
     const [modalConfig, setModalConfig] = useState<{
         isOpen: boolean;
         title: string;
@@ -38,8 +41,8 @@ const AdminCategory: React.FC = () => {
 
 
     useEffect(() => {
-        dispatch(getAllCategories({page, limit: 5}))
-    }, [dispatch, page])
+        dispatch(getAllCategories({search: debouncedSerchTerm,page, limit: 5}))
+    }, [dispatch,debouncedSerchTerm, page])
 
     const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
         setModalConfig({...config, isOpen: true})
@@ -107,6 +110,17 @@ const AdminCategory: React.FC = () => {
                         <Plus className='w-4 h-4' />
                         Add Job Category
                     </button>
+                </div>
+
+                <div className="relative w-full md:w-2/3 lg:w-1/2 group">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
+                    <input
+                            type="text"
+                            placeholder="Search companies by name or email..."
+                            className="w-full pl-12 pr-4 py-3.5 bg-[#9A6605] text-white border border-transparent rounded-2xl outline-none text-md transition-all focus:ring-2 focus:ring-[#9A6605] focus:ring-opacity-50"
+                            value={debouncedSerchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
 
                 <div className="mt-6 bg-white rounded-2xl shadow-sm border">

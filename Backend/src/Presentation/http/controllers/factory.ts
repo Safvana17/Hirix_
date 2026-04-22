@@ -213,7 +213,8 @@ const iForgotPassword = new ForgotPasswordUsecase(
     iCandidateRepository,
     iOtpService,
     iOtpRepository,
-    iMailService
+    iMailService,
+    iProcessNotification
 )
 
 const iVerifyCandidateForgotPasswordOtp = new VerifyCandidateForgotPasswordOtpUsecase(
@@ -300,6 +301,7 @@ const iRegisterCompany = new RegisterCompanyUsecase(
       iHashService,
       iOtpService,
       iOtpRepository,
+      iProcessNotification,
       iMailService,
       iSubscriptionPlanRepository,
       iSubscriptionRepository
@@ -328,7 +330,8 @@ const iCompanyForgotPassword = new CompanyForgotPasswordUsecase(
     iCompanyRepository,
     iMailService,
     iOtpService,
-    iOtpRepository
+    iOtpRepository,
+    iProcessNotification
 )
 
 const iCompanyVerifyOtpForForgotPassword = new VerifyCompanyOtpForForgotPasswordUsecase(
@@ -375,12 +378,14 @@ const iChangeCompanyPassword = new CompanyChangePasswordUsecase (
 const iDeleteAccount = new DeleteAccountUsecase(
     iCompanyRepository,
     iHashService,
-    iMailService
+    iMailService,
+    iProcessNotification
 )
 const iSendRestoreAccountLink = new SendRestoreAccountEmailUsecase(
     iCompanyRepository,
     iMailService,
-    iTokenService
+    iTokenService,
+    iProcessNotification
 )
 const iGetDeletedAccount = new GetDeletedAccountDetailsUsecase(
     iCompanyRepository,
@@ -608,12 +613,14 @@ const iUpdateCandidateStatus = new AdminUpdateCandidateStatus(
 
 const iApproveCompany = new AdminApproveCompanyUsecase(
     iCompanyRepository,
-    iMailService
+    iMailService,
+    iProcessNotification
 )
 
 const iRejectCompany = new AdminRejectCompanyUsecase(
     iCompanyRepository,
-    iMailService
+    iMailService,
+    iProcessNotification
 )
 const iGetMyNotification = new UnifiedGetMyNotificationsUsecase(
     repositoryRegistry,

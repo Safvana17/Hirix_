@@ -10,6 +10,7 @@ export const settingsMessages = {
     error: {
       UPDATE_COMPANY_FAILED: 'Failed to update company profile',
       INVALID_IMAGE: 'Invalid file type',
+      INVALID_FILE_TYPE: 'Only images and pdf are allowed',
       IMAGE_REQUIRED: 'Image file is required',
       FAILED_TO_UPDATE_IMAGE: 'Failed to update image',
       INCORRECT_PASSWORD: 'Current password is incorrect',

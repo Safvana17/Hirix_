@@ -19,10 +19,15 @@ export class CategoryRepository extends BaseRepository<CategoryEntity, ICategory
         return this.mapToEntity(category)
     }
 
-    async findAllFiltered(query: { page: number; limit: number; }): Promise<{ data: CategoryEntity[]; totalPages: number; totalCount: number; }> {
+    async findAllFiltered(query: { search: string, page: number; limit: number; }): Promise<{ data: CategoryEntity[]; totalPages: number; totalCount: number; }> {
         const filter: QueryFilter<ICategory> = {
             parentId: null,
             isDeleted: false
+        }
+        if(query.search){
+            filter.$or = [
+                {name: {$regex: query.search, $options: 'i'} },
+            ]
         }
 
         const skip = (query.page - 1) * query.limit
