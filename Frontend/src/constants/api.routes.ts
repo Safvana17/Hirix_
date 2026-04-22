@@ -151,7 +151,9 @@ export const API_ROUTES = {
     },
     NOTIFICATION : {
       GET_NOTIFICATIONS: (role: UserRole) => 
-      `/${role}/my-notifications`
+      `/${role}/my-notifications`,
+    MARK_READ: (role: UserRole) => 
+      `/${role}/mark-read`
     }
   }
 }

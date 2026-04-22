@@ -164,6 +164,25 @@ Notification[],
         return rejectWithValue(err.response?.data.message || 'Failed to get notifications')
     }
 })
+
+export const markAllAsRead = createAsyncThunk<
+void,
+{role: UserRole},
+{rejectValue: string}
+>('settings/markAllAsRead', async({role}, {rejectWithValue}) => {
+    try {
+
+        const response = await api.patch(API_ROUTES.COMMON.NOTIFICATION.MARK_READ(role))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to mark as read')
+    }
+})
+
 const adminSettingsSlice = createSlice({
     name: 'AdminSettings',
     initialState,
@@ -248,6 +267,16 @@ const adminSettingsSlice = createSlice({
          .addCase(getMyNotification.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get my notifications'
+         })
+         .addCase(markAllAsRead.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(markAllAsRead.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(markAllAsRead.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to mark read'
          })
     },
 })

@@ -123,7 +123,7 @@ import type { AppDispatch, RootState } from '../../../redux/store'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { logoutUser } from '../../../redux/slices/features/auth/authSlice'
 import { ROUTES } from '../../../constants/routes'
-import { getMyNotification } from '../../../redux/slices/features/settingsSlice/adminSettings'
+import { getMyNotification, markAllAsRead } from '../../../redux/slices/features/settingsSlice/adminSettings'
 
 const InternalHeader: React.FC = () => {
   const [isDropDown, setIsDropDown] = useState(false)
@@ -159,7 +159,7 @@ const InternalHeader: React.FC = () => {
   }
 
   const handleMarkAllRead = async () => {
-    // await dispatch(markAllNotificationsRead({ role }))
+    await dispatch(markAllAsRead({ role }))
     dispatch(getMyNotification({ role }))
   }
 
