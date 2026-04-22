@@ -4,7 +4,7 @@ export const TemplateSchema = z.object({
   key: z.string().min(3).max(100),
   name: z.string().min(3).max(100),
   channel: z.enum(['EMAIL', 'IN_APP']),
-  subject: z.string().min(1).optional(),
+  subject: z.string().optional(),
   title: z.string().optional(),
   body: z.string().min(1),
   footerText: z.string().optional(),

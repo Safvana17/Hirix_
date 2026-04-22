@@ -1,7 +1,7 @@
 import  Express  from "express";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { authHandler } from "../../middlewares/authMiddleware";
-import { iCompanyQuestionController, iCompanySettingsController, iCompanySubscriptionController, iJobRoleController, iTokenService } from "../../controllers/factory";
+import { iCompanyQuestionController, iCompanySettingsController, iCompanySubscriptionController, iJobRoleController, iTokenService, iUnifiedSettingsController } from "../../controllers/factory";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { upload } from "../../middlewares/imageUpload";
 import { validate } from "../../middlewares/validate";
@@ -47,7 +47,8 @@ router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_BILLING_HISTORY, authHandler(iTokenSe
 router.patch(ROUTES.COMPANY.SUBSCRIPTION.CANCEL, authHandler(iTokenService),verifyCsrf, validate(CancelSubscriptionSchema, 'params'), iCompanySubscriptionController.cancelSubscription)
 router.get(ROUTES.COMPANY.SUBSCRIPTION.INVOICE, authHandler(iTokenService), validate(GetInvoiceSchema, 'params'), iCompanySubscriptionController.getInvoice)
 
-
+//notifications
+router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
 
 
 

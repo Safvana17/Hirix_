@@ -136,6 +136,8 @@ import { AdminProcessNotificationEventUsecase } from "../../../Application/admin
 import { RenderTemplateService } from "../../../Infrastructure/services/RenderTemplateService";
 import { NotificationRepository } from "../../../Infrastructure/repositories/notification.repository";
 import { TextFormatService } from "../../../Infrastructure/services/TextFormatService";
+import { UnifiedGetMyNotificationsUsecase } from "../../../Application/common/usecases/unified.getMyNotifications.usecase";
+import { UnifiedSettingsController } from "./common/unifiedSettingsController";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -172,7 +174,8 @@ const iProcessNotification = new AdminProcessNotificationEventUsecase(
     iTemplateREpository,
     iMailService,
     iTemplateRenderService,
-    iTextFormatService
+    iTextFormatService,
+    iAdminRepository
 )
 //candidates
 const iVerifyRegisterCandidate = new VerifyRegisterCandidateOtpUsecase(
@@ -355,7 +358,8 @@ const iVerifyRegisterCompany = new VerifyRegisterCompanyUsecase(
 
 //company settings
 const iUpdateCompanyProfile = new UpdateCompanyProfileUsecase(
-    iCompanyRepository
+    iCompanyRepository,
+    iProcessNotification
 )
 const iGetCompanyProfle = new GetCompanyProfileUsecase(
     iCompanyRepository
@@ -610,6 +614,10 @@ const iRejectCompany = new AdminRejectCompanyUsecase(
     iCompanyRepository,
     iMailService
 )
+const iGetMyNotification = new UnifiedGetMyNotificationsUsecase(
+    repositoryRegistry,
+    iNotificationRepository
+)
 
 //controller
 export const iUnifiedController = new UnifiedAuthController(
@@ -739,4 +747,8 @@ export const iAdminSettingsController = new AdminSettingsController(
     iAdminCreateNotificationRule,
     iAdminGetAllNotificationRule,
     iAdminUpdateNotificationRule,
+)
+
+export const iUnifiedSettingsController = new UnifiedSettingsController(
+    iGetMyNotification
 )

@@ -77,6 +77,11 @@ export const ROUTES = {
         }
     },
 
+    COMMON: {
+        GET_NOTIFICATIONS: '/my-notifications',
+        MARK_READ: '/mark-read'
+    },
+
     ADMIN: {
         BASE: '/admin',
         LOGIN: "/admin/login",

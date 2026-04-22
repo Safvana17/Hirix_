@@ -1,7 +1,7 @@
 import Express from 'express'
 import { ROUTES } from '../../../../Shared/constsnts/routes'
 import { authHandler } from '../../middlewares/authMiddleware'
-import { iCandidateSubscriptionController, iPracticeLibraryController, iTokenService } from '../../controllers/factory'
+import { iCandidateSubscriptionController, iPracticeLibraryController, iTokenService, iUnifiedSettingsController } from '../../controllers/factory'
 import { verifyCsrf } from '../../middlewares/csrfVerify'
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
@@ -23,6 +23,9 @@ router.get(ROUTES.CANDIDATE.SUBSCRIPTION.GET_BILLING_HISTORY, authHandler(iToken
 router.patch(ROUTES.CANDIDATE.SUBSCRIPTION.CANCEL, authHandler(iTokenService), verifyCsrf, validate(CancelSubscriptionSchema, 'params'), iCandidateSubscriptionController.cancelSubscription)
 router.get(ROUTES.CANDIDATE.SUBSCRIPTION.INVOICE, authHandler(iTokenService), validate(GetInvoiceSchema, 'params'), iCandidateSubscriptionController.getInvoice)
 
+
+//notifications
+router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
 
 
 export default router

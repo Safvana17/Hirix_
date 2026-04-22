@@ -9,9 +9,8 @@ export class NotificationRepository extends BaseRepository<NotificationEntity, I
         super(NotificationModel)
     }
 
-    async findByRecipient(recipientId: string): Promise<NotificationEntity[] | null> {
-        const documents = await this._model.find({recipientId}).sort({createdAt: -1})
-        if(!documents) return null
+    async findByRecipient(recipientId: string): Promise<NotificationEntity[]> {
+        const documents = await this._model.find({recipientId, isRead: false}).sort({createdAt: -1})
         return documents.map(d => this.mapToEntity(d))
     }
 

@@ -1,5 +1,5 @@
 import  Express  from "express";
-import { iAdminQuestionController, iAdminSettingsController, iCategoryController, iSubscriptionPlanController, iTokenService, IUserManagementController } from "../../controllers/factory";
+import { iAdminQuestionController, iAdminSettingsController, iCategoryController, iSubscriptionPlanController, iTokenService, iUnifiedController, iUnifiedSettingsController, IUserManagementController } from "../../controllers/factory";
 import { authHandler } from "../../middlewares/authMiddleware";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
@@ -55,7 +55,7 @@ router.put(ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT, authHandler(iTokenService), verifyC
 router.post(ROUTES.ADMIN.NOTIFICATION_RULE.CREATE, authHandler(iTokenService), verifyCsrf, validate(CreateNotificationRuleSchema, 'body'), iAdminSettingsController.createNotificationRule)
 router.get(ROUTES.ADMIN.NOTIFICATION_RULE.GET_ALL, authHandler(iTokenService), iAdminSettingsController.getAllRules)
 router.put(ROUTES.ADMIN.NOTIFICATION_RULE.EDIT, authHandler(iTokenService), verifyCsrf, validate(UpdateNotificationRuleSchema, 'body'), iAdminSettingsController.updateNotificationRule)
-
+router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
 
 
 export default router;               

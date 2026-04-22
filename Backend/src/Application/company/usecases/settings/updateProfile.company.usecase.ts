@@ -1,14 +1,18 @@
+import { NotificationEvents } from "../../../../Domain/enums/notification";
+import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { UpdateCompanyProfileInputDTO, UpdateCompanyProfileOutputDTO } from "../../dtos/settings/settings.company.dto";
 import { ICompanyUpdateProfileUsecase } from "../../interfaces/settings/iCompany.updateProfile.usecase";
 
 export class UpdateCompanyProfileUsecase implements ICompanyUpdateProfileUsecase {
     constructor(
-        private _companyRepository: ICompanyRepository
+        private _companyRepository: ICompanyRepository,
+        private _processNotificationUsecase: IAdminProcessNotificationUsecase
     ) {}
 
     async execute(request: UpdateCompanyProfileInputDTO): Promise<UpdateCompanyProfileOutputDTO> {
@@ -21,9 +25,11 @@ export class UpdateCompanyProfileUsecase implements ICompanyUpdateProfileUsecase
             throw new AppError(settingsMessages.error.GST_NUMBER_REQUIRED, statusCode.BAD_REQUEST)
         }
 
-        const certificateFile = request.certificateFile
-        const certificateUrl = `http://localhost:4000/uploads/${certificateFile.filename}`
+        let certificateUrl = company.certificate;
 
+        if (request.certificateFile) {
+        certificateUrl = `http://localhost:4000/uploads/${request.certificateFile.filename}`;
+        }
         company.setName(request.name!)
         company.legalName = request.legalName
         company.domain = request.domain
@@ -50,6 +56,18 @@ export class UpdateCompanyProfileUsecase implements ICompanyUpdateProfileUsecase
             throw new AppError(settingsMessages.error.UPDATE_COMPANY_FAILED, statusCode.SERVER_ERROR)
         }
 
+        await this._processNotificationUsecase.execute({
+            event: NotificationEvents.COMPANY_PROFILE_UPDATED,
+            recipients: [{
+                recipientType: userRole.Admin
+            }],
+            variables: {
+                companyName: updatedCompany.getName()
+            },
+            metaData: {
+                companyId: updatedCompany.id
+            }
+        })
         return {
             company: updatedCompany
         }

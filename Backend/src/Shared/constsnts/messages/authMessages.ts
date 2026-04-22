@@ -22,8 +22,7 @@ export const authMessages = {
 
         PASSWORD_RESET: "Password reset successfully",
         OTP_VERIFIED: 'Otp verified successfully',
-        
-
+    
         TOKEN_REFRESHED: "Token refreshed successfully",
         ADMIN_APPROVED_COMPANY: "Company approved",
         ADMIN_REJECTED_COMPANY: 'Company rejected and notification email sent'
@@ -94,6 +93,8 @@ export const authMessages = {
 
         INVALID_CERTIFICATE_NUMBER: 'Invalid certificate number',
         // Admin Errors
-        ADMIN_NOT_FOUND: "Admin not found"
+        ADMIN_NOT_FOUND: "Admin not found",
+        NOT_FOUND: 'User not found',
+
     }
 }
