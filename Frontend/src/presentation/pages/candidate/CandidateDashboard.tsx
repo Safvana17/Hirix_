@@ -9,37 +9,43 @@ import type { QuestionType, QuestionDifficulty } from '../../../types/question';
 import { Box, Button, Divider, Typography } from '@mui/material';
 import { Star } from 'lucide-react';
 import { Lock } from '@mui/icons-material';
+import { getAllPlans } from '../../../redux/slices/features/subscription/subscriptionSlice';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../../constants/routes';
 
 
 
 const CandidateDashboard: React.FC = () => {
-  const [type, setType] = useState<QuestionType | ''>('');
+  const [type, setType] = useState<QuestionType | ''>('')
   const [page, setPage] = useState(1)
   const [difficulty, setDifficulty] = useState<QuestionDifficulty | ''>('');
   const [searchTerm, setSearchTerm] = useState('');
   const { currentPlan, plans } = useSelector((state: RootState) => state.subscription)
-  
-
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const { user } = useSelector((state: RootState) => state.auth)
+  const navigate = useNavigate()
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const { PracticeQuestions } = useSelector(
     (state: RootState) => state.practiceQuestion
-  );
+  )
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(
-      getAllPracticeQuestions({
-        params: {
-          search: debouncedSearchTerm,
-          type: type || undefined,
-          difficulty: difficulty || undefined,
-          page: page,
-          limit: 10,
-        },
-        role: 'candidate',
-      })
-    );
-  }, [debouncedSearchTerm, type, difficulty, page, dispatch]);
+    if(user){
+      dispatch(
+        getAllPracticeQuestions({
+          params: {
+            search: debouncedSearchTerm,
+            type: type || undefined,
+            difficulty: difficulty || undefined,
+            page: page,
+            limit: 10,
+          },
+          role: 'candidate',
+        })
+      )
+      dispatch(getAllPlans({params: {target: 'candidate'}, role: user?.role}))
+  }
+  }, [debouncedSearchTerm, type, difficulty, user, page, dispatch]);
 
   const proPlan = plans.find(p => p.price > 0)
 
@@ -95,6 +101,7 @@ const CandidateDashboard: React.FC = () => {
               </Typography>
               <Button
                 variant="contained"
+                onClick={() => navigate(ROUTES.CANDIDATE.SUBSCRIPTION)}
                 sx={{
                   background: "linear-gradient(90deg, #8822F5, #9057C6)",
                   textTransform: "none",

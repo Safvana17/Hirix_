@@ -3,7 +3,7 @@ import type { TemplatePayload, EmailTemplate, GetAllTemplatesArgs, GetAllTemplat
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
-import type { CreateNotificationRulePayload, NotificationRule } from "../../../../types/notification";
+import type { CreateNotificationRulePayload, NotificationRule, UpdateNotificationRulePayload } from "../../../../types/notification";
 
 interface AdminSettingsState {
     loading: boolean;
@@ -126,6 +126,23 @@ void,
     }
 })
 
+export const editNotificationRule = createAsyncThunk<
+NotificationRule,
+UpdateNotificationRulePayload,
+{rejectValue: string}
+>('settings/editRule', async(UpdateNotificationRulePayload, {rejectWithValue}) => {
+    try {
+        const response = await api.put(API_ROUTES.ADMIN.NOTIFICATION_RULE.EDIT(UpdateNotificationRulePayload.id), UpdateNotificationRulePayload)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to edit notification rule')
+    }
+})
+
 const adminSettingsSlice = createSlice({
     name: 'AdminSettings',
     initialState,
@@ -185,6 +202,20 @@ const adminSettingsSlice = createSlice({
          .addCase(getAllRules.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get all rules'
+         })
+         .addCase(editNotificationRule.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(editNotificationRule.fulfilled, (state, action) => {
+            state.loading = false
+            const index = state.notificationRules.findIndex(n => n.id === action.payload.id)
+            if(index !== -1){
+                state.notificationRules[index] = action.payload
+            }
+         })
+         .addCase(editNotificationRule.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to edit notification rule'
          })
     },
 })

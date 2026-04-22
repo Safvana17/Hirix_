@@ -16,12 +16,12 @@ import toast from 'react-hot-toast'
 
 import type { AppDispatch, RootState } from '../../../redux/store'
 import NotificationRuleModal from '../modal/NotificationRuleModal'
-import type { CreateNotificationRulePayload } from '../../../types/notification'
+import type { CreateNotificationRulePayload, NotificationRule, UpdateNotificationRulePayload } from '../../../types/notification'
 import {
   createNotificationRule,
+  editNotificationRule,
   getAllRules,
   getAllTemplates,
-  // updateNotificationRule,
 } from '../../../redux/slices/features/settingsSlice/adminSettings'
 
 const NOTIFICATION_EVENTS: string[] = [
@@ -50,7 +50,7 @@ export default function AdminNotificationTab() {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>('create')
-  // const [selectedRule, setSelectedRule] = useState<any>(null)
+  const [selectedRule, setSelectedRule] = useState<NotificationRule | null>(null)
 
   useEffect(() => {
     dispatch(getAllTemplates({ params: {} }))
@@ -58,16 +58,16 @@ export default function AdminNotificationTab() {
   }, [dispatch])
 
   const handleCreateRule = (): void => {
-    // setSelectedRule(null)
+    setSelectedRule(null)
     setModalMode('create')
     setIsModalOpen(true)
   }
 
-  // const handleOpenEdit = (rule: any): void => {
-  //   setSelectedRule(rule)
-  //   setModalMode('edit')
-  //   setIsModalOpen(true)
-  // }
+  const handleOpenEdit = (rule:NotificationRule): void => {
+    setSelectedRule(rule)
+    setModalMode('edit')
+    setIsModalOpen(true)
+  }
 
   // const handleOpenView = (rule: any): void => {
   //   setSelectedRule(rule)
@@ -76,28 +76,29 @@ export default function AdminNotificationTab() {
   // }
 
   const handleSubmit = async (
-    payload: CreateNotificationRulePayload
+    payload: CreateNotificationRulePayload | UpdateNotificationRulePayload
   ): Promise<void> => {
     try {
       if (modalMode === 'create') {
-        await dispatch(createNotificationRule(payload)).unwrap()
-        toast.success('Notification rule created successfully')
+        if('event' in payload && 'channel' in payload){
+          await dispatch(createNotificationRule(payload)).unwrap()
+          toast.success('Notification rule created successfully')
+        }else{
+          toast.error('Invalid create payload')
+        }
       }
 
-      // if (modalMode === 'edit') {
-      //   await dispatch(
-      //     updateNotificationRule({
-      //       id: selectedRule.id,
-      //       data: payload,
-      //     })
-      //   ).unwrap()
-      //   toast.success('Notification rule updated successfully')
-      // }
+      if (modalMode === 'edit' && selectedRule) {
+        await dispatch(
+          editNotificationRule(payload)
+        ).unwrap()
+        toast.success('Notification rule updated successfully')
+      }
 
       setIsModalOpen(false)
-      dispatch(getAllRules())
+      await dispatch(getAllRules())
     } catch (error) {
-      toast.error(typeof error === 'string' ? error : 'Operation failed')
+      toast.error(typeof error === 'string' ? error : error instanceof Error ? error.message : 'Operation failed')
     }
   }
 
@@ -187,22 +188,23 @@ export default function AdminNotificationTab() {
                   </TableCell>
 
                   <TableCell align="right">
-                    {/* <Box display="flex" justifyContent="flex-end" gap={1}>
-                      <Button
+                    <Box display="flex" justifyContent="flex-end" gap={1}>
+                      {/* <Button
                         variant="outlined"
                         size="small"
                         onClick={() => handleOpenView(rule)}
                       >
                         View
-                      </Button>
+                      </Button> */}
                       <Button
+                        sx={{backgroundColor:'#6B4705'}}
                         variant="contained"
                         size="small"
                         onClick={() => handleOpenEdit(rule)}
                       >
                         Edit
                       </Button>
-                    </Box> */}
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
@@ -212,11 +214,12 @@ export default function AdminNotificationTab() {
       )}
 
       <NotificationRuleModal
+        key={selectedRule?.id ?? modalMode}
         open={isModalOpen}
         mode={modalMode}
         eventOptions={NOTIFICATION_EVENTS}
         templates={templates}
-        // rule={selectedRule}
+        rule={selectedRule}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
       />

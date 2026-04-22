@@ -12,18 +12,18 @@ import {
   Typography
 } from '@mui/material'
 import type { EmailTemplate } from '../../../types/template'
-import type{ CreateNotificationRulePayload, NotificationChannel } from '../../../types/notification'
+import type{ CreateNotificationRulePayload, NotificationChannel, NotificationRule, UpdateNotificationRulePayload } from '../../../types/notification'
 
 interface RuleModalProps {
   open: boolean
   mode: 'create' | 'edit' | 'view'
-//   rule: NotificationRule | null
+  rule: NotificationRule | null
   templates: EmailTemplate[]
 //   loading: boolean
   eventOptions: string[]
   onClose: () => void
   onSubmit: (
-    payload: CreateNotificationRulePayload 
+    payload: CreateNotificationRulePayload | UpdateNotificationRulePayload
   ) => void
 }
 
@@ -47,39 +47,21 @@ const modalStyle = {
   p: 4
 }
 
-export default function NotificationRuleModal({
+const NotificationRuleModal: React.FC <RuleModalProps> = ({
   open,
   mode,
   templates,
+  rule,
   eventOptions,
   onClose,
   onSubmit
-}: RuleModalProps) {
+}: RuleModalProps) => {
   const [form, setForm] = useState<RuleFormState>({
-    event: '',
-    channel: 'EMAIL',
-    templateKey: '',
-    isActive: true
+    event: rule?.event || '',
+    channel: rule?.channel ||  'EMAIL',
+    templateKey: rule?.templateKey || '',
+    isActive: rule?.isActive ?? true
   })
-
-//   useEffect(() => {
-//     if (mode === 'edit' && rule) {
-//       setForm({
-//         event: rule.event,
-//         channel: rule.channel,
-//         templateKey: rule.templateKey,
-//         isActive: rule.isActive
-//       })
-//       return
-//     }
-
-//     setForm({
-//       event: '',
-//       channel: 'EMAIL',
-//       templateKey: '',
-//       isActive: true
-//     })
-//   }, [mode, rule, open])
 
   const filteredTemplates = useMemo(() => {
     return templates.filter(
@@ -101,16 +83,16 @@ export default function NotificationRuleModal({
 //   }, [filteredTemplates, form.templateKey])
 
   const handleSubmit = (): void => {
-    // if (mode === 'edit' && rule) {
-    //   onSubmit({
-    //     id: rule.id,
-    //     templateKey: form.templateKey,
-    //     isActive: form.isActive
-    //   })
-    //   return
-    // }
-
+    if (mode === 'edit' && rule) {
+      onSubmit({
+        id: rule.id,
+        templateKey: form.templateKey,
+        isActive: form.isActive
+      })
+      return
+    }
     onSubmit({
+      id: '',
       event: form.event,
       channel: form.channel,
       templateKey: form.templateKey,
@@ -171,6 +153,7 @@ export default function NotificationRuleModal({
             <Select
               value={form.templateKey}
               label="Template"
+              disabled={mode === 'edit'}
               onChange={(e) =>
                 setForm((prev) => ({
                   ...prev,
@@ -214,3 +197,5 @@ export default function NotificationRuleModal({
     </Modal>
   )
 }
+
+export default NotificationRuleModal

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import type { Category, ModalMode } from '../../../types/category'
+import { CategorySchema } from '../../../lib/validation/categoryValidation'
+import { ZodError } from 'zod'
 
 
 interface CategoryModalProps {
@@ -24,12 +26,34 @@ const CategoryModal: React.FC<CategoryModalProps>= ({
         name: initialData?.name || '',
         parentId: initialData?.parentId || null
     })
+     const [localError, setLocalError] = useState<Record<string, string>>({})
+    
 
     if(!isOpen) return null
+    const validate = () => {
+        try {
+        CategorySchema.parse(formData)
+        setLocalError({})
+        return true
+
+        } catch (error) {
+        if(error instanceof ZodError){
+            const errors: Record<string, string> = {}
+            error.issues.forEach((issue) => {
+            const field = issue.path[0] 
+            if(typeof field === 'string' ||typeof field === 'number')
+            errors[field] = issue.message
+            })
+            setLocalError(errors)
+        }
+        return false
+        }
+    }
     const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault()
         console.log('parent: ', formData.parentId)
         console.log('mode', mode)
+        if(!validate()) return
         if(mode === 'create'){
             onSave({
                 name: formData.name,
@@ -81,7 +105,7 @@ const CategoryModal: React.FC<CategoryModalProps>= ({
                             className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-amber-500"
                             placeholder="Enter job role name"
                         />
-                        {/* {localError.name && <p className='text-[#FBBEBE] text-sm'>{localError.name}</p>} */}
+                        {localError.name && <p className='text-[#FBBEBE] text-sm'>{localError.name}</p>}
                     </div>
 
                     <div>
@@ -108,7 +132,7 @@ const CategoryModal: React.FC<CategoryModalProps>= ({
                                ))
                             }
                         </select>
-                        {/* {localError.skills && <p className='text-[#FBBEBE] text-sm'>{localError.skills}</p>} */}
+                        {localError.skills && <p className='text-[#FBBEBE] text-sm'>{localError.skills}</p>}
                     </div>
                     <div className="flex gap-4 pt-4">
                         <button
