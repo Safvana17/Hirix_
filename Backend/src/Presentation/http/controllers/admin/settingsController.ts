@@ -10,7 +10,8 @@ import { IAdminEditTemplateUsecase } from "../../../../Application/admin/interfa
 import { IAdminCreateNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.createNotificationRule.usecase";
 import { IAdminGetAllNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.getAllNotificationRule";
 import { IAdminUpdateNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.updateNotificationRule.usecase";
-import { IAdminUpdateEmailTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin..updateTemplate.usecase";
+import { IAdminUpdateEmailTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.updateTemplate.usecase";
+import { IAdminDeleteTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.deleteTemplate.usecase";
 
 export class AdminSettingsController {
     constructor(
@@ -21,6 +22,7 @@ export class AdminSettingsController {
         private _getAllNotificationRule: IAdminGetAllNotificationRuleUsecase,
         private _updateNotificationRule: IAdminUpdateNotificationRuleUsecase,
         private _updateTemplateStatus: IAdminUpdateEmailTemplateUsecase,
+        private _deleteTemplate: IAdminDeleteTemplateUsecase
     ) {}
 
     createTemplate = asyncHandler(async(req: Request, res: Response) => {
@@ -62,6 +64,12 @@ export class AdminSettingsController {
         const { id } = req.validatedParams as templateParams
         const updatedTemplate = await this._updateTemplateStatus.execute({id, status: req.body.status})
         return sendSuccess(res, statusCode.OK, '', updatedTemplate)
+    })
+
+    deleteTemplate = asyncHandler(async (req: Request, res: Response) => {
+        const { id } = req.validatedParams as templateParams
+        await this._deleteTemplate.execute({id})
+        return sendSuccess(res, statusCode.OK, '')
     })
 
 

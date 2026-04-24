@@ -5,7 +5,7 @@ import { settingsMessages } from "../../../../Shared/constsnts/messages/settings
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
 import { AdminUpdateTemplateInputDTO, AdminUpdateTemplateOutputDTO } from "../../dtos/settings/admin.updateTemplate.dto";
-import { IAdminUpdateEmailTemplateUsecase } from "../../interfaces/settings/IAdmin..updateTemplate.usecase";
+import { IAdminUpdateEmailTemplateUsecase } from "../../interfaces/settings/IAdmin.updateTemplate.usecase";
 
 export class AdminUpdateTemplateUsecase implements IAdminUpdateEmailTemplateUsecase{
     constructor(

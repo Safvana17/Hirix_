@@ -51,6 +51,8 @@ router.post(ROUTES.ADMIN.EMAIL_TEMPLATE.CREATE, authHandler(iTokenService), veri
 router.get(ROUTES.ADMIN.EMAIL_TEMPLATE.GET_aLL, authHandler(iTokenService), validate(getAllTemplateQSchema, 'query'), iAdminSettingsController.getAllTemplates)
 router.put(ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT, authHandler(iTokenService), verifyCsrf, validate(TemplateSchema, 'body'), iAdminSettingsController.editTemplate)
 router.patch(ROUTES.ADMIN.EMAIL_TEMPLATE.STATUS, authHandler(iTokenService), verifyCsrf, validate(templateParamsShema, 'params'), validate(UpdatetEmplateStatusSchema, 'body'), iAdminSettingsController.updatetemplateStatus)
+router.delete(ROUTES.ADMIN.EMAIL_TEMPLATE.DELETE, authHandler(iTokenService), verifyCsrf, validate(templateParamsShema, 'params'), iAdminSettingsController.deleteTemplate)
+
 //notification rule
 router.post(ROUTES.ADMIN.NOTIFICATION_RULE.CREATE, authHandler(iTokenService), verifyCsrf, validate(CreateNotificationRuleSchema, 'body'), iAdminSettingsController.createNotificationRule)
 router.get(ROUTES.ADMIN.NOTIFICATION_RULE.GET_ALL, authHandler(iTokenService), iAdminSettingsController.getAllRules)

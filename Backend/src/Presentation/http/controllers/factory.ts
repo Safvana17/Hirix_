@@ -140,6 +140,7 @@ import { UnifiedGetMyNotificationsUsecase } from "../../../Application/common/us
 import { UnifiedSettingsController } from "./common/unifiedSettingsController";
 import { UnifiedMarkAllAsReadUsecase } from "../../../Application/common/usecases/unified.markAllAsRead.usecase";
 import { AdminUpdateTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.updateTemplate.usecase";
+import { AdminDeleteTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.deleteTemplate.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -571,6 +572,10 @@ const iAdminUpdateTemplateStatus = new AdminUpdateTemplateUsecase(
     iTemplateREpository,
     iNotificationRuleRepository
 )
+const iAdminDeleteTemplate = new AdminDeleteTemplateUsecase(
+    iTemplateREpository,
+    iNotificationRuleRepository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -764,7 +769,8 @@ export const iAdminSettingsController = new AdminSettingsController(
     iAdminCreateNotificationRule,
     iAdminGetAllNotificationRule,
     iAdminUpdateNotificationRule,
-    iAdminUpdateTemplateStatus
+    iAdminUpdateTemplateStatus,
+    iAdminDeleteTemplate
 )
 
 export const iUnifiedSettingsController = new UnifiedSettingsController(
