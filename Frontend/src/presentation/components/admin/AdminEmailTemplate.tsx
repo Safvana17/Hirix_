@@ -6,7 +6,7 @@ import type { TemplatePayload, EmailTemplate } from '../../../types/template'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
-import { createEmailTemplate, editEmailTemplate, getAllTemplates, updateEmailTemplateStatus } from '../../../redux/slices/features/settingsSlice/adminSettings'
+import { createEmailTemplate, deleteEmailTemplate, editEmailTemplate, getAllTemplates, updateEmailTemplateStatus } from '../../../redux/slices/features/settingsSlice/adminSettings'
 import ConfirmationModal from '../modal/ConfirmationModal'
 
 
@@ -83,6 +83,24 @@ export default function TemplatePage() {
     })
   }
 
+  const handleDeleteTemplate = (template: EmailTemplate) => {  
+    openModal({
+      title: 'Delete Template',
+      message: `Are you sure you want to delete this Template? It will no longer be available for sending emails.`,
+      type: 'danger',
+        onConfirm: async() => {
+          try {
+            await dispatch(deleteEmailTemplate({id: template.id})).unwrap()
+            toast.success('Template deleted successfully')
+            closeModal()
+            await dispatch(getAllTemplates({params: {page, limit: 9}}))
+          } catch (error) {
+            toast.error(typeof error === 'string' ? error : 'Failed to delete template')
+          }
+        }
+    })
+  }
+
   const handleSubmit = async (payload: TemplatePayload) => {
     try {
       if (mode === 'create') {
@@ -152,7 +170,7 @@ export default function TemplatePage() {
                 template={template}
                 onView={() => handleViewTemplate(template)}
                 onEdit={() => handleEditTemplate(template)}
-                onDelete={(t) => console.log(t)}
+                onDelete={() => handleDeleteTemplate(template)}
                 onToggleStatus={() =>handleToggleStatus(template)}
               />
             </Grid>

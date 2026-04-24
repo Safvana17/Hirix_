@@ -6,6 +6,7 @@ import { API_ROUTES } from "../../../../constants/api.routes";
 import type { CreateNotificationRulePayload, Notification, NotificationRule, UpdateNotificationRulePayload } from "../../../../types/notification";
 import type { UserRole } from "../../../../constants/role";
 
+
 interface AdminSettingsState {
     loading: boolean;
     templates: EmailTemplate[];
@@ -108,6 +109,24 @@ UpdateTemplateStatusPayload,
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to update email template status')
+    }
+})
+
+export const deleteEmailTemplate = createAsyncThunk<
+void,
+{id: string},
+{rejectValue: string}
+>('settings/deleteTemplate', async({id}, {rejectWithValue}) => {
+    try {
+        console.log('status: ', status)
+        const response = await api.delete(API_ROUTES.ADMIN.EMAIL_TEMPLATE.DELETE(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to delete email template')
     }
 })
 
@@ -222,7 +241,7 @@ const adminSettingsSlice = createSlice({
          })
          .addCase(getAllTemplates.fulfilled, (state, action) => {
             state.loading = false
-            state.templates = action.payload.templates
+            state.templates = action.payload.templates.filter(t => !t.isDeleted)
             state.pagination.templates.totalPages = action.payload.totalPages
             state.pagination.templates.totalCount = action.payload.totalCount
          })
@@ -305,6 +324,16 @@ const adminSettingsSlice = createSlice({
          .addCase(updateEmailTemplateStatus.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to update email template status'
+         })
+         .addCase(deleteEmailTemplate.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(deleteEmailTemplate.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(deleteEmailTemplate.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to delete email template'
          })
     },
 })
