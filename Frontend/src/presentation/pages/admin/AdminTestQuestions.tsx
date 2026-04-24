@@ -50,7 +50,7 @@ const AdminTestQuestions: React.FC= () => {
   const { user } = useSelector((state: RootState) => state.auth)
 
   useEffect(() =>{
-    dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:1}, role: user!.role}))
+    dispatch(getAllQuestions({params: {search: debouncedSearchTerm, category: category, type: type || undefined, difficulty: difficulty || undefined, page, limit:10}, role: user!.role}))
     dispatch(getAllCategories({}))
   },[dispatch, debouncedSearchTerm, category, type, difficulty, page, user])
 

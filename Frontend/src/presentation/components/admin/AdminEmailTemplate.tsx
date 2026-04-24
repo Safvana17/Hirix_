@@ -6,7 +6,8 @@ import type { TemplatePayload, EmailTemplate } from '../../../types/template'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
-import { createEmailTemplate, editEmailTemplate, getAllTemplates } from '../../../redux/slices/features/settingsSlice/adminSettings'
+import { createEmailTemplate, editEmailTemplate, getAllTemplates, updateEmailTemplateStatus } from '../../../redux/slices/features/settingsSlice/adminSettings'
+import ConfirmationModal from '../modal/ConfirmationModal'
 
 
 export default function TemplatePage() {
@@ -17,10 +18,31 @@ export default function TemplatePage() {
   const [page, setPage ] = useState(1)
   const { templates, pagination } = useSelector((state: RootState) => state.AdminSettings)
 
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    type: 'danger' | 'warning' | 'info';
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => { },
+    type: 'warning'
+  })
+
   useEffect(() => {
     dispatch(getAllTemplates({params: { page, limit:9}}))
   }, [dispatch, page])
 
+  const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+    setModalConfig({...config, isOpen: true})
+  }
+
+  const closeModal = () => {
+    setModalConfig(prev => ({...prev, isOpen: false}))
+  }
   const handleOpenCreate = (): void => {
     setSelectedTemplate(null)
     setMode('create')
@@ -39,6 +61,28 @@ export default function TemplatePage() {
     setMode('view')
     setFormModalOpen(true)
   }
+
+  const handleToggleStatus = (template: EmailTemplate) => {
+    const newStatus = template.isActive ? 'Deactivate' : 'Activate'
+    const actionText = newStatus === 'Deactivate' ? 'Deactivate' : 'Activate'
+  
+    openModal({
+      title: `${actionText} Template`,
+      message: `Are you sure you want to ${actionText.toLowerCase()} this Template? ${newStatus === 'Deactivate' ? 'It will no longer be available for sending emails' : 'It will be available for sending emails again'}.`,
+      type: newStatus === 'Deactivate' ? 'danger' : 'warning',
+        onConfirm: async() => {
+          try {
+            await dispatch(updateEmailTemplateStatus({id: template.id, status: newStatus})).unwrap()
+            toast.success('Template status updated successfully')
+            closeModal()
+            await dispatch(getAllTemplates({params: {page, limit: 9}}))
+          } catch (error) {
+            toast.error(typeof error === 'string' ? error : 'Failed to update template status')
+          }
+        }
+    })
+  }
+
   const handleSubmit = async (payload: TemplatePayload) => {
     try {
       if (mode === 'create') {
@@ -109,7 +153,7 @@ export default function TemplatePage() {
                 onView={() => handleViewTemplate(template)}
                 onEdit={() => handleEditTemplate(template)}
                 onDelete={(t) => console.log(t)}
-                onToggleStatus={(t) => console.log(t)}
+                onToggleStatus={() =>handleToggleStatus(template)}
               />
             </Grid>
           ))}
@@ -126,6 +170,14 @@ export default function TemplatePage() {
         template={selectedTemplate}
         onClose={() => setFormModalOpen(false)}
         onSubmit={handleSubmit}
+      />
+      <ConfirmationModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        onConfirm={modalConfig.onConfirm}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        type={modalConfig.type}
       />
     </Box>
   )

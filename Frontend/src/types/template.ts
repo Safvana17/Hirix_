@@ -56,3 +56,8 @@ export interface GetAllTemplatesResponse {
     totalPages: number
     totalCount: number
 }
+
+export interface UpdateTemplateStatusPayload {
+    id: string
+    status: 'Activate' | 'Deactivate'
+}

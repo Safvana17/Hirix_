@@ -29,7 +29,7 @@ export default function TemplateCard({
         height: '100%'
       }}
     >
-      {/* HEADER */}
+
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h6" fontWeight={700}>
           {template.name}
@@ -50,7 +50,6 @@ export default function TemplateCard({
         </Box>
       </Box>
 
-      {/* CONTENT */}
       <Typography variant="body2" color="text.secondary">
         Key: {template.key}
       </Typography>
@@ -63,7 +62,6 @@ export default function TemplateCard({
         <Typography variant="body2">Title: {template.title}</Typography>
       )}
 
-      {/* ACTIONS */}
       <Box display="flex" flexWrap="wrap" gap={1} mt={2}>
         <Button
           variant="contained"
@@ -89,7 +87,6 @@ export default function TemplateCard({
           Edit
         </Button>
 
-        {/* Toggle Status */}
         <Button
           variant="contained"
           size="small"
@@ -104,7 +101,6 @@ export default function TemplateCard({
           {template.isActive ? 'Deactivate' : 'Activate'}
         </Button>
 
-        {/* Delete */}
         <Button
           variant="contained"
           size="small"

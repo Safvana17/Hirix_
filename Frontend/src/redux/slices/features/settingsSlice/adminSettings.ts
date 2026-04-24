@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { TemplatePayload, EmailTemplate, GetAllTemplatesArgs, GetAllTemplatesResponse } from "../../../../types/template";
+import type { TemplatePayload, EmailTemplate, GetAllTemplatesArgs, GetAllTemplatesResponse, UpdateTemplateStatusPayload } from "../../../../types/template";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
@@ -90,6 +90,24 @@ EmailTemplate,
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to edit email template')
+    }
+})
+
+export const updateEmailTemplateStatus = createAsyncThunk<
+EmailTemplate,
+UpdateTemplateStatusPayload,
+{rejectValue: string}
+>('settings/updateTemplateStatus', async({id, status}, {rejectWithValue}) => {
+    try {
+        console.log('status: ', status)
+        const response = await api.patch(API_ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT(id), {status})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to update email template status')
     }
 })
 
@@ -277,6 +295,16 @@ const adminSettingsSlice = createSlice({
          .addCase(markAllAsRead.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to mark read'
+         })
+         .addCase(updateEmailTemplateStatus.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(updateEmailTemplateStatus.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(updateEmailTemplateStatus.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to update email template status'
          })
     },
 })
