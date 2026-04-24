@@ -19,7 +19,7 @@
 // };
 
 import { Request, Response, NextFunction } from "express";
-import { ZodSchema, ZodTypeAny, z } from "zod";
+import { ZodSchema, z } from "zod";
 
 type RequestProperty = "body" | "query" | "params";
 
@@ -36,7 +36,7 @@ export const validate =
     if(property === 'query'){
       req.validatedQuery = parsed
     }else if(property === 'params'){
-      req.validateParams = parsed
+      req.validatedParams = parsed
     }else{
       req[property] = parsed;
     }
@@ -86,7 +86,7 @@ export const validate =
 //     const data = result.data;
 
 //     req.body = data.body;
-//     req.query = data.query;     // ✅ now matches ParsedQs
+//     req.query = data.query;    
 //     req.params = data.params;
 
 //     next();

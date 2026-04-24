@@ -22,6 +22,12 @@ export class AdminCreateNotificationRuleUsecase implements IAdminCreateNotificat
         if(template.channel !== request.channel){
             throw new AppError(settingsMessages.error.INVALID_NOTIFICATION_CHANNEL, statusCode.BAD_REQUEST)
         }
+        const exixting = await this._notificationRuleRepository.findByEvent(request.event)
+        for(let rule of exixting){
+            if(rule.channel === request.channel && rule.templateKey === request.templateKey){
+                throw new AppError(settingsMessages.error.EXISTING_NOTIFICATION_RULE, statusCode.CONFLICT)
+            }
+        }
 
         if(!template.isActive){
             throw new AppError(settingsMessages.error.INACTIVE_TEMPLATE, statusCode.BAD_REQUEST)

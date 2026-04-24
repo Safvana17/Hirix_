@@ -75,7 +75,7 @@ export class CompanySubscriptionController {
 
     cancelSubscription = asyncHandler(async(req: Request, res: Response) => {
         const companyId = req.user.id
-        const { id }= req.validateParams as CancelSubscriptionParam
+        const { id }= req.validatedParams as CancelSubscriptionParam
         const currentPlan = await this._cancelSubscription.execute({companyId, subscriptionId: id})
         return sendSuccess(res, statusCode.OK, '', currentPlan)
     })

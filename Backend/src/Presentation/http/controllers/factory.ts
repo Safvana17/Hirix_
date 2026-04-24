@@ -139,6 +139,7 @@ import { TextFormatService } from "../../../Infrastructure/services/TextFormatSe
 import { UnifiedGetMyNotificationsUsecase } from "../../../Application/common/usecases/unified.getMyNotifications.usecase";
 import { UnifiedSettingsController } from "./common/unifiedSettingsController";
 import { UnifiedMarkAllAsReadUsecase } from "../../../Application/common/usecases/unified.markAllAsRead.usecase";
+import { AdminUpdateTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.updateTemplate.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -566,6 +567,10 @@ const iAdminUpdateNotificationRule = new AdminUpdateNotificationRuleUsecase(
     iNotificationRuleRepository,
     iTemplateREpository
 )
+const iAdminUpdateTemplateStatus = new AdminUpdateTemplateUsecase(
+    iTemplateREpository,
+    iNotificationRuleRepository
+)
 //unified
 const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
@@ -759,6 +764,7 @@ export const iAdminSettingsController = new AdminSettingsController(
     iAdminCreateNotificationRule,
     iAdminGetAllNotificationRule,
     iAdminUpdateNotificationRule,
+    iAdminUpdateTemplateStatus
 )
 
 export const iUnifiedSettingsController = new UnifiedSettingsController(

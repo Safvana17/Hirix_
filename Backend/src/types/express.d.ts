@@ -9,7 +9,7 @@ declare module 'express-serve-static-core' {
                refreshToken?: string
             },
             validatedQuery?: unknown,
-            validateParams?: unknown
+            validatedParams?: unknown
         }
 }
  

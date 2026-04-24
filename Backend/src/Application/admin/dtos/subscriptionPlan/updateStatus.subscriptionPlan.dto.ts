@@ -1,8 +1,8 @@
-import { SubscriptionStatus } from "../../../../Domain/enums/subscription"
+import { SubscriptionPlanStatus } from "../../../../Domain/enums/subscription"
 
 export interface AdminUpdateSubscriptionPlanStatusInputDTO {
     id: string
-    status: SubscriptionStatus
+    status: SubscriptionPlanStatus
 }
 
 export interface AdminUpdateSubscriptionPlanStatusOutputDTO {

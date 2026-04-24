@@ -4,12 +4,13 @@ import { asyncHandler } from "../../../../utils/asyncHandler";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IAdminGetAllTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.getAllTemplates.usecase";
-import { GetAllTemplateQuery } from "../../validators/adminSettingsValidator";
+import { GetAllTemplateQuery, templateParams } from "../../validators/adminSettingsValidator";
 import { logger } from "../../../../utils/logging/loger";
 import { IAdminEditTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.editTemplate.usecase";
 import { IAdminCreateNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.createNotificationRule.usecase";
 import { IAdminGetAllNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.getAllNotificationRule";
 import { IAdminUpdateNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.updateNotificationRule.usecase";
+import { IAdminUpdateEmailTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin..updateTemplate.usecase";
 
 export class AdminSettingsController {
     constructor(
@@ -19,6 +20,7 @@ export class AdminSettingsController {
         private _createNotificationRule: IAdminCreateNotificationRuleUsecase,
         private _getAllNotificationRule: IAdminGetAllNotificationRuleUsecase,
         private _updateNotificationRule: IAdminUpdateNotificationRuleUsecase,
+        private _updateTemplateStatus: IAdminUpdateEmailTemplateUsecase,
     ) {}
 
     createTemplate = asyncHandler(async(req: Request, res: Response) => {
@@ -55,4 +57,12 @@ export class AdminSettingsController {
         const updateRule = await this._updateNotificationRule.execute({id: ruleId, ...req.body})
         return sendSuccess(res, statusCode.OK, '', updateRule)
     })
+
+    updatetemplateStatus = asyncHandler(async(req: Request, res: Response) => {
+        const { id } = req.validatedParams as templateParams
+        const updatedTemplate = await this._updateTemplateStatus.execute({id, status: req.body.status})
+        return sendSuccess(res, statusCode.OK, '', updatedTemplate)
+    })
+
+
 }

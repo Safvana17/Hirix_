@@ -125,6 +125,7 @@ export const ROUTES = {
         EMAIL_TEMPLATE: {
             CREATE: '/email-template',
             EDIT: '/email-template/:id',
+            STATUS: '/email-template/:id',
             DELETE: '/email-template/:id',
             BY_ID: '/email-template/:id',
             GET_aLL: '/email-templates'
