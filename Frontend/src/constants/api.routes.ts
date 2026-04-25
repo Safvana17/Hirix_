@@ -116,6 +116,8 @@ export const API_ROUTES = {
       EDIT: (id: string) =>
         `/admin/notification-rule/${id}`,
       GET_ALL: '/admin/notification-rules',
+      DELETE: (id: string) =>
+        `/admin/notification-rule/${id}`,
     },
   },
   COMMON: {

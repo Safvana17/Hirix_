@@ -32,3 +32,16 @@ export interface Notification {
     isRead: boolean;
     metaData: Record<string, string>;
 }
+
+export interface GetAllNotificationRuleParams {
+    search?: string
+    channel?: NotificationChannel
+    page: number
+    limit: number
+}
+
+export interface GetAllNotificationRuleResponse {
+    rules: NotificationRule[]
+    totalPages: number
+    totalCount: number
+}

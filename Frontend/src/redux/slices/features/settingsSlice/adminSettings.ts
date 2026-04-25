@@ -3,7 +3,7 @@ import type { TemplatePayload, EmailTemplate, GetAllTemplatesArgs, GetAllTemplat
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
-import type { CreateNotificationRulePayload, Notification, NotificationRule, UpdateNotificationRulePayload } from "../../../../types/notification";
+import type { CreateNotificationRulePayload, GetAllNotificationRuleParams, GetAllNotificationRuleResponse, Notification, NotificationRule, UpdateNotificationRulePayload } from "../../../../types/notification";
 import type { UserRole } from "../../../../constants/role";
 
 
@@ -19,6 +19,10 @@ interface AdminSettingsState {
         templates: {
             totalPages: number;
             totalCount: number
+        },
+        rules: {
+            totalPages: number;
+            totalCount: number;
         }
     }
 }
@@ -33,6 +37,10 @@ const initialState: AdminSettingsState = {
     error: null,
     pagination: {
         templates: {
+            totalPages: 0,
+            totalCount: 0
+        },
+        rules: {
             totalPages: 0,
             totalCount: 0
         }
@@ -148,21 +156,38 @@ CreateNotificationRulePayload,
 })
 
 export const getAllRules = createAsyncThunk<
-NotificationRule[],
-void,
+GetAllNotificationRuleResponse,
+{params: GetAllNotificationRuleParams},
 {rejectValue: string}
->('settings/getAllRules', async(_, {rejectWithValue}) => {
+>('settings/getAllRules', async({params}, {rejectWithValue}) => {
     try {
         console.log('from slice: ', createEmailTemplate)
-        const response = await api.get(API_ROUTES.ADMIN.NOTIFICATION_RULE.GET_ALL)
+        const response = await api.get(API_ROUTES.ADMIN.NOTIFICATION_RULE.GET_ALL, {params})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
         console.log('from slice rule: ', response.data)
-        return response.data.data.rules
+        return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get all notification rules')
+    }
+})
+
+export const deleteNotificationRule = createAsyncThunk<
+void,
+{id: string},
+{rejectValue: string}
+>('settings/deleteNotificationRule', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.delete(API_ROUTES.ADMIN.NOTIFICATION_RULE.DELETE(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to delete notification rule')
     }
 })
 
@@ -274,7 +299,9 @@ const adminSettingsSlice = createSlice({
          })
          .addCase(getAllRules.fulfilled, (state, action) => {
             state.loading = false
-            state.notificationRules = action.payload
+            state.notificationRules = action.payload.rules
+            state.pagination.rules.totalCount = action.payload.totalCount
+            state.pagination.rules.totalPages = action.payload.totalPages
          })
          .addCase(getAllRules.rejected, (state, action) => {
             state.loading = false
@@ -334,6 +361,16 @@ const adminSettingsSlice = createSlice({
          .addCase(deleteEmailTemplate.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to delete email template'
+         })
+         .addCase(deleteNotificationRule.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(deleteNotificationRule.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(deleteNotificationRule.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to delete notification rule'
          })
     },
 })

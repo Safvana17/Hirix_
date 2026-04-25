@@ -3,26 +3,27 @@ import {
   Box,
   Button,
   Chip,
+  InputAdornment,
+  MenuItem,
+  Pagination,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
-
 import type { AppDispatch, RootState } from '../../../redux/store'
 import NotificationRuleModal from '../modal/NotificationRuleModal'
-import type { CreateNotificationRulePayload, NotificationRule, UpdateNotificationRulePayload } from '../../../types/notification'
-import {
-  createNotificationRule,
-  editNotificationRule,
-  getAllRules,
-  getAllTemplates,
-} from '../../../redux/slices/features/settingsSlice/adminSettings'
+import type { CreateNotificationRulePayload, NotificationChannel, NotificationRule, UpdateNotificationRulePayload } from '../../../types/notification'
+import { createNotificationRule, deleteNotificationRule, editNotificationRule, getAllRules, getAllTemplates } from '../../../redux/slices/features/settingsSlice/adminSettings'
+import ConfirmationModal from '../modal/ConfirmationModal'
+import { useDebounce } from '../../../hooks/useDebounce'
+import { Search } from '@mui/icons-material'
 
 const NOTIFICATION_EVENTS: string[] = [
   'REGISTER_OTP_REQUESTED',
@@ -35,6 +36,7 @@ const NOTIFICATION_EVENTS: string[] = [
   'ACCOUNT_RESTORE',
 ]
 
+const notificationChannel: NotificationChannel[] = ['EMAIL', 'IN_APP']
 const actionButtonSx = {
   backgroundColor: '#4F3503',
   borderRadius: 4,
@@ -44,18 +46,40 @@ const actionButtonSx = {
 
 export default function AdminNotificationTab() {
   const dispatch = useDispatch<AppDispatch>()
-  const { notificationRules, templates } = useSelector(
-    (state: RootState) => state.AdminSettings
-  )
-
+  const { notificationRules, templates, pagination } = useSelector((state: RootState) => state.AdminSettings )
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>('create')
   const [selectedRule, setSelectedRule] = useState<NotificationRule | null>(null)
+  const [page, setPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [channel, setChannel] = useState<NotificationChannel | null>(null)
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    type: 'danger' | 'warning' | 'info';
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => { },
+    type: 'warning'
+  })
 
   useEffect(() => {
     dispatch(getAllTemplates({ params: {} }))
-    dispatch(getAllRules())
-  }, [dispatch])
+    dispatch(getAllRules({params: {search: debouncedSearchTerm, channel: channel || undefined, page, limit: 6}}))
+  }, [dispatch, debouncedSearchTerm, channel, page])
+
+  const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+    setModalConfig({...config, isOpen: true})
+  }
+
+  const closeModal = () => {
+    setModalConfig(prev => ({...prev, isOpen: false}))
+  }
 
   const handleCreateRule = (): void => {
     setSelectedRule(null)
@@ -69,11 +93,23 @@ export default function AdminNotificationTab() {
     setIsModalOpen(true)
   }
 
-  // const handleOpenView = (rule: any): void => {
-  //   setSelectedRule(rule)
-  //   setModalMode('view')
-  //   setIsModalOpen(true)
-  // }
+  const handleDeleteRule = (rule: NotificationRule) => {
+    openModal({
+      title: 'Delete Notification Rule',
+      message: `Are you sure you want to delete this Notification rule?`,
+      type: 'danger',
+        onConfirm: async() => {
+          try {
+            await dispatch(deleteNotificationRule({id: rule.id})).unwrap()
+            toast.success('Notification rule deleted successfully')
+            closeModal()
+            await dispatch(getAllRules({params: {search: debouncedSearchTerm, channel: channel || undefined, page, limit: 6}}))
+          } catch (error) {
+            toast.error(typeof error === 'string' ? error : 'Failed to delete notification rule')
+          }
+        }
+    })
+  }
 
   const handleSubmit = async (
     payload: CreateNotificationRulePayload | UpdateNotificationRulePayload
@@ -96,7 +132,7 @@ export default function AdminNotificationTab() {
       }
 
       setIsModalOpen(false)
-      await dispatch(getAllRules())
+      await dispatch(getAllRules({params: {search: debouncedSearchTerm, channel: channel || undefined, page, limit: 6}}))
     } catch (error) {
       toast.error(typeof error === 'string' ? error : error instanceof Error ? error.message : 'Operation failed')
     }
@@ -118,7 +154,81 @@ export default function AdminNotificationTab() {
           Add Rule
         </Button>
       </Box>
-
+      <Box display="flex" gap={2} my={2}>
+        <TextField
+          fullWidth
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search questions, categories..."
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <Search sx={{color: '#fff'}} />
+              </InputAdornment>
+            )
+          }}
+          sx={{
+            borderRadius: 2,
+            backgroundColor: "#6B4705",
+            "& .MuiInputBase-input": {
+              color: "#fff"
+            },
+            "& .MuiInputBase-input::placeholder": {
+              color: "#fff",
+              opacity: 0.7
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#6B4705"
+              },
+              "&:hover fieldset": {
+                borderColor: "#6B4705"
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#6B4705"
+              }
+            }
+          }}
+        />
+        <TextField
+          select 
+          label="Channel" 
+          value={channel} 
+          onChange={(e) => setChannel(e.target.value as NotificationChannel)} 
+          sx={{ 
+            width: 150, 
+            background: "#6B4705", 
+            borderRadius: 3,
+            "& .MuiSelect-select": {
+              color: "#fff"
+            },
+            "& .MuiInputLabel-root": {
+              color: "#fff"
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#fff"
+            },
+            "& .MuiSvgIcon-root": {
+              color: "#fff"
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#6B4705"
+              },
+              "&:hover fieldset": {
+                borderColor: "#6B4705"
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#6B4705"
+              }
+            }
+          }}>
+          <MenuItem value="easy">Select Channel</MenuItem>
+          {notificationChannel.map((d) => (
+            <MenuItem key={d} value={d}>{d}</MenuItem>
+          ))}
+        </TextField>
+      </Box>
       {notificationRules.length === 0 ? (
         <Box
           sx={{
@@ -189,13 +299,14 @@ export default function AdminNotificationTab() {
 
                   <TableCell align="right">
                     <Box display="flex" justifyContent="flex-end" gap={1}>
-                      {/* <Button
-                        variant="outlined"
+                      <Button
+                        sx={{backgroundColor: '#6d0505'}}
+                        variant="contained"
                         size="small"
-                        onClick={() => handleOpenView(rule)}
+                        onClick={() => handleDeleteRule(rule)}
                       >
-                        View
-                      </Button> */}
+                        Delete
+                      </Button>
                       <Button
                         sx={{backgroundColor:'#6B4705'}}
                         variant="contained"
@@ -213,6 +324,9 @@ export default function AdminNotificationTab() {
         </Paper>
       )}
 
+      <Box display="flex" justifyContent="center" mt={3}>
+        <Pagination count={pagination.rules.totalPages} page={page} onChange={(_, v) => setPage(v)} />
+      </Box>
       <NotificationRuleModal
         key={selectedRule?.id ?? modalMode}
         open={isModalOpen}
@@ -222,6 +336,14 @@ export default function AdminNotificationTab() {
         rule={selectedRule}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
+      />
+      <ConfirmationModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        onConfirm={modalConfig.onConfirm}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        type={modalConfig.type}
       />
     </Box>
   )
