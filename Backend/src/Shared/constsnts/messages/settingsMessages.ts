@@ -28,6 +28,7 @@ export const settingsMessages = {
       INVALID_TEMPLATE_ID: 'Invalid template id',
       NOTIFICATION_RULE_NOT_FOUND: 'Notifictaion rule not found',
       ALRAEDY_IN_USE: 'Template already in use',
+      DELETED_NOTIFICATION_RULE: 'Notification rule is already deleted',
       EXISTING_NOTIFICATION_RULE: 'Notification rule with same template and channle already existing',
     }
 }

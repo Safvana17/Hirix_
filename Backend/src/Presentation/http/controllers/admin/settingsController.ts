@@ -4,7 +4,7 @@ import { asyncHandler } from "../../../../utils/asyncHandler";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IAdminGetAllTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.getAllTemplates.usecase";
-import { GetAllTemplateQuery, templateParams } from "../../validators/adminSettingsValidator";
+import { getAllRulesQuery, GetAllTemplateQuery, templateParams } from "../../validators/adminSettingsValidator";
 import { logger } from "../../../../utils/logging/loger";
 import { IAdminEditTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.editTemplate.usecase";
 import { IAdminCreateNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.createNotificationRule.usecase";
@@ -12,6 +12,7 @@ import { IAdminGetAllNotificationRuleUsecase } from "../../../../Application/adm
 import { IAdminUpdateNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.updateNotificationRule.usecase";
 import { IAdminUpdateEmailTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.updateTemplate.usecase";
 import { IAdminDeleteTemplateUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.deleteTemplate.usecase";
+import { IAdminDeleteNotificationRuleUsecase } from "../../../../Application/admin/interfaces/settings/IAdmin.deleteNotificationRule.usecase";
 
 export class AdminSettingsController {
     constructor(
@@ -22,7 +23,8 @@ export class AdminSettingsController {
         private _getAllNotificationRule: IAdminGetAllNotificationRuleUsecase,
         private _updateNotificationRule: IAdminUpdateNotificationRuleUsecase,
         private _updateTemplateStatus: IAdminUpdateEmailTemplateUsecase,
-        private _deleteTemplate: IAdminDeleteTemplateUsecase
+        private _deleteTemplate: IAdminDeleteTemplateUsecase,
+        private _deleteNotificationRule: IAdminDeleteNotificationRuleUsecase,
     ) {}
 
     createTemplate = asyncHandler(async(req: Request, res: Response) => {
@@ -50,8 +52,9 @@ export class AdminSettingsController {
     })
 
     getAllRules = asyncHandler(async(req: Request, res: Response) => {
-        const rules = await this._getAllNotificationRule.execute()
-        return sendSuccess(res, statusCode.OK, '', rules)
+        const query = req.validatedQuery as getAllRulesQuery
+        const { rules, totalCount, totalPages }= await this._getAllNotificationRule.execute(query)
+        return sendSuccess(res, statusCode.OK, '', { rules, totalCount, totalPages })
     })
 
     updateNotificationRule = asyncHandler(async(req: Request, res: Response) => {
@@ -69,6 +72,12 @@ export class AdminSettingsController {
     deleteTemplate = asyncHandler(async (req: Request, res: Response) => {
         const { id } = req.validatedParams as templateParams
         await this._deleteTemplate.execute({id})
+        return sendSuccess(res, statusCode.OK, '')
+    })
+
+    deleteNotificationRule = asyncHandler(async(req: Request, res: Response) => {
+        const { id } = req.validatedParams as templateParams
+        await this._deleteNotificationRule.execute({id})
         return sendSuccess(res, statusCode.OK, '')
     })
 

@@ -8,7 +8,7 @@ import { createQuestionSchema, editQuestionSchema } from "../../validators/quest
 import { addCategorySchema, editCategorySchema } from "../../validators/categoryValidator";
 import { rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
 import { createSubscriptionPlanSchema, updatePlanSchema } from "../../validators/subscriptionPlanValidator";
-import { CreateNotificationRuleSchema, TemplateSchema, UpdateNotificationRuleSchema, UpdatetEmplateStatusSchema, getAllTemplateQSchema, templateParamsShema } from "../../validators/adminSettingsValidator";
+import { CreateNotificationRuleSchema, TemplateSchema, UpdateNotificationRuleSchema, UpdatetEmplateStatusSchema, getAllRulesSchema, getAllTemplateQSchema, settingsParamsShema } from "../../validators/adminSettingsValidator";
 
 const router = Express.Router()
 
@@ -50,14 +50,14 @@ router.delete(ROUTES.ADMIN.SUBSCRIPTION_PLAN.DELETE, authHandler(iTokenService),
 router.post(ROUTES.ADMIN.EMAIL_TEMPLATE.CREATE, authHandler(iTokenService), verifyCsrf, validate(TemplateSchema, 'body'), iAdminSettingsController.createTemplate)
 router.get(ROUTES.ADMIN.EMAIL_TEMPLATE.GET_aLL, authHandler(iTokenService), validate(getAllTemplateQSchema, 'query'), iAdminSettingsController.getAllTemplates)
 router.put(ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT, authHandler(iTokenService), verifyCsrf, validate(TemplateSchema, 'body'), iAdminSettingsController.editTemplate)
-router.patch(ROUTES.ADMIN.EMAIL_TEMPLATE.STATUS, authHandler(iTokenService), verifyCsrf, validate(templateParamsShema, 'params'), validate(UpdatetEmplateStatusSchema, 'body'), iAdminSettingsController.updatetemplateStatus)
-router.delete(ROUTES.ADMIN.EMAIL_TEMPLATE.DELETE, authHandler(iTokenService), verifyCsrf, validate(templateParamsShema, 'params'), iAdminSettingsController.deleteTemplate)
+router.patch(ROUTES.ADMIN.EMAIL_TEMPLATE.STATUS, authHandler(iTokenService), verifyCsrf, validate(settingsParamsShema, 'params'), validate(UpdatetEmplateStatusSchema, 'body'), iAdminSettingsController.updatetemplateStatus)
+router.delete(ROUTES.ADMIN.EMAIL_TEMPLATE.DELETE, authHandler(iTokenService), verifyCsrf, validate(settingsParamsShema, 'params'), iAdminSettingsController.deleteTemplate)
 
 //notification rule
 router.post(ROUTES.ADMIN.NOTIFICATION_RULE.CREATE, authHandler(iTokenService), verifyCsrf, validate(CreateNotificationRuleSchema, 'body'), iAdminSettingsController.createNotificationRule)
-router.get(ROUTES.ADMIN.NOTIFICATION_RULE.GET_ALL, authHandler(iTokenService), iAdminSettingsController.getAllRules)
+router.get(ROUTES.ADMIN.NOTIFICATION_RULE.GET_ALL, authHandler(iTokenService), validate(getAllRulesSchema, 'query'), iAdminSettingsController.getAllRules)
 router.put(ROUTES.ADMIN.NOTIFICATION_RULE.EDIT, authHandler(iTokenService), verifyCsrf, validate(UpdateNotificationRuleSchema, 'body'), iAdminSettingsController.updateNotificationRule)
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
 router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iUnifiedSettingsController.markAllAsRead)
-
+router.delete(ROUTES.ADMIN.NOTIFICATION_RULE.DELETE, authHandler(iTokenService), validate(settingsParamsShema, 'params'), iAdminSettingsController.deleteNotificationRule)
 export default router;               

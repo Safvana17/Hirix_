@@ -1,5 +1,5 @@
 import { INotificationRuleRepository } from "../../../../Domain/repositoryInterface/iNotificationRule.repository";
-import { AdminGetAllNotificationRuleOutputDTO } from "../../dtos/settings/admin.getAllNotificationRule.dto";
+import { AdminGetAllNotificationRuleInputDTO, AdminGetAllNotificationRuleOutputDTO } from "../../dtos/settings/admin.getAllNotificationRule.dto";
 import { IAdminGetAllNotificationRuleUsecase } from "../../interfaces/settings/IAdmin.getAllNotificationRule";
 
 export class AdminGetAllNotificationRuleUsecase implements IAdminGetAllNotificationRuleUsecase{
@@ -7,10 +7,12 @@ export class AdminGetAllNotificationRuleUsecase implements IAdminGetAllNotificat
         private _notificationRuleRepository: INotificationRuleRepository
     ) {}
 
-    async execute(): Promise<AdminGetAllNotificationRuleOutputDTO> {
-        const rules = await this._notificationRuleRepository.findAll()
+    async execute(request: AdminGetAllNotificationRuleInputDTO): Promise<AdminGetAllNotificationRuleOutputDTO> {
+        const { data, totalCount, totalPages }= await this._notificationRuleRepository.findAllFiltered(request)
         return {
-            rules
+            rules: data,
+            totalCount,
+            totalPages
         }
     }
 }

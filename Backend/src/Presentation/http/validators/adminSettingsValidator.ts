@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { TemplateStatus } from '../../../Domain/enums/notification';
+import { NotificationChannels, TemplateStatus } from '../../../Domain/enums/notification';
 
 export const TemplateSchema = z.object({
   key: z.string().min(3).max(100),
@@ -39,8 +39,15 @@ export const UpdateNotificationRuleSchema = z.object({
 export const UpdatetEmplateStatusSchema = z.object({
   status: z.nativeEnum(TemplateStatus)
 })
-export const templateParamsShema = z.object({
+export const settingsParamsShema = z.object({
   id: z.string().regex(/^[0-9a-fA-F]{24}$/)
 })
+export type templateParams = z.infer<typeof settingsParamsShema>
 
-export type templateParams = z.infer<typeof templateParamsShema>
+export const getAllRulesSchema = z.object({
+  search: z.string().optional(),
+  channel: z.nativeEnum(NotificationChannels).optional(),
+  page: z.coerce.number().default(1),
+  limit: z.coerce.number(),
+})
+export type getAllRulesQuery = z.infer<typeof getAllRulesSchema>

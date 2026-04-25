@@ -133,7 +133,8 @@ export const ROUTES = {
         NOTIFICATION_RULE: {
             CREATE: '/notification-rule',
             EDIT: '/notification-rule/:id',
-            GET_ALL: '/notification-rules'
+            GET_ALL: '/notification-rules',
+            DELETE: '/notification-rule/:id'
         }
     }
 }
