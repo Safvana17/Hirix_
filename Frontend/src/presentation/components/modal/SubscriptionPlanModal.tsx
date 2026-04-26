@@ -3,11 +3,8 @@ import type { ModalMode, PlanPayload, TargetType, BillingCycle } from '../../../
 import { ZodError } from 'zod'
 import { createSubscriptionPlanSchema } from '../../../lib/validation/subcriptionPlanValidator'
 
-// const durationMap: Record<BillingCycle, number|null> = {
-//   monthly: 30,
-//   yearly: 365,
-//   forever: null
-// }
+
+
 
 interface Props {
   isOpen: boolean
@@ -35,7 +32,9 @@ const SubscriptionPlanModal: React.FC<Props> = ({ isOpen, onClose,initialData, o
 
     canAccessPremiumQuestions: initialData?.canAccessPremiumQuestions || false,
     maxPracticePerDay: initialData?.maxPracticePerDay || null,
-    hasDetailedFeedback: initialData?.hasDetailedFeedback || false
+    hasDetailedFeedback: initialData?.hasDetailedFeedback || false,
+    isTrialEnabled: initialData?.isTrialEnabled || false,
+    trialDays: initialData?.trialDays || 0
   })
 
   const [localError, setLocalError] = useState<Record<string, string>>({})
@@ -279,9 +278,43 @@ const SubscriptionPlanModal: React.FC<Props> = ({ isOpen, onClose,initialData, o
             </label>
           </div>
         )}
+        <div className="mb-5">
+          <label className="flex items-center gap-2 text-sm font-medium">
+            <input
+              type="checkbox"
+              checked={formData.isTrialEnabled}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  isTrialEnabled: e.target.checked,
+                  trialDays: e.target.checked ? formData.trialDays : 0,
+                })
+              }
+            />
+            Enable Free Trial
+          </label>
 
-        {/* ACTIONS */}
-        <div className="flex justify-end gap-3">
+          {formData.isTrialEnabled && (
+            <div className="mt-3">
+              <label className="text-sm font-medium mb-1 block">Trial Days</label>
+              <input
+                type="number"
+                className="border border-gray-300 p-2 rounded-lg w-full"
+                value={formData.trialDays}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    trialDays: Number(e.target.value),
+                  })
+                }
+              />
+              {localError.trialDays && (
+                <p className="text-red-500 text-xs">{localError.trialDays}</p>
+              )}
+            </div>
+          )}
+        </div>
+        <div className="flex justify-end gap-3 mt-3">
           <button
             className="px-4 py-2 bg-[#65051C] text-white rounded-lg"
             onClick={onClose}

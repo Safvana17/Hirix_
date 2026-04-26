@@ -1,9 +1,11 @@
 import { TemplateEntity } from "../../../../Domain/entities/Template.entity"
+import { NotificationChannel } from "../../../../Domain/enums/notification"
 
 export interface AdminGetAllTemplatesInputDTO {
     page: number
     limit?: number
-    isActive?: boolean
+    search?: string
+    channel?: NotificationChannel
 }
 
 export interface AdminGetAllTemplatesOutputDTO {

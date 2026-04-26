@@ -39,6 +39,8 @@ export const createSubscriptionPlanSchema = z.object({
   hasDetailedFeedback: z
     .boolean()
     .optional(),
+  isTrialEnabled: z.boolean(),
+  trialDays: z.coerce.number().default(0)
   })
   .refine((data) =>
     !(data.planName.toLowerCase() === "free" && data.price > 0),{

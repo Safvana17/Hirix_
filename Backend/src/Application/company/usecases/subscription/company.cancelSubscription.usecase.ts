@@ -57,6 +57,7 @@ export class CompanyCancelSubscriptionUsecase implements ICompanyCancelSubscript
             new Date(),
             null,
             subscriptionStatus.ACTIVE,
+            false,
             true
         )
         const currentSubscription = await this._subscriptionRepository.create(newSubscription)

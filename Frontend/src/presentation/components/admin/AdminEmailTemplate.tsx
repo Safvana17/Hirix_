@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Button, Typography, Grid, Pagination } from '@mui/material'
+import { Box, Button, Typography, Grid, Pagination, MenuItem, TextField, InputAdornment } from '@mui/material'
 import TemplateModal from '../modal/EmailTemplateModal'
 import TemplateCard from './EmailTemplateCard'
 import type { TemplatePayload, EmailTemplate } from '../../../types/template'
@@ -8,7 +8,11 @@ import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
 import { createEmailTemplate, deleteEmailTemplate, editEmailTemplate, getAllTemplates, updateEmailTemplateStatus } from '../../../redux/slices/features/settingsSlice/adminSettings'
 import ConfirmationModal from '../modal/ConfirmationModal'
+import { Search } from '@mui/icons-material'
+import type { NotificationChannel } from '../../../types/notification'
+import { useDebounce } from '../../../hooks/useDebounce'
 
+const notificationChannel: NotificationChannel[] = ['EMAIL', 'IN_APP']
 
 export default function TemplatePage() {
   const dispatch = useDispatch<AppDispatch>()
@@ -16,6 +20,9 @@ export default function TemplatePage() {
   const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate | null>(null)
   const [mode, setMode] = useState<'create' | 'edit' | 'view'>('create')
   const [page, setPage ] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [channel, setChannel] = useState<NotificationChannel | null>(null)
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const { templates, pagination } = useSelector((state: RootState) => state.AdminSettings)
 
   const [modalConfig, setModalConfig] = useState<{
@@ -33,8 +40,8 @@ export default function TemplatePage() {
   })
 
   useEffect(() => {
-    dispatch(getAllTemplates({params: { page, limit:9}}))
-  }, [dispatch, page])
+    dispatch(getAllTemplates({params: {search: debouncedSearchTerm, channel: channel || undefined, page, limit:9}}))
+  }, [dispatch, page, debouncedSearchTerm, channel])
 
   const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
     setModalConfig({...config, isOpen: true})
@@ -134,6 +141,81 @@ export default function TemplatePage() {
         >
           Add Template
         </Button>
+      </Box>
+      <Box display="flex" gap={2} my={2}>
+        <TextField
+          fullWidth
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search questions, categories..."
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <Search sx={{color: '#fff'}} />
+              </InputAdornment>
+            )
+          }}
+          sx={{
+            borderRadius: 2,
+            backgroundColor: "#6B4705",
+            "& .MuiInputBase-input": {
+              color: "#fff"
+            },
+            "& .MuiInputBase-input::placeholder": {
+              color: "#fff",
+              opacity: 0.7
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#6B4705"
+              },
+              "&:hover fieldset": {
+                borderColor: "#6B4705"
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#6B4705"
+              }
+            }
+          }}
+        />
+        <TextField
+          select 
+          label="Channel" 
+          value={channel} 
+          onChange={(e) => setChannel(e.target.value as NotificationChannel)} 
+          sx={{ 
+            width: 150, 
+            background: "#6B4705", 
+            borderRadius: 3,
+            "& .MuiSelect-select": {
+              color: "#fff"
+            },
+            "& .MuiInputLabel-root": {
+              color: "#fff"
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#fff"
+            },
+            "& .MuiSvgIcon-root": {
+              color: "#fff"
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#6B4705"
+              },
+              "&:hover fieldset": {
+                borderColor: "#6B4705"
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#6B4705"
+              }
+            }
+          }}>
+          <MenuItem value="easy">Select Channel</MenuItem>
+          {notificationChannel.map((d) => (
+            <MenuItem key={d} value={d}>{d}</MenuItem>
+          ))}
+        </TextField>
       </Box>
 
       {templates.length === 0 ? (

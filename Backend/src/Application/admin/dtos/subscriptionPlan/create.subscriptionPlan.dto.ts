@@ -16,6 +16,8 @@ export interface AdminCreateSubscriptionPlanInputDTO {
     canAccessPremiumQuestions?: boolean;
     maxPracticePerDay?: number | null
     hasDetailedFeedback?: boolean
+    isTrialEnabled: boolean
+    trialDays: number
 }
 
 export interface AdminCreateSubscriptionPlanOutputDTO {

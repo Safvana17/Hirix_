@@ -60,6 +60,7 @@ export class CompanyChangeSubscriptionUsecase implements ICompanyChangeSubscript
               startDate: new Date(),
               endDate: null,
               status: subscriptionStatus.ACTIVE,
+              isTrial: false,
               isCurrent: true
            })
         }

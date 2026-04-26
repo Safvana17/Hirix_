@@ -150,6 +150,8 @@ export const API_ROUTES = {
         `/${role}/subscription/${id}/cancel`,
       INVOICE: (id: string, role: UserRole) => 
         `/${role}/subscription/${id}/invoice`,
+      START_TRIAL: (id: string, role: UserRole) =>
+        `/${role}/subscription/${id}/start-trial`
     },
     NOTIFICATION : {
       GET_NOTIFICATIONS: (role: UserRole) => 

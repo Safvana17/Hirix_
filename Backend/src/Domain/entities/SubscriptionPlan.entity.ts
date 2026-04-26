@@ -19,6 +19,9 @@ export class SubscriptionPlanEntity {
     maxPracticePerDay?: number | null
     hasDetailedFeedback?: boolean
 
+    isTrialEnabled: boolean
+    trialDays: number
+
     isActive: boolean;
     isDeleted: boolean;
 
@@ -29,6 +32,8 @@ export class SubscriptionPlanEntity {
         price: number, 
         billingCycle: BillingCycle, 
         durationDays: number | null, 
+        isTrialEnabled: boolean,
+        trailDays: number,
         isActive: boolean, 
         isDeleted: boolean,
         canCreateCustomQuestions?: boolean,
@@ -39,7 +44,7 @@ export class SubscriptionPlanEntity {
         maxInterviewsPerMonth?: number | null,
         canAccessPremiumQuestions?: boolean,
         maxPracticePerDay?: number | null,
-        hasDetailedFeedback?: boolean
+        hasDetailedFeedback?: boolean,
     ){
         this.id = id
         this.planName = planName
@@ -47,6 +52,7 @@ export class SubscriptionPlanEntity {
         this.price = price
         this.billingCycle = billingCycle
         this.durationDays = durationDays
+        this.isTrialEnabled = isTrialEnabled
         this.isActive = isActive
         this.isDeleted = isDeleted
         this.canCreateCustomQuestions = canCreateCustomQuestions
@@ -58,5 +64,6 @@ export class SubscriptionPlanEntity {
         this.canAccessPremiumQuestions = canAccessPremiumQuestions
         this.maxPracticePerDay = maxPracticePerDay
         this.hasDetailedFeedback = hasDetailedFeedback
+        this.trialDays = trailDays
     }
 }

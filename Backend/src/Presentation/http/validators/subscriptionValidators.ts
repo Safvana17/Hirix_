@@ -48,3 +48,8 @@ export const GetInvoiceSchema = z.object({
   id: z.string().regex(/^[0-9a-fA-F]{24}$/)
 })
 export type getInvoiceParam = z.infer<typeof GetInvoiceSchema>
+
+export const startTrialSchema = z.object({
+  id: z.string().regex(/^[0-9a-fA-F]{24}$/)
+})
+export type subscriptionParam = z.infer<typeof startTrialSchema>

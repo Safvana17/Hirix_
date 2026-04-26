@@ -18,6 +18,8 @@ export interface SubscriptionPlan {
     canAccessPremiumQuestions?: boolean;
     maxPracticePerDay?: number | null;
     hasDetailedFeedback?: boolean;
+    isTrialEnabled: boolean;
+    trialDays?: number
     isActive: boolean
     isDeleted: boolean
 }
@@ -38,6 +40,8 @@ export interface PlanPayload {
     canAccessPremiumQuestions?: boolean;
     maxPracticePerDay?: number | null;
     hasDetailedFeedback?: boolean;
+    isTrialEnabled: boolean;
+    trialDays?: number
     isActive?: boolean
     isDeleted?: boolean
 }

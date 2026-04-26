@@ -10,6 +10,8 @@ export class SubscriptionPlanMapper {
             doc.price,
             doc.billingCycle, 
             doc.durationDays,
+            doc.isTrialEnabled,
+            doc.trialDays,
             doc.isActive,
             doc.isDeleted,
             doc.canCreateCustomQuestions,
@@ -20,7 +22,7 @@ export class SubscriptionPlanMapper {
             doc.maxInterviewsPerMonth,
             doc.canAccessPremiumQuestions,
             doc.maxPracticePerDay,
-            doc.hasDetailedFeedback
+            doc.hasDetailedFeedback,
         )
 
         return plan
@@ -33,6 +35,8 @@ export class SubscriptionPlanMapper {
            price: entity.price,
            billingCycle: entity.billingCycle,
            durationDays: entity.durationDays,
+           isTrialEnabled: entity.isTrialEnabled,
+           trialDays: entity.trialDays,
            isActive: entity.isActive,
            isDeleted: entity.isDeleted,
            canCreateCustomQuestions: entity.canCreateCustomQuestions,

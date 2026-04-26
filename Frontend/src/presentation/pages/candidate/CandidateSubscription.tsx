@@ -30,6 +30,7 @@ const CandidateSubscription: React.FC= () => {
     }
   }, [dispatch, page, user, currentPage, pageSize])
   console.log('current plan: ', currentPlan)
+  console.log('plans: ', plans)
 
   if(!user) return
   const handleDownloadInvoice = async(paymentId: string) => {

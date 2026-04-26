@@ -8,6 +8,7 @@ export class SubscriptionEntity {
     startDate: Date;
     endDate: Date | null;
     status: subscriptionStatus;
+    isTrial: boolean;
     isCurrent: boolean;
     paymentId?: string
 
@@ -19,6 +20,7 @@ export class SubscriptionEntity {
         startDate: Date,
         endDate: Date | null,
         status: subscriptionStatus,
+        isTrial: boolean,
         isCurrent: boolean,
         paymentId?: string
     ) {
@@ -28,7 +30,8 @@ export class SubscriptionEntity {
         this.planId = planId;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.status = status
+        this.status = status;
+        this.isTrial = isTrial;
         this.isCurrent = isCurrent;
         this.paymentId = paymentId 
     }

@@ -18,6 +18,8 @@ export interface ISubscriptionPlan extends Document {
     canAccessPremiumQuestions: boolean;
     maxPracticePerDay: number | null
     hasDetailedFeedback: boolean
+    isTrialEnabled: boolean
+    trialDays: number
     isActive: boolean;
     isDeleted: boolean;
     createdAt: Date;
@@ -75,6 +77,14 @@ const subscriptionPlanSchema: Schema<ISubscriptionPlan> = new Schema ({
     },
     hasDetailedFeedback: {
         type: Boolean
+    },
+    isTrialEnabled: {
+        type: Boolean,
+        default: false
+    },
+    trialDays: {
+        type: Number,
+        default: 0
     },
     isActive: {
         type: Boolean

@@ -21,6 +21,7 @@ export enum SubscriptionPlanStatus {
 }
 
 export enum subscriptionStatus {
+    TRIAL = 'trial',
     ACTIVE = 'active',
     EXPIRED = 'expired',
     CANCELLED = 'cancelled',

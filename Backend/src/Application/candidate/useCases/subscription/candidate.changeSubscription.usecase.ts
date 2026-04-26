@@ -60,6 +60,7 @@ export class CandidateChangeSubscriptionUsecase implements ICandidateChangeSubsc
               startDate: new Date(),
               endDate: null,
               status: subscriptionStatus.ACTIVE,
+              isTrial: false,
               isCurrent: true
            })
         }

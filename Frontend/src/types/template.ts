@@ -1,3 +1,5 @@
+import type { NotificationChannel } from "./notification";
+
 export type TemplateChannel = 'EMAIL' | 'IN_APP'
 
 export interface EmailTemplate {
@@ -46,7 +48,8 @@ export interface TemplatePayload {
 // }
 
 export interface GetAllTemplatesArgs {
-    isActive?: boolean
+    search?: string
+    channel?: NotificationChannel
     page?: number
     limit?: number
 }

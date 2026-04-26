@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ICandidateGetAllPlansUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getAllPlans.usecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
-import { CancelSubscriptionParam, getInvoiceParam, PaymentQuery, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
+import { CancelSubscriptionParam, getInvoiceParam, PaymentQuery, subscriptionParam, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { ICandidateGetCurrentPlanUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getCurrentPlan.usecase";
@@ -12,6 +12,8 @@ import { ICandidateMarkPaymentFailureUsecase } from "../../../../Application/can
 import { ICandidateGetBillingHistoryUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getBillingHistory.usecase";
 import { ICandidateCancelSubscriptionUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.cancelSubscription.usecase";
 import { ICandidateGetInvoiceUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.getInvoice.usecase";
+import { logger } from "../../../../utils/logging/loger";
+import { ICandidateStartFreeTrialUsecase } from "../../../../Application/candidate/interfaces/subscription/ICandidate.startFreeTrial.usecase";
 
 export class CandidateSubscriptionController {
     constructor(
@@ -23,12 +25,14 @@ export class CandidateSubscriptionController {
         private _markFailure: ICandidateMarkPaymentFailureUsecase,
         private _getBillingHistory: ICandidateGetBillingHistoryUsecase,
         private _CancelSubscription: ICandidateCancelSubscriptionUsecase,
-        private _getInvoice: ICandidateGetInvoiceUsecase
+        private _getInvoice: ICandidateGetInvoiceUsecase,
+        private _startTrial: ICandidateStartFreeTrialUsecase,
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
         const parsed = UserPlanQuerySchema.parse(req.query)
         const subscriptionPlans = await this._getAllPlans.execute(parsed)
+        logger.info(subscriptionPlans)
         return sendSuccess(res, statusCode.OK, '', subscriptionPlans)
     })
 
@@ -87,5 +91,12 @@ export class CandidateSubscriptionController {
         )
 
         return res.send(result.buffer)
+    })
+
+    startTrial = asyncHandler(async(req: Request, res: Response) => {
+        const candidateId = req.user.id
+        const { id }= req.validatedParams as subscriptionParam
+        await this._startTrial.execute({candidateId, planId: id})
+        return sendSuccess(res, statusCode.OK, '')
     })
 }

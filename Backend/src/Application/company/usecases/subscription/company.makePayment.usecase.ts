@@ -51,6 +51,7 @@ export class CompanyMakePaymentUsecase implements ICompanyMakePaymentUsecase {
             startDate,
             endDate,
             subscriptionStatus.PENDING,
+            false,
             false
         )
         const subscription = await this._subscriptionRepository.create(newSubscription)

@@ -46,6 +46,7 @@ export class CandidateGetCurrentPlanUsecse implements ICandidateGetCurrentPlanUs
                 startDate: new Date(),
                 endDate: null,
                 status: subscriptionStatus.ACTIVE,
+                isTrial: false,
                 isCurrent: true,
             })
         }

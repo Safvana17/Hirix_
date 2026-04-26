@@ -50,6 +50,7 @@ const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, set
         toast.error(typeof error === 'string' ? error : 'Failed to change subscription')
        }
   }
+  console.log('plan from card:', plans)
   return (
     <div>
       <Box
@@ -59,6 +60,7 @@ const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, set
         mt={2}
       >
         {plans.map((p) => (
+          
           <Card
             key={p.id}
             sx={{
@@ -144,6 +146,11 @@ const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, set
                 })}
               </Stack>
               <Box display="flex" gap={1} mt={2}>
+                {p.isTrialEnabled && (
+                  <button>
+                    Start Trial
+                  </button>
+                )}
                 <button 
                   onClick={ () => handleChangeSubscription(p.id)}
                   disabled={currentPlan?.id === p.id}

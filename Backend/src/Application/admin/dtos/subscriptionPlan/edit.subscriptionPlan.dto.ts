@@ -7,7 +7,7 @@ export interface AdminEditSubscriptionPlanInputDTO {
     target: TargetType;
     price: number;
     billingCycle: BillingCycle;
-    durationDays: number;
+    // durationDays: number;
     canCreateCustomQuestions?: boolean;
     canUseAdminQuestions?: boolean;
     maxCandidates?: number | null;
@@ -17,6 +17,8 @@ export interface AdminEditSubscriptionPlanInputDTO {
     canAccessPremiumQuestions?: boolean;
     maxPracticePerDay?: number | null
     hasDetailedFeedback?: boolean
+    isTrialEnabled: boolean
+    trialDays: number
 }
 
 export interface AdminEditSubscriptionPlanOutputDTO {

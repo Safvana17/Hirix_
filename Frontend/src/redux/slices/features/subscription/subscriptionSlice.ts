@@ -207,6 +207,23 @@ Blob,
     }
 })
 
+export const startFreeTrial = createAsyncThunk<
+void,
+{id: string, role: UserRole},
+{rejectValue: string}
+>('subscription/startTrial', async({id, role}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.COMMON.SUBSCRIPTION.START_TRIAL(id, role))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to start free trial')
+    }
+})
+
 const subscriptionSlice = createSlice({
     name: 'subscription',
     initialState,
@@ -314,6 +331,16 @@ const subscriptionSlice = createSlice({
         .addCase(getInvoice.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get invoice'
+        })
+        .addCase(startFreeTrial.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(startFreeTrial.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(startFreeTrial.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to start free trial'
         })
     }
 })

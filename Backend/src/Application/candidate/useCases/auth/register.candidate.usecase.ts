@@ -58,6 +58,7 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
             startDate: new Date(),
             endDate: null,
             status: subscriptionStatus.ACTIVE,
+            isTrial: false,
             isCurrent: true,
         })
         

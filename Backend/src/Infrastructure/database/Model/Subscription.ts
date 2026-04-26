@@ -9,6 +9,7 @@ export interface ISubscription extends Document {
     startDate: Date
     endDate: Date | null
     status: subscriptionStatus
+    isTrial: boolean
     isCurrent: boolean
     paymentId: string
     createdAt: Date
@@ -35,6 +36,9 @@ const SubscriptionSchema: Schema<ISubscription> = new Schema ({
     },
     status: {
         type: String
+    },
+    isTrial: {
+        type: Boolean
     },
     isCurrent: {
         type: Boolean

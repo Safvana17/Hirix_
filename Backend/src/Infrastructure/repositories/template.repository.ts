@@ -4,6 +4,7 @@ import { TemplateEntity } from "../../Domain/entities/Template.entity";
 import { ITemplateRepository } from "../../Domain/repositoryInterface/iTemplate.repository";
 import { ITemplate, TemplateModel } from "../database/Model/Template";
 import { BaseRepository } from "./base.repository";
+import { NotificationChannel } from "../../Domain/enums/notification";
 
 export class TemplateRepository extends BaseRepository<TemplateEntity, ITemplate> implements ITemplateRepository {
     constructor(){
@@ -15,13 +16,20 @@ export class TemplateRepository extends BaseRepository<TemplateEntity, ITemplate
         if(!document) return null
         return this.mapToEntity(document)
     }
-    async findAllFiltered(query: { page: number; limit: number; isActive?: boolean; }): Promise<{ data: TemplateEntity[]; totalPages: number; totalCount: number; }> {
+    async findAllFiltered(query: { search?: string, channel?: NotificationChannel, page: number; limit: number; }): Promise<{ data: TemplateEntity[]; totalPages: number; totalCount: number; }> {
         const filter: QueryFilter<ITemplate> = {
             isDeleted: false
         }
 
-        if(query.isActive){
-            filter.isActive = query.isActive
+        if(query.search){
+            filter.$or = [
+                {name: {$regex: query.search, $options: "i"}},
+                {title: {$regex: query.search, $options: "i"}},
+                {key: {$regex: query.search, $options: "i"}}
+            ]
+        }
+        if(query.channel){
+            filter.channel = query.channel
         }
 
         const skip = (query.page - 1) * query.limit

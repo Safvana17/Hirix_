@@ -32,11 +32,13 @@ export class AdminEditSubscriptionPlanUsecase implements IAdminEditSubscriptionP
             throw new AppError(subscriptionPlanMessages.error.PRICE_MUST_BE_ZERO, statusCode.BAD_REQUEST)
         }
 
-        const expectedDurationDays = DurationDays[request.billingCycle]
+        // const expectedDurationDays = DurationDays[request.billingCycle]
 
-        if (!expectedDurationDays || request.durationDays !== expectedDurationDays) {
-            throw new AppError(subscriptionPlanMessages.error.INVALID_DURATIONDAYS, statusCode.BAD_REQUEST)
-        }
+        // if (!expectedDurationDays || request.durationDays !== expectedDurationDays) {
+        //     throw new AppError(subscriptionPlanMessages.error.INVALID_DURATIONDAYS, statusCode.BAD_REQUEST)
+        // }
+
+        const durationDays = DurationDays[request.billingCycle]
 
         const limits = [
             request.maxTestsPerMonth,
@@ -68,7 +70,7 @@ export class AdminEditSubscriptionPlanUsecase implements IAdminEditSubscriptionP
         plan.target = request.target
         plan.price = request.price
         plan.billingCycle = request.billingCycle
-        plan.durationDays = request.durationDays
+        plan.durationDays = durationDays
         plan.canCreateCustomQuestions = request.canCreateCustomQuestions
         plan.canUseAdminQuestions = request.canUseAdminQuestions
         plan.canAccessPremiumQuestions = request.canAccessPremiumQuestions
@@ -78,6 +80,8 @@ export class AdminEditSubscriptionPlanUsecase implements IAdminEditSubscriptionP
         plan.maxJobRolesPerMonth = request.maxJobRolesPerMonth
         plan.maxPracticePerDay = request.maxPracticePerDay
         plan.hasDetailedFeedback = request.hasDetailedFeedback
+        plan.isTrialEnabled = request.isTrialEnabled
+        plan.trialDays = request.trialDays
 
         const updatedPlan = await this._subscriptionPlanRepository.update(plan.id, plan)
 

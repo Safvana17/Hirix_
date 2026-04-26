@@ -20,7 +20,8 @@ export const TemplateSchema = z.object({
 export const getAllTemplateQSchema = z.object({
   page: z.coerce.number().default(1),
   limit: z.coerce.number().optional(),
-  isActive: z.boolean().optional()
+  search: z.string().optional(),
+  channel: z.nativeEnum(NotificationChannels).optional(),
 })
 export type GetAllTemplateQuery = z.infer< typeof getAllTemplateQSchema>
 

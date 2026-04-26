@@ -46,6 +46,17 @@ export class SubscriptionRepository extends BaseRepository<SubscriptionEntity, I
         return documents.map(d => this.mapToEntity(d))
     }
 
+    async findTrialByUserAndPlan(userId: string, planId: string): Promise<SubscriptionEntity | null> {
+        const document = await this._model.findOne({
+            ownerId: userId,
+            planId,
+            isTrial: true
+        })
+        if(!document) return null
+        return this.mapToEntity(document)
+
+    }
+
     protected mapToEntity(doc: ISubscription): SubscriptionEntity {
         return SubscriptionMapper.toEntity(doc)
     }

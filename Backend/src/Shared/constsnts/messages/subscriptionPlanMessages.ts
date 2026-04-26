@@ -29,5 +29,7 @@ export const subscriptionPlanMessages = {
         NOT_CURRENT_SUBSCRIPTION: 'Requested subscription is not current subscription',
         CANNOT_CANCEL_FREE_PLAN: 'You cannot cancel free plan',
         CANNOT_CREATE_QUESTION: 'You don’t have access to create questions on your current plan',
+        PLAN_DOES_NOT_SUPPORT_FREE_TRIAL: 'The plan does not support free trial',
+        FREE_TRIAL_ALREADY_USED: 'Free trial for this plan already used',
     }
 }

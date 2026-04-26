@@ -51,6 +51,7 @@ export class CandidateMakePaymentUsecase implements ICandidateMakePaymentUsecase
             startDate,
             endDate,
             subscriptionStatus.PENDING,
+            false,
             false
         )
         const subscription = await this._subscriptionRepository.create(newSubscription)

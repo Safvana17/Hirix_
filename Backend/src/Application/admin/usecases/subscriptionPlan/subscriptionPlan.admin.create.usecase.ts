@@ -64,6 +64,8 @@ export class AdminCreateSubscriptionPlnUsecase implements ICreateSubscriptionPla
             request.price,
             request.billingCycle,
             durationDays,
+            request.isTrialEnabled,
+            request.trialDays ?? 0,
             true,
             false,
             request.canCreateCustomQuestions ?? false,
@@ -74,7 +76,7 @@ export class AdminCreateSubscriptionPlnUsecase implements ICreateSubscriptionPla
             request.maxInterviewsPerMonth,
             request.canAccessPremiumQuestions,
             request.maxPracticePerDay,
-            request.hasDetailedFeedback
+            request.hasDetailedFeedback,
         )
 
         await this._subscriptionPlanRepository.create(newPlan)

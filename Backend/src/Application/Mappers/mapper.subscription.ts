@@ -12,6 +12,7 @@ export class SubscriptionMapper{
             doc.startDate,
             doc.endDate,
             doc.status,
+            doc.isTrial,
             doc.isCurrent,
             doc.paymentId
         )
@@ -27,6 +28,7 @@ export class SubscriptionMapper{
             startDate: entity.startDate,
             endDate: entity.endDate,
             status: entity.status,
+            isTrial: entity.isTrial,
             isCurrent: entity.isCurrent,
             paymentId: entity.paymentId
         }

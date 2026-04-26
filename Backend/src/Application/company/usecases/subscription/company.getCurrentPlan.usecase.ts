@@ -47,6 +47,7 @@ export class CompanyGetCurrentPlanUsecase implements ICompanyGetCurrentPlanUseca
                 startDate: new Date(),
                 endDate: null,
                 status: subscriptionStatus.ACTIVE,
+                isTrial: false,
                 isCurrent: true,
             })
         }
