@@ -143,6 +143,7 @@ import { AdminUpdateTemplateUsecase } from "../../../Application/admin/usecases/
 import { AdminDeleteTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.deleteTemplate.usecase";
 import { AdminDeleteNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.deleteNotificationRule.usecase";
 import { CandidateStartFreeTrialUsecase } from "../../../Application/candidate/useCases/subscription/candidate.startFreeTrial.usecase";
+import { CompanyStartTrialUsecase } from "../../../Application/company/usecases/subscription/company.startTrial.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -499,6 +500,11 @@ const iCompanyGetInvoice = new CompanyDownloadInvoiceUsecase(
     iSubscriptionRepository,
     iPdfService
 )
+const iComapnyStartTrial = new CompanyStartTrialUsecase(
+    iCompanyRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -757,7 +763,8 @@ export const iCompanySubscriptionController = new CompanySubscriptionController(
     iCompanyMarkFailure,
     iCompanyGetBillingHistory,
     iCompanyCancelSubscription,
-    iCompanyGetInvoice
+    iCompanyGetInvoice,
+    iComapnyStartTrial,
 )
 
 export const iCandidateSubscriptionController = new CandidateSubscriptionController(

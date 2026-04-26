@@ -5,7 +5,7 @@ import type { CurrentPlan, SubscriptionPlan } from '../../../types/subscription'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
-import { changeSubscription } from '../../../redux/slices/features/subscription/subscriptionSlice'
+import { changeSubscription, getCurrentPlan, startFreeTrial } from '../../../redux/slices/features/subscription/subscriptionSlice'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../../../constants/routes'
 
@@ -51,6 +51,17 @@ const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, set
        }
   }
   console.log('plan from card:', plans)
+
+  const handleStartTrial = async(planId: string) => {
+    try {
+      if(!user) return
+      await dispatch(startFreeTrial({id: planId, role: user.role})).unwrap()
+      await dispatch(getCurrentPlan({role: user.role}))
+      toast.success('Free trial started successfully.')
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to start free trial')
+    }
+  }
   return (
     <div>
       <Box
@@ -147,9 +158,14 @@ const CompanyPlans: React.FC<CompanyPlansProps>= ({plans, currentPlan, page, set
               </Stack>
               <Box display="flex" gap={1} mt={2}>
                 {p.isTrialEnabled && (
-                  <button>
+                  p.id !== currentPlan?.id && (
+                  <button 
+                    onClick={() => handleStartTrial(p.id)}
+                    className='cursor-pointer w-full p-2 border rounded-lg text-white font-bold bg-[#021A30]'
+                  >
                     Start Trial
                   </button>
+                  )
                 )}
                 <button 
                   onClick={ () => handleChangeSubscription(p.id)}

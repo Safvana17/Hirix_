@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ICompanyGetAllPlanUsecase } from "../../../../Application/company/interfaces/subscription/ICompanyGetAllPlanUsecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
-import { CancelSubscriptionParam, getInvoiceParam, PaymentQuery, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
+import { CancelSubscriptionParam, getInvoiceParam, PaymentQuery, subscriptionParam, UserPlanQuerySchema } from "../../validators/subscriptionValidators";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
@@ -13,6 +13,7 @@ import { ICompanyPaymentFailureUsecase } from "../../../../Application/company/i
 import { IGetCompanyBillingHistoryUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.getBillingHistory.usecase";
 import { ICompanyCancelSubscriptionUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.cancelSubscription.usecase";
 import { ICompanyDownloadInvoiceUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.downloadInvoice.usecase";
+import { ICompanyStartTrialUsecase } from "../../../../Application/company/interfaces/subscription/ICompany.startTrial.usecase";
 
 
 export class CompanySubscriptionController {
@@ -25,7 +26,8 @@ export class CompanySubscriptionController {
         private _paymentFailure: ICompanyPaymentFailureUsecase,
         private _getBillingHistory: IGetCompanyBillingHistoryUsecase,
         private _cancelSubscription: ICompanyCancelSubscriptionUsecase,
-        private _getInvoice: ICompanyDownloadInvoiceUsecase
+        private _getInvoice: ICompanyDownloadInvoiceUsecase,
+        private _startTrial: ICompanyStartTrialUsecase,
     ) {}
 
     getAllPlan = asyncHandler(async (req: Request, res: Response) => {
@@ -91,5 +93,12 @@ export class CompanySubscriptionController {
         )
 
         return res.send(result.buffer)
+    })
+
+    startTrial = asyncHandler(async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        const { id }= req.validatedParams as subscriptionParam
+        await this._startTrial.execute({companyId, planId: id})
+        return sendSuccess(res, statusCode.OK, '')
     })
 }

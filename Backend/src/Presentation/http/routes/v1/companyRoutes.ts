@@ -8,7 +8,7 @@ import { validate } from "../../middlewares/validate";
 import { createQuestionSchema, editQuestionSchema } from "../../validators/questionValidator";
 import { createJobRoleSchema, EditJobRoleSchema, updateJobRoleSchema} from "../../validators/jobRoleValidator";
 import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updateProfileSchema } from "../../validators/settingsValidator";
-import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema } from "../../validators/subscriptionValidators";
+import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from "../../validators/subscriptionValidators";
 import { certificateUpload } from "../../middlewares/certificateUpload";
 
 const router = Express.Router()
@@ -47,6 +47,9 @@ router.patch(ROUTES.COMPANY.SUBSCRIPTION.MARK_FAILURE, authHandler(iTokenService
 router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_BILLING_HISTORY, authHandler(iTokenService), validate(PaymnetQuerySchema, 'query'), iCompanySubscriptionController.getBillingHistory)
 router.patch(ROUTES.COMPANY.SUBSCRIPTION.CANCEL, authHandler(iTokenService),verifyCsrf, validate(CancelSubscriptionSchema, 'params'), iCompanySubscriptionController.cancelSubscription)
 router.get(ROUTES.COMPANY.SUBSCRIPTION.INVOICE, authHandler(iTokenService), validate(GetInvoiceSchema, 'params'), iCompanySubscriptionController.getInvoice)
+router.post(ROUTES.COMPANY.SUBSCRIPTION.START_TRIAL, authHandler(iTokenService), verifyCsrf, validate(startTrialSchema, 'params'), iCompanySubscriptionController.startTrial)
+
+
 
 //notifications
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)

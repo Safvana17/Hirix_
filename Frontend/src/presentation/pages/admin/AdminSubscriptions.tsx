@@ -228,6 +228,7 @@ const AdminSubscriptions: React.FC = () => {
                     }}
                   >
                     <Box display="flex" justifyContent="space-between" alignItems="center">
+
                       <Box
                         sx={{
                           fontSize: 10,
@@ -256,7 +257,6 @@ const AdminSubscriptions: React.FC = () => {
                         {p.target}
                       </Box>
                     </Box>
-
                     <Box mt={1}>
                       <Typography variant="h5" fontWeight="bold">
                         ₹{p.price}
@@ -306,7 +306,22 @@ const AdminSubscriptions: React.FC = () => {
                         return null
                       })}
                     </Stack>
-
+                    {p.isTrialEnabled && (
+                      <Box
+                        sx={{
+                          fontSize: 11,
+                          px: 2.2,
+                          py: 0.6,
+                          borderRadius: "20px",
+                          backgroundColor: "#b57cda",
+                          color: "#fff",
+                          m: 2,
+                          textAlign: 'center'
+                        }}
+                      >
+                        {p.trialDays} days trial
+                      </Box>
+                    )}
                     <Box display="flex" gap={1} mt={2}>
                       <Tooltip title='Edit plan'>
                       <button 
