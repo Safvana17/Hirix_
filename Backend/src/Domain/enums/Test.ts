@@ -1,0 +1,21 @@
+export enum TestStatus {
+    DRAFT = 'DRAFT',
+    ACTIVE = 'ACTIVE',
+    COMPLETED = 'COMPLETED',
+    CANCELLED = 'CANCELLED'
+}
+
+export enum QuestionSource {
+    ADMIN_LIBRARY = 'ADMIN_LIBRARY',
+    COMPANY_LIBRARY = 'COMPANY_LIBRARY',
+    TEXT_ONLY = 'TEST_ONLY'
+}
+
+export enum CandidateTestStatus {
+   INVITED = 'INVITED',
+   IN_PROGRESS = 'IN_PROGRESS',
+   SUBMITTED = 'SUBMITTED',
+   EXPIRED = 'EXPIRED',
+   DISQUALIFIED = 'DISQUALIFIED'
+}
+
