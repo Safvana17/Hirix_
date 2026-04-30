@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { getAllQuestionsParams, getAllQuestionsResponse, Question, QuestionFormData } from "../../../../types/question";
+import type { getAllQuestionsParams, getAllQuestionsResponse, getQuestionsForTestParams, Question, QuestionFormData } from "../../../../types/question";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 import type { AxiosError } from "axios";
@@ -116,6 +116,25 @@ export const deleteQuestion = createAsyncThunk<
     }
 })
 
+export const getQuestionsForTest = createAsyncThunk<
+Question[],
+{params: getQuestionsForTestParams | undefined},
+{rejectValue: string}
+>('questions/getTestQuestions', async({params}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.TEST.GET_QUESTIONS, {params})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log('response from slice: ', response)
+        return response.data.data
+
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get all questions')
+    }
+})
+
 const questionSlice = createSlice({
     name: 'Question',
     initialState,
@@ -178,6 +197,17 @@ const questionSlice = createSlice({
          .addCase(deleteQuestion.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get Question'
+         })
+         .addCase(getQuestionsForTest.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getQuestionsForTest.fulfilled, (state, action) => {
+            state.loading = false
+            state.questions = action.payload
+         })
+         .addCase(getQuestionsForTest.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get questions'
          })
     }
 })

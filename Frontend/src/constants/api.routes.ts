@@ -40,19 +40,15 @@ export const API_ROUTES = {
       `/company/jobrole/${id}/status`,
     DELETE_JOB_ROLE: (id: string) => 
       `/company/jobrole/${id}`,
-    // SUBSCRIPTION: {
-    //   GET_ALL: `/company/plans`,
-    //   GET_CURRENT: `/company/plan`,
-    //   CHANGE_SUBSCRIPTION: `/company/change-subscription`,
-    //   MAKE_PAYMENT: '/company/subscription/payment',
-    //   CONFIRM_PAYMENT: '/company/subscription/confirm',
-    //   MARK_FAILURE: '/company/subscription/failure',
-    //   GET_BILLING_HISTORY: '/company/subscription/billing-history',
-    //   CANCEL: (id: string) =>
-    //     `/company/subscription/${id}/cancel`,
-    //   INVOICE: (id: string) => 
-    //     `company/subscription/${id}/invoice`,
-    // }
+    TEST: {
+      CREATE: '/company/test',
+      EDIT: (id: string) => 
+        `/company/test/${id}`,
+      GET_ALL: '/company/tests',
+      GET_BY_ID: (id: string) => 
+        `/company/test/${id}`,
+      GET_QUESTIONS: '/company/test/questions'
+    }
   },
 
   ADMIN: {

@@ -63,6 +63,12 @@ export interface getAllQuestionsParams {
   limit?: number;
 }
 
+export interface getQuestionsForTestParams {
+  category?: string;
+  type?: QuestionType;
+  difficulty?: QuestionDifficulty;
+}
+
 export interface editQuestionPaylod {
   id: string
 

@@ -34,6 +34,7 @@ const NOTIFICATION_EVENTS: string[] = [
   'SUBSCRIPTION_REMINDER',
   'ACCOUNT_DELETED',
   'ACCOUNT_RESTORE',
+  'TEST_INVITE'
 ]
 
 const notificationChannel: NotificationChannel[] = ['EMAIL', 'IN_APP']

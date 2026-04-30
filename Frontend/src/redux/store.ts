@@ -9,6 +9,7 @@ import PracticeQuestionSlice from './slices/features/question/practiceQuestionSl
 import SubscriptionPlanSlice from './slices/features/subscription/subscriptionPlanSlice'
 import SubscriptionSlice from './slices/features/subscription/subscriptionSlice'
 import AdminSettingsSlice from './slices/features/settingsSlice/adminSettings'
+import CompanyTestSlice from './slices/features/test/companyTestSlice'
 
 
 
@@ -23,7 +24,8 @@ export const store = configureStore({
         practiceQuestion: PracticeQuestionSlice,
         subscriptionPlan: SubscriptionPlanSlice,
         subscription: SubscriptionSlice,
-        AdminSettings: AdminSettingsSlice
+        AdminSettings: AdminSettingsSlice,
+        companyTest: CompanyTestSlice
     }
 })
 

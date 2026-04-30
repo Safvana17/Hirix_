@@ -17,6 +17,9 @@ export const ROUTES = {
     JOB_ROLES: '/company/job-roles',
     QUESTIONS: '/company/questions',
     SUBSCRIPTION: '/company/subscriptions',
+    TEST: '/company/tests',
+    CREATE_TEST: '/company/test/create',
+    CREATE_TEST_SUCCESS: '/company/test/success'
   },
 
   CANDIDATE: {

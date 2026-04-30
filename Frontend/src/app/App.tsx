@@ -21,6 +21,9 @@ import PaymentStatus from '../presentation/components/common/PaymentStatus'
 import CandidateSubscription from '../presentation/pages/candidate/CandidateSubscription'
 import PaymentPage from '../presentation/components/common/PayemntPage'
 import AdminSettings from '../presentation/pages/admin/AdminSettings'
+import CompanyTest from '../presentation/pages/company/CompanyTest'
+import CreateTestPage from '../presentation/pages/company/CreateTestPage'
+import TestCreateSuccessPage from '../presentation/components/company/test/TestCreateSuccessPage'
 
 
 
@@ -96,6 +99,24 @@ const App = () => {
             </RoleRoute>
           } />
 
+          <Route path={ROUTES.COMPANY.TEST} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <CompanyTest />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.COMPANY.CREATE_TEST} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <CreateTestPage />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.COMPANY.CREATE_TEST_SUCCESS} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <TestCreateSuccessPage />
+            </RoleRoute>
+          } />
+          
           <Route path={ROUTES.COMPANY.SUBSCRIPTION} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <CompanySubscription />
