@@ -24,7 +24,7 @@ export interface ICandidateAnswer {
 export interface ITestCandidate extends Document {
     _id: Types.ObjectId
     testId: Types.ObjectId
-    testLink: string
+    testToken: string
     email: string
     candidateTestStatus: CandidateTestStatus
     warningCount: number
@@ -91,7 +91,7 @@ const TestCandidateSchema: Schema<ITestCandidate> = new Schema({
         type: Types.ObjectId,
         ref: "Test"
     },
-    testLink: {
+    testToken: {
         type: String
     },
     email: {

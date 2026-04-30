@@ -1,5 +1,6 @@
 import QuestionType from "../enums/questionType"
 import { QuestionSource } from "../enums/Test"
+import { TestCase } from "../valueObjects/question.testCase"
 
 export class TestQuestionEntity {
     id: string
@@ -12,7 +13,7 @@ export class TestQuestionEntity {
     description?: string
     options?: string[]
     answer?: string
-    testCase?: string[]
+    testCase?: TestCase[]
 
     constructor(
         id: string,
@@ -25,7 +26,7 @@ export class TestQuestionEntity {
         description?: string,
         options?: string[],
         answer?: string,
-        testCase?: string[]
+        testCase?: TestCase[]
     ) {
         this.id = id
         this.source = source

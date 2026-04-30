@@ -5,7 +5,7 @@ export class TestCandidateEntity {
     id: string
     testId: string
     email: string
-    testLink: string
+    testToken: string
     candidateTestStatus: CandidateTestStatus
     warningCount: number
     candidateAnswers: CandidateAnswerEntity[]
@@ -17,7 +17,7 @@ export class TestCandidateEntity {
         id: string,
         testId: string,
         email: string,
-        testLink: string,
+        testToken: string,
         candidateTestStatus: CandidateTestStatus,
         warningCount: number,
         candidateAnswers: CandidateAnswerEntity[],
@@ -28,7 +28,7 @@ export class TestCandidateEntity {
         this.id = id
         this.testId = testId
         this.email = email
-        this.testLink = testLink
+        this.testToken = testToken
         this.candidateTestStatus = candidateTestStatus
         this.warningCount = warningCount
         this.candidateAnswers = candidateAnswers

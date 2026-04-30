@@ -100,4 +100,8 @@ export class TokenService implements ITokenService {
         const result = await redisClient.exists(`bl_${token}`)
         return result === 1
     }
+
+    generateTestToken(): string {
+        return crypto.randomBytes(32).toString("hex")
+    }
 }

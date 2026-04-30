@@ -8,7 +8,7 @@ export enum TestStatus {
 export enum QuestionSource {
     ADMIN_LIBRARY = 'ADMIN_LIBRARY',
     COMPANY_LIBRARY = 'COMPANY_LIBRARY',
-    TEXT_ONLY = 'TEST_ONLY'
+    TEST_ONLY = 'TEST_ONLY'
 }
 
 export enum CandidateTestStatus {

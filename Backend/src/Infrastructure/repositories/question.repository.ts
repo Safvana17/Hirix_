@@ -108,6 +108,41 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
             totalCount
         }
     }
+
+    async findAllForTest(query: { difficulty?: QuestionDifficulty; type?: QuestionType; category?: string; companyId: string; includeCompany: boolean; }): Promise<{ questions: QuestionEntity[]; }> {
+        const filter: QueryFilter<IQuestion> = {
+            isDeleted: false
+        }
+
+        if(query.includeCompany){
+            filter.$or = [
+                {createdBy: 'Admin'},
+                {createdById: query.companyId}
+            ]
+        }else{
+            filter.$or = [
+                {createdBy: 'Admin'}
+            ]
+        }
+        if(query.category){
+            filter.categoryId = query.category
+        }
+
+        if(query.type){
+            filter.type = query.type
+        }
+
+        if(query.difficulty) {
+            filter.difficulty = query.difficulty
+        }
+
+        const documents = await this._model.find(filter).sort({createdAt: -1})
+
+        return {
+            questions: documents.map(d => this.mapToEntity(d))
+        }
+    }
+    
     protected mapToEntity(doc: IQuestion): QuestionEntity {
         return QuestionMapper.toEntity(doc)
     }

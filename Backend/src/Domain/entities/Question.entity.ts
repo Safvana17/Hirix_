@@ -2,7 +2,7 @@ import QuestionDifficulty from "../enums/questionDifficulty";
 import QuestionType from "../enums/questionType";
 import QuestionVisibility from "../enums/questionVisibility";
 import userRole from "../enums/userRole.enum";
-import { TestCase } from "../interfaces/question.testCase";
+import { TestCase } from "../valueObjects/question.testCase";
 
 export class QuestionEntity {
     id: string;

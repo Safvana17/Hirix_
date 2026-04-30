@@ -9,7 +9,7 @@ export class TestCandidateMapper {
             doc._id.toString(),
             doc.testId.toString(),
             doc.email,
-            doc.testLink,
+            doc.testToken,
             doc.candidateTestStatus,
             doc.warningCount,
             doc.candidateAnswers.map((answer) => {
@@ -37,7 +37,7 @@ export class TestCandidateMapper {
         return {
             testId: new Types.ObjectId(entity.testId),
             email: entity.email,
-            testLink: entity.testLink,
+            testLink: entity.testToken,
             candidateTestStatus: entity.candidateTestStatus,
             warningCount: entity.warningCount,
             candidateAnswers: entity.candidateAnswers.map((answer) => ({

@@ -1,4 +1,6 @@
 import { TestStatus } from "../enums/Test"
+import { TestRules } from "../valueObjects/test.rules"
+import { TestQuestionEntity } from "./TestQuestion.entity"
 
 export class TestEntity {
     id: string
@@ -8,7 +10,8 @@ export class TestEntity {
     description: string
     startTime: Date
     endTime: Date
-    rules: string[]
+    rules: TestRules
+    questions: TestQuestionEntity[]
     testStatus: TestStatus
 
     constructor (
@@ -19,7 +22,8 @@ export class TestEntity {
         description: string,
         startTime: Date,
         endTime: Date,
-        rules: string[],
+        rules: TestRules,
+        questions: TestQuestionEntity[],
         testStatus: TestStatus
     ) {
         this.id = id
@@ -30,6 +34,7 @@ export class TestEntity {
         this.startTime = startTime
         this.endTime = endTime
         this.rules = rules
+        this.questions = questions
         this.testStatus = testStatus
     }
 }

@@ -15,7 +15,8 @@ export const NotificationEvents = {
     RESET_PASSWORD_OTP_REQUESTED: 'RESET_PASSWORD_OTP_REQUESTED',
     SUBSCRIPTION_REMINDER: 'SUBSCRIPTION_REMINDER',
     ACCOUNT_DELETED: 'ACCOUNT_DELETED',
-    ACCOUNT_RESTORE: 'ACCOUNT_RESTORE',   
+    ACCOUNT_RESTORE: 'ACCOUNT_RESTORE',  
+    TEST_INVITE: 'TEST_INVITE', 
 } as const
 
 export type NotificationEvent = (typeof NotificationEvents)[keyof typeof NotificationEvents]

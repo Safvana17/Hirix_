@@ -60,4 +60,7 @@ router.put(ROUTES.ADMIN.NOTIFICATION_RULE.EDIT, authHandler(iTokenService), veri
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
 router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iUnifiedSettingsController.markAllAsRead)
 router.delete(ROUTES.ADMIN.NOTIFICATION_RULE.DELETE, authHandler(iTokenService), validate(settingsParamsShema, 'params'), iAdminSettingsController.deleteNotificationRule)
+
+
+
 export default router;               

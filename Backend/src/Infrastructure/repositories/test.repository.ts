@@ -15,14 +15,18 @@ export class TestRepository extends BaseRepository<TestEntity, ITest> implements
         return this.mapToEntity(document)
     }
 
-    async findByName(name: string): Promise<TestEntity | null> {
-        const document = await this._model.findOne({name})
+    async findByName(name: string, companyId: string): Promise<TestEntity | null> {
+        const document = await this._model.findOne({
+            name, 
+            companyId,
+            testStatus: 'ACTIVE'
+        })
         if(!document) return null
         return this.mapToEntity(document)
     }
 
-    async findByJobroleId(jobRoleId: string): Promise<TestEntity | null> {
-        const document = await this._model.findOne({jobRoleId})
+    async findByJobroleId(jobRoleId: string, companyId: string): Promise<TestEntity | null> {
+        const document = await this._model.findOne({jobRoleId, companyId, testStatus: 'ACTIVE'})
         if(!document) return null
         return this.mapToEntity(document)
     }

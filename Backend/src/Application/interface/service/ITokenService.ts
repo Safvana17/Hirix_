@@ -22,6 +22,7 @@ export interface RestoreAccountTokenPayload {
 }
 
 
+
 export interface ITokenService {
     generateAccessToken(payload: AccessTokenPayload): string
     generateRefreshToken(payload: RefreshTokenPayload): string
@@ -34,4 +35,5 @@ export interface ITokenService {
     verifyRestoreAccountToken(token: string): RestoreAccountTokenPayload
     blackListToken(token: string, expiresInSeconds: number): Promise<void>
     isTokenBlackListed(token: string): Promise<boolean>
+    generateTestToken(): string
 }

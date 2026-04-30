@@ -144,6 +144,11 @@ import { AdminDeleteTemplateUsecase } from "../../../Application/admin/usecases/
 import { AdminDeleteNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.deleteNotificationRule.usecase";
 import { CandidateStartFreeTrialUsecase } from "../../../Application/candidate/useCases/subscription/candidate.startFreeTrial.usecase";
 import { CompanyStartTrialUsecase } from "../../../Application/company/usecases/subscription/company.startTrial.usecase";
+import { CompanyCreateTestUsecase } from "../../../Application/company/usecases/test/company.createTest.usecase";
+import { TestRepository } from "../../../Infrastructure/repositories/test.repository";
+import { TestCandidateRepository } from "../../../Infrastructure/repositories/textCandidate.repository";
+import { CompanyTestController } from "./company/testController";
+import { CompanyGetAllQuestionsForTest } from "../../../Application/company/usecases/test/company.getAllQuestionsForTest.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -159,7 +164,8 @@ const iPaymentRepository = new PaymentRepository()
 const iTemplateREpository = new TemplateRepository()
 const iNotificationRuleRepository = new NotificationRuleRepository()
 const iNotificationRepository = new NotificationRepository()
-
+const iTestRepository = new TestRepository()
+const iTestCandidateRepository = new TestCandidateRepository()
 
 
 
@@ -505,6 +511,23 @@ const iComapnyStartTrial = new CompanyStartTrialUsecase(
     iSubscriptionRepository,
     iSubscriptionPlanRepository
 )
+
+//test
+const iCompanyCreateTest = new CompanyCreateTestUsecase(
+    iTestRepository,
+    iCompanyRepository,
+    iJobRoleRepository,
+    iTokenService,
+    iTestCandidateRepository,
+    iProcessNotification
+
+)
+const iCompanyGetQuestionsForTest = new CompanyGetAllQuestionsForTest(
+    iQuestionRepository,
+    iCompanyRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -795,4 +818,9 @@ export const iAdminSettingsController = new AdminSettingsController(
 export const iUnifiedSettingsController = new UnifiedSettingsController(
     iGetMyNotification,
     iMarkAllAsRead
+)
+
+export const iCompanyTestController = new CompanyTestController (
+    iCompanyCreateTest,
+    iCompanyGetQuestionsForTest
 )

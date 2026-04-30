@@ -1,7 +1,7 @@
 import  Express  from "express";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { authHandler } from "../../middlewares/authMiddleware";
-import { iCompanyQuestionController, iCompanySettingsController, iCompanySubscriptionController, iJobRoleController, iTokenService, iUnifiedSettingsController } from "../../controllers/factory";
+import { iCompanyQuestionController, iCompanySettingsController, iCompanySubscriptionController, iCompanyTestController, iJobRoleController, iTokenService, iUnifiedSettingsController } from "../../controllers/factory";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { imageUpload } from "../../middlewares/profilePicUpload";
 import { validate } from "../../middlewares/validate";
@@ -10,11 +10,11 @@ import { createJobRoleSchema, EditJobRoleSchema, updateJobRoleSchema} from "../.
 import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updateProfileSchema } from "../../validators/settingsValidator";
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from "../../validators/subscriptionValidators";
 import { certificateUpload } from "../../middlewares/certificateUpload";
+import { CompanyGetQuestionsForTestSchema, createTestValidator } from "../../validators/companyTest.validator";
 
 const router = Express.Router()
 
 //settings
-
 router.get(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), iCompanySettingsController.getCompanyProfile)
 router.put(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), verifyCsrf,certificateUpload.single('certificateFile'), validate(updateProfileSchema, 'body'), iCompanySettingsController.updateProfile)
 router.put(ROUTES.COMPANY.SETTINGS.PROFILE_IMAGE, authHandler(iTokenService), verifyCsrf, imageUpload.single('profileLogo'), iCompanySettingsController.uploadProfileImage)
@@ -55,7 +55,9 @@ router.post(ROUTES.COMPANY.SUBSCRIPTION.START_TRIAL, authHandler(iTokenService),
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
 router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iUnifiedSettingsController.markAllAsRead)
 
-
+//test
+router.post(ROUTES.COMPANY.TEST.CREATE, authHandler(iTokenService), verifyCsrf, validate(createTestValidator, 'body'), iCompanyTestController.createTest)
+router.get(ROUTES.COMPANY.TEST.GET_QUESTIONS, authHandler(iTokenService), verifyCsrf, validate(CompanyGetQuestionsForTestSchema, 'query'), iCompanyTestController.getAllQuestionsForTest)
 
 
 

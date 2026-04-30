@@ -50,6 +50,15 @@ export const ROUTES = {
         CANCEL: '/subscription/:id/cancel',
         INVOICE: '/subscription/:id/invoice',
         START_TRIAL: '/subscription/:id/start-trial',
+      },
+      TEST : {
+        CREATE: '/test',
+        EDIT: '/test/:id',
+        GET_BY_ID: '/test/:id',
+        GET_ALL: '/tests',
+        CANCEL: '/test/:id/cancel',
+        DELETE: '/test/:id',
+        GET_QUESTIONS: '/test/questions',
       }
     },
 

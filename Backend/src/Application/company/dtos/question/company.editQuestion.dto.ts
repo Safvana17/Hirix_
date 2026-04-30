@@ -1,6 +1,6 @@
 import QuestionDifficulty from "../../../../Domain/enums/questionDifficulty";
 import QuestionType from "../../../../Domain/enums/questionType";
-import { TestCase } from "../../../../Domain/interfaces/question.testCase";
+import { TestCase } from "../../../../Domain/valueObjects/question.testCase";
 
 export interface CompanyEditQuestionInputDTO {
     id: string
