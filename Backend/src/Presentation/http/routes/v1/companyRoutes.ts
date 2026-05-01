@@ -10,7 +10,7 @@ import { createJobRoleSchema, EditJobRoleSchema, updateJobRoleSchema} from "../.
 import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updateProfileSchema } from "../../validators/settingsValidator";
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from "../../validators/subscriptionValidators";
 import { certificateUpload } from "../../middlewares/certificateUpload";
-import { CompanyGetQuestionsForTestSchema, createTestValidator } from "../../validators/companyTest.validator";
+import { CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator } from "../../validators/companyTest.validator";
 
 const router = Express.Router()
 
@@ -58,7 +58,7 @@ router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iU
 //test
 router.post(ROUTES.COMPANY.TEST.CREATE, authHandler(iTokenService), verifyCsrf, validate(createTestValidator, 'body'), iCompanyTestController.createTest)
 router.get(ROUTES.COMPANY.TEST.GET_QUESTIONS, authHandler(iTokenService), verifyCsrf, validate(CompanyGetQuestionsForTestSchema, 'query'), iCompanyTestController.getAllQuestionsForTest)
-
+router.get(ROUTES.COMPANY.TEST.GET_ALL, authHandler(iTokenService), validate(CompanyGetAllTestSchema, 'query'), iCompanyTestController.getAllTests)
 
 
 

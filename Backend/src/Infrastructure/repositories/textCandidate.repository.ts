@@ -21,6 +21,10 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
         return this.mapToEntity(document)
     }
 
+    async countByTestIds(testId: string): Promise<number> {
+        return this._model.countDocuments({testId})
+    }
+
     protected mapToEntity(doc: ITestCandidate): TestCandidateEntity {
         return TestCandidateMapper.toEntity(doc)
     }

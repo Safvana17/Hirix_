@@ -226,7 +226,7 @@ const TestSchema: Schema<ITest> = new Schema({
     },
     jobRoleId: {
         type: Types.ObjectId,
-        ref: 'JobRole'
+        ref: 'JobRoles'
     },
     description:{
         type: String

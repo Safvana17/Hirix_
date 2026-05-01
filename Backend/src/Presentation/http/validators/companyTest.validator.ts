@@ -1,8 +1,7 @@
 import z from "zod";
-import { QuestionSource } from "../../../Domain/enums/Test";
+import { QuestionSource, TestStatus } from "../../../Domain/enums/Test";
 import QuestionType from "../../../Domain/enums/questionType";
 import QuestionDifficulty from "../../../Domain/enums/questionDifficulty";
-
 
 const TestCaseSchema = z.object({
     input: z.string().min(1, "Test case input is required"),
@@ -10,7 +9,6 @@ const TestCaseSchema = z.object({
     explanation: z.string().optional(),
     isHidden: z.boolean().optional()
 });
-
 const CreateTestQuestionSchema = z
   .object({
     source: z.nativeEnum(QuestionSource),
@@ -153,3 +151,11 @@ export const CompanyGetQuestionsForTestSchema = z.object({
   category: z.string().optional(),
 })
 export type GetQuestionsForTestQuery = z.infer<typeof CompanyGetQuestionsForTestSchema>
+
+export const CompanyGetAllTestSchema = z.object({
+  search: z.string().optional(),
+  status: z.enum(TestStatus).optional(),
+  page: z.coerce.number().default(1),
+  limit: z.coerce.number().default(10)
+})
+export type GetAllTestQuery = z.infer<typeof CompanyGetAllTestSchema>

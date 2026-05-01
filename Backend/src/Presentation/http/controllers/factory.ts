@@ -149,6 +149,7 @@ import { TestRepository } from "../../../Infrastructure/repositories/test.reposi
 import { TestCandidateRepository } from "../../../Infrastructure/repositories/textCandidate.repository";
 import { CompanyTestController } from "./company/testController";
 import { CompanyGetAllQuestionsForTest } from "../../../Application/company/usecases/test/company.getAllQuestionsForTest.usecase";
+import { CompanyGetAllTestUsecase } from "../../../Application/company/usecases/test/company.getAllTest.usecase";
 
 
 const iCandidateRepository = new CandidateRepository()
@@ -528,6 +529,11 @@ const iCompanyGetQuestionsForTest = new CompanyGetAllQuestionsForTest(
     iSubscriptionRepository,
     iSubscriptionPlanRepository
 )
+const iCompanyGetAllTest = new CompanyGetAllTestUsecase(
+    iTestRepository,
+    iCompanyRepository,
+    iTestCandidateRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -822,5 +828,6 @@ export const iUnifiedSettingsController = new UnifiedSettingsController(
 
 export const iCompanyTestController = new CompanyTestController (
     iCompanyCreateTest,
-    iCompanyGetQuestionsForTest
+    iCompanyGetQuestionsForTest,
+    iCompanyGetAllTest
 )
