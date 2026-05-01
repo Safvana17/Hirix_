@@ -53,6 +53,7 @@ export const ROUTES = {
       },
       TEST : {
         CREATE: '/test',
+        PUBLISH: '/test/:testId',
         EDIT: '/test/:id',
         GET_BY_ID: '/test/:id',
         GET_ALL: '/tests',

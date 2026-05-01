@@ -144,13 +144,13 @@ import { AdminDeleteTemplateUsecase } from "../../../Application/admin/usecases/
 import { AdminDeleteNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.deleteNotificationRule.usecase";
 import { CandidateStartFreeTrialUsecase } from "../../../Application/candidate/useCases/subscription/candidate.startFreeTrial.usecase";
 import { CompanyStartTrialUsecase } from "../../../Application/company/usecases/subscription/company.startTrial.usecase";
-import { CompanyCreateTestUsecase } from "../../../Application/company/usecases/test/company.createTest.usecase";
+import { CompanyCreateTestDraftUsecase } from "../../../Application/company/usecases/test/company.createTestDraft.usecase";
 import { TestRepository } from "../../../Infrastructure/repositories/test.repository";
 import { TestCandidateRepository } from "../../../Infrastructure/repositories/textCandidate.repository";
 import { CompanyTestController } from "./company/testController";
 import { CompanyGetAllQuestionsForTest } from "../../../Application/company/usecases/test/company.getAllQuestionsForTest.usecase";
 import { CompanyGetAllTestUsecase } from "../../../Application/company/usecases/test/company.getAllTest.usecase";
-
+import { CompanyPublishTestUsecase } from "../../../Application/company/usecases/test/company.publishTest.usecase";
 
 const iCandidateRepository = new CandidateRepository()
 const iCompanyRepository = new CompanyRepository()
@@ -514,14 +514,19 @@ const iComapnyStartTrial = new CompanyStartTrialUsecase(
 )
 
 //test
-const iCompanyCreateTest = new CompanyCreateTestUsecase(
+const iCompanyCreateTest = new CompanyCreateTestDraftUsecase(
     iTestRepository,
     iCompanyRepository,
     iJobRoleRepository,
-    iTokenService,
+    iTestCandidateRepository
+)
+const iCompanyPublishTest = new CompanyPublishTestUsecase (
+    iTestRepository,
+    iCompanyRepository,
     iTestCandidateRepository,
+    iJobRoleRepository,
+    iTokenService,
     iProcessNotification
-
 )
 const iCompanyGetQuestionsForTest = new CompanyGetAllQuestionsForTest(
     iQuestionRepository,
@@ -828,6 +833,7 @@ export const iUnifiedSettingsController = new UnifiedSettingsController(
 
 export const iCompanyTestController = new CompanyTestController (
     iCompanyCreateTest,
+    iCompanyPublishTest,
     iCompanyGetQuestionsForTest,
     iCompanyGetAllTest
 )

@@ -159,3 +159,8 @@ export const CompanyGetAllTestSchema = z.object({
   limit: z.coerce.number().default(10)
 })
 export type GetAllTestQuery = z.infer<typeof CompanyGetAllTestSchema>
+
+export const TestParamsSchema = z.object({
+  testId: z.string().regex(/^[0-9a-fA-F]{24}$/)
+})
+export type testParams = z.infer<typeof TestParamsSchema>

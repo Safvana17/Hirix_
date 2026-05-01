@@ -80,6 +80,11 @@ export interface CompanyCreateTestInputDTO {
     rules: CreateTestRulesDTO
 }
 
+export interface CompanyPublishTestInputDTO {
+    testId: string
+    companyId: string
+}
+
 export interface CompanyCreateTestOutputDTO {
     test: TestEntity
 }

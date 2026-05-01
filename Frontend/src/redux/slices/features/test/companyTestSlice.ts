@@ -9,6 +9,7 @@ interface CompanyTestState {
     currentStep: number
     error: string | null
     tests: Test[]
+    selectedTest: Test | null,
     testList: CompanyTestList[]
     pagination: {
         test: {
@@ -24,6 +25,7 @@ const initialState: CompanyTestState = {
     error: null,
     tests: [],
     testList: [],
+    selectedTest: null,
     pagination: {
         test: {
             totalCount: 0,
@@ -46,6 +48,23 @@ CreateTestPayload,
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to create test')
+    }
+})
+
+export const publishTest = createAsyncThunk<
+Test,
+{id: string},
+{rejectValue: string}
+>('test/publish', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.COMPANY.TEST.PUBLISH(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to publish test')
     }
 })
 
@@ -91,11 +110,22 @@ const CompanyTestSlice = createSlice({
         })
         .addCase(createTest.fulfilled, (state, action) => {
             state.loading = false
+            state.selectedTest = action.payload
             state.tests.unshift(action.payload)
         })
         .addCase(createTest.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to create test'
+        })
+        .addCase(publishTest.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(publishTest.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(publishTest.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to publish test'
         })
         .addCase(getAllTests.pending, (state) => {
             state.loading = true

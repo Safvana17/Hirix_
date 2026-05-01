@@ -1,23 +1,32 @@
 import { Request, Response } from "express";
-import { ICompanyCreateTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.createTest.usecase";
+import { ICompanyCreateTestDraftUsecase } from "../../../../Application/company/interfaces/test/ICompany.createTestDraft.usecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { ICompanyGetQuestionsForTest } from "../../../../Application/company/interfaces/test/ICompany.getQuestionsForTest.usecase";
-import { GetAllTestQuery, GetQuestionsForTestQuery } from "../../validators/companyTest.validator";
+import { GetAllTestQuery, GetQuestionsForTestQuery, testParams } from "../../validators/companyTest.validator";
 import { ICompanyGetAllTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.getAllTest.usecase";
+import { ICompanyPublishTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.publishTest.usecase";
 
 export class CompanyTestController {
     constructor(
-        private _createTestUsecase: ICompanyCreateTestUsecase,
+        private _createTestUsecase: ICompanyCreateTestDraftUsecase,
+        private _publishTestUsecase: ICompanyPublishTestUsecase,
         private _getAllQuestionsForTest: ICompanyGetQuestionsForTest,
         private _getAllTests: ICompanyGetAllTestUsecase,
     ) {}
 
-    createTest = asyncHandler(async(req: Request, res: Response) => {
+    createTestDraft = asyncHandler(async(req: Request, res: Response) => {
         const companyId = req.user.id
-        const { test }= await this._createTestUsecase.execute({...req.body, companyId})
+        const { test } = await this._createTestUsecase.execute({...req.body, companyId})
         return sendSuccess(res, statusCode.OK, '', test)
+    })
+
+    publishTest = asyncHandler(async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        const { testId } = req.validatedParams as testParams
+        const { test } = await this._publishTestUsecase.execute({companyId, testId})
+        return sendSuccess(res, statusCode.OK, '' , { test })
     })
 
     getAllQuestionsForTest = asyncHandler(async(req: Request, res: Response) => {

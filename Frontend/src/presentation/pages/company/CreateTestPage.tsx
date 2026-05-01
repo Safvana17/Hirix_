@@ -138,7 +138,7 @@ const CreateTestPage: React.FC = () => {
                             backgroundColor: "#6B4705",
                         }}
                     >
-                        {loading ? 'Publishing...' : currentStep === steps.length - 1 ? 'Publish & Send Invites' : 'Save & Next'}
+                        {loading ? 'Saving...' : currentStep === steps.length - 1 ? 'Save Draft' : 'Save & Next'}
                     </Button>
                 </Box>
             </Paper> 

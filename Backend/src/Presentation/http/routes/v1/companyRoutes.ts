@@ -10,7 +10,7 @@ import { createJobRoleSchema, EditJobRoleSchema, updateJobRoleSchema} from "../.
 import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updateProfileSchema } from "../../validators/settingsValidator";
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from "../../validators/subscriptionValidators";
 import { certificateUpload } from "../../middlewares/certificateUpload";
-import { CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator } from "../../validators/companyTest.validator";
+import { CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator, TestParamsSchema } from "../../validators/companyTest.validator";
 
 const router = Express.Router()
 
@@ -49,14 +49,13 @@ router.patch(ROUTES.COMPANY.SUBSCRIPTION.CANCEL, authHandler(iTokenService),veri
 router.get(ROUTES.COMPANY.SUBSCRIPTION.INVOICE, authHandler(iTokenService), validate(GetInvoiceSchema, 'params'), iCompanySubscriptionController.getInvoice)
 router.post(ROUTES.COMPANY.SUBSCRIPTION.START_TRIAL, authHandler(iTokenService), verifyCsrf, validate(startTrialSchema, 'params'), iCompanySubscriptionController.startTrial)
 
-
-
 //notifications
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
 router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iUnifiedSettingsController.markAllAsRead)
 
 //test
-router.post(ROUTES.COMPANY.TEST.CREATE, authHandler(iTokenService), verifyCsrf, validate(createTestValidator, 'body'), iCompanyTestController.createTest)
+router.post(ROUTES.COMPANY.TEST.CREATE, authHandler(iTokenService), verifyCsrf, validate(createTestValidator, 'body'), iCompanyTestController.createTestDraft)
+router.post(ROUTES.COMPANY.TEST.PUBLISH, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), iCompanyTestController.publishTest)
 router.get(ROUTES.COMPANY.TEST.GET_QUESTIONS, authHandler(iTokenService), verifyCsrf, validate(CompanyGetQuestionsForTestSchema, 'query'), iCompanyTestController.getAllQuestionsForTest)
 router.get(ROUTES.COMPANY.TEST.GET_ALL, authHandler(iTokenService), validate(CompanyGetAllTestSchema, 'query'), iCompanyTestController.getAllTests)
 

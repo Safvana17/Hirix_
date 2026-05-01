@@ -1,107 +1,204 @@
 import React, { useEffect, useState } from "react"
 import InternalLayout from "../../layouts/InternalLayout"
 import { companySidebarItems } from "../../../constants/sidebarItems"
-import { CalendarClock, Edit2, Edit2Icon, Eye, Plus, Trash2, XCircle } from "lucide-react"
+import {
+  CalendarClock,
+  Edit2Icon,
+  Eye,
+  Plus,
+  Send,
+  Trash2,
+  XCircle,
+} from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "../../../redux/store"
-import { getAllTests } from "../../../redux/slices/features/test/companyTestSlice"
+import { getAllTests, publishTest } from "../../../redux/slices/features/test/companyTestSlice"
 import { useDebounce } from "../../../hooks/useDebounce"
 import type { CompanyTestList, TestStatus } from "../../../types/test"
 import DataTable from "../../components/ui/DataTable"
 import type { Column } from "../../../types/table"
-
 import {
   Box,
   Button,
   Chip,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Paper,
   Select,
   TextField,
   Typography,
-  InputAdornment,
 } from "@mui/material"
-
 import { Search, Filter } from "lucide-react"
+import toast from "react-hot-toast"
 
-const testStatuses: TestStatus[] = ["DRAFT", "ACTIVE", "COMPLETED", "CANCELLED"]
+const testStatuses: TestStatus[] = ["DRAFT", "PUBLISHED", "COMPLETED", "CANCELLED"]
+
+const statusColorMap: Record<
+  TestStatus,
+  "success" | "warning" | "info" | "error"
+> = {
+  PUBLISHED: "success",
+  DRAFT: "warning",
+  COMPLETED: "info",
+  CANCELLED: "error",
+}
+
+type TestAction = {
+  label: string
+  icon: React.ElementType
+  color: "success" | "primary" | "warning" | "secondary" | "error"
+  onClick: () => void
+}
 
 const CompanyTest: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<TestStatus | "">("")
   const [currentPage, setCurrentPage] = useState(1)
-
-  const { testList, pagination, loading } = useSelector(
-    (state: RootState) => state.companyTest
-  )
-
+  const { testList, pagination, loading } = useSelector((state: RootState) => state.companyTest )
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
   useEffect(() => {
     dispatch(
-      getAllTests({
-        params: {
-          search: debouncedSearchTerm || undefined,
-          status: statusFilter || undefined,
-          page: currentPage,
-          limit: 10,
-        },
-      })
-    )
+      getAllTests({params: {search: debouncedSearchTerm || undefined,status: statusFilter || undefined,page: currentPage,limit: 10,}}))
   }, [dispatch, debouncedSearchTerm, statusFilter, currentPage])
 
   const handleCreateTest = () => {
     navigate("/company/test/create")
   }
 
-  const getStatusColor = (status: TestStatus) => {
-    switch (status) {
-      case "ACTIVE":
-        return "success"
-      case "DRAFT":
-        return "warning"
-      case "COMPLETED":
-        return "info"
-      case "CANCELLED":
-        return "error"
-      default:
-        return "default"
+  const handlePublishTest = async(id: string) => {
+    try {
+      await dispatch(publishTest({id})).unwrap()
+      toast.success('Test published successfully')
+      await dispatch(getAllTests({params: {search: debouncedSearchTerm || undefined,status: statusFilter || undefined,page: currentPage,limit: 10,}}))
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to publish test')
     }
   }
 
+  const getStatusColor = (status: TestStatus) => {
+    return statusColorMap[status] ?? "default"
+  }
+  const hasTestStarted = (startTime: string | Date) => {
+    return new Date(startTime).getTime() <= Date.now()
+  }
+  const getTestActions = (test: CompanyTestList): TestAction[] => {
+    const commonActions: TestAction[] = [
+      {
+        label: "View",
+        icon: Eye,
+        color: "success",
+        onClick: () => navigate(`/company/test/${test.id}`),
+      },
+    ]
+
+    if (test.testStatus === "DRAFT") {
+      return [
+        ...commonActions,
+        {
+          label: "Edit",
+          icon: Edit2Icon,
+          color: "primary",
+          onClick: () => navigate(`/company/test/${test.id}/edit`),
+        },
+        {
+          label: "Publish",
+          icon: Send,
+          color: "warning",
+          onClick: () => handlePublishTest(test.id)
+        },
+        {
+          label: "Delete",
+          icon: Trash2,
+          color: "error",
+          onClick: () => {
+            // dispatch(deleteTest(test.id))
+          },
+        },
+      ]
+    }
+
+    if (test.testStatus === "PUBLISHED") {
+      if (hasTestStarted(test.startTime)) {
+        return commonActions
+      }
+
+      return [
+        ...commonActions,
+        {
+          label: "Edit",
+          icon: Edit2Icon,
+          color: "primary",
+          onClick: () => navigate(`/company/test/${test.id}/edit`),
+        },
+        {
+          label: "Reschedule",
+          icon: CalendarClock,
+          color: "warning",
+          onClick: () => navigate(`/company/test/${test.id}/reschedule`),
+        },
+        {
+          label: "Cancel",
+          icon: XCircle,
+          color: "secondary",
+          onClick: () => {
+            // dispatch(cancelTest(test.id))
+          },
+        },
+      ]
+    }
+
+    return commonActions
+  }
+
   const columns: Column<CompanyTestList>[] = [
-    { header: "Name",key: "name",render: (val) => (
+    {
+      header: "Name",
+      key: "name",
+      render: (val) => (
         <Typography fontWeight={700} color="text.primary">
           {val.toString()}
         </Typography>
-    )},
-    { header: "Job Role", key: "jobRole", render: (val) => (
+      ),
+    },
+    {
+      header: "Job Role",
+      key: "jobRole",
+      render: (val) => (
         <Typography fontWeight={600} color="text.secondary">
-          {val}
+          {val.toString()}
         </Typography>
-    )},
-    { header: "Invited Candidates", key: "candidatesCount", render: (val) => (
+      ),
+    },
+    {
+      header: "Invited Candidates",
+      key: "candidatesCount",
+      render: (val) => (
         <Typography fontWeight={600} color="text.secondary">
-          {val}
+          {val.toString()}
         </Typography>
-    )},
-    { header: "Duration", key: "durationInMinutes", render: (val) => (
-          <Typography fontSize={13} fontWeight={700}>
-            {val} Minutes
-          </Typography>
-    )},
+      ),
+    },
+    {
+      header: "Duration",
+      key: "durationInMinutes",
+      render: (val) => (
+        <Typography fontSize={13} fontWeight={700}>
+          {val.toString()} Minutes
+        </Typography>
+      ),
+    },
     {
       header: "Status",
       key: "testStatus",
       render: (val) => (
         <Chip
-          label={val}
+          label={val.toString()}
           color={getStatusColor(val as TestStatus)}
           size="small"
           sx={{
@@ -114,49 +211,30 @@ const CompanyTest: React.FC = () => {
     {
       header: "Actions",
       key: "id",
-      render: (_, row) => (
-        <Box display="flex" alignItems="center" gap={1}>
-          <Button
-            size="small"
-            color="success"
-            onClick={() => navigate(`/company/test/${row.id}`)}
-          >
-            <Eye size={16} />
-          </Button>
-          <Button
-            size="small"
-            color="primary"
-            onClick={() => navigate(`/company/test/${row.id}`)}
-          >
-            <Edit2Icon size={16} />
-          </Button>
+      render: (_, row) => {
+        const actions = getTestActions(row)
 
-          <Button
-            size="small"
-            color="warning"
-            onClick={() => navigate(`/company/test/${row.id}/reschedule`)}
-          >
-            <CalendarClock size={16} />
-          </Button>
+        return (
+          <Box display="flex" alignItems="center" gap={1}>
+            {actions.map((action) => {
+              const Icon = action.icon
 
-          <Button
-            size="small"
-            color="secondary"
-            // onClick={() => handleCancelTest(row.id)}
-          >
-            <XCircle size={16} />
-          </Button>
-
-          <Button
-            size="small"
-            color="error"
-            // onClick={() => handleDeleteTest(row.id)}
-          >
-            <Trash2 size={16} />
-          </Button>
-        </Box>
-      ),
-    }
+              return (
+                <Button
+                  key={action.label}
+                  size="small"
+                  color={action.color}
+                  onClick={action.onClick}
+                  title={action.label}
+                >
+                  <Icon size={16} />
+                </Button>
+              )
+            })}
+          </Box>
+        )
+      },
+    },
   ]
 
   return (

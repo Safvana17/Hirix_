@@ -42,6 +42,8 @@ export const API_ROUTES = {
       `/company/jobrole/${id}`,
     TEST: {
       CREATE: '/company/test',
+      PUBLISH: (id: string) =>
+        `/company/test/${id}`,
       EDIT: (id: string) => 
         `/company/test/${id}`,
       GET_ALL: '/company/tests',

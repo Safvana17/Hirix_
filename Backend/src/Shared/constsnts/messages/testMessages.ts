@@ -6,5 +6,8 @@ export const TestMessages = {
         ALREADY_EXISTS: 'Test name already exists',
         CANNOT_CREATE_TEST_FOR_THIS_ROLE: 'An active test already exists for this job role',
         CANDIDATES_REQUIRED: 'Atleast one candidate is required',
+        TEST_NOT_FOUND: 'Test not found',
+        NOT_ALLOWED: 'Test company',
+        NOT_DRAFTED_TEST: 'Only drafted tests can be published',
     }
 }

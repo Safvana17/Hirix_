@@ -1,9 +1,7 @@
 import { TestEntity } from "../../../../Domain/entities/Test.entity";
 import { TestCandidateEntity } from "../../../../Domain/entities/TestCandidate.entity";
 import { TestQuestionEntity } from "../../../../Domain/entities/TestQuestion.entity";
-import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { CandidateTestStatus, TestStatus } from "../../../../Domain/enums/Test";
-import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
@@ -14,19 +12,19 @@ import { authMessages } from "../../../../Shared/constsnts/messages/authMessages
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
-import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
-import { ITokenService } from "../../../interface/service/ITokenService";
+// import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
+// import { ITokenService } from "../../../interface/service/ITokenService";
 import { CompanyCreateTestInputDTO, CompanyCreateTestOutputDTO } from "../../dtos/test/company.createTest.dto";
-import { ICompanyCreateTestUsecase } from "../../interfaces/test/ICompany.createTest.usecase";
+import { ICompanyCreateTestDraftUsecase } from "../../interfaces/test/ICompany.createTestDraft.usecase";
 
-export class CompanyCreateTestUsecase implements ICompanyCreateTestUsecase {
+export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUsecase {
     constructor (
         private _testRepository: ITestRepository,
         private _companyRepository: ICompanyRepository,
         private _jobRoleRepository: IJobRepository,
-        private _tokenService: ITokenService,
+        // private _tokenService: ITokenService,
         private _testCandidateRepository: ITestCandidateRepository,
-        private _processNotificationUsecase: IAdminProcessNotificationUsecase
+        // private _processNotificationUsecase: IAdminProcessNotificationUsecase
     ) {}
 
     async execute(request: CompanyCreateTestInputDTO): Promise<CompanyCreateTestOutputDTO> {
@@ -129,61 +127,75 @@ export class CompanyCreateTestUsecase implements ICompanyCreateTestUsecase {
             request.endTime,
             rules,
             questions,
-            TestStatus.ACTIVE
+            TestStatus.DRAFT
         )
 
         const savedTest = await this._testRepository.create(test)
-    
-        const savedCandidatesWithLinks = await Promise.all(
-            request.candidates.map( async (candidate) => {
-                const token = this._tokenService.generateTestToken()
-                const testCandidate =  new TestCandidateEntity(
-                    '',
+        await Promise.all(
+            request.candidates.map((candidate) => {
+                const testCandidate = new TestCandidateEntity(
+                    "",
                     savedTest.id,
                     candidate.email,
-                    token,
-                    CandidateTestStatus.INVITED,
+                    "",
+                    CandidateTestStatus.DRAFT,
                     0,
                     [],
                 )
-
-                const savedCandidate = await this._testCandidateRepository.create(testCandidate)
-                const testLink = `http://localhost:5173/candidate/test/${token}`
-
-                return {
-                    candidate: savedCandidate,
-                    testLink
-                }
+                return this._testCandidateRepository.create(testCandidate)
             })
         )
+    
+        // const savedCandidatesWithLinks = await Promise.all(
+        //     request.candidates.map( async (candidate) => {
+        //         const token = this._tokenService.generateTestToken()
+        //         const testCandidate =  new TestCandidateEntity(
+        //             '',
+        //             savedTest.id,
+        //             candidate.email,
+        //             token,
+        //             CandidateTestStatus.INVITED,
+        //             0,
+        //             [],
+        //         )
 
-        await Promise.all(
-            savedCandidatesWithLinks.map(({candidate, testLink}) => {
-                return this._processNotificationUsecase.execute({
-                    event: NotificationEvents.TEST_INVITE,
-                    recipients: [{
-                        recipientId: candidate.id,
-                        recipientType: userRole.Candidate,
-                        email: candidate.email
-                    }],
-                    variables: {
-                        companyName: company.getName(),
-                        testName: savedTest.name,
-                        role: jobRole.name,
-                        testLink: testLink,
-                        startTime: savedTest.startTime.toLocaleString(),
-                        endTime: savedTest.endTime.toLocaleString(),
-                        instructions: [
-                            "Do not switch tabs.",
-                            "Do not copy or paste.",
-                            "Stay in full screen mode.",
-                            "The test will auto-submit when time ends.",
-                            "Answers are auto-saved."
-                        ].join("\n")
-                    }
-                })
-            })
-        )
+        //         const savedCandidate = await this._testCandidateRepository.create(testCandidate)
+        //         const testLink = `http://localhost:5173/candidate/test/${token}`
+
+        //         return {
+        //             candidate: savedCandidate,
+        //             testLink
+        //         }
+        //     })
+        // )
+
+        // await Promise.all(
+        //     savedCandidatesWithLinks.map(({candidate, testLink}) => {
+        //         return this._processNotificationUsecase.execute({
+        //             event: NotificationEvents.TEST_INVITE,
+        //             recipients: [{
+        //                 recipientId: candidate.id,
+        //                 recipientType: userRole.Candidate,
+        //                 email: candidate.email
+        //             }],
+        //             variables: {
+        //                 companyName: company.getName(),
+        //                 testName: savedTest.name,
+        //                 role: jobRole.name,
+        //                 testLink: testLink,
+        //                 startTime: savedTest.startTime.toLocaleString(),
+        //                 endTime: savedTest.endTime.toLocaleString(),
+        //                 instructions: [
+        //                     "Do not switch tabs.",
+        //                     "Do not copy or paste.",
+        //                     "Stay in full screen mode.",
+        //                     "The test will auto-submit when time ends.",
+        //                     "Answers are auto-saved."
+        //                 ].join("\n")
+        //             }
+        //         })
+        //     })
+        // )
 
         return {
             test: savedTest

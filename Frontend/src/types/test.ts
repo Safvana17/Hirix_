@@ -1,6 +1,6 @@
 import type { QuestionType, TestCase } from "./question"
 
-export type TestStatus = 'DRAFT' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED'
+export type TestStatus = 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'CANCELLED'
 export type QuestionSource = 'ADMIN_LIBRARY' | 'COMPANY_LIBRARY' | 'TEST_ONLY'
 
 

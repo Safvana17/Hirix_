@@ -17,7 +17,6 @@ const TestCaseSchema = z.object({
 
 const CreateTestQuestionSchema = z
   .object({
-    id: z.string().min(1),
     source: QuestionSourceSchema,
     type: QuestionTypeSchema,
     title: z.string().min(1, 'Question title is required'),

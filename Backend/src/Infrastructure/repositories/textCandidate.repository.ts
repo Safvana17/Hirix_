@@ -15,10 +15,10 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
         return this.mapToEntity(document)
     }
 
-    async findByTestId(testId: string): Promise<TestCandidateEntity | null> {
-        const document = await this._model.findOne({testId})
-        if(!document) return null
-        return this.mapToEntity(document)
+    async findByTestId(testId: string): Promise<TestCandidateEntity[] | null> {
+        const documents = await this._model.find({testId})
+        if(!documents) return null
+        return documents.map( d => this.mapToEntity(d) )
     }
 
     async countByTestIds(testId: string): Promise<number> {
