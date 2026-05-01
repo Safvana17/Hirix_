@@ -46,6 +46,12 @@ export const API_ROUTES = {
         `/company/test/${id}`,
       EDIT: (id: string) => 
         `/company/test/${id}`,
+      DELETE: (id: string) => 
+        `/company/test/${id}`,
+      CANCEL: (id: string) => 
+        `/company/test/${id}`,
+      RESCHEDULE: (id: string) => 
+        `/company/test/${id}`,
       GET_ALL: '/company/tests',
       GET_BY_ID: (id: string) => 
         `/company/test/${id}`,

@@ -7,6 +7,7 @@ import { ICompanyGetQuestionsForTest } from "../../../../Application/company/int
 import { GetAllTestQuery, GetQuestionsForTestQuery, testParams } from "../../validators/companyTest.validator";
 import { ICompanyGetAllTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.getAllTest.usecase";
 import { ICompanyPublishTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.publishTest.usecase";
+import { ICompanyDeleteTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.deleteTest.usecase";
 
 export class CompanyTestController {
     constructor(
@@ -14,6 +15,7 @@ export class CompanyTestController {
         private _publishTestUsecase: ICompanyPublishTestUsecase,
         private _getAllQuestionsForTest: ICompanyGetQuestionsForTest,
         private _getAllTests: ICompanyGetAllTestUsecase,
+        private _deleteTest: ICompanyDeleteTestUsecase,
     ) {}
 
     createTestDraft = asyncHandler(async(req: Request, res: Response) => {
@@ -41,5 +43,12 @@ export class CompanyTestController {
         const query = req.validatedQuery as GetAllTestQuery
         const { tests, totalPages, totalCount } = await this._getAllTests.execute({...query, companyId})
         return sendSuccess(res, statusCode.OK, '', {tests, totalPages, totalCount})
+    })
+
+    deleteTest = asyncHandler(async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        const {testId} = req.validatedParams as testParams
+        const test = await this._deleteTest.execute({companyId, testId})
+        return sendSuccess(res, statusCode.OK, '', test)
     })
 }

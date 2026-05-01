@@ -13,7 +13,7 @@ import {
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "../../../redux/store"
-import { getAllTests, publishTest } from "../../../redux/slices/features/test/companyTestSlice"
+import { deleteTest, getAllTests, publishTest } from "../../../redux/slices/features/test/companyTestSlice"
 import { useDebounce } from "../../../hooks/useDebounce"
 import type { CompanyTestList, TestStatus } from "../../../types/test"
 import DataTable from "../../components/ui/DataTable"
@@ -33,6 +33,7 @@ import {
 } from "@mui/material"
 import { Search, Filter } from "lucide-react"
 import toast from "react-hot-toast"
+import ConfirmationModal from "../../components/modal/ConfirmationModal"
 
 const testStatuses: TestStatus[] = ["DRAFT", "PUBLISHED", "COMPLETED", "CANCELLED"]
 
@@ -44,6 +45,7 @@ const statusColorMap: Record<
   DRAFT: "warning",
   COMPLETED: "info",
   CANCELLED: "error",
+  DELETED: "error"
 }
 
 type TestAction = {
@@ -61,11 +63,31 @@ const CompanyTest: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    type: 'danger' | 'warning' | 'info';
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => { },
+    type: 'warning'
+  })
 
   useEffect(() => {
     dispatch(
       getAllTests({params: {search: debouncedSearchTerm || undefined,status: statusFilter || undefined,page: currentPage,limit: 10,}}))
   }, [dispatch, debouncedSearchTerm, statusFilter, currentPage])
+
+  const openModal = (config: Omit<typeof modalConfig, 'isOpen'>) => {
+    setModalConfig({...config, isOpen: true})
+  }
+  const closeModal = () => {
+    setModalConfig(prev => ({...prev, isOpen: false}))
+  }
 
   const handleCreateTest = () => {
     navigate("/company/test/create")
@@ -87,6 +109,26 @@ const CompanyTest: React.FC = () => {
   const hasTestStarted = (startTime: string | Date) => {
     return new Date(startTime).getTime() <= Date.now()
   }
+  const handleDeleteTest = (id: string) => {
+    openModal({
+      title: 'Delete Test',
+      message: 'Are you sure you want to delete this test?',
+      type: 'danger',
+      onConfirm: async() => {
+        try {
+          await dispatch(deleteTest({ id }))
+          toast.success('Test deleted successfully')
+          dispatch(getAllTests({params: {search: debouncedSearchTerm || undefined,status: statusFilter || undefined,page: currentPage,limit: 10,}}))
+        } catch (error: unknown) {
+          if(error instanceof Error)
+            toast.error('Failed to delete test')
+        } finally {
+          closeModal()
+        }
+      }
+    })
+  }
+
   const getTestActions = (test: CompanyTestList): TestAction[] => {
     const commonActions: TestAction[] = [
       {
@@ -110,15 +152,13 @@ const CompanyTest: React.FC = () => {
           label: "Publish",
           icon: Send,
           color: "warning",
-          onClick: () => handlePublishTest(test.id)
+          onClick: () => { handlePublishTest(test.id) }
         },
         {
           label: "Delete",
           icon: Trash2,
           color: "error",
-          onClick: () => {
-            // dispatch(deleteTest(test.id))
-          },
+          onClick: () => { handleDeleteTest(test.id)},
         },
       ]
     }
@@ -362,6 +402,14 @@ const CompanyTest: React.FC = () => {
             totalCount: pagination.test.totalCount,
             onPageChange: (page) => setCurrentPage(page),
           }}
+        />
+        <ConfirmationModal 
+          isOpen={modalConfig.isOpen}
+          onClose={closeModal}
+          onConfirm={modalConfig.onConfirm}
+          title={modalConfig.title}
+          message={modalConfig.message}
+          type={modalConfig.type}
         />
       </Box>
     </InternalLayout>

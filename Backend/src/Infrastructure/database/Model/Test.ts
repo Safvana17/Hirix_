@@ -29,6 +29,7 @@ export interface ITest extends Document {
     rules: TestRules
     questions: ITestQuestion[]
     testStatus: TestStatus
+    isDeleted: boolean
 }
 
 const TimingRulesSchema = new Schema({
@@ -247,6 +248,10 @@ const TestSchema: Schema<ITest> = new Schema({
     },
     testStatus: {
         type: String,
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true

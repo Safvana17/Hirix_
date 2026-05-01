@@ -13,6 +13,7 @@ export interface CompanyTestList{
     startTime: Date
     endTime: Date
     testStatus: TestStatus
+    isDeleted: boolean
 }
 export interface ITestRepository extends IBaseRepository<TestEntity>{
     findByName(name: string, companyId: string): Promise<TestEntity | null>

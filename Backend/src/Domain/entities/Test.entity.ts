@@ -13,6 +13,7 @@ export class TestEntity {
     rules: TestRules
     questions: TestQuestionEntity[]
     testStatus: TestStatus
+    isDeleted: boolean
 
     constructor (
         id: string,
@@ -24,7 +25,8 @@ export class TestEntity {
         endTime: Date,
         rules: TestRules,
         questions: TestQuestionEntity[],
-        testStatus: TestStatus
+        testStatus: TestStatus,
+        isDeleted: boolean
     ) {
         this.id = id
         this.name = name
@@ -36,5 +38,6 @@ export class TestEntity {
         this.rules = rules
         this.questions = questions
         this.testStatus = testStatus
+        this.isDeleted = isDeleted
     }
 }

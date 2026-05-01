@@ -74,7 +74,8 @@ export class TestMapper {
             doc.endTime,
             rules,
             questions,
-            doc.testStatus
+            doc.testStatus,
+            doc.isDeleted
         )
 
         return test
@@ -89,6 +90,7 @@ export class TestMapper {
             startTime: entity.startTime,
             endTime: entity.endTime,
             testStatus: entity.testStatus,
+            isDeleted: entity.isDeleted,
             rules: {
                 timing: {
                     durationInMinutes: entity.rules.timing.durationInMinutes,

@@ -58,7 +58,7 @@ router.post(ROUTES.COMPANY.TEST.CREATE, authHandler(iTokenService), verifyCsrf, 
 router.post(ROUTES.COMPANY.TEST.PUBLISH, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), iCompanyTestController.publishTest)
 router.get(ROUTES.COMPANY.TEST.GET_QUESTIONS, authHandler(iTokenService), verifyCsrf, validate(CompanyGetQuestionsForTestSchema, 'query'), iCompanyTestController.getAllQuestionsForTest)
 router.get(ROUTES.COMPANY.TEST.GET_ALL, authHandler(iTokenService), validate(CompanyGetAllTestSchema, 'query'), iCompanyTestController.getAllTests)
-
+router.delete(ROUTES.COMPANY.TEST.DELETE, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), iCompanyTestController.deleteTest )
 
 
 export default router;

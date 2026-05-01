@@ -30,6 +30,7 @@ export class CompanyGetAllTestUsecase implements ICompanyGetAllTestUsecase {
                 durationInMinutes: Math.round((d.endTime.getTime() - d.startTime.getTime()) / 60000 ),
                 testStatus: d.testStatus,
                 candidatesCount: await this._testCandidateRepository.countByTestIds(d.id),
+                isDeleted: d.isDeleted
             }))
         )
         return{

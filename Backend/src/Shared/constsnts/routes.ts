@@ -58,7 +58,7 @@ export const ROUTES = {
         GET_BY_ID: '/test/:id',
         GET_ALL: '/tests',
         CANCEL: '/test/:id/cancel',
-        DELETE: '/test/:id',
+        DELETE: '/test/:testId',
         GET_QUESTIONS: '/test/questions',
       }
     },

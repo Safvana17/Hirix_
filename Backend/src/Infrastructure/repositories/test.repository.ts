@@ -28,14 +28,16 @@ export class TestRepository extends BaseRepository<TestEntity, ITest> implements
     }
 
     async findByJobroleId(jobRoleId: string, companyId: string): Promise<TestEntity | null> {
-        const document = await this._model.findOne({jobRoleId, companyId, testStatus: 'ACTIVE'})
+        const document = await this._model.findOne({jobRoleId, companyId, testStatus: 'PUBLISHED'})
         if(!document) return null
         return this.mapToEntity(document)
     }
 
     async findAllFiltered(query: { companyId: string, search?: string; status?: TestStatus; page: number; limit: number; }): Promise<{ data: CompanyTestList[]; totalPages: number; totalCount: number; }> {
         const filter: QueryFilter<ITest> = {
-            companyId: query.companyId
+            companyId: query.companyId,
+            isDeleted: false
+            
         }
         if(query.search){
             filter.$or = [
@@ -65,7 +67,8 @@ export class TestRepository extends BaseRepository<TestEntity, ITest> implements
                 },
                 startTime: doc.startTime,
                 endTime: doc.endTime,
-                testStatus: doc.testStatus
+                testStatus: doc.testStatus,
+                isDeleted: doc.isDeleted
             })),
             totalCount,
             totalPages

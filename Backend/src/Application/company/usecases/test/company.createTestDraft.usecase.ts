@@ -127,7 +127,8 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
             request.endTime,
             rules,
             questions,
-            TestStatus.DRAFT
+            TestStatus.DRAFT,
+            false
         )
 
         const savedTest = await this._testRepository.create(test)

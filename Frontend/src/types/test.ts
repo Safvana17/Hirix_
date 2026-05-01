@@ -1,6 +1,6 @@
 import type { QuestionType, TestCase } from "./question"
 
-export type TestStatus = 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'CANCELLED'
+export type TestStatus = 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'CANCELLED' | 'DELETED'
 export type QuestionSource = 'ADMIN_LIBRARY' | 'COMPANY_LIBRARY' | 'TEST_ONLY'
 
 
@@ -69,6 +69,7 @@ export interface Test {
     rules: TestRules
     questions: TestQuestions[]
     testStatus: TestStatus
+    isDeleted: boolean
 }
 
 export interface CreateTestPayload {
@@ -98,6 +99,7 @@ export interface CompanyTestList{
     durationInMinutes: number
     testStatus: TestStatus
     candidatesCount: number
+    isDeleted: boolean
 }
 
 export interface GetAllTestResponse {

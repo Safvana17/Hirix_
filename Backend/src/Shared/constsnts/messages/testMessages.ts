@@ -9,5 +9,7 @@ export const TestMessages = {
         TEST_NOT_FOUND: 'Test not found',
         NOT_ALLOWED: 'Test company',
         NOT_DRAFTED_TEST: 'Only drafted tests can be published',
+        CANNOT_DELETE: 'You can delete only drafted test.',
+        CANNOT_CANCEL: 'You can cancel this test after publishing it.',
     }
 }

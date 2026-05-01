@@ -19,6 +19,7 @@ export interface CompanyTestListDTO{
     durationInMinutes: number
     testStatus: TestStatus
     candidatesCount: number
+    isDeleted: boolean
 }
 export interface CompanyGetAllTestOututDTO {
     tests: CompanyTestListDTO[]

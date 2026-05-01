@@ -86,23 +86,27 @@ GetAllTestResponse,
     }
 })
 
+export const deleteTest = createAsyncThunk<
+{id: string},
+{id: string},
+{rejectValue: string}
+>('test/delete', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.delete(API_ROUTES.COMPANY.TEST.DELETE(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to delete test')
+    }
+})
+
 const CompanyTestSlice = createSlice({
     name: 'CompanyTestSlice',
     initialState,
-    reducers: {
-        // nextStep: (state) => {
-        //     state.currentStep += 1
-        // },
-        // prevStep: (state) => {
-        //     state.currentStep -= 1
-        // },
-        // setStep: (state, action) => {
-        //     state.currentStep = action.payload
-        // },
-        // resetTestCreation: () => {
-        //     return initialState
-        // }
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
         .addCase(createTest.pending, (state) => {
@@ -139,6 +143,17 @@ const CompanyTestSlice = createSlice({
         .addCase(getAllTests.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get all tests'
+        })
+        .addCase(deleteTest.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(deleteTest.fulfilled, (state, action) => {
+            state.loading = false
+            state.testList = state.testList.filter(t => t.id != action.payload.id)
+        })
+        .addCase(deleteTest.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to delete test'
         })
     },
 })
