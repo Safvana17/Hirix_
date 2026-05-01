@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { CreateTestPayload, Test } from "../../../../types/test"
+import type { CompanyTestList, CreateTestPayload, GetAllTestParams, GetAllTestResponse, Test } from "../../../../types/test"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -9,6 +9,7 @@ interface CompanyTestState {
     currentStep: number
     error: string | null
     tests: Test[]
+    testList: CompanyTestList[]
     pagination: {
         test: {
             totalCount: number
@@ -22,6 +23,7 @@ const initialState: CompanyTestState = {
     currentStep: 0,
     error: null,
     tests: [],
+    testList: [],
     pagination: {
         test: {
             totalCount: 0,
@@ -47,22 +49,40 @@ CreateTestPayload,
     }
 })
 
+export const getAllTests = createAsyncThunk<
+GetAllTestResponse,
+{params: GetAllTestParams},
+{rejectValue: string}
+>('tests/getAll', async({params}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.TEST.GET_ALL, {params})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get all Tests')
+    }
+})
+
 const CompanyTestSlice = createSlice({
     name: 'CompanyTestSlice',
     initialState,
     reducers: {
-        nextStep: (state) => {
-            state.currentStep += 1
-        },
-        prevStep: (state) => {
-            state.currentStep -= 1
-        },
-        setStep: (state, action) => {
-            state.currentStep = action.payload
-        },
-        resetTestCreation: () => {
-            return initialState
-        }
+        // nextStep: (state) => {
+        //     state.currentStep += 1
+        // },
+        // prevStep: (state) => {
+        //     state.currentStep -= 1
+        // },
+        // setStep: (state, action) => {
+        //     state.currentStep = action.payload
+        // },
+        // resetTestCreation: () => {
+        //     return initialState
+        // }
     },
     extraReducers: (builder) => {
         builder
@@ -77,8 +97,21 @@ const CompanyTestSlice = createSlice({
             state.loading = false
             state.error = action.payload || 'Failed to create test'
         })
+        .addCase(getAllTests.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(getAllTests.fulfilled, (state, action) => {
+            state.loading = false
+            state.testList = action.payload.tests
+            state.pagination.test.totalCount = action.payload.totalCount
+            state.pagination.test.totalPages = action.payload.totalPages
+        })
+        .addCase(getAllTests.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get all tests'
+        })
     },
 })
 
-export const { nextStep, prevStep, setStep } = CompanyTestSlice.actions
+// export const { nextStep, prevStep, setStep } = CompanyTestSlice.actions
 export default CompanyTestSlice.reducer

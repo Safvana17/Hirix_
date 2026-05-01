@@ -81,3 +81,27 @@ export interface CreateTestPayload {
     candidates: CreateTestCandidatePayload[]
     rules: TestRules
 }
+
+export interface GetAllTestParams {
+    search?: string
+    status?: TestStatus
+    page: number
+    limit: number
+}
+
+export interface CompanyTestList{
+    id: string
+    name: string
+    jobRole: string
+    startTime: Date
+    endTime: Date
+    durationInMinutes: number
+    testStatus: TestStatus
+    candidatesCount: number
+}
+
+export interface GetAllTestResponse {
+    tests: CompanyTestList[]
+    totalPages: number
+    totalCount: number
+}
