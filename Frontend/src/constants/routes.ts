@@ -19,7 +19,8 @@ export const ROUTES = {
     SUBSCRIPTION: '/company/subscriptions',
     TEST: '/company/tests',
     CREATE_TEST: '/company/test/create',
-    CREATE_TEST_SUCCESS: '/company/test/success'
+    CREATE_TEST_SUCCESS: '/company/test/success',
+    CANCEL_TEST: '/company/test/:id/cancel'
   },
 
   CANDIDATE: {

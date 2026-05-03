@@ -49,7 +49,7 @@ export const API_ROUTES = {
       DELETE: (id: string) => 
         `/company/test/${id}`,
       CANCEL: (id: string) => 
-        `/company/test/${id}`,
+        `/company/test/${id}/cancel`,
       RESCHEDULE: (id: string) => 
         `/company/test/${id}`,
       GET_ALL: '/company/tests',

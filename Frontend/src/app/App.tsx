@@ -24,6 +24,7 @@ import AdminSettings from '../presentation/pages/admin/AdminSettings'
 import CompanyTest from '../presentation/pages/company/CompanyTest'
 import CreateTestPage from '../presentation/pages/company/CreateTestPage'
 import TestCreateSuccessPage from '../presentation/components/company/test/TestCreateSuccessPage'
+import CancelTestPage from '../presentation/components/company/test/CancelTestPage'
 
 
 
@@ -114,6 +115,12 @@ const App = () => {
           <Route path={ROUTES.COMPANY.CREATE_TEST_SUCCESS} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <TestCreateSuccessPage />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.COMPANY.CANCEL_TEST} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <CancelTestPage />
             </RoleRoute>
           } />
           

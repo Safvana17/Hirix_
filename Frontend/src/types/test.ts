@@ -107,3 +107,8 @@ export interface GetAllTestResponse {
     totalPages: number
     totalCount: number
 }
+
+export interface CancelTestArgs {
+    id: string
+    reason: string
+}

@@ -89,6 +89,8 @@ const CompanyTest: React.FC = () => {
     setModalConfig(prev => ({...prev, isOpen: false}))
   }
 
+  console.log("test: ", testList)
+
   const handleCreateTest = () => {
     navigate("/company/test/create")
   }
@@ -186,9 +188,7 @@ const CompanyTest: React.FC = () => {
           label: "Cancel",
           icon: XCircle,
           color: "secondary",
-          onClick: () => {
-            // dispatch(cancelTest(test.id))
-          },
+          onClick: () => navigate(`/company/test/${test.id}/cancel`),
         },
       ]
     }
@@ -232,6 +232,17 @@ const CompanyTest: React.FC = () => {
           {val.toString()} Minutes
         </Typography>
       ),
+    },
+    {
+      header: "Start Time",
+      key: "startTime",
+      render: (val) => {
+        const date = new Date(val.toLocaleString())
+        return (
+        <Typography fontSize={13} fontWeight={700}>
+          {date.toLocaleString()}
+        </Typography>
+      )}
     },
     {
       header: "Status",

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { CompanyTestList, CreateTestPayload, GetAllTestParams, GetAllTestResponse, Test } from "../../../../types/test"
+import type { CancelTestArgs, CompanyTestList, CreateTestPayload, GetAllTestParams, GetAllTestResponse, Test } from "../../../../types/test"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -103,6 +103,22 @@ export const deleteTest = createAsyncThunk<
     }
 })
 
+export const cancelTest = createAsyncThunk<
+void,
+CancelTestArgs,
+{rejectValue: string}
+>('test/cancel', async(CancelTestArgs, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMPANY.TEST.CANCEL(CancelTestArgs.id), {reason: CancelTestArgs.reason})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to cancel test')
+    }
+})
 const CompanyTestSlice = createSlice({
     name: 'CompanyTestSlice',
     initialState,
@@ -152,6 +168,16 @@ const CompanyTestSlice = createSlice({
             state.testList = state.testList.filter(t => t.id != action.payload.id)
         })
         .addCase(deleteTest.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to delete test'
+        })
+        .addCase(cancelTest.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(cancelTest.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(cancelTest.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to delete test'
         })
