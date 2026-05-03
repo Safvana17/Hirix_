@@ -153,6 +153,7 @@ import { CompanyGetAllTestUsecase } from "../../../Application/company/usecases/
 import { CompanyPublishTestUsecase } from "../../../Application/company/usecases/test/company.publishTest.usecase";
 import { CompanyDeleteTestUsecase } from "../../../Application/company/usecases/test/company.deleteTest.usecase";
 import { CompanyCancelTestUsecase } from "../../../Application/company/usecases/test/company.cancelTest.usecase";
+import { CompanyResheduleTestUsecase } from "../../../Application/company/usecases/test/company.resheduleTest.usecase";
 
 const iCandidateRepository = new CandidateRepository()
 const iCompanyRepository = new CompanyRepository()
@@ -551,6 +552,12 @@ const iCompanyCancelTest = new CompanyCancelTestUsecase(
     iTestCandidateRepository,
     iProcessNotification
 )
+const iCompanyResheduleTest = new CompanyResheduleTestUsecase(
+    iTestRepository,
+    iTestCandidateRepository,
+    iCompanyRepository,
+    iProcessNotification
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -849,5 +856,6 @@ export const iCompanyTestController = new CompanyTestController (
     iCompanyGetQuestionsForTest,
     iCompanyGetAllTest,
     iComapnyDeleteTest,
-    iCompanyCancelTest
+    iCompanyCancelTest,
+    iCompanyResheduleTest
 )

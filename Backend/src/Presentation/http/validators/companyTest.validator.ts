@@ -105,13 +105,10 @@ export const createTestValidator = z
     jobRoleId: z.string().min(1, 'Job role is required'),
     name: z.string().min(1, 'Test name is required'),
     description: z.string().min(1, 'Description is required'),
-
     startTime: z.coerce.date(),
     endTime: z.coerce.date(),
-
     questions: z.array(CreateTestQuestionSchema).min(1),
     candidates: z.array(CreateTestCandidateSchema).min(1),
-
     rules: CreateTestRulesSchema,
   })
   .superRefine((data, ctx) => {
@@ -167,4 +164,9 @@ export type testParams = z.infer<typeof TestParamsSchema>
 
 export const CancelTestSchema = z.object({
   reason: z.string().min(15, 'Reason is required')
+})
+
+export const ResheduleTestSchema = z.object({
+    startTime: z.coerce.date(),
+    endTime: z.coerce.date(),
 })

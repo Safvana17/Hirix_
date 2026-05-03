@@ -9,6 +9,7 @@ import { ICompanyGetAllTestUsecase } from "../../../../Application/company/inter
 import { ICompanyPublishTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.publishTest.usecase";
 import { ICompanyDeleteTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.deleteTest.usecase";
 import { ICompanyCancelTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.cancelTest.usecase";
+import { ICompanyResheduleTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.resheduleTest.usecase";
 
 export class CompanyTestController {
     constructor(
@@ -17,7 +18,8 @@ export class CompanyTestController {
         private _getAllQuestionsForTest: ICompanyGetQuestionsForTest,
         private _getAllTests: ICompanyGetAllTestUsecase,
         private _deleteTest: ICompanyDeleteTestUsecase,
-        private _cancelTest: ICompanyCancelTestUsecase
+        private _cancelTest: ICompanyCancelTestUsecase,
+        private _resheduleTest: ICompanyResheduleTestUsecase,
     ) {}
 
     createTestDraft = asyncHandler(async(req: Request, res: Response) => {
@@ -58,6 +60,13 @@ export class CompanyTestController {
         const companyId = req.user.id
         const { testId } = req.validatedParams as testParams
         await this._cancelTest.execute({companyId, testId, reason: req.body.eason})
+        return sendSuccess(res, statusCode.OK, '')
+    })
+
+    resheduleTest = asyncHandler(async (req: Request, res: Response) => {
+        const companyId = req.user.id
+        const { testId } = req.validatedParams as testParams
+        await this._resheduleTest.execute({companyId, testId, ...req.body})
         return sendSuccess(res, statusCode.OK, '')
     })
 }

@@ -58,6 +58,7 @@ export const ROUTES = {
         GET_BY_ID: '/test/:id',
         GET_ALL: '/tests',
         CANCEL: '/test/:testId/cancel',
+        RESHEDULE: '/test/:testId/reshedule',
         DELETE: '/test/:testId',
         GET_QUESTIONS: '/test/questions',
       }
