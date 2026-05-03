@@ -17,6 +17,8 @@ export const NotificationEvents = {
     ACCOUNT_DELETED: 'ACCOUNT_DELETED',
     ACCOUNT_RESTORE: 'ACCOUNT_RESTORE',  
     TEST_INVITE: 'TEST_INVITE', 
+    CANCEL_TEST: 'CANCEL_TEST',
+    RESCHEDULE_TEST: 'RESCHEDULE_TEST',
 } as const
 
 export type NotificationEvent = (typeof NotificationEvents)[keyof typeof NotificationEvents]

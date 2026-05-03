@@ -164,3 +164,7 @@ export const TestParamsSchema = z.object({
   testId: z.string().regex(/^[0-9a-fA-F]{24}$/)
 })
 export type testParams = z.infer<typeof TestParamsSchema>
+
+export const CancelTestSchema = z.object({
+  reason: z.string().min(15, 'Reason is required')
+})
