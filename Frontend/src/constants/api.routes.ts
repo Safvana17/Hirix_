@@ -51,7 +51,7 @@ export const API_ROUTES = {
       CANCEL: (id: string) => 
         `/company/test/${id}/cancel`,
       RESCHEDULE: (id: string) => 
-        `/company/test/${id}`,
+        `/company/test/${id}/reshedule`,
       GET_ALL: '/company/tests',
       GET_BY_ID: (id: string) => 
         `/company/test/${id}`,

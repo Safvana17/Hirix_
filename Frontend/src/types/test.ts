@@ -112,3 +112,9 @@ export interface CancelTestArgs {
     id: string
     reason: string
 }
+
+export interface ResheduleTestArgs {
+    startTime: string
+    endTime: string
+    id: string
+}

@@ -3,8 +3,6 @@ import {
   Alert,
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
   Paper,
   TextField,
   Typography,
@@ -19,9 +17,7 @@ const CancelTestPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
-
   const [reason, setReason] = useState("")
-  const [notifyCandidates, setNotifyCandidates] = useState(true)
   const [loading, setLoading] = useState(false)
 
   const handleCancelTest = async () => {
@@ -29,22 +25,13 @@ const CancelTestPage: React.FC = () => {
       toast.error("Test id is missing")
       return
     }
-
     if (!reason.trim()) {
       toast.error("Cancellation reason is required")
       return
     }
-
     try {
       setLoading(true)
-
-      await dispatch(
-        cancelTest({
-          id,
-          reason: reason.trim(),
-        })
-      ).unwrap()
-
+      await dispatch(cancelTest({id, reason: reason.trim()})).unwrap()
       toast.success("Test cancelled successfully")
       navigate("/company/tests")
     } catch (error) {
@@ -75,11 +62,9 @@ const CancelTestPage: React.FC = () => {
         <Typography variant="h5" fontWeight={800} mb={2}>
           Cancel Test
         </Typography>
-
         <Alert severity="warning" sx={{ mb: 3, borderRadius: 2 }}>
           Candidates will be notified about the cancellation.
         </Alert>
-
         <TextField
           label="Reason"
           fullWidth
@@ -89,18 +74,6 @@ const CancelTestPage: React.FC = () => {
           onChange={(e) => setReason(e.target.value)}
           placeholder="Enter reason for cancelling this test"
         />
-
-        <FormControlLabel
-          sx={{ mt: 2 }}
-          control={
-            <Checkbox
-              checked={notifyCandidates}
-              onChange={(e) => setNotifyCandidates(e.target.checked)}
-            />
-          }
-          label="Send email notification to candidates"
-        />
-
         <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
           <Button
             variant="outlined"
@@ -109,7 +82,6 @@ const CancelTestPage: React.FC = () => {
           >
             Back
           </Button>
-
           <Button
             variant="contained"
             color="error"

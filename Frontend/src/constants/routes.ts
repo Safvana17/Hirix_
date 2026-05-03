@@ -20,7 +20,8 @@ export const ROUTES = {
     TEST: '/company/tests',
     CREATE_TEST: '/company/test/create',
     CREATE_TEST_SUCCESS: '/company/test/success',
-    CANCEL_TEST: '/company/test/:id/cancel'
+    CANCEL_TEST: '/company/test/:id/cancel',
+    RESHEDULE_TEST: '/company/test/reschedule',
   },
 
   CANDIDATE: {

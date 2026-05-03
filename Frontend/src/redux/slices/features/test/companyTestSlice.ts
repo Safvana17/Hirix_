@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { CancelTestArgs, CompanyTestList, CreateTestPayload, GetAllTestParams, GetAllTestResponse, Test } from "../../../../types/test"
+import type { CancelTestArgs, CompanyTestList, CreateTestPayload, GetAllTestParams, GetAllTestResponse, ResheduleTestArgs, Test } from "../../../../types/test"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -119,6 +119,25 @@ CancelTestArgs,
         return rejectWithValue(err.response?.data.message || 'Failed to cancel test')
     }
 })
+
+export const resheduleTest = createAsyncThunk<
+void,
+ResheduleTestArgs,
+{rejectValue: string}
+>('test/reshedule', async(ResheduleTestArgs, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMPANY.TEST.RESCHEDULE(ResheduleTestArgs.id), {startTime: ResheduleTestArgs.startTime, endTime: ResheduleTestArgs.endTime})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to reshedule test')
+    }
+})
+
+
 const CompanyTestSlice = createSlice({
     name: 'CompanyTestSlice',
     initialState,
@@ -181,8 +200,17 @@ const CompanyTestSlice = createSlice({
             state.loading = false
             state.error = action.payload || 'Failed to delete test'
         })
+        .addCase(resheduleTest.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(resheduleTest.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(resheduleTest.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to reshedule test'
+        })
     },
 })
 
-// export const { nextStep, prevStep, setStep } = CompanyTestSlice.actions
 export default CompanyTestSlice.reducer

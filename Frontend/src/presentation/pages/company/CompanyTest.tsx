@@ -182,7 +182,7 @@ const CompanyTest: React.FC = () => {
           label: "Reschedule",
           icon: CalendarClock,
           color: "warning",
-          onClick: () => navigate(`/company/test/${test.id}/reschedule`),
+          onClick: () => navigate(`/company/test/reschedule`, {state: test}),
         },
         {
           label: "Cancel",
