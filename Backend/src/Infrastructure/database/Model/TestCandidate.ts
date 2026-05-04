@@ -1,5 +1,5 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
-import { CandidateTestStatus } from "../../../Domain/enums/Test";
+import { CandidateSelectionStatus, CandidateTestStatus } from "../../../Domain/enums/Test";
 import QuestionType from "../../../Domain/enums/questionType";
 
 
@@ -19,6 +19,7 @@ export interface ICandidateAnswer {
     codingAnswer?: ICodingAnswer
     isCorrect?: boolean
     marksObtained?: number
+    totalMarks?: number
 }
 
 export interface ITestCandidate extends Document {
@@ -27,9 +28,14 @@ export interface ITestCandidate extends Document {
     testToken: string
     email: string
     candidateTestStatus: CandidateTestStatus
+    selectionStatus: CandidateSelectionStatus
     warningCount: number
     candidateAnswers: ICandidateAnswer[]
     aiRank: number
+    totalMarks: number
+    marksObtained: number
+    correctAnswerCount: number
+    totalQuestionsCount: number
     startedAt: Date
     submittedAt: Date
 }

@@ -1,10 +1,26 @@
 import { redisClient } from "../../../Infrastructure/config/redis.config";
+import userRole from "../../../Domain/enums/userRole.enum";
+import UserEntity from "../../../Domain/entities/user.entity";
+
 //controllers
 import { CandidateAuthController } from "./candidate/authController";
 import { CompanyAuthController } from "./company/authController";
 import { AdminAuthController } from "./admin/authController";
 import { UnifiedAuthController } from "./common/unifiedAuthController";
 import { UserManagementController } from "./admin/userManagementController";
+import { CompanySettingsController } from "./company/companySettingsController";
+import { JobRolesController } from "./company/jobRoleController";
+import { CategoryController } from "./admin/categoryController";
+import { AdminQestionController } from "./admin/adminQuestionController";
+import { CompanyQuestionController } from "./company/companyQuestionController";
+import { PracticeLibraryController } from "./candidate/practiceQuestionController";
+import { SubscriptionPlanController } from "./admin/subscriptionPlanController";
+import { CompanySubscriptionController } from "./company/subscriptionController";
+import { CandidateSubscriptionController } from "./candidate/subscriptionController";
+import { AdminSettingsController } from "./admin/settingsController";
+import { UnifiedSettingsController } from "./common/unifiedSettingsController";
+import { CompanyTestController } from "./company/testController";
+
 
 //use case
 import { RegisterCandidateUsecase } from "../../../Application/candidate/useCases/auth/register.candidate.usecase";
@@ -75,8 +91,36 @@ import { AdminEditTemplateUsecase } from "../../../Application/admin/usecases/se
 import { AdminCreateNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.createNotificationRule.usecase";
 import { AdminGetAllNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.getAllNotificationRule.usecase";
 import { AdminUpdateNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.updateNotificationRule.usecase";
-
-
+import { CompanyGetAllQuestionsForTest } from "../../../Application/company/usecases/test/company.getAllQuestionsForTest.usecase";
+import { CompanyGetAllTestUsecase } from "../../../Application/company/usecases/test/company.getAllTest.usecase";
+import { CompanyPublishTestUsecase } from "../../../Application/company/usecases/test/company.publishTest.usecase";
+import { CompanyDeleteTestUsecase } from "../../../Application/company/usecases/test/company.deleteTest.usecase";
+import { CompanyCancelTestUsecase } from "../../../Application/company/usecases/test/company.cancelTest.usecase";
+import { CompanyResheduleTestUsecase } from "../../../Application/company/usecases/test/company.resheduleTest.usecase";
+import { UnifiedMarkAllAsReadUsecase } from "../../../Application/common/usecases/unified.markAllAsRead.usecase";
+import { AdminUpdateTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.updateTemplate.usecase";
+import { AdminDeleteTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.deleteTemplate.usecase";
+import { AdminDeleteNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.deleteNotificationRule.usecase";
+import { CandidateStartFreeTrialUsecase } from "../../../Application/candidate/useCases/subscription/candidate.startFreeTrial.usecase";
+import { CompanyStartTrialUsecase } from "../../../Application/company/usecases/subscription/company.startTrial.usecase";
+import { CompanyCreateTestDraftUsecase } from "../../../Application/company/usecases/test/company.createTestDraft.usecase";
+import { CandidateGetCurrentPlanUsecse } from "../../../Application/candidate/useCases/subscription/candidate.getCurrentPlan.usecase";
+import { CandidateChangeSubscriptionUsecase } from "../../../Application/candidate/useCases/subscription/candidate.changeSubscription.usecase";
+import { CandidateMakePaymentUsecase } from "../../../Application/candidate/useCases/subscription/candidate.makePayment.usecase";
+import { CandidateMarkPaymentFailureUsecase } from "../../../Application/candidate/useCases/subscription/candidate.markPaymentFailure.usecase";
+import { CandidateGetBillingHistoryUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getBillingHistory.usecase";
+import { CandidateCancelSubscriptionUsecase } from "../../../Application/candidate/useCases/subscription/candidate.cancelSubscription.usecase";
+import { CandidateGetInvoiceUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getInvoice.usecase";
+import { UnifiedLogoutUsecase } from "../../../Application/common/usecases/unified.logout.usecase";
+import { AdminGetCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.getCompany.usecase";
+import { AdminUpdateCompanyStatus } from "../../../Application/admin/usecases/userManagement/admin.updateCompanyStatus.usecase";
+import { AdminUpdateCandidateStatus } from "../../../Application/admin/usecases/userManagement/admin.updateCandidateStatus.usecase";
+import { AdminApproveCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.approveCompany.usecase";
+import { AdminRejectCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.rejectCompany.usecase";
+import { CandidateGetAllPracticeQuestionsUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getAllPracticeQuestion.usecase";
+import { AdminGetAllTemplatesUsecase } from "../../../Application/admin/usecases/settings/admin.getAllTemplates.usecase";
+import { AdminProcessNotificationEventUsecase } from "../../../Application/admin/usecases/settings/admin.processNotificationEvent.usecase";
+import { UnifiedGetMyNotificationsUsecase } from "../../../Application/common/usecases/unified.getMyNotifications.usecase";
 
 
 //repositories
@@ -90,8 +134,13 @@ import { CategoryRepository } from "../../../Infrastructure/repositories/categor
 import { QuestionRepository } from "../../../Infrastructure/repositories/question.repository";
 import { SubscriptionPlanRepository } from "../../../Infrastructure/repositories/subscriptionPlan.repository";
 import { PaymentRepository } from "../../../Infrastructure/repositories/payment.repository";
-
-
+import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
+import { SubscriptionRepository } from "../../../Infrastructure/repositories/subscription.repository";
+import { TemplateRepository } from "../../../Infrastructure/repositories/template.repository";
+import { NotificationRuleRepository } from "../../../Infrastructure/repositories/notificationRule.repository";
+import { NotificationRepository } from "../../../Infrastructure/repositories/notification.repository";
+import { TestRepository } from "../../../Infrastructure/repositories/test.repository";
+import { TestCandidateRepository } from "../../../Infrastructure/repositories/textCandidate.repository";
 
 //services
 import { HashService } from "../../../Infrastructure/services/HashService";
@@ -99,61 +148,14 @@ import { OtpService } from "../../../Infrastructure/services/OtpService";
 import { TokenService } from "../../../Infrastructure/services/TokenService";
 import { MailService } from "../../../Infrastructure/services/MailService";
 import { GoogleAuthService } from "../../../Infrastructure/services/GoogleAuthService";
-import userRole from "../../../Domain/enums/userRole.enum";
-import UserEntity from "../../../Domain/entities/user.entity";
-import { UnifiedLogoutUsecase } from "../../../Application/common/usecases/unified.logout.usecase";
-import { AdminGetCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.getCompany.usecase";
-import { AdminUpdateCompanyStatus } from "../../../Application/admin/usecases/userManagement/admin.updateCompanyStatus.usecase";
-import { AdminUpdateCandidateStatus } from "../../../Application/admin/usecases/userManagement/admin.updateCandidateStatus.usecase";
-import { AdminApproveCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.approveCompany.usecase";
-import { AdminRejectCompanyUsecase } from "../../../Application/admin/usecases/userManagement/admin.rejectCompany.usecase";
-import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";
-import { CompanySettingsController } from "./company/companySettingsController";
-import { JobRolesController } from "./company/jobRoleController";
-import { CategoryController } from "./admin/categoryController";
-import { AdminQestionController } from "./admin/adminQuestionController";
-import { CompanyQuestionController } from "./company/companyQuestionController";
-import { CandidateGetAllPracticeQuestionsUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getAllPracticeQuestion.usecase";
-import { PracticeLibraryController } from "./candidate/practiceQuestionController";
-import { SubscriptionPlanController } from "./admin/subscriptionPlanController";
-import { CompanySubscriptionController } from "./company/subscriptionController";
-import { SubscriptionRepository } from "../../../Infrastructure/repositories/subscription.repository";
 import { RazorpayService } from "../../../Infrastructure/services/RazorpayService";
 import { PdfService } from "../../../Infrastructure/services/PdfService";
-import { CandidateSubscriptionController } from "./candidate/subscriptionController";
-import { CandidateGetCurrentPlanUsecse } from "../../../Application/candidate/useCases/subscription/candidate.getCurrentPlan.usecase";
-import { CandidateChangeSubscriptionUsecase } from "../../../Application/candidate/useCases/subscription/candidate.changeSubscription.usecase";
-import { CandidateMakePaymentUsecase } from "../../../Application/candidate/useCases/subscription/candidate.makePayment.usecase";
-import { CandidateMarkPaymentFailureUsecase } from "../../../Application/candidate/useCases/subscription/candidate.markPaymentFailure.usecase";
-import { CandidateGetBillingHistoryUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getBillingHistory.usecase";
-import { CandidateCancelSubscriptionUsecase } from "../../../Application/candidate/useCases/subscription/candidate.cancelSubscription.usecase";
-import { CandidateGetInvoiceUsecase } from "../../../Application/candidate/useCases/subscription/candidate.getInvoice.usecase";
-import { TemplateRepository } from "../../../Infrastructure/repositories/template.repository";
-import { AdminSettingsController } from "./admin/settingsController";
-import { AdminGetAllTemplatesUsecase } from "../../../Application/admin/usecases/settings/admin.getAllTemplates.usecase";
-import { NotificationRuleRepository } from "../../../Infrastructure/repositories/notificationRule.repository";
-import { AdminProcessNotificationEventUsecase } from "../../../Application/admin/usecases/settings/admin.processNotificationEvent.usecase";
 import { RenderTemplateService } from "../../../Infrastructure/services/RenderTemplateService";
-import { NotificationRepository } from "../../../Infrastructure/repositories/notification.repository";
 import { TextFormatService } from "../../../Infrastructure/services/TextFormatService";
-import { UnifiedGetMyNotificationsUsecase } from "../../../Application/common/usecases/unified.getMyNotifications.usecase";
-import { UnifiedSettingsController } from "./common/unifiedSettingsController";
-import { UnifiedMarkAllAsReadUsecase } from "../../../Application/common/usecases/unified.markAllAsRead.usecase";
-import { AdminUpdateTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.updateTemplate.usecase";
-import { AdminDeleteTemplateUsecase } from "../../../Application/admin/usecases/settings/admin.deleteTemplate.usecase";
-import { AdminDeleteNotificationRuleUsecase } from "../../../Application/admin/usecases/settings/admin.deleteNotificationRule.usecase";
-import { CandidateStartFreeTrialUsecase } from "../../../Application/candidate/useCases/subscription/candidate.startFreeTrial.usecase";
-import { CompanyStartTrialUsecase } from "../../../Application/company/usecases/subscription/company.startTrial.usecase";
-import { CompanyCreateTestDraftUsecase } from "../../../Application/company/usecases/test/company.createTestDraft.usecase";
-import { TestRepository } from "../../../Infrastructure/repositories/test.repository";
-import { TestCandidateRepository } from "../../../Infrastructure/repositories/textCandidate.repository";
-import { CompanyTestController } from "./company/testController";
-import { CompanyGetAllQuestionsForTest } from "../../../Application/company/usecases/test/company.getAllQuestionsForTest.usecase";
-import { CompanyGetAllTestUsecase } from "../../../Application/company/usecases/test/company.getAllTest.usecase";
-import { CompanyPublishTestUsecase } from "../../../Application/company/usecases/test/company.publishTest.usecase";
-import { CompanyDeleteTestUsecase } from "../../../Application/company/usecases/test/company.deleteTest.usecase";
-import { CompanyCancelTestUsecase } from "../../../Application/company/usecases/test/company.cancelTest.usecase";
-import { CompanyResheduleTestUsecase } from "../../../Application/company/usecases/test/company.resheduleTest.usecase";
+import { CompanyGetTestByIdUsecase } from "../../../Application/company/usecases/test/company.getTestById.usecase";
+
+
+
 
 const iCandidateRepository = new CandidateRepository()
 const iCompanyRepository = new CompanyRepository()
@@ -558,6 +560,12 @@ const iCompanyResheduleTest = new CompanyResheduleTestUsecase(
     iCompanyRepository,
     iProcessNotification
 )
+const iCompanyGetTestById = new CompanyGetTestByIdUsecase(
+    iCompanyRepository,
+    iTestRepository,
+    iTestCandidateRepository,
+    iJobRoleRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -857,5 +865,6 @@ export const iCompanyTestController = new CompanyTestController (
     iCompanyGetAllTest,
     iComapnyDeleteTest,
     iCompanyCancelTest,
-    iCompanyResheduleTest
+    iCompanyResheduleTest,
+    iCompanyGetTestById,
 )

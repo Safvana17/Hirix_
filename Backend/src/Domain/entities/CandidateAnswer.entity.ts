@@ -16,6 +16,7 @@ export class CandidateAnswerEntity {
     codingAnswer?: CodingAnswer
     isCorrect?: boolean
     marksObtained?: number
+    totalMarks?: number
 
     constructor (
         id: string,
@@ -26,7 +27,8 @@ export class CandidateAnswerEntity {
         descriptiveAnswer?: string,
         codingAnswer?: CodingAnswer,
         isCorrect?: boolean,
-        marksObtained?: number
+        marksObtained?: number,
+        totalMarks?: number
     ) {
         this.id = id
         this.testQuestionId = testQuestionId
@@ -37,5 +39,6 @@ export class CandidateAnswerEntity {
         this.codingAnswer = codingAnswer
         this.isCorrect = isCorrect
         this.marksObtained = marksObtained
+        this.totalMarks = totalMarks
     }
 }

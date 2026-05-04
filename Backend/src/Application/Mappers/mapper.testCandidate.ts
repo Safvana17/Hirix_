@@ -22,10 +22,16 @@ export class TestCandidateMapper {
                     answer.descriptiveAnswer,
                     answer.codingAnswer,
                     answer.isCorrect,
-                    answer.marksObtained
+                    answer.marksObtained,
+                    answer.totalMarks
                 )
             }),
+            doc.selectionStatus,
             doc.aiRank,
+            doc.totalMarks,
+            doc.marksObtained,
+            doc.correctAnswerCount,
+            doc.totalQuestionsCount,
             doc.startedAt,
             doc.submittedAt
         )
@@ -39,6 +45,7 @@ export class TestCandidateMapper {
             email: entity.email,
             testLink: entity.testToken,
             candidateTestStatus: entity.candidateTestStatus,
+            selectionStatus: entity.selectionStatus,
             warningCount: entity.warningCount,
             candidateAnswers: entity.candidateAnswers.map((answer) => ({
                 _id: new Types.ObjectId(answer.id),
@@ -49,9 +56,14 @@ export class TestCandidateMapper {
                 descriptiveAnswer: answer.descriptiveAnswer,
                 codingAnswer: answer.codingAnswer,
                 isCorrect: answer.isCorrect,
-                marksObtained: answer.marksObtained
+                marksObtained: answer.marksObtained,
+                totalMarks: answer.totalMarks
             })),
             aiRank: entity.aiRank,
+            totalMarks: entity.totalMarks,
+            marksObtained: entity.marksObtained,
+            correctAnswerCount: entity.correctAnswerCount,
+            totalQuestionsCount: entity.totalQuestionsCount,
             startedAt: entity.startedAt,
             submittedAt: entity.submittedAt
 

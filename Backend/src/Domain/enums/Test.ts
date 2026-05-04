@@ -21,3 +21,9 @@ export enum CandidateTestStatus {
    DISQUALIFIED = 'DISQUALIFIED'
 }
 
+export enum CandidateSelectionStatus {
+    PENDING = 'PENDING',
+    SHORTLISTED = 'SHORTLISTED',
+    REJECTED = 'REJECTED'
+}
+
