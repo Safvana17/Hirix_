@@ -54,6 +54,7 @@ type TestAction = {
   color: "success" | "primary" | "warning" | "secondary" | "error"
   onClick: () => void
 }
+export type ModalMode = 'create' | 'edit'
 
 const CompanyTest: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("")

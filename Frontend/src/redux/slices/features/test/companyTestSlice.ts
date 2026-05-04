@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { CancelTestArgs, CompanyTestList, CreateTestPayload, GetAllTestParams, GetAllTestResponse, ResheduleTestArgs, Test } from "../../../../types/test"
+import type { CancelTestArgs, CompanyTestList, CreateTestPayload, GetAllTestParams, GetAllTestResponse, ResheduleTestArgs, SelectedTest, Test, TestCandidate } from "../../../../types/test"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -9,7 +9,8 @@ interface CompanyTestState {
     currentStep: number
     error: string | null
     tests: Test[]
-    selectedTest: Test | null,
+    selectedTest: SelectedTest | null
+    candidates: TestCandidate[]
     testList: CompanyTestList[]
     pagination: {
         test: {
@@ -26,6 +27,7 @@ const initialState: CompanyTestState = {
     tests: [],
     testList: [],
     selectedTest: null,
+    candidates: [],
     pagination: {
         test: {
             totalCount: 0,
@@ -137,6 +139,24 @@ ResheduleTestArgs,
     }
 })
 
+export const getTestById = createAsyncThunk<
+SelectedTest,
+{ id: string },
+{rejectValue: string}
+>('test/getById', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.TEST.GET_BY_ID(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log('data: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get test')
+    }
+})
+
 
 const CompanyTestSlice = createSlice({
     name: 'CompanyTestSlice',
@@ -149,7 +169,7 @@ const CompanyTestSlice = createSlice({
         })
         .addCase(createTest.fulfilled, (state, action) => {
             state.loading = false
-            state.selectedTest = action.payload
+            // state.selectedTest = action.payload
             state.tests.unshift(action.payload)
         })
         .addCase(createTest.rejected, (state, action) => {
@@ -209,6 +229,17 @@ const CompanyTestSlice = createSlice({
         .addCase(resheduleTest.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to reshedule test'
+        })
+        .addCase(getTestById.pending, (state) => {
+            state.loading = true
+        }) 
+        .addCase(getTestById.fulfilled, (state, action) => {
+            state.loading = false
+            state.selectedTest = action.payload
+        })
+        .addCase(getTestById.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get test'
         })
     },
 })

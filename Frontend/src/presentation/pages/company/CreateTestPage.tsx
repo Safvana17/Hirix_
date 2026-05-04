@@ -18,7 +18,7 @@ import { createTestValidator } from '../../../lib/validation/testValidation';
 
 
 
-const steps = ['Test Details', 'Candidates', 'Questions', 'Rules', 'Publish'];
+const steps = ['Test Details', 'Candidates', 'Questions', 'Rules', 'Publish']
 
 const CreateTestPage: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -112,7 +112,7 @@ const CreateTestPage: React.FC = () => {
 
 
                 <Box sx={{ minHeight: '400px' }}>
-                    {currentStep === 0 && <CompanyTestBasicInfo data={formData} updateData={updateFormDate} />}
+                    {currentStep === 0 && <CompanyTestBasicInfo data={formData} updateData={updateFormDate} mode='create'/>}
                     {currentStep === 1 && <CompanyAddCandidates data={formData} updateData={updateFormDate} />}
                     {currentStep === 2 && <CompanyAddQuestions data={formData} updateData={updateFormDate} />}
                     {currentStep === 3 && <CompanyTestRules data={formData} updateData={updateFormDate}/>}

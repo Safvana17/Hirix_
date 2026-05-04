@@ -13,13 +13,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../../redux/store'
 import type { CreateTestPayload } from '../../../../types/test'
 import { getAllJobRoles } from '../../../../redux/slices/features/jobRoles/jobRoleSlice'
+import type { ModalMode } from '../../../pages/company/CompanyTest'
 
 interface CompanyTestBasicInfoProps {
   data: CreateTestPayload
+  mode: ModalMode
   updateData: (data: Partial<CreateTestPayload>) => void
 }
 
-const CompanyTestBasicInfo: React.FC<CompanyTestBasicInfoProps> = ({ data, updateData }) => {
+const CompanyTestBasicInfo: React.FC<CompanyTestBasicInfoProps> = ({ data, updateData, mode }) => {
   const dispatch = useDispatch<AppDispatch>()
   const { jobRoles } = useSelector((state: RootState) => state.jobRole)
 
@@ -100,6 +102,7 @@ const CompanyTestBasicInfo: React.FC<CompanyTestBasicInfoProps> = ({ data, updat
           <TextField
             fullWidth
             type="datetime-local"
+            disabled={mode === 'edit'}
             label="Start Time"
             value={data.startTime}
             onChange={(e) => updateData({ startTime: e.target.value })}
@@ -112,6 +115,7 @@ const CompanyTestBasicInfo: React.FC<CompanyTestBasicInfoProps> = ({ data, updat
           <TextField
             fullWidth
             type="datetime-local"
+            disabled={mode === 'edit'}
             label="End Time"
             value={data.endTime}
             onChange={(e) => updateData({ endTime: e.target.value })}

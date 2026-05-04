@@ -2,7 +2,41 @@ import type { QuestionType, TestCase } from "./question"
 
 export type TestStatus = 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'CANCELLED' | 'DELETED'
 export type QuestionSource = 'ADMIN_LIBRARY' | 'COMPANY_LIBRARY' | 'TEST_ONLY'
+export type CandidateStatus = 'DRAFT' | 'INVITED' | 'IN_PROGRESS'| 'SUBMITTED'| 'EXPIRED'| 'DISQUALIFIED'
+export type CandidateSelectionStatus = 'PENDING' | 'SHORTLISTED' | 'REJECTED'
 
+export interface TestCandidate {
+    id: string
+    email: string
+    token: string
+    testId: string
+    candidateStatus: CandidateStatus
+    selectionStatus: CandidateSelectionStatus
+    warningCount: number
+    candidateAnswers: {
+        id: string
+        testQuestionId: string
+        questionType: QuestionType
+        timeTakenInSeconds: number
+        selectedOptionIds?: string[]
+        descriptiveAnswer?: string
+        codingAnswer?: {
+            language: string
+            code: string
+            output?: string
+        }
+        isCorrect?: boolean
+        marksObtained?: number
+        totalMarks: number
+    },
+    aiRank: number
+    totalMarks: number
+    totalQuestions: number
+    correctAnswerCount: number
+    marksObtained: number
+    startedAt: string
+    submittedAt: string
+}
 
 export interface TestRules {
     timing: {
@@ -117,4 +151,18 @@ export interface ResheduleTestArgs {
     startTime: string
     endTime: string
     id: string
+}
+
+export interface SelectedTest {
+    id: string
+    name: string
+    description: string
+    jobrole: string
+    startTime: Date
+    endTime: Date
+    companyName: string
+    rules: TestRules
+    questions: TestQuestions[]
+    testStatus: TestStatus
+    candidates: TestCandidate[]
 }
