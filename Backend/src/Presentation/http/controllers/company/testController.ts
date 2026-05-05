@@ -11,6 +11,7 @@ import { ICompanyDeleteTestUsecase } from "../../../../Application/company/inter
 import { ICompanyCancelTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.cancelTest.usecase";
 import { ICompanyResheduleTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.resheduleTest.usecase";
 import { ICompanyGetTestByIDUsecase } from "../../../../Application/company/interfaces/test/ICompany.getTestById.usecase";
+import { ICompanyEditTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.editTest.usecase";
 
 export class CompanyTestController {
     constructor(
@@ -22,6 +23,7 @@ export class CompanyTestController {
         private _cancelTest: ICompanyCancelTestUsecase,
         private _resheduleTest: ICompanyResheduleTestUsecase,
         private _getTestById: ICompanyGetTestByIDUsecase,
+        private  _editTestUsecase: ICompanyEditTestUsecase,
     ) {}
 
     createTestDraft = asyncHandler(async(req: Request, res: Response) => {
@@ -77,5 +79,12 @@ export class CompanyTestController {
         const { testId }= req.validatedParams as testParams
         const result = await this._getTestById.execute({companyId, testId})
         return sendSuccess(res, statusCode.OK, '', result.Test)
+    })
+
+    editTest = asyncHandler(async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        const { testId } = req.validatedParams as testParams
+        const { test } = await this._editTestUsecase.execute({companyId, testId, ...req.body})
+        return sendSuccess(res, statusCode.OK, '', test)
     })
 }

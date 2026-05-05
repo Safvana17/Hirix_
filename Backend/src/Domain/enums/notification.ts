@@ -19,6 +19,7 @@ export const NotificationEvents = {
     TEST_INVITE: 'TEST_INVITE', 
     CANCEL_TEST: 'CANCEL_TEST',
     RESCHEDULE_TEST: 'RESCHEDULE_TEST',
+    TEST_REMOVED: 'TEST_REMOVED'
 } as const
 
 export type NotificationEvent = (typeof NotificationEvents)[keyof typeof NotificationEvents]

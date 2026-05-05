@@ -13,9 +13,10 @@ export interface CompanyGetTestByIDOutputDTO {
             id: string
             name: string
             description: string
+            jobRoleId: string
             jobrole: string
             startTime: Date
-            endiTime: Date
+            endTime: Date
             companyName: string
             rules: TestRules
             questions: TestQuestionEntity[]

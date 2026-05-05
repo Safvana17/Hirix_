@@ -153,6 +153,7 @@ import { PdfService } from "../../../Infrastructure/services/PdfService";
 import { RenderTemplateService } from "../../../Infrastructure/services/RenderTemplateService";
 import { TextFormatService } from "../../../Infrastructure/services/TextFormatService";
 import { CompanyGetTestByIdUsecase } from "../../../Application/company/usecases/test/company.getTestById.usecase";
+import { CompanyEditTestUsecase } from "../../../Application/company/usecases/test/company.editTest.usecase";
 
 
 
@@ -566,6 +567,14 @@ const iCompanyGetTestById = new CompanyGetTestByIdUsecase(
     iTestCandidateRepository,
     iJobRoleRepository
 )
+const iCompanyEditTest = new CompanyEditTestUsecase(
+    iCompanyRepository,
+    iTestRepository,
+    iTestCandidateRepository,
+    iTokenService,
+    iJobRoleRepository,
+    iProcessNotification
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -867,4 +876,5 @@ export const iCompanyTestController = new CompanyTestController (
     iCompanyCancelTest,
     iCompanyResheduleTest,
     iCompanyGetTestById,
+    iCompanyEditTest
 )

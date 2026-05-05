@@ -1,9 +1,10 @@
 import { TestEntity } from "../../../../Domain/entities/Test.entity"
 import QuestionType from "../../../../Domain/enums/questionType"
-import { CandidateTestStatus, QuestionSource } from "../../../../Domain/enums/Test"
+import { QuestionSource } from "../../../../Domain/enums/Test"
 import { TestCase } from "../../../../Domain/valueObjects/question.testCase"
 
-export interface CreateTestQuestionInputDTO {
+export interface EditTestQuestionInputDTO {
+    id?: string
     source: QuestionSource
     type: QuestionType
     title: string
@@ -16,14 +17,13 @@ export interface CreateTestQuestionInputDTO {
     testCase?: TestCase[]
 }
 
-export interface CreateTestCandiateInputDTO {
+export interface EditTestCandiateInputDTO {
     email: string
-    candidateTestStatus?: CandidateTestStatus
 }
 
 export interface TimingRulesDTO {
     durationInMinutes: number
-    autoSubmitOnTimeEnd?: boolean
+    autoSubmitOnTimeEnd: boolean
     warningBeforeEndInMinutes?: number
 }
 
@@ -60,7 +60,7 @@ export interface AutoSaveRulesDTO {
     saveOnEveryAnswer?: boolean
 }
 
-export interface CreateTestRulesDTO {
+export interface EditTestRulesDTO {
     timing: TimingRulesDTO
     navigation: NavigationRulesDTO
     proctoring: ProctoringRulesDTO
@@ -68,23 +68,19 @@ export interface CreateTestRulesDTO {
     autoSave: AutoSaveRulesDTO
 }
 
-export interface CompanyCreateTestInputDTO {
+export interface CompanyEditTestInputDTO {
+    testId: string
     companyId: string
     jobRoleId: string
     name: string
     description: string
     startTime: Date
     endTime: Date
-    questions: CreateTestQuestionInputDTO[]
-    candidates: CreateTestCandiateInputDTO[]
-    rules: CreateTestRulesDTO
+    questions: EditTestQuestionInputDTO[]
+    candidates: EditTestCandiateInputDTO[]
+    rules: EditTestRulesDTO
 }
 
-export interface CompanyPublishTestInputDTO {
-    testId: string
-    companyId: string
-}
-
-export interface CompanyCreateTestOutputDTO {
+export interface CompanyEditTestOutputDTO {
     test: TestEntity
 }

@@ -54,7 +54,7 @@ export const ROUTES = {
       TEST : {
         CREATE: '/test',
         PUBLISH: '/test/:testId',
-        EDIT: '/test/:testId',
+        EDIT: '/test/:testId/edit',
         GET_BY_ID: '/test/:testId',
         GET_ALL: '/tests',
         CANCEL: '/test/:testId/cancel',

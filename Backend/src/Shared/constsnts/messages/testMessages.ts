@@ -12,5 +12,7 @@ export const TestMessages = {
         CANNOT_DELETE: 'You can delete only drafted test.',
         CANNOT_CANCEL: 'You can cancel this test after publishing it.',
         TEST_STARTED: 'You cannot cancel started test',
+        CANDIDATES_NOT_FOUND: 'Test candidates not found',
+        TEST_UPDATE_FAILED: 'Failed to update test',
     }
 }

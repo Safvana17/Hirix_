@@ -62,7 +62,7 @@ router.delete(ROUTES.COMPANY.TEST.DELETE, authHandler(iTokenService), verifyCsrf
 router.patch(ROUTES.COMPANY.TEST.CANCEL, authHandler(iTokenService), verifyCsrf, validate(CancelTestSchema, 'body'), validate(TestParamsSchema, 'params'), iCompanyTestController.cancelTest)
 router.patch(ROUTES.COMPANY.TEST.RESHEDULE, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(ResheduleTestSchema, 'body'), iCompanyTestController.resheduleTest)
 router.get(ROUTES.COMPANY.TEST.GET_BY_ID, authHandler(iTokenService), validate(TestParamsSchema, 'params'), iCompanyTestController.getTestById)
-
+router.post(ROUTES.COMPANY.TEST.EDIT, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(createTestValidator, 'body'), iCompanyTestController.editTest)
 
 
 export default router;

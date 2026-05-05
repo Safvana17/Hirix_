@@ -18,7 +18,8 @@ export enum CandidateTestStatus {
    IN_PROGRESS = 'IN_PROGRESS',
    SUBMITTED = 'SUBMITTED',
    EXPIRED = 'EXPIRED',
-   DISQUALIFIED = 'DISQUALIFIED'
+   DISQUALIFIED = 'DISQUALIFIED',
+   REMOVED = 'REMOVED'
 }
 
 export enum CandidateSelectionStatus {
