@@ -37,6 +37,7 @@ const NOTIFICATION_EVENTS: string[] = [
   'TEST_INVITE',
   'CANCEL_TEST',
   'RESCHEDULE_TEST',
+  'TEST_REMOVED'
 ]
 
 const notificationChannel: NotificationChannel[] = ['EMAIL', 'IN_APP']

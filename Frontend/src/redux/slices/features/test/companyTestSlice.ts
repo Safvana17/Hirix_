@@ -158,6 +158,23 @@ SelectedTest,
 })
 
 
+export const editTest = createAsyncThunk<
+Test,
+{data: CreateTestPayload, id: string},
+{rejectValue: string}
+>('test/edit', async({data, id}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.COMPANY.TEST.EDIT(id), data)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to edit test')
+    }
+})
+
 const CompanyTestSlice = createSlice({
     name: 'CompanyTestSlice',
     initialState,
@@ -240,6 +257,16 @@ const CompanyTestSlice = createSlice({
         .addCase(getTestById.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get test'
+        })
+        .addCase(editTest.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(editTest.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(editTest.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to edit test'
         })
     },
 })

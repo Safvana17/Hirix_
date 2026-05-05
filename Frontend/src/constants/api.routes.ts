@@ -45,7 +45,7 @@ export const API_ROUTES = {
       PUBLISH: (id: string) =>
         `/company/test/${id}`,
       EDIT: (id: string) => 
-        `/company/test/${id}`,
+        `/company/test/${id}/edit`,
       DELETE: (id: string) => 
         `/company/test/${id}`,
       CANCEL: (id: string) => 

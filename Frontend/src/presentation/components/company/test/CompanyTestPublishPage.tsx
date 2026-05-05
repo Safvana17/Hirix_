@@ -1,8 +1,15 @@
-import { EditNote } from "@mui/icons-material"
+import { EditNote, Save } from "@mui/icons-material"
 import { Box, Paper, Typography } from "@mui/material"
 import React from "react"
+import type { ModalMode } from "../../../../types/test"
 
-const CompanyTestPublishPage: React.FC = () => {
+
+interface CompanyTestPublishPageProps {
+  mode: ModalMode
+}
+const CompanyTestPublishPage: React.FC <CompanyTestPublishPageProps> = ({mode}) => {
+  const isEdit = mode === 'edit'
+
   return (
     <Box
       sx={{
@@ -39,16 +46,15 @@ const CompanyTestPublishPage: React.FC = () => {
             mb: 3,
           }}
         >
-          <EditNote
-            sx={{
-              fontSize: 52,
-              color: "#795003",
-            }}
-          />
+          {isEdit ? (
+            <Save sx={{ fontSize: 52, color: '#795003'}} />
+          ): (
+            <EditNote sx={{ fontSize: 52, color: "#795003" }} />
+          )}
         </Box>
 
         <Typography variant="h5" fontWeight={800} mb={1.5}>
-          Save test as draft
+          { isEdit ? 'Update test changes' : 'Save test as draft' }
         </Typography>
 
         <Typography
@@ -59,7 +65,10 @@ const CompanyTestPublishPage: React.FC = () => {
             maxWidth: 520,
           }}
         >
-          Store your test details, candidates, questions, and rules as a draft.
+          { isEdit 
+            ? 'Review your updated test details, candidates, questions and rules before saving'
+            : 'Store your test details, candidates, questions, and rules as a draft.'
+          }
         </Typography>
 
         <Typography
@@ -69,8 +78,10 @@ const CompanyTestPublishPage: React.FC = () => {
             maxWidth: 560,
           }}
         >
-          You can review, edit, publish, or delete this test while it is in draft.
-          Once published, candidate links will be generated and the test cannot be deleted.
+          {isEdit
+            ? "If this test is already published, affected candidates may be notified based on the changes made."
+            : "You can review, edit, publish, or delete this test while it is in draft. Once published, candidate links will be generated and the test cannot be deleted."
+          }
         </Typography>
       </Paper>
     </Box>

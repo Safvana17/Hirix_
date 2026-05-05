@@ -238,6 +238,48 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
               </Stack>
             )}
           </Paper>
+          {data.questions.length > 0 && (
+            <Paper sx={{ p: 2, mt: 3, borderRadius: 3, backgroundColor: "#fff" }}>
+              <Typography fontWeight={700} mb={2}>
+                Selected Questions
+              </Typography>
+
+              <Stack spacing={1.5}>
+                {data.questions.map((q, index) => (
+                  <Box
+                    key={q.id || q.questionId || `${q.title}-${index}`}
+                    sx={{
+                      p: 2,
+                      borderRadius: 2,
+                      backgroundColor: "#F5EFE6",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box>
+                      <Typography fontWeight={700}>{q.title}</Typography>
+                      <Typography fontSize={12} color="text.secondary">
+                        {q.type} • {q.source}
+                      </Typography>
+                    </Box>
+
+                    <Button
+                      size="small"
+                      color="error"
+                      onClick={() =>
+                        updateData({
+                          questions: data.questions.filter((_, i) => i !== index),
+                        })
+                      }
+                    >
+                      Remove
+                    </Button>
+                  </Box>
+                ))}
+              </Stack>
+            </Paper>
+          )}
         </Paper>
       </Box>
 

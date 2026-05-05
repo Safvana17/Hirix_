@@ -4,15 +4,17 @@ import {
   Box,
   Button,
   Chip,
+  Divider,
   Paper,
   Stack,
   Tab,
-  Tabs,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
+  Tabs,
   Typography,
 } from "@mui/material";
 
@@ -33,17 +35,15 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<CandidateTab>("attended");
 
-  const attendedCandidates = useMemo(() => {
-    return candidates.filter(
-      (candidate) => candidate.candidateStatus === "SUBMITTED"
-    );
-  }, [candidates]);
+  const attendedCandidates = useMemo(
+    () => candidates.filter((c) => c.candidateTestStatus === "SUBMITTED"),
+    [candidates]
+  );
 
-  const notAttendedCandidates = useMemo(() => {
-    return candidates.filter(
-      (candidate) => candidate.candidateStatus !== "SUBMITTED"
-    );
-  }, [candidates]);
+  const notAttendedCandidates = useMemo(
+    () => candidates.filter((c) => c.candidateTestStatus !== "SUBMITTED"),
+    [candidates]
+  );
 
   const visibleCandidates =
     activeTab === "attended" ? attendedCandidates : notAttendedCandidates;
@@ -78,7 +78,7 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
       >
         <Box
           sx={{
-            px: 2,
+            px: { xs: 1, sm: 2 },
             pt: 1,
             borderBottom: "1px solid",
             borderColor: "divider",
@@ -87,12 +87,17 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
           <Tabs
             value={activeTab}
             onChange={(_, value: CandidateTab) => setActiveTab(value)}
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
             sx={{
               minHeight: 44,
               "& .MuiTab-root": {
                 textTransform: "none",
                 fontWeight: 600,
                 minHeight: 44,
+                fontSize: { xs: 13, sm: 14 },
+                px: { xs: 1.5, sm: 2 },
               },
             }}
           >
@@ -100,7 +105,6 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
               value="attended"
               label={`Attended (${attendedCandidates.length})`}
             />
-
             <Tab
               value="notAttended"
               label={`Not Attended (${notAttendedCandidates.length})`}
@@ -117,86 +121,118 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
             }
           />
         ) : (
-          <Table size="small">
-            <TableHead>
-              <TableRow
-                sx={{
-                  bgcolor: "#F7F8FA",
-                  "& th": {
-                    fontWeight: 700,
-                    color: "text.secondary",
-                    borderBottom: "1px solid",
-                    borderColor: "divider",
-                    py: 1.4,
-                  },
-                }}
-              >
-                <TableCell>Email</TableCell>
-                <TableCell>Test Status</TableCell>
-                <TableCell>Selection</TableCell>
-                <TableCell>Started At</TableCell>
-                <TableCell>Submitted At</TableCell>
-                <TableCell>Warnings</TableCell>
-                <TableCell>AI Rank</TableCell>
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
+          <>
+            {/* Mobile card view */}
+            <Stack
+              spacing={1.5}
+              sx={{
+                display: { xs: "flex", md: "none" },
+                p: 1.5,
+              }}
+            >
               {visibleCandidates.map((candidate) => (
-                <TableRow
+                <CandidateMobileCard
                   key={candidate.id}
-                  hover
-                  sx={{
-                    "& td": {
-                      py: 1.5,
-                      borderBottom: "1px solid",
-                      borderColor: "#F0F0F0",
-                    },
-                  }}
-                >
-                  <TableCell>
-                    <Typography variant="body2" fontWeight={500}>
-                      {candidate.email}
-                    </Typography>
-                  </TableCell>
-
-                  <TableCell>
-                    <StatusChip status={candidate.candidateStatus} />
-                  </TableCell>
-
-                  <TableCell>
-                    <SelectionChip status={candidate.selectionStatus} />
-                  </TableCell>
-
-                  <TableCell>
-                    <Typography variant="body2" color="text.secondary">
-                      {formatDateTime(candidate.startedAt)}
-                    </Typography>
-                  </TableCell>
-
-                  <TableCell>
-                    <Typography variant="body2" color="text.secondary">
-                      {formatDateTime(candidate.submittedAt)}
-                    </Typography>
-                  </TableCell>
-
-                  <TableCell>{candidate.warningCount ?? 0}</TableCell>
-
-                  <TableCell>{candidate.aiRank ?? "-"}</TableCell>
-
-                  <TableCell align="right">
-                    <CandidateActions
-                      candidate={candidate}
-                      onViewAnswers={onViewAnswers}
-                      onShortlist={onShortlist}
-                      onReject={onReject}
-                    />
-                  </TableCell>
-                </TableRow>
+                  candidate={candidate}
+                  onViewAnswers={onViewAnswers}
+                  onShortlist={onShortlist}
+                  onReject={onReject}
+                />
               ))}
-            </TableBody>
-          </Table>
+            </Stack>
+
+            {/* Desktop / tablet table view */}
+            <TableContainer
+              sx={{
+                display: { xs: "none", md: "block" },
+                width: "100%",
+                overflowX: "auto",
+              }}
+            >
+              <Table size="small" sx={{ minWidth: 1050 }}>
+                <TableHead>
+                  <TableRow
+                    sx={{
+                      bgcolor: "#F7F8FA",
+                      "& th": {
+                        fontWeight: 700,
+                        color: "text.secondary",
+                        borderBottom: "1px solid",
+                        borderColor: "divider",
+                        py: 1.4,
+                        whiteSpace: "nowrap",
+                      },
+                    }}
+                  >
+                    <TableCell>Email</TableCell>
+                    <TableCell>Test Status</TableCell>
+                    <TableCell>Selection</TableCell>
+                    <TableCell>Started At</TableCell>
+                    <TableCell>Submitted At</TableCell>
+                    <TableCell>Warnings</TableCell>
+                    <TableCell>AI Rank</TableCell>
+                    <TableCell align="right">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {visibleCandidates.map((candidate) => (
+                    <TableRow
+                      key={candidate.id}
+                      hover
+                      sx={{
+                        "& td": {
+                          py: 1.5,
+                          borderBottom: "1px solid",
+                          borderColor: "#F0F0F0",
+                          whiteSpace: "nowrap",
+                        },
+                      }}
+                    >
+                      <TableCell>
+                        <Typography variant="body2" fontWeight={500}>
+                          {candidate.email}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <StatusChip status={candidate.candidateTestStatus} />
+                      </TableCell>
+
+                      <TableCell>
+                        <SelectionChip status={candidate.selectionStatus} />
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary">
+                          {formatDateTime(candidate.startedAt)}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary">
+                          {formatDateTime(candidate.submittedAt)}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>{candidate.warningCount ?? 0}</TableCell>
+
+                      <TableCell>{candidate.aiRank ?? "-"}</TableCell>
+
+                      <TableCell align="right">
+                        <CandidateActions
+                          candidate={candidate}
+                          onViewAnswers={onViewAnswers}
+                          onShortlist={onShortlist}
+                          onReject={onReject}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
         )}
       </Paper>
     </Box>
@@ -204,6 +240,81 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
 };
 
 export default TestCandidatesTab;
+
+const CandidateMobileCard = ({
+  candidate,
+  onViewAnswers,
+  onShortlist,
+  onReject,
+}: {
+  candidate: TestCandidate;
+  onViewAnswers?: (candidateId: string) => void;
+  onShortlist?: (candidateId: string) => void;
+  onReject?: (candidateId: string) => void;
+}) => {
+  return (
+    <Paper
+      elevation={0}
+      sx={{
+        p: 1.5,
+        border: "1px solid",
+        borderColor: "divider",
+        borderRadius: 2,
+      }}
+    >
+      <Stack spacing={1.2}>
+        <Box>
+          <Typography
+            variant="body2"
+            fontWeight={700}
+            sx={{
+              wordBreak: "break-word",
+            }}
+          >
+            {candidate.email}
+          </Typography>
+        </Box>
+
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          <StatusChip status={candidate.candidateTestStatus} />
+          <SelectionChip status={candidate.selectionStatus} />
+        </Stack>
+
+        <Divider />
+
+        <InfoRow label="Started At" value={formatDateTime(candidate.startedAt)} />
+        <InfoRow
+          label="Submitted At"
+          value={formatDateTime(candidate.submittedAt)}
+        />
+        <InfoRow label="Warnings" value={String(candidate.warningCount ?? 0)} />
+        <InfoRow label="AI Rank" value={String(candidate.aiRank ?? "-")} />
+
+        <Box pt={0.5}>
+          <CandidateActions
+            candidate={candidate}
+            onViewAnswers={onViewAnswers}
+            onShortlist={onShortlist}
+            onReject={onReject}
+          />
+        </Box>
+      </Stack>
+    </Paper>
+  );
+};
+
+const InfoRow = ({ label, value }: { label: string; value: string }) => {
+  return (
+    <Stack direction="row" justifyContent="space-between" spacing={2}>
+      <Typography variant="caption" color="text.secondary">
+        {label}
+      </Typography>
+      <Typography variant="caption" fontWeight={600} textAlign="right">
+        {value}
+      </Typography>
+    </Stack>
+  );
+};
 
 const CandidateActions = ({
   candidate,
@@ -216,7 +327,7 @@ const CandidateActions = ({
   onShortlist?: (candidateId: string) => void;
   onReject?: (candidateId: string) => void;
 }) => {
-  const isSubmitted = candidate.candidateStatus === "SUBMITTED";
+  const isSubmitted = candidate.candidateTestStatus === "SUBMITTED";
   const selectionStatus = candidate.selectionStatus || "PENDING";
 
   if (!isSubmitted) {
@@ -228,12 +339,24 @@ const CandidateActions = ({
   }
 
   return (
-    <Stack direction="row" spacing={1} justifyContent="flex-end">
+    <Stack
+      direction={{ xs: "column", sm: "row" }}
+      spacing={1}
+      justifyContent="flex-end"
+      sx={{
+        width: { xs: "100%", sm: "auto" },
+      }}
+    >
       <Button
         size="small"
         variant="outlined"
+        fullWidth
         onClick={() => onViewAnswers?.(candidate.id)}
-        sx={{ textTransform: "none", fontWeight: 600 }}
+        sx={{
+          textTransform: "none",
+          fontWeight: 600,
+          width: { xs: "100%", sm: "auto" },
+        }}
       >
         View Answers
       </Button>
@@ -244,8 +367,13 @@ const CandidateActions = ({
             size="small"
             variant="contained"
             color="success"
+            fullWidth
             onClick={() => onShortlist?.(candidate.id)}
-            sx={{ textTransform: "none", fontWeight: 600 }}
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              width: { xs: "100%", sm: "auto" },
+            }}
           >
             Shortlist
           </Button>
@@ -254,36 +382,17 @@ const CandidateActions = ({
             size="small"
             variant="outlined"
             color="error"
+            fullWidth
             onClick={() => onReject?.(candidate.id)}
-            sx={{ textTransform: "none", fontWeight: 600 }}
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              width: { xs: "100%", sm: "auto" },
+            }}
           >
             Reject
           </Button>
         </>
-      )}
-
-      {selectionStatus === "SHORTLISTED" && (
-        <Chip
-          label="Shortlisted"
-          size="small"
-          sx={{
-            bgcolor: "#E8F5E9",
-            color: "#2E7D32",
-            fontWeight: 600,
-          }}
-        />
-      )}
-
-      {selectionStatus === "REJECTED" && (
-        <Chip
-          label="Rejected"
-          size="small"
-          sx={{
-            bgcolor: "#FDECEA",
-            color: "#D32F2F",
-            fontWeight: 600,
-          }}
-        />
       )}
     </Stack>
   );
@@ -293,7 +402,7 @@ const EmptyState = ({ message }: { message: string }) => {
   return (
     <Box
       sx={{
-        p: 4,
+        p: { xs: 3, sm: 4 },
         textAlign: "center",
         bgcolor: "#fff",
       }}

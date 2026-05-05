@@ -18,6 +18,7 @@ export const ROUTES = {
     QUESTIONS: '/company/questions',
     SUBSCRIPTION: '/company/subscriptions',
     TEST: '/company/tests',
+    EDIT_TEST: '/company/TEST/edit/:id',
     CREATE_TEST: '/company/test/create',
     CREATE_TEST_SUCCESS: '/company/test/success',
     CANCEL_TEST: '/company/test/:id/cancel',

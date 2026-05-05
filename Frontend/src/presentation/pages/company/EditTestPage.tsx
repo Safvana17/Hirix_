@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Stepper, Step, StepLabel, Button, Typography, Paper } from '@mui/material';
 import type { AppDispatch, RootState } from '../../../redux/store';
 import CompanyTestBasicInfo from '../../components/company/test/CompanyTestBasicInfo';
-import { createTest } from '../../../redux/slices/features/test/companyTestSlice';
+import { editTest, getTestById } from '../../../redux/slices/features/test/companyTestSlice';
 import CompanyAddCandidates from '../../components/company/test/CompanyAddCandidates';
 import CompanyAddQuestions from '../../components/company/test/CompanyAddQuestions';
 import CompanyTestPublishPage from '../../components/company/test/CompanyTestPublishPage';
@@ -11,7 +11,7 @@ import CompanyTestRules from '../../components/company/test/CompanyTestRules';
 import type { CreateTestPayload } from '../../../types/test';
 import { createDefaultTestRules } from '../../../utils/DefaultTestRules';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
 import { createTestValidator } from '../../../lib/validation/testValidation';
 
@@ -20,35 +20,93 @@ import { createTestValidator } from '../../../lib/validation/testValidation';
 
 const steps = ['Test Details', 'Candidates', 'Questions', 'Rules', 'Publish']
 
-const CreateTestPage: React.FC = () => {
+const EditTestPage: React.FC = () => {
+    const { id } = useParams()
     const dispatch = useDispatch<AppDispatch>();
     const { loading } = useSelector((state: RootState) => state.companyTest)
     const navigate = useNavigate()
     const [currentStep, setCurrentStep] = useState(0)
-    const [formData, setFormData] = useState<CreateTestPayload>({
-        jobRoleId: '',
-        name: '',
-        description: '',
-        startTime: '',
-        endTime: '',
-        candidates: [],
-        questions: [],
-        rules: createDefaultTestRules()
+    const {selectedTest} = useSelector((state: RootState) => state.companyTest)
+
+    useEffect(() => {
+        if(id)
+          dispatch(getTestById({id}))
+    }, [id, dispatch])
+
+    const formatForDateTimeLocal = (value: string) => {
+      const date = new Date(value)
+      const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+      return localDate.toISOString().slice(0, 16)
+    }
+
+    const [formData, setFormData] = useState<CreateTestPayload | null>({
+        name: selectedTest?.name || '',
+        jobRoleId: selectedTest?.jobRoleId || '',
+        description: selectedTest?.description || '',
+        startTime: selectedTest?.startTime ? formatForDateTimeLocal(selectedTest.startTime) : '',
+        endTime: selectedTest?.endTime ? formatForDateTimeLocal(selectedTest.endTime) : '',
+        questions: selectedTest?.questions || [],
+        candidates: selectedTest?.candidates.map((c) => ({email: c.email})) || [],
+        rules: {
+            ...createDefaultTestRules(),
+            ...selectedTest?.rules,
+            timing: {
+                ...createDefaultTestRules().timing,
+                ...selectedTest?.rules.timing
+            },
+            navigation: {
+                ...createDefaultTestRules().navigation,
+                ...selectedTest?.rules.navigation 
+            },
+            proctoring: {
+                ...createDefaultTestRules().proctoring,
+                ...selectedTest?.rules.proctoring  
+            },
+            behavior: {
+                ...createDefaultTestRules().behavior,
+                ...selectedTest?.rules.behavior
+            },
+            autoSave: {
+                ...createDefaultTestRules().autoSave,
+                ...selectedTest?.rules.autoSave
+            }
+        }
     })
 
     const updateFormDate = (data: Partial<CreateTestPayload>) => {
-        setFormData((prev) => ({
-            ...prev,
-            ...data
-        }))
+        setFormData((prev) => {
+            if(!prev) return prev
+            return {
+                ...prev,
+                ...data
+            }
+        })
     }
-    const validate = () => {
-        const result = createTestValidator.safeParse(formData)
-        if(result.success) return true
-        const firstError = result.error.issues[0]
-        toast.error(`${firstError.path}: ${firstError.message}`)
-        return false
-    }
+const validate = () => {
+  if (!formData) {
+    toast.error("Test data is missing")
+    return false
+  }
+
+  const result = createTestValidator.safeParse(formData)
+
+  if (result.success) return true
+
+  console.table(
+    result.error.issues.map((issue) => ({
+      path: issue.path.join("."),
+      message: issue.message,
+      expected: "expected" in issue ? issue.expected : "",
+      received: "received" in issue ? issue.received : "",
+    }))
+  )
+
+  const firstError = result.error.issues[0]
+
+  toast.error(`${firstError.path.join(".")}: ${firstError.message}`)
+
+  return false
+}
 
     const handleNext = async() => {
         if(currentStep === steps.length - 1) {
@@ -57,7 +115,8 @@ const CreateTestPage: React.FC = () => {
                     console.log('validation error')
                     return
                 }
-                await dispatch(createTest(formData)).unwrap()
+                if(!id || !formData) return
+                await dispatch(editTest({data: formData, id: id})).unwrap()
                 toast.success('Test created successfully')
                 navigate(ROUTES.COMPANY.CREATE_TEST_SUCCESS)
             } catch (error) {
@@ -71,9 +130,11 @@ const CreateTestPage: React.FC = () => {
         setCurrentStep((prev) => prev - 1)
     }
 
+    if(!formData) return
+
     return (
         <Box sx={{ p: 4, backgroundColor: '#E6DECF', minHeight: '100vh' }}>
-             <Typography variant="h5" fontWeight="bold" mb={4}>Create Assessment</Typography>
+             <Typography variant="h5" fontWeight="bold" mb={4}>Edit Assessment</Typography>
             
             <Paper elevation={0} sx={{ p: 4, backgroundColor: '#E6DECF' }}>
                 <Stepper
@@ -112,11 +173,11 @@ const CreateTestPage: React.FC = () => {
 
 
                 <Box sx={{ minHeight: '400px' }}>
-                    {currentStep === 0 && <CompanyTestBasicInfo data={formData} updateData={updateFormDate} mode='create'/>}
-                    {currentStep === 1 && <CompanyAddCandidates data={formData} updateData={updateFormDate} mode = 'create' />}
+                    {currentStep === 0 && <CompanyTestBasicInfo data={formData} updateData={updateFormDate} mode='edit'/>}
+                    {currentStep === 1 && <CompanyAddCandidates data={formData} updateData={updateFormDate} mode='edit' />}
                     {currentStep === 2 && <CompanyAddQuestions data={formData} updateData={updateFormDate} />}
                     {currentStep === 3 && <CompanyTestRules data={formData} updateData={updateFormDate}/>}
-                    {currentStep === 4 && <CompanyTestPublishPage mode='create' />}
+                    {currentStep === 4 && <CompanyTestPublishPage mode='edit'  />}
                 </Box>
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4, gap: 2 }}>
@@ -138,7 +199,7 @@ const CreateTestPage: React.FC = () => {
                             backgroundColor: "#6B4705",
                         }}
                     >
-                        {loading ? 'Saving...' : currentStep === steps.length - 1 ? 'Save Draft' : 'Save & Next'}
+                        {loading ? 'Updating...' : currentStep === steps.length - 1 ? 'Update' : 'Save & Next'}
                     </Button>
                 </Box>
             </Paper> 
@@ -146,4 +207,4 @@ const CreateTestPage: React.FC = () => {
     );
 };
 
-export default CreateTestPage;
+export default EditTestPage;

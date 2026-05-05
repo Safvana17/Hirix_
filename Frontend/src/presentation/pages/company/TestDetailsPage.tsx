@@ -5,7 +5,6 @@ import {
   Container,
   Tab,
   Tabs,
-  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -24,7 +23,7 @@ const TestDetailsPage = () => {
   const dispatch = useDispatch<AppDispatch>()
   const { testId } = useParams();
   const [activeTab, setActiveTab] = useState<TabValue>("info")
-  const { selectedTest, loading, error } = useSelector((state: RootState) => state.companyTest) 
+  const { selectedTest, loading } = useSelector((state: RootState) => state.companyTest) 
   
   useEffect(() => {
     if(!testId) {
@@ -34,16 +33,13 @@ const TestDetailsPage = () => {
     dispatch(getTestById({id: testId}))
   }, [dispatch, testId])
 
+  if(!selectedTest) return
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" mt={8}>
         <CircularProgress />
       </Box>
     );
-  }
-
-  if (error || !selectedTest) {
-    return <Typography color="error">Failed to load test details</Typography>;
   }
 
   return (

@@ -27,6 +27,7 @@ import TestCreateSuccessPage from '../presentation/components/company/test/TestC
 import CancelTestPage from '../presentation/components/company/test/CancelTestPage'
 import ResheduleTestPage from '../presentation/components/company/test/ResheduleTestPage'
 import TestDetailsPage from '../presentation/pages/company/TestDetailsPage'
+import EditTestPage from '../presentation/pages/company/EditTestPage'
 
 
 
@@ -117,6 +118,12 @@ const App = () => {
           <Route path={ROUTES.COMPANY.CREATE_TEST_SUCCESS} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <TestCreateSuccessPage />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.COMPANY.EDIT_TEST} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <EditTestPage />
             </RoleRoute>
           } />
 

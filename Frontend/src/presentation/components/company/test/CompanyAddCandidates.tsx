@@ -1,10 +1,11 @@
 import { Box, Button, Grid, Paper, Stack, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import type { CreateTestPayload } from '../../../../types/test'
+import type { CreateTestPayload, ModalMode } from '../../../../types/test'
 
 
 interface CompanyAddCandidateProps {
   data: CreateTestPayload
+  mode: ModalMode
   updateData: (data: Partial<CreateTestPayload>) => void
 }
 
@@ -13,7 +14,11 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
   const [emailText, setEmailText] = useState('')
 
   const handleAddEmails = () => {
-    const emails = emailText.split(/[\n,]+/).map((email) => email.trim().toLowerCase()).filter(Boolean)
+    if(!emailText.trim()) return
+    const isValidEmail = (email: string) =>
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+
+    const emails = emailText.split(/[\n,]+/).map((email) => email.trim().toLowerCase()).filter((email) => isValidEmail(email))
     const uniqueEmails = Array.from(new Set([...data.candidates.map((c) => c.email), ...emails]))
     updateData({
       candidates: uniqueEmails.map((email) => ({ email }))

@@ -149,7 +149,7 @@ const CompanyTest: React.FC = () => {
           label: "Edit",
           icon: Edit2Icon,
           color: "primary",
-          onClick: () => navigate(`/company/test/${test.id}/edit`),
+          onClick: () => navigate(`/company/test/edit/${test.id}`),
         },
         {
           label: "Publish",
@@ -177,7 +177,7 @@ const CompanyTest: React.FC = () => {
           label: "Edit",
           icon: Edit2Icon,
           color: "primary",
-          onClick: () => navigate(`/company/test/${test.id}/edit`),
+          onClick: () => navigate(`/company/test/edit/${test.id}`),
         },
         {
           label: "Reschedule",

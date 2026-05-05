@@ -11,9 +11,9 @@ import Grid from '@mui/material/Grid'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../../redux/store'
-import type { CreateTestPayload } from '../../../../types/test'
+import type { CreateTestPayload, ModalMode } from '../../../../types/test'
 import { getAllJobRoles } from '../../../../redux/slices/features/jobRoles/jobRoleSlice'
-import type { ModalMode } from '../../../pages/company/CompanyTest'
+
 
 interface CompanyTestBasicInfoProps {
   data: CreateTestPayload
@@ -71,6 +71,7 @@ const CompanyTestBasicInfo: React.FC<CompanyTestBasicInfoProps> = ({ data, updat
             <Select
               value={data.jobRoleId}
               label="Job Role"
+              disabled={mode === 'edit'}
               onChange={(e) =>
                 updateData({
                   jobRoleId: e.target.value,

@@ -4,13 +4,14 @@ export type TestStatus = 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'CANCELLED' | 'DE
 export type QuestionSource = 'ADMIN_LIBRARY' | 'COMPANY_LIBRARY' | 'TEST_ONLY'
 export type CandidateStatus = 'DRAFT' | 'INVITED' | 'IN_PROGRESS'| 'SUBMITTED'| 'EXPIRED'| 'DISQUALIFIED'
 export type CandidateSelectionStatus = 'PENDING' | 'SHORTLISTED' | 'REJECTED'
+export type ModalMode = 'create' | 'edit'
 
 export interface TestCandidate {
     id: string
     email: string
     token: string
     testId: string
-    candidateStatus: CandidateStatus
+    candidateTestStatus: CandidateStatus
     selectionStatus: CandidateSelectionStatus
     warningCount: number
     candidateAnswers: {
@@ -157,9 +158,10 @@ export interface SelectedTest {
     id: string
     name: string
     description: string
+    jobRoleId: string
     jobrole: string
-    startTime: Date
-    endTime: Date
+    startTime: string
+    endTime: string
     companyName: string
     rules: TestRules
     questions: TestQuestions[]
