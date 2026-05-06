@@ -26,7 +26,8 @@ export class SubscriptionRepository extends BaseRepository<SubscriptionEntity, I
                 $gte: new Date(expiringDate.setHours(0, 0, 0)),
                 $lte: new Date(expiringDate.setHours(23, 59, 59))
             },
-            status: 'active'
+            status: 'active',
+            isTrial: false
         })
 
         if(!documents) return null
@@ -57,6 +58,18 @@ export class SubscriptionRepository extends BaseRepository<SubscriptionEntity, I
 
     }
 
+    async findTrialEndSoon(expiringDate: Date): Promise<SubscriptionEntity[] | null> {
+        const documents = await this._model.find({
+            endDate: {
+                $gt: expiringDate.setHours(0, 0, 0),
+                $lt: expiringDate.setHours(23, 59, 59)
+            },
+            status: 'active',
+            isTrial: true
+        })
+        if(!documents) return null
+        return documents.map(d => this.mapToEntity(d))
+    }
     protected mapToEntity(doc: ISubscription): SubscriptionEntity {
         return SubscriptionMapper.toEntity(doc)
     }

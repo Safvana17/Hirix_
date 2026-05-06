@@ -1,13 +1,15 @@
 import cron from 'node-cron'
 import { ISendExpireSubscriptionReminderUsecase } from '../../Application/common/interfaces/ISendExpireReminder.usecase'
 import { IMarkExpiredUsecase } from '../../Application/common/interfaces/IMarkExpired.usecase'
+import { ISendTrialEndReminderUsecase } from '../../Application/common/interfaces/ISendTrialEndReminder.usecase'
 
 
 
 
 export const subscriptionExpireReminder = (
     sendReminder: ISendExpireSubscriptionReminderUsecase,
-    markExpired: IMarkExpiredUsecase
+    markExpired: IMarkExpiredUsecase,
+    sendTrialEndReminder: ISendTrialEndReminderUsecase
 ) => {
     cron.schedule("0 9 * * *", async () => {
        await sendReminder.execute()
@@ -15,5 +17,9 @@ export const subscriptionExpireReminder = (
 
     cron.schedule('0 0 * * *', async () => {
         await markExpired.execute()
+    })
+
+    cron.schedule("0 9 * * *", async () => {
+       await sendTrialEndReminder.execute()
     })
 }

@@ -75,6 +75,19 @@ export class TestRepository extends BaseRepository<TestEntity, ITest> implements
         }
     }
 
+    async CountTestInMonth(companyId: string, startOfMonth: Date, endOfMonth: Date): Promise<number> {
+        return await this._model.countDocuments({
+            companyId,
+            createdAt: {
+                $gt: startOfMonth,
+                $lt: endOfMonth
+            },
+            testStatus: {
+                $nin: ['DELETED', 'CANCELLED']
+            }
+        })
+    }
+    
     protected mapToEntity(doc: ITest): TestEntity {
         return TestMapper.toEntity(doc)
     }

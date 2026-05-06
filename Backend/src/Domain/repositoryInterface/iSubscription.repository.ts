@@ -6,4 +6,5 @@ export interface ISubscriptionRepository extends IBaseRepository<SubscriptionEnt
      findExpiringSoon(expiringDate: Date): Promise<SubscriptionEntity[] | null>
      findExpiredActive(): Promise<SubscriptionEntity[] | null>
      findTrialByUserAndPlan(userId: string, planId: string): Promise<SubscriptionEntity | null>
+     findTrialEndSoon(expiringDate: Date): Promise<SubscriptionEntity[] | null>
 }

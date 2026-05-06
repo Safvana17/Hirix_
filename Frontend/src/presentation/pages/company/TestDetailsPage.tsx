@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CircularProgress,
   Container,
@@ -7,7 +8,7 @@ import {
   Tabs,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import InternalLayout from "../../layouts/InternalLayout";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../redux/store";
@@ -16,12 +17,15 @@ import { companySidebarItems } from "../../../constants/sidebarItems";
 import TestInfoTab from "../../components/company/test/TestInfoTab";
 import TestQuestionsTab from "../../components/company/test/TestQuestionsTab";
 import TestCandidatesTab from "../../components/company/test/TestCandidatesTab";
+import { ArrowBack } from "@mui/icons-material";
+import { ROUTES } from "../../../constants/routes";
 
 type TabValue = "info" | "questions" | "candidates" | "shortlisted";
 
 const TestDetailsPage = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const { testId } = useParams();
+  const { testId } = useParams()
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<TabValue>("info")
   const { selectedTest, loading } = useSelector((state: RootState) => state.companyTest) 
   
@@ -43,7 +47,12 @@ const TestDetailsPage = () => {
   }
 
   return (
-    <InternalLayout title={selectedTest.name} subTitle="" sidebarItems={companySidebarItems}>
+    <InternalLayout title={selectedTest.name} subTitle={selectedTest.jobrole} sidebarItems={companySidebarItems}>
+      <Button
+        onClick={() => navigate(ROUTES.COMPANY.TEST)}
+      >
+        <ArrowBack sx={{ color: '#3f3c3c'}}/>
+      </Button>
         <Container maxWidth="lg" sx={{ py: 3 }}>
         <Card sx={{ mt: 3, borderRadius: 3 }}>
             <Tabs

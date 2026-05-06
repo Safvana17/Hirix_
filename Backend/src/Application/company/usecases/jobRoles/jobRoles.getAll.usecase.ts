@@ -4,7 +4,6 @@ import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
-import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { JobRolesQueryDTO, PaginatedJobRolesDTO } from "../../dtos/jobRoles/jobRole.getAll.dto";
@@ -42,10 +41,13 @@ export class GetAllJobRolesUsecase implements IGetAllJobRolesUsecase {
         const now = new Date()
         const jobRoleLimit = plan.maxJobRolesPerMonth
         let currentCount = 0
+        let isLocked = false
         if(jobRoleLimit != null){
            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
            const endOfMonth = new Date(now.getFullYear(), now.getMonth()+1, 0, 23, 59, 59)
            currentCount = await this._jobRoleRepository.CountJobRoleInMonth(comapny.id, startOfMonth, endOfMonth)
+           if(currentCount >= jobRoleLimit)
+            isLocked = true
         }
         const {data, totalPages, totalCount} = await this._jobRoleRepository.findAllFiltered(request)
         return {
@@ -60,7 +62,7 @@ export class GetAllJobRolesUsecase implements IGetAllJobRolesUsecase {
             })),
             totalCount,
             totalPages,
-            featureLocked: currentCount >= jobRoleLimit!
+            featureLocked: isLocked
         }
     }
 }

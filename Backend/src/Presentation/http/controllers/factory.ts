@@ -523,6 +523,8 @@ const iComapnyStartTrial = new CompanyStartTrialUsecase(
 const iCompanyCreateTest = new CompanyCreateTestDraftUsecase(
     iTestRepository,
     iCompanyRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
     iJobRoleRepository,
     iTestCandidateRepository
 )
@@ -543,7 +545,9 @@ const iCompanyGetQuestionsForTest = new CompanyGetAllQuestionsForTest(
 const iCompanyGetAllTest = new CompanyGetAllTestUsecase(
     iTestRepository,
     iCompanyRepository,
-    iTestCandidateRepository
+    iTestCandidateRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
 )
 const iComapnyDeleteTest = new CompanyDeleteTestUsecase(
     iTestRepository,

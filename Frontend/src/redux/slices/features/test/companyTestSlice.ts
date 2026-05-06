@@ -12,6 +12,7 @@ interface CompanyTestState {
     selectedTest: SelectedTest | null
     candidates: TestCandidate[]
     testList: CompanyTestList[]
+    featureLocked: boolean
     pagination: {
         test: {
             totalCount: number
@@ -28,6 +29,7 @@ const initialState: CompanyTestState = {
     testList: [],
     selectedTest: null,
     candidates: [],
+    featureLocked: false,
     pagination: {
         test: {
             totalCount: 0,
@@ -39,17 +41,22 @@ const initialState: CompanyTestState = {
 export const createTest = createAsyncThunk<
 Test,
 CreateTestPayload,
-{rejectValue: string}
+{rejectValue: {message: string, code?: string}}
 >('test/create', async(createTestPayload, {rejectWithValue}) => {
     try {
         const response = await api.post(API_ROUTES.COMPANY.TEST.CREATE, createTestPayload)
         if(!response.data.success){
-            return rejectWithValue('Invalid response')
+            return rejectWithValue({
+                message: 'Invalid response'
+            })
         }
         return response.data.data
     } catch (error) {
-        const err = error as AxiosError<{message: string}>
-        return rejectWithValue(err.response?.data.message || 'Failed to create test')
+        const err = error as AxiosError<{message: string, code?: string}>
+        return rejectWithValue({
+            message: err.response?.data.message || 'Failed to create test',
+            code: err.response?.data.code
+        })
     }
 })
 
@@ -191,7 +198,10 @@ const CompanyTestSlice = createSlice({
         })
         .addCase(createTest.rejected, (state, action) => {
             state.loading = false
-            state.error = action.payload || 'Failed to create test'
+            if(action.payload?.code === 'FEATURE_LOCKED'){
+                state.featureLocked = true
+            }
+            state.error = action.payload?.message || 'Failed to create test'
         })
         .addCase(publishTest.pending, (state) => {
             state.loading = true
@@ -211,6 +221,7 @@ const CompanyTestSlice = createSlice({
             state.testList = action.payload.tests
             state.pagination.test.totalCount = action.payload.totalCount
             state.pagination.test.totalPages = action.payload.totalPages
+            state.featureLocked = action.payload.featureLocked
         })
         .addCase(getAllTests.rejected, (state, action) => {
             state.loading = false

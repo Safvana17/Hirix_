@@ -60,7 +60,7 @@ const CompanyTest: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<TestStatus | "">("")
   const [currentPage, setCurrentPage] = useState(1)
-  const { testList, pagination, loading } = useSelector((state: RootState) => state.companyTest )
+  const { testList, pagination, loading, featureLocked } = useSelector((state: RootState) => state.companyTest )
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
@@ -299,6 +299,7 @@ const CompanyTest: React.FC = () => {
         <Box display="flex" justifyContent="flex-end" mb={3}>
           <Button
             variant="contained"
+            disabled={featureLocked}
             startIcon={<Plus size={18} />}
             onClick={handleCreateTest}
             sx={{

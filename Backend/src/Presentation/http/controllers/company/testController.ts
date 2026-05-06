@@ -49,8 +49,8 @@ export class CompanyTestController {
     getAllTests = asyncHandler(async(req: Request, res: Response) => {
         const companyId = req.user.id
         const query = req.validatedQuery as GetAllTestQuery
-        const { tests, totalPages, totalCount } = await this._getAllTests.execute({...query, companyId})
-        return sendSuccess(res, statusCode.OK, '', {tests, totalPages, totalCount})
+        const { tests, totalPages, totalCount, featureLocked } = await this._getAllTests.execute({...query, companyId})
+        return sendSuccess(res, statusCode.OK, '', {tests, totalPages, totalCount, featureLocked})
     })
 
     deleteTest = asyncHandler(async(req: Request, res: Response) => {

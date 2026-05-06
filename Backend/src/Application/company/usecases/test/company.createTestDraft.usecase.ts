@@ -5,11 +5,14 @@ import { CandidateTestStatus, TestStatus } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
+import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
+import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
 import { autoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules } from "../../../../Domain/valueObjects/test.rules";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
+import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { CompanyCreateTestInputDTO, CompanyCreateTestOutputDTO } from "../../dtos/test/company.createTest.dto";
@@ -19,6 +22,8 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
     constructor (
         private _testRepository: ITestRepository,
         private _companyRepository: ICompanyRepository,
+        private _subscriptionRepository: ISubscriptionRepository,
+        private _subscriptionPlanRepository: ISubscriptionPlanRepository,
         private _jobRoleRepository: IJobRepository,
         private _testCandidateRepository: ITestCandidateRepository,
     ) {}
@@ -29,6 +34,27 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
+        const subscription = await this._subscriptionRepository.findCurrentByUserId(company.id)
+        if(!subscription){
+            throw new AppError(subscriptionPlanMessages.error.CANNOT_FIND_SUBCRIPTION_DETAILS, statusCode.NOT_FOUND)
+        }
+
+        const plan = await this._subscriptionPlanRepository.findById(subscription.planId)
+        if(!plan){
+            throw new AppError(subscriptionPlanMessages.error.NOT_FOUND, statusCode.NOT_FOUND)
+        }
+
+        const now = new Date()
+        const testLimit = plan.maxTestsPerMonth
+        const candidateLimit = plan.maxCandidates
+        if(testLimit != null){
+            const startOfMonth = new Date( now.getFullYear() ,now.getMonth(), 1)
+            const endOfMonth = new Date(now.getFullYear(), now.getMonth()+1, 0, 23, 59, 59)
+            const currentCount = await this._testRepository.CountTestInMonth(company.id, startOfMonth, endOfMonth)
+            if(currentCount >= testLimit){
+                throw new AppError(TestMessages.error.TEST_LIMIT_EXCEEDED, statusCode.BAD_REQUEST, 'FEATURE_LOCKED')
+            }
+        }
         const jobRole = await this._jobRoleRepository.findById(request.jobRoleId)
         if(!jobRole){
             throw new AppError(JobRoleMessages.error.JOBROLE_NOT_FOUND, statusCode.NOT_FOUND)
@@ -60,6 +86,10 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
             throw new AppError(TestMessages.error.CANDIDATES_REQUIRED, statusCode.BAD_REQUEST)
         }
 
+        if(candidateLimit != null && request.candidates.length > candidateLimit){
+            throw new AppError(TestMessages.error.TEST_CANDIDATES_COUNT_EXCEEDED, statusCode.BAD_REQUEST)
+        }
+        
         const rules = new TestRules(
             new TimingRules(
                 request.rules.timing.durationInMinutes,

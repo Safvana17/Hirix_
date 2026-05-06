@@ -1,4 +1,3 @@
-import { TestEntity } from "../../../../Domain/entities/Test.entity"
 import { TestStatus } from "../../../../Domain/enums/Test"
 
 export interface CompanyGetAllTestInputDTO {
@@ -25,4 +24,5 @@ export interface CompanyGetAllTestOututDTO {
     tests: CompanyTestListDTO[]
     totalPages: number
     totalCount: number
+    featureLocked: boolean
 }

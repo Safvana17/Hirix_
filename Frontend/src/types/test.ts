@@ -141,6 +141,7 @@ export interface GetAllTestResponse {
     tests: CompanyTestList[]
     totalPages: number
     totalCount: number
+    featureLocked: boolean
 }
 
 export interface CancelTestArgs {

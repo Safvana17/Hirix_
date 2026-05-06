@@ -14,5 +14,7 @@ export const TestMessages = {
         TEST_STARTED: 'You cannot cancel started test',
         CANDIDATES_NOT_FOUND: 'Test candidates not found',
         TEST_UPDATE_FAILED: 'Failed to update test',
+        TEST_LIMIT_EXCEEDED: 'Max test limit exceeded',
+        TEST_CANDIDATES_COUNT_EXCEEDED: 'You max candidate limit exceeded',
     }
 }
