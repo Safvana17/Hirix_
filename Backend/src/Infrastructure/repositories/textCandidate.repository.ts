@@ -25,6 +25,12 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
         return this._model.countDocuments({testId})
     }
 
+    async findByToken(token: string): Promise<TestCandidateEntity | null> {
+        const document = await this._model.findOne({testToken: token})
+        if(!document) return null
+        return this.mapToEntity(document)
+    }
+    
     protected mapToEntity(doc: ITestCandidate): TestCandidateEntity {
         return TestCandidateMapper.toEntity(doc)
     }

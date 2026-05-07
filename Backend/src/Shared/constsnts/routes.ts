@@ -87,6 +87,9 @@ export const ROUTES = {
             CANCEL: '/subscription/:id/cancel',
             INVOICE: '/subscription/:id/invoice',
             START_TRIAL: '/subscription/:id/start-trial',
+        },
+        TEST: {
+            GET_BY_TOKEN: '/test/:token',
         }
     },
 

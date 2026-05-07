@@ -154,6 +154,8 @@ import { RenderTemplateService } from "../../../Infrastructure/services/RenderTe
 import { TextFormatService } from "../../../Infrastructure/services/TextFormatService";
 import { CompanyGetTestByIdUsecase } from "../../../Application/company/usecases/test/company.getTestById.usecase";
 import { CompanyEditTestUsecase } from "../../../Application/company/usecases/test/company.editTest.usecase";
+import { CandidateGetTestByTokenUsecase } from "../../../Application/candidate/useCases/test/candidate.getTestByToken.usecase";
+import { CandidatetestController } from "./candidate/candidateTestController";
 
 
 
@@ -317,6 +319,14 @@ const iCandidateStartTrial = new CandidateStartFreeTrialUsecase(
     iCandidateRepository,
     iSubscriptionPlanRepository,
     iSubscriptionRepository
+)
+
+//test
+const iCandidateGetTestByToken = new CandidateGetTestByTokenUsecase(
+    iTestCandidateRepository,
+    iTestRepository,
+    iCompanyRepository,
+    iJobRoleRepository
 )
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -881,4 +891,8 @@ export const iCompanyTestController = new CompanyTestController (
     iCompanyResheduleTest,
     iCompanyGetTestById,
     iCompanyEditTest
+)
+
+export const ICandidateTestController = new CandidatetestController(
+    iCandidateGetTestByToken
 )

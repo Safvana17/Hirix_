@@ -3,6 +3,7 @@ import { QuestionSource, TestStatus } from "../../../Domain/enums/Test";
 import QuestionType from "../../../Domain/enums/questionType";
 import QuestionDifficulty from "../../../Domain/enums/questionDifficulty";
 
+
 const TestCaseSchema = z.object({
     input: z.string().min(1, "Test case input is required"),
     expectedOutput: z.string().min(1, "Expected output is required"),
@@ -170,3 +171,8 @@ export const ResheduleTestSchema = z.object({
     startTime: z.coerce.date(),
     endTime: z.coerce.date(),
 })
+
+export const TestTokenSchema = z.object({
+  token: z.string()
+})
+export type TestTokenParams = z.infer<typeof TestTokenSchema>

@@ -1,10 +1,11 @@
 import Express from 'express'
 import { ROUTES } from '../../../../Shared/constsnts/routes'
 import { authHandler } from '../../middlewares/authMiddleware'
-import { iCandidateSubscriptionController, iPracticeLibraryController, iTokenService, iUnifiedSettingsController } from '../../controllers/factory'
+import { iCandidateSubscriptionController, ICandidateTestController, iPracticeLibraryController, iTokenService, iUnifiedSettingsController } from '../../controllers/factory'
 import { verifyCsrf } from '../../middlewares/csrfVerify'
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
+import { TestTokenSchema } from '../../validators/companyTest.validator'
 
 
 const router = Express.Router()
@@ -27,5 +28,8 @@ router.post(ROUTES.CANDIDATE.SUBSCRIPTION.START_TRIAL, authHandler(iTokenService
 //notifications
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
 router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iUnifiedSettingsController.markAllAsRead)
+
+//test
+router.get(ROUTES.CANDIDATE.TEST.GET_BY_TOKEN, validate(TestTokenSchema, 'params'), ICandidateTestController.getTestByToken)
 
 export default router

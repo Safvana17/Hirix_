@@ -43,7 +43,7 @@ export class TestCandidateMapper {
         return {
             testId: new Types.ObjectId(entity.testId),
             email: entity.email,
-            testLink: entity.testToken,
+            testToken: entity.testToken,
             candidateTestStatus: entity.candidateTestStatus,
             selectionStatus: entity.selectionStatus,
             warningCount: entity.warningCount,

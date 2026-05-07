@@ -16,5 +16,8 @@ export const TestMessages = {
         TEST_UPDATE_FAILED: 'Failed to update test',
         TEST_LIMIT_EXCEEDED: 'Max test limit exceeded',
         TEST_CANDIDATES_COUNT_EXCEEDED: 'You max candidate limit exceeded',
+        CANDIDATE_NOT_FOUND: 'Candidate not found',
+        COMPANY_NOT_FOUND: 'Company not found',
+        JOB_ROLE_NOT_FOUND: 'Job role not found',
     }
 }
