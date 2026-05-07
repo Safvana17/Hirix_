@@ -5,6 +5,8 @@ export type QuestionSource = 'ADMIN_LIBRARY' | 'COMPANY_LIBRARY' | 'TEST_ONLY'
 export type CandidateStatus = 'DRAFT' | 'INVITED' | 'IN_PROGRESS'| 'SUBMITTED'| 'EXPIRED'| 'DISQUALIFIED'
 export type CandidateSelectionStatus = 'PENDING' | 'SHORTLISTED' | 'REJECTED'
 export type ModalMode = 'create' | 'edit'
+export type CandidateTestGateStep = 'LOADING' | 'NOT_STARTED' | 'DETAILS' | 'INSTRUCTIONS' | 'EXPIRED' | 'READY'
+
 
 export interface TestCandidate {
     id: string
@@ -168,4 +170,22 @@ export interface SelectedTest {
     questions: TestQuestions[]
     testStatus: TestStatus
     candidates: TestCandidate[]
+}
+
+export interface CandidateTest {
+    id: string
+    name: string
+    description: string
+    jobrole: string
+    startTime: Date
+    endTime: Date
+    companyName: string
+    rules: TestRules
+    questions: TestQuestions[]
+    testStatus: TestStatus
+}
+
+export interface TestCandidateLoginResponse {
+    candidate: TestCandidate
+    test: CandidateTest
 }

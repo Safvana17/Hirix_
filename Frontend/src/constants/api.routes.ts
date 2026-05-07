@@ -16,6 +16,14 @@ export const API_ROUTES = {
     GOOGLE_LOGIN: (role: string) => `/auth/${role}/googlelogin`,
   },
 
+  CANDIDATE: {
+    TEST: {
+      GET_TEST: (token: string) => 
+        `/candidate/test/${token}` ,
+      TEST_LOGIN: '/candidate/test/login', 
+    }
+  },
+
   COMPANY: {
     VERIFY_EMAIL: (token: string) =>
       `/auth/company/verifyemail?token=${token}`,

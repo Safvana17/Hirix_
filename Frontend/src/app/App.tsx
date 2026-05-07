@@ -28,6 +28,9 @@ import CancelTestPage from '../presentation/components/company/test/CancelTestPa
 import ResheduleTestPage from '../presentation/components/company/test/ResheduleTestPage'
 import TestDetailsPage from '../presentation/pages/company/TestDetailsPage'
 import EditTestPage from '../presentation/pages/company/EditTestPage'
+import CandidateTestGateway from '../presentation/pages/candidate/CandidateTestGateWay'
+import TestCandidateLogin from '../presentation/pages/candidate/TestCandidateLogin'
+import TestCandidateInstructions from '../presentation/pages/candidate/TestCandidateInstructions'
 
 
 
@@ -172,6 +175,18 @@ const App = () => {
             </RoleRoute>
           } />
 
+          <Route path={ROUTES.CANDIDATE.START_TEST} element={
+            <CandidateTestGateway />
+          } />
+
+          <Route path={ROUTES.CANDIDATE.TEST_LOGIN} element={
+            <TestCandidateLogin />
+          } />
+
+          <Route path={ROUTES.CANDIDATE.TEST_INSTRUCTIONS} element={
+            <TestCandidateInstructions />
+          } />
+          
           <Route path={ROUTES.ADMIN.LOGIN} element={<PublicRoute><AdminLogin /></PublicRoute>} />
           <Route path={ROUTES.ADMIN.DASHBOARD} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>

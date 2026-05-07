@@ -32,6 +32,9 @@ export const ROUTES = {
     RESET_PASSWORD: '/candidate/resetpassword',
     DASHBOARD: '/candidate/dashboard',
     SUBSCRIPTION: '/candidate/subscription',
+    START_TEST: '/candidate/test/:token',
+    TEST_LOGIN: '/candidate/test/login',
+    TEST_INSTRUCTIONS: '/candidate/test/instructions',
   },
 
   COMMON: {

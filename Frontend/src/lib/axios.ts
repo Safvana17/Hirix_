@@ -66,7 +66,8 @@ api.interceptors.response.use(
             !originalRequest._retry && 
             !originalRequest.url?.includes("/refresh") && 
             !originalRequest.url?.includes("/login") && 
-            !originalRequest.url?.includes("/register")
+            !originalRequest.url?.includes("/register") 
+            // !originalRequest.url?.includes("/candidate/test")
         ){
             
             if(isRefreshing){
