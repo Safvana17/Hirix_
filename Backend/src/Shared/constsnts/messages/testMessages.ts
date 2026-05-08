@@ -19,5 +19,7 @@ export const TestMessages = {
         CANDIDATE_NOT_FOUND: 'Candidate not found',
         COMPANY_NOT_FOUND: 'Company not found',
         JOB_ROLE_NOT_FOUND: 'Job role not found',
+        INVALID_START_TIME: 'Invalid strat time',
+        WRONG_EMAIL: 'Candidate email and requested email does not match',
     }
 }

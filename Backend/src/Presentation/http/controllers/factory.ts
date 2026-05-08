@@ -156,6 +156,7 @@ import { CompanyGetTestByIdUsecase } from "../../../Application/company/usecases
 import { CompanyEditTestUsecase } from "../../../Application/company/usecases/test/company.editTest.usecase";
 import { CandidateGetTestByTokenUsecase } from "../../../Application/candidate/useCases/test/candidate.getTestByToken.usecase";
 import { CandidatetestController } from "./candidate/candidateTestController";
+import { CandidateTestLoginUsecase } from "../../../Application/candidate/useCases/test/candidate.testLogin.usecase";
 
 
 
@@ -323,6 +324,12 @@ const iCandidateStartTrial = new CandidateStartFreeTrialUsecase(
 
 //test
 const iCandidateGetTestByToken = new CandidateGetTestByTokenUsecase(
+    iTestCandidateRepository,
+    iTestRepository,
+    iCompanyRepository,
+    iJobRoleRepository
+)
+const iCandidateTestLogin = new CandidateTestLoginUsecase(
     iTestCandidateRepository,
     iTestRepository,
     iCompanyRepository,
@@ -894,5 +901,6 @@ export const iCompanyTestController = new CompanyTestController (
 )
 
 export const ICandidateTestController = new CandidatetestController(
-    iCandidateGetTestByToken
+    iCandidateGetTestByToken,
+    iCandidateTestLogin
 )

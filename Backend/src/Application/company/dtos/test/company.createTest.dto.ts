@@ -1,6 +1,6 @@
 import { TestEntity } from "../../../../Domain/entities/Test.entity"
 import QuestionType from "../../../../Domain/enums/questionType"
-import { CandidateTestStatus, QuestionSource } from "../../../../Domain/enums/Test"
+import { QuestionSource } from "../../../../Domain/enums/Test"
 import { TestCase } from "../../../../Domain/valueObjects/question.testCase"
 
 export interface CreateTestQuestionInputDTO {
@@ -18,22 +18,21 @@ export interface CreateTestQuestionInputDTO {
 
 export interface CreateTestCandiateInputDTO {
     email: string
-    candidateTestStatus?: CandidateTestStatus
 }
 
 export interface TimingRulesDTO {
     durationInMinutes: number
-    autoSubmitOnTimeEnd?: boolean
-    warningBeforeEndInMinutes?: number
+    autoSubmitOnTimeEnd: boolean
+    warningBeforeEndInMinutes: number
 }
 
 export interface NavigationRulesDTO {
-    allowTabSwitch?: boolean
-    maxTabSwitchCount?: number
-    autoSubmitOnTabViolation?: boolean
-    shuffleQuestions?: boolean
-    shuffleOptions?: boolean
-    allowBackNavigation?: boolean
+    allowTabSwitch: boolean
+    maxTabSwitchCount: number
+    autoSubmitOnTabViolation: boolean
+    shuffleQuestions: boolean
+    shuffleOptions: boolean
+    allowBackNavigation: boolean
 }
 
 export interface ProctoringRulesDTO {

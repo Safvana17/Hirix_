@@ -30,6 +30,12 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
         if(!document) return null
         return this.mapToEntity(document)
     }
+
+    async findByEmail(email: string): Promise<TestCandidateEntity | null> {
+        const document = await this._model.findOne({email})
+        if(!document) return null
+        return this.mapToEntity(document)
+    }
     
     protected mapToEntity(doc: ITestCandidate): TestCandidateEntity {
         return TestCandidateMapper.toEntity(doc)

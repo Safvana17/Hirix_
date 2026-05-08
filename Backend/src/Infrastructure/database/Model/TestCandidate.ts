@@ -26,6 +26,7 @@ export interface ITestCandidate extends Document {
     _id: Types.ObjectId
     testId: Types.ObjectId
     testToken: string
+    name: string
     email: string
     candidateTestStatus: CandidateTestStatus
     selectionStatus: CandidateSelectionStatus
@@ -98,6 +99,9 @@ const TestCandidateSchema: Schema<ITestCandidate> = new Schema({
         ref: "Test"
     },
     testToken: {
+        type: String
+    },
+    name: {
         type: String
     },
     email: {

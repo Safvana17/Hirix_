@@ -53,9 +53,9 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Auto Submit On Time End"
                 description="Automatically submit when test time expires"
-                checked={data.rules.timing.autoSubmissionOnTimeEnds}
+                checked={data.rules.timing.autoSubmitOnTimeEnd}
                 onChange={(checked) =>
-                  updateRules('timing', { autoSubmissionOnTimeEnds: checked })
+                  updateRules('timing', { autoSubmitOnTimeEnd: checked })
                 }
               />
 
@@ -99,10 +99,10 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Auto Submit On Tab Violation"
                 description="Submit test if tab switch limit is reached"
-                checked={data.rules.navigation.autoSubmissionOnTabViolation}
+                checked={data.rules.navigation.autoSubmitOnTabViolation}
                 onChange={(checked) =>
                   updateRules('navigation', {
-                    autoSubmissionOnTabViolation: checked,
+                    autoSubmitOnTabViolation: checked,
                   })
                 }
               />
@@ -110,9 +110,9 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Shuffle Questions"
                 description="Randomize question order"
-                checked={data.rules.navigation.shuffleQuestion}
+                checked={data.rules.navigation.shuffleQuestions}
                 onChange={(checked) =>
-                  updateRules('navigation', { shuffleQuestion: checked })
+                  updateRules('navigation', { shuffleQuestions: checked })
                 }
               />
 
@@ -150,17 +150,17 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Capture Snapshots"
                 description="Capture candidate snapshots during the test"
-                checked={data.rules.proctoring.captureSnapShots}
+                checked={data.rules.proctoring.captureSnapshots}
                 onChange={(checked) =>
-                  updateRules('proctoring', { captureSnapShots: checked })
+                  updateRules('proctoring', { captureSnapshots: checked })
                 }
               />
 
               <RuleInput
                 label="Snapshot Interval Seconds"
-                value={data.rules.proctoring.snapShotIntervalSeconds}
+                value={data.rules.proctoring.snapshotIntervalSeconds}
                 onChange={(value) =>
-                  updateRules('proctoring', { snapShotIntervalSeconds: value })
+                  updateRules('proctoring', { snapshotIntervalSeconds: value })
                 }
               />
 
@@ -176,9 +176,9 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Detect Multiple Face"
                 description="Warn if multiple faces are detected"
-                checked={data.rules.proctoring.detectMultipleFace}
+                checked={data.rules.proctoring.detectMultipleFaces}
                 onChange={(checked) =>
-                  updateRules('proctoring', { detectMultipleFace: checked })
+                  updateRules('proctoring', { detectMultipleFaces: checked })
                 }
               />
 
@@ -193,10 +193,10 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Auto Submit On Max Warnings"
                 description="Submit when warning limit is reached"
-                checked={data.rules.proctoring.autoSubmissionOnMaxWarnings}
+                checked={data.rules.proctoring.autoSubmitOnMaxWarnings}
                 onChange={(checked) =>
                   updateRules('proctoring', {
-                    autoSubmissionOnMaxWarnings: checked,
+                    autoSubmitOnMaxWarnings: checked,
                   })
                 }
               />
@@ -217,10 +217,10 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Auto Submit Full Screen Exit"
                 description="Submit if candidate exits full screen"
-                checked={data.rules.behavior.autoSubmissionFullScreenExit}
+                checked={data.rules.behavior.autoSubmitOnFullScreenExit}
                 onChange={(checked) =>
                   updateRules('behavior', {
-                    autoSubmissionFullScreenExit: checked,
+                    autoSubmitOnFullScreenExit: checked,
                   })
                 }
               />

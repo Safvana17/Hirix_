@@ -43,6 +43,9 @@ export class CompanyPublishTestUsecase implements ICompanyPublishTestUsecase {
             throw new AppError(TestMessages.error.NOT_DRAFTED_TEST, statusCode.BAD_REQUEST)
         }
 
+        if(test.startTime < new Date()){
+            throw new AppError(TestMessages.error.INVALID_START_TIME, statusCode.BAD_REQUEST)
+        }
         if(test.startTime >= test.endTime) {
             throw new AppError(TestMessages.error.INVALID_END_TIME, statusCode.BAD_REQUEST)
         }

@@ -3,11 +3,13 @@ import { TestQuestionEntity } from "../../../../Domain/entities/TestQuestion.ent
 import { TestStatus } from "../../../../Domain/enums/Test"
 import { TestRules } from "../../../../Domain/valueObjects/test.rules"
 
-export interface CandidateGetTestByTokenInputDTO {
+export interface CandidateTestLoginInputDTO {
     token: string
+    name: string
+    email: string
 }
 
-export interface CandidateGetTestByTokenOutputDTO {
+export interface CandidateTestLoginOutputDTO {
     test: {
         id: string
         name: string

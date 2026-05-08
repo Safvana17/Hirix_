@@ -20,7 +20,8 @@ export const API_ROUTES = {
     TEST: {
       GET_TEST: (token: string) => 
         `/candidate/test/${token}` ,
-      TEST_LOGIN: '/candidate/test/login', 
+      TEST_LOGIN: (token: string) =>
+        `/candidate/test/${token}/login`, 
     }
   },
 

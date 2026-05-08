@@ -35,6 +35,7 @@ export class TestCandidateMapper {
             doc.startedAt,
             doc.submittedAt
         )
+        testCandidate.name = doc.name
 
         return testCandidate
     }
@@ -64,6 +65,7 @@ export class TestCandidateMapper {
             marksObtained: entity.marksObtained,
             correctAnswerCount: entity.correctAnswerCount,
             totalQuestionsCount: entity.totalQuestionsCount,
+            name: entity.name,
             startedAt: entity.startedAt,
             submittedAt: entity.submittedAt
 

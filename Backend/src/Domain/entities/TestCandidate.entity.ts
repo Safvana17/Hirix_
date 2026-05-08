@@ -4,6 +4,7 @@ import { CandidateAnswerEntity } from "./CandidateAnswer.entity"
 export class TestCandidateEntity {
     id: string
     testId: string
+    name?: string
     email: string
     testToken: string
     candidateTestStatus: CandidateTestStatus

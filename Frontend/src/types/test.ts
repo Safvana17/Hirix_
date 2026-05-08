@@ -2,10 +2,10 @@ import type { QuestionType, TestCase } from "./question"
 
 export type TestStatus = 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'CANCELLED' | 'DELETED'
 export type QuestionSource = 'ADMIN_LIBRARY' | 'COMPANY_LIBRARY' | 'TEST_ONLY'
-export type CandidateStatus = 'DRAFT' | 'INVITED' | 'IN_PROGRESS'| 'SUBMITTED'| 'EXPIRED'| 'DISQUALIFIED'
+export type CandidateStatus = 'DRAFT' | 'VERIFIED' | 'INVITED' | 'IN_PROGRESS'| 'SUBMITTED'| 'EXPIRED'| 'DISQUALIFIED' | 'TERMINATED'
 export type CandidateSelectionStatus = 'PENDING' | 'SHORTLISTED' | 'REJECTED'
 export type ModalMode = 'create' | 'edit'
-export type CandidateTestGateStep = 'LOADING' | 'NOT_STARTED' | 'DETAILS' | 'INSTRUCTIONS' | 'EXPIRED' | 'READY'
+export type CandidateTestGateStep = 'LOADING' | 'NOT_STARTED' | 'DETAILS' | 'INSTRUCTIONS' | 'EXPIRED' | 'READY' | 'LOGIN' | 'QUESTIONS' | 'SUBMITTED' | 'TERMINATED' | 'DISQUALIFIED' | 'EXPIRED'
 
 
 export interface TestCandidate {
@@ -31,7 +31,7 @@ export interface TestCandidate {
         isCorrect?: boolean
         marksObtained?: number
         totalMarks: number
-    },
+    }[],
     aiRank: number
     totalMarks: number
     totalQuestions: number
@@ -42,40 +42,44 @@ export interface TestCandidate {
 }
 
 export interface TestRules {
-    timing: {
-        durationInMinutes: number
-        autoSubmissionOnTimeEnds: boolean
-        warningBeforeEndInMinutes: number
-    },
-    navigation: {
-        allowTabSwitch: boolean
-        maxTabSwitchCount: number
-        autoSubmissionOnTabViolation: boolean
-        shuffleQuestion: boolean
-        shuffleOptions: boolean
-        allowBackNavigation: boolean
-    },
-    proctoring: {
-        enableCamera: boolean
-        captureSnapShots: boolean
-        snapShotIntervalSeconds: number
-        detectNoFace: boolean
-        detectMultipleFace: boolean
-        maxWarningsAllowed: number
-        autoSubmissionOnMaxWarnings: boolean
-    },
-    behavior: {
-        enforceFullScreen: boolean
-        autoSubmissionFullScreenExit: boolean
-        allowCopyPaste: boolean
-        allowRightClick: boolean
-        allowKeyboardShortcuts: boolean
-    },
-    autoSave: {
-        enabled: boolean
-        intervalInSeconds: number
-        saveOnEveryAnswer: boolean
-    }
+  timing: {
+    durationInMinutes: number
+    autoSubmitOnTimeEnd: boolean
+    warningBeforeEndInMinutes: number
+  }
+
+  navigation: {
+    allowTabSwitch: boolean
+    maxTabSwitchCount: number
+    autoSubmitOnTabViolation: boolean
+    shuffleQuestions: boolean
+    shuffleOptions: boolean
+    allowBackNavigation: boolean
+  }
+
+  proctoring: {
+    enableCamera: boolean
+    captureSnapshots: boolean
+    snapshotIntervalSeconds: number
+    detectNoFace: boolean
+    detectMultipleFaces: boolean
+    maxWarningsAllowed: number
+    autoSubmitOnMaxWarnings: boolean
+  }
+
+  behavior: {
+    enforceFullScreen: boolean
+    autoSubmitOnFullScreenExit: boolean
+    allowCopyPaste: boolean
+    allowRightClick: boolean
+    allowKeyboardShortcuts: boolean
+  }
+
+  autoSave: {
+    enabled: boolean
+    intervalInSeconds: number
+    saveOnEveryAnswer: boolean
+  }
 }
 
 export interface TestQuestions {
@@ -185,7 +189,7 @@ export interface CandidateTest {
     testStatus: TestStatus
 }
 
-export interface TestCandidateLoginResponse {
+export interface TestCandidateResponse {
     candidate: TestCandidate
     test: CandidateTest
 }

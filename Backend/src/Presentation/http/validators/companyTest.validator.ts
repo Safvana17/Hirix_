@@ -56,41 +56,41 @@ const CreateTestCandidateSchema = z.object({
 
 const TimingRulesSchema = z.object({
   durationInMinutes: z.number().min(1),
-  autoSubmitOnTimeEnd: z.boolean().optional(),
-  warningBeforeEndInMinutes: z.number().optional(),
+  autoSubmitOnTimeEnd: z.boolean(),
+  warningBeforeEndInMinutes: z.number().min(1),
 })
 
 const NavigationRulesSchema = z.object({
-  allowTabSwitch: z.boolean().optional(),
-  maxTabSwitchCount: z.number().optional(),
-  autoSubmitOnTabViolation: z.boolean().optional(),
-  shuffleQuestions: z.boolean().optional(),
-  shuffleOptions: z.boolean().optional(),
-  allowBackNavigation: z.boolean().optional(),
+  allowTabSwitch: z.boolean(),
+  maxTabSwitchCount: z.number().min(0),
+  autoSubmitOnTabViolation: z.boolean(),
+  shuffleQuestions: z.boolean(),
+  shuffleOptions: z.boolean(),
+  allowBackNavigation: z.boolean(),
 })
 
 const ProctoringRulesSchema = z.object({
-  enableCamera: z.boolean().optional(),
-  captureSnapshots: z.boolean().optional(),
-  snapshotIntervalSeconds: z.number().optional(),
-  detectNoFace: z.boolean().optional(),
-  detectMultipleFaces: z.boolean().optional(),
-  maxWarningsAllowed: z.number().optional(),
-  autoSubmitOnMaxWarnings: z.boolean().optional(),
+  enableCamera: z.boolean(),
+  captureSnapshots: z.boolean(),
+  snapshotIntervalSeconds: z.number().min(1),
+  detectNoFace: z.boolean(),
+  detectMultipleFaces: z.boolean(),
+  maxWarningsAllowed: z.number().min(0),
+  autoSubmitOnMaxWarnings: z.boolean(),
 })
 
 const BehaviorRulesSchema = z.object({
-  enforceFullScreen: z.boolean().optional(),
-  autoSubmitOnFullScreenExit: z.boolean().optional(),
-  allowCopyPaste: z.boolean().optional(),
-  allowRightClick: z.boolean().optional(),
-  allowKeyboardShortcuts: z.boolean().optional(),
+  enforceFullScreen: z.boolean(),
+  autoSubmitOnFullScreenExit: z.boolean(),
+  allowCopyPaste: z.boolean(),
+  allowRightClick: z.boolean(),
+  allowKeyboardShortcuts: z.boolean(),
 })
 
 const AutoSaveRulesSchema = z.object({
-  enabled: z.boolean().optional(),
-  intervalInSeconds: z.number().optional(),
-  saveOnEveryAnswer: z.boolean().optional(),
+  enabled: z.boolean(),
+  intervalInSeconds: z.number().min(1),
+  saveOnEveryAnswer: z.boolean(),
 })
 
 const CreateTestRulesSchema = z.object({
@@ -176,3 +176,8 @@ export const TestTokenSchema = z.object({
   token: z.string()
 })
 export type TestTokenParams = z.infer<typeof TestTokenSchema>
+
+export const TestCandidateLoginSchema = z.object({
+  name: z.string().min(1, 'Name is required').trim(),
+  email: z.string().email().min(1, 'email is required')
+})

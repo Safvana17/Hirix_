@@ -14,6 +14,7 @@ export enum QuestionSource {
 
 export enum CandidateTestStatus {
    DRAFT = 'DRAFT',
+   VERIFIED = 'VERIFIED',
    INVITED = 'INVITED',
    IN_PROGRESS = 'IN_PROGRESS',
    SUBMITTED = 'SUBMITTED',

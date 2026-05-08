@@ -33,7 +33,7 @@ export const ROUTES = {
     DASHBOARD: '/candidate/dashboard',
     SUBSCRIPTION: '/candidate/subscription',
     START_TEST: '/candidate/test/:token',
-    TEST_LOGIN: '/candidate/test/login',
+    TEST_LOGIN: '/candidate/test/:token/login',
     TEST_INSTRUCTIONS: '/candidate/test/instructions',
   },
 

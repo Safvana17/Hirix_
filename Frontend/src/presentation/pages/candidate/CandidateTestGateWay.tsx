@@ -7,11 +7,13 @@ import type { CandidateTestGateStep } from '../../../types/test'
 import TestNotStartedPage from '../../components/candidate/test/TestNotStartedPage'
 import TestExpiredPage from '../../components/candidate/test/TestExpiredPage'
 import TestStartPage from '../../components/candidate/test/TestStartPage'
+// import TestCandidateLogin from './TestCandidateLogin'
+import TestCandidateInstructions from './TestCandidateInstructions'
 
 const CandidateTestGateway: React.FC = () => {
     const { token } = useParams()
     const dispatch = useDispatch<AppDispatch>()
-    const { test, loading } = useSelector((state: RootState) => state.candidateTest )
+    const { test, loading, candidate } = useSelector((state: RootState) => state.candidateTest )
 
     console.log('token: ', token)
     useEffect(() => {
@@ -21,39 +23,63 @@ const CandidateTestGateway: React.FC = () => {
     }, [dispatch, token])
 
     const step: CandidateTestGateStep = useMemo(() => {
-        if (loading || !test) return 'LOADING'
+        if (loading || !test || !candidate) return 'LOADING'
         const now = new Date()
         const startTime = new Date(test.startTime)
         const endTime = new Date(test.endTime)
         if (now < startTime) return 'NOT_STARTED'
-        if (now > endTime) return 'EXPIRED'
-        return 'READY'
-    }, [loading, test])
-    console.log('test from candidate: ', test)
+        if (now > endTime && candidate.candidateTestStatus !== 'SUBMITTED') return 'EXPIRED'
 
-    // if (step === 'LOADING') {
-    //     return <div>Loading...</div>
+        switch(candidate.candidateTestStatus){
+            case 'INVITED': 
+                return 'READY'
+            case 'VERIFIED':
+                return 'INSTRUCTIONS'
+            case 'IN_PROGRESS': 
+                return 'QUESTIONS'
+            case 'TERMINATED': 
+                return 'TERMINATED'
+            case 'DISQUALIFIED': 
+                return 'DISQUALIFIED'
+            case 'SUBMITTED': 
+                return 'SUBMITTED'
+            case 'EXPIRED': 
+                return 'EXPIRED'
+            default:
+                return 'READY'
+                
+        }
+    }, [loading, test, candidate])
+    if(step === 'NOT_STARTED'){
+        return <TestNotStartedPage test={test} />
+    }
+    if(step === 'EXPIRED'){
+        return <TestExpiredPage test={test} />
+    }
+    if(step === 'READY'){
+        return <TestStartPage test={test} />
+    }
+    // if(step === 'LOGIN') {
+    //     return <TestCandidateLogin />
     // }
-
-    // if (step === 'NOT_STARTED') {
-    //     return <TestNotStartedPage test={test} />
-    // }
-
-    // if (step === 'EXPIRED') {
-    //     return <div>Test expired</div>
-    // }
-
+    if(step === 'INSTRUCTIONS') {
+        return <TestCandidateInstructions />
+    }
+    if(step === 'QUESTIONS'){
+        return <p>questions</p>
+    }
+    if(step === 'SUBMITTED') {
+        return <p>submitted</p>
+    }
+    if(step === 'TERMINATED') {
+        return <p>terminated</p>
+    }
+    if(step === 'DISQUALIFIED'){
+        return <p>disqualified</p>
+    }
     return (
-        <div className="min-h-screen">
-            {step === 'NOT_STARTED' ? (
-               <TestNotStartedPage test={test} />
-            ): ( step === 'EXPIRED' ? (
-                <TestExpiredPage test={test} />
-            ): ( step === 'READY' ? (
-                <TestStartPage test={test} />
-            ): (
-                <p>hi</p>
-            )))}
+        <div className="flex h-screen items-center justify-center">
+            <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-600"></div>
         </div>
     )
 }

@@ -9,7 +9,7 @@ import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
-import { autoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules } from "../../../../Domain/valueObjects/test.rules";
+import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules } from "../../../../Domain/valueObjects/test.rules";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
@@ -93,16 +93,16 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
         const rules = new TestRules(
             new TimingRules(
                 request.rules.timing.durationInMinutes,
-                request.rules.timing.autoSubmitOnTimeEnd ?? true,
-                request.rules.timing.warningBeforeEndInMinutes ?? 3
+                request.rules.timing.autoSubmitOnTimeEnd,
+                request.rules.timing.warningBeforeEndInMinutes
             ),
             new NavigationRules(
-                request.rules.navigation.allowTabSwitch ?? false,
-                request.rules.navigation.maxTabSwitchCount ?? 0,
-                request.rules.navigation.autoSubmitOnTabViolation ?? true,
-                request.rules.navigation.shuffleQuestions ?? true,
-                request.rules.navigation.shuffleOptions ?? true,
-                request.rules.navigation.allowBackNavigation ?? true,
+                request.rules.navigation.allowTabSwitch,
+                request.rules.navigation.maxTabSwitchCount,
+                request.rules.navigation.autoSubmitOnTabViolation,
+                request.rules.navigation.shuffleQuestions,
+                request.rules.navigation.shuffleOptions,
+                request.rules.navigation.allowBackNavigation,
             ),
             new ProctoringRules(
                 request.rules.proctoring.enableCamera ?? false,
@@ -120,7 +120,7 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
                 request.rules.behavior.allowRightClick ?? false,
                 request.rules.behavior.allowKeyboardShortcuts ?? false
             ),
-            new autoSaveRules(
+            new AutoSaveRules(
                 request.rules.autoSave.enabled ?? true,
                 request.rules.autoSave.intervalInSeconds ?? 10,
                 request.rules.autoSave.saveOnEveryAnswer ??true

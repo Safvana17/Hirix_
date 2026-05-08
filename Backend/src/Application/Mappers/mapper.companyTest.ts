@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import { TestEntity } from "../../Domain/entities/Test.entity";
 import { ITest } from "../../Infrastructure/database/Model/Test";
-import { autoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules } from "../../Domain/valueObjects/test.rules";
+import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules } from "../../Domain/valueObjects/test.rules";
 import { TestQuestionEntity } from "../../Domain/entities/TestQuestion.entity";
 
 export class TestMapper {
@@ -17,7 +17,7 @@ export class TestMapper {
                 doc.rules.navigation.allowTabSwitch,
                 doc.rules.navigation.maxTabSwitchCount,
                 doc.rules.navigation.autoSubmitOnTabViolation,
-                doc.rules.navigation.shuffleQuestion,
+                doc.rules.navigation.shuffleQuestions,
                 doc.rules.navigation.shuffleOptions,
                 doc.rules.navigation.allowBackNavigation
             ),
@@ -37,7 +37,7 @@ export class TestMapper {
                 doc.rules.behavior.allowRightClick,
                 doc.rules.behavior.allowKeyboardShortcuts
             ),
-            new autoSaveRules(
+            new AutoSaveRules(
                 doc.rules.autoSave.enabled,
                 doc.rules.autoSave.intervalInSeconds,
                 doc.rules.autoSave.saveOnEveryAnswer
@@ -101,7 +101,7 @@ export class TestMapper {
                     allowTabSwitch: entity.rules.navigation.allowTabSwitch,
                     maxTabSwitchCount: entity.rules.navigation.maxTabSwitchCount,
                     autoSubmitOnTabViolation: entity.rules.navigation.autoSubmitOnTabViolation,
-                    shuffleQuestion: entity.rules.navigation.shuffleQuestion,
+                    shuffleQuestions: entity.rules.navigation.shuffleQuestions,
                     shuffleOptions: entity.rules.navigation.shuffleOptions,
                     allowBackNavigation: entity.rules.navigation.allowBackNavigation
                 },

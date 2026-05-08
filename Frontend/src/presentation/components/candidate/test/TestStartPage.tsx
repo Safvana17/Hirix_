@@ -12,14 +12,14 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import QuizIcon from '@mui/icons-material/Quiz'
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
-import { ROUTES } from '../../../../constants/routes'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 interface TestStartPageProps {
     test: CandidateTest | null
 }
 
 const TestStartPage: React.FC<TestStartPageProps> = ({ test }) => {
+    const { token } = useParams()
     const navigate = useNavigate()
     const duration =
         test?.startTime && test?.endTime
@@ -168,7 +168,7 @@ const TestStartPage: React.FC<TestStartPageProps> = ({ test }) => {
                                     bgcolor: '#087A27',
                                 },
                             }}
-                            onClick={() => navigate(ROUTES.CANDIDATE.TEST_LOGIN)}
+                            onClick={() => navigate(`/candidate/test/${token}/login`)}
                         >
                             Proceed to Test
                         </Button>

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { CandidateTest, TestCandidate, TestCandidateLoginResponse } from "../../../../types/test"
+import type { CandidateTest, TestCandidate, TestCandidateResponse } from "../../../../types/test"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -19,7 +19,7 @@ const initialState: CandidateTestState = {
 }
 
 export const getTestByToken = createAsyncThunk<
-CandidateTest,
+TestCandidateResponse,
 {token: string},
 {rejectValue: string}
 >('candidate/getTest', async({token}, {rejectWithValue}) => {
@@ -37,12 +37,12 @@ CandidateTest,
 })
 
 export const testCandidateLogin = createAsyncThunk<
-TestCandidateLoginResponse,
-{data: {name: string, email: string}},
+TestCandidateResponse,
+{data: {name: string, email: string}, token: string},
 {rejectValue: string}
->('candidate/testLogin', async({data}, {rejectWithValue}) => {
+>('candidate/testLogin', async({data, token}, {rejectWithValue}) => {
     try {
-        const response = await api.post(API_ROUTES.CANDIDATE.TEST.TEST_LOGIN, {data})
+        const response = await api.post(API_ROUTES.CANDIDATE.TEST.TEST_LOGIN(token), data)
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -65,7 +65,8 @@ const candidateTestSlice = createSlice({
         })
         .addCase(getTestByToken.fulfilled, (state, action) => {
             state.loading = false
-            state.test = action.payload
+            state.test = action.payload.test
+            state.candidate = action.payload.candidate
         })
         .addCase(getTestByToken.rejected, (state, action) => {
             state.loading = false

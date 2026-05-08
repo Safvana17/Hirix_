@@ -8,7 +8,7 @@ import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
-import { autoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules } from "../../../../Domain/valueObjects/test.rules";
+import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules } from "../../../../Domain/valueObjects/test.rules";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
@@ -101,7 +101,7 @@ export class CompanyEditTestUsecase implements ICompanyEditTestUsecase{
                 request.rules.behavior.allowRightClick ?? false,
                 request.rules.behavior.allowKeyboardShortcuts ?? false
             ),
-            new autoSaveRules(
+            new AutoSaveRules(
                 request.rules.autoSave.enabled ?? true,
                 request.rules.autoSave.intervalInSeconds ?? 10,
                 request.rules.autoSave.saveOnEveryAnswer ??true

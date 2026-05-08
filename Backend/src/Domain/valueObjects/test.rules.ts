@@ -11,7 +11,7 @@ export class NavigationRules {
         public allowTabSwitch: boolean,
         public maxTabSwitchCount: number,
         public autoSubmitOnTabViolation: boolean,
-        public shuffleQuestion: boolean,
+        public shuffleQuestions: boolean,
         public shuffleOptions: boolean,
         public allowBackNavigation: boolean
     ) {}
@@ -39,7 +39,7 @@ export class BehaviorRules {
     ) {}
 }
 
-export class autoSaveRules {
+export class AutoSaveRules {
     constructor (
         public enabled: boolean,
         public intervalInSeconds: number,
@@ -53,7 +53,7 @@ export class TestRules {
         public navigation: NavigationRules,
         public proctoring: ProctoringRules,
         public behavior: BehaviorRules,
-        public autoSave: autoSaveRules
+        public autoSave: AutoSaveRules
     ) {}
 }
 

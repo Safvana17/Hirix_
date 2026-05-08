@@ -4,10 +4,11 @@ import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
 import { testCandidateLogin } from '../../../redux/slices/features/test/CandidateTestSlice'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTES } from '../../../constants/routes'
 
 const TestCandidateLogin: React.FC = () => {
+    const { token } = useParams()
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -44,8 +45,10 @@ const TestCandidateLogin: React.FC = () => {
         console.log('candidate login data:', formData)
 
        try {
-         await dispatch(testCandidateLogin({data: formData})).unwrap()
-         navigate(ROUTES.CANDIDATE.TEST_INSTRUCTIONS)
+         if(token){
+            await dispatch(testCandidateLogin({data: formData, token: token})).unwrap()
+            navigate(ROUTES.CANDIDATE.TEST_INSTRUCTIONS)
+         }
        } catch (error) {
         toast.error(typeof error === 'string' ? error : 'Failed to login')
        }
