@@ -7,12 +7,14 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
 import { ICandidateTestLoginUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.testLogin.usecase";
 import { ICandidateStartTestUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.startTest.usecase";
+import { ICandidateRunCodeUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.runCode.usecase";
 
 export class CandidatetestController {
     constructor (
         private _getTestByToken: ICandidateGetTestByTokenUsecase,
         private _candidateLogin: ICandidateTestLoginUsecase,
         private _startTest: ICandidateStartTestUsecase,
+        private _runCode: ICandidateRunCodeUsecase,
     ) {}
 
     getTestByToken = asyncHandler(async(req: Request, res: Response) => {
@@ -33,5 +35,11 @@ export class CandidatetestController {
         logger.info(token)
         const  {test, candidate} = await this._startTest.execute({token})
         return sendSuccess(res, statusCode.OK, '', { test, candidate })
+    })
+
+    runCode = asyncHandler(async(req: Request, res: Response) => {
+        const { token } = req.validatedParams as TestTokenParams
+        const {stdout, stderr, error, exitCode } = await this._runCode.execute({token, ...req.body})
+        return sendSuccess(res, statusCode.OK, '', {stdout, stderr, error, exitCode})
     })
 }

@@ -29,3 +29,7 @@ export enum CandidateSelectionStatus {
     REJECTED = 'REJECTED'
 }
 
+export enum CodingLanguage {
+    JAVASCRIPT = 'javascript',
+    PYTHON = 'python'
+}

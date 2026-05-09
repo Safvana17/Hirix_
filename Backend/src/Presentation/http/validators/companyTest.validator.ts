@@ -181,3 +181,9 @@ export const TestCandidateLoginSchema = z.object({
   name: z.string().min(1, 'Name is required').trim(),
   email: z.string().email().min(1, 'email is required')
 })
+
+export const CandidateRunCodeSchema = z.object({
+    language: z.enum(['javascript', 'python']),
+    sourceCode: z.string().min(1, 'Source code is required'),
+    input: z.string().optional(),
+})

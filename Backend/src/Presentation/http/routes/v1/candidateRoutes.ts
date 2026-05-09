@@ -5,7 +5,7 @@ import { iCandidateSubscriptionController, ICandidateTestController, iPracticeLi
 import { verifyCsrf } from '../../middlewares/csrfVerify'
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
-import { TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
+import { CandidateRunCodeSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
 
 
 const router = Express.Router()
@@ -33,7 +33,7 @@ router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iU
 router.get(ROUTES.CANDIDATE.TEST.GET_BY_TOKEN, validate(TestTokenSchema, 'params'), ICandidateTestController.getTestByToken)
 router.post(ROUTES.CANDIDATE.TEST.TEST_LOGIN, validate(TestTokenSchema, 'params'), validate(TestCandidateLoginSchema, 'body'), ICandidateTestController.candidateLogin)
 router.patch(ROUTES.CANDIDATE.TEST.START, validate(TestTokenSchema, 'params'), ICandidateTestController.startTest)
-
+router.post(ROUTES.CANDIDATE.TEST.RUN_CODE, validate(TestTokenSchema, 'params'), validate(CandidateRunCodeSchema, 'body'), ICandidateTestController.runCode)
 
 
 

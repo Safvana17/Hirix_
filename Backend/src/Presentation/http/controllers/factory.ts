@@ -158,6 +158,8 @@ import { CandidateGetTestByTokenUsecase } from "../../../Application/candidate/u
 import { CandidatetestController } from "./candidate/candidateTestController";
 import { CandidateTestLoginUsecase } from "../../../Application/candidate/useCases/test/candidate.testLogin.usecase";
 import { CandidateStartTestUsecase } from "../../../Application/candidate/useCases/test/candidate.startTest.usecase";
+import { CandidateRunCodeUsecase } from "../../../Application/candidate/useCases/test/candidate.runCode.usecase";
+import { DockerCodeRunnerService } from "../../../Infrastructure/services/DockerCodeRunner.service";
 
 
 
@@ -189,6 +191,7 @@ const iRazorpayService = new RazorpayService()
 const iPdfService = new PdfService()
 const iTemplateRenderService = new RenderTemplateService()
 const iTextFormatService = new TextFormatService()
+const iCodeRunnerService = new DockerCodeRunnerService()
 
 //notification
 const iProcessNotification = new AdminProcessNotificationEventUsecase(
@@ -341,6 +344,10 @@ const iCandidateStartTest = new CandidateStartTestUsecase (
     iTestRepository,
     iCompanyRepository,
     iJobRoleRepository
+)
+const iCandidateRunCode = new CandidateRunCodeUsecase (
+    iTestCandidateRepository,
+    iCodeRunnerService
 )
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -910,5 +917,6 @@ export const iCompanyTestController = new CompanyTestController (
 export const ICandidateTestController = new CandidatetestController(
     iCandidateGetTestByToken,
     iCandidateTestLogin,
-    iCandidateStartTest
+    iCandidateStartTest,
+    iCandidateRunCode
 )
