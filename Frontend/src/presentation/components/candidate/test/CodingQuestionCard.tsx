@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Box, Button, CircularProgress, FormControl, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded"
 import QuestionText from "./QuestionText"
@@ -8,13 +8,17 @@ import Editor from '@monaco-editor/react'
 import { useParams } from "react-router-dom"
 import { CODING_LANGUAGES, type CodingLanguages } from "../../../../constants/codingLanguages"
 import toast from "react-hot-toast"
+import { useDispatch } from "react-redux"
+import type { AppDispatch } from "../../../../redux/store"
+import { testRunCode } from "../../../../redux/slices/features/test/CandidateTestSlice"
 
 
 const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChange }) => {
   const testCases = question.testCase ?? []
   const { token } = useParams()
+  const dispatch= useDispatch<AppDispatch>()
   const [language, setLanguage] = useState<CodingLanguages>('javascript')
-  const [customInput, setCustomInput] = useState('')
+  // const [customInput, setCustomInput] = useState('')
   const [output, setOutput] = useState('Output will appear here...')
   const [running, setRunning] = useState(false)
 
@@ -23,6 +27,12 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
   }, [language])
 
   const editorValue = value || selectedLanguage.defaultCode
+
+  useEffect(() => {
+  if (!value) {
+    onChange(selectedLanguage.defaultCode)
+  }
+}, [language])
 
   const handleLanguageChange = (newLanguage: CodingLanguages) => {
     setLanguage(newLanguage)
@@ -36,9 +46,28 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
     if(!token) return
     try {
       setRunning(true)
-      setOutput('Running...')
+      console.log('input: ', {
+        language,
+        editorValue,
+      })
+      const result = await dispatch(testRunCode({
+        data: {
+          language,
+          sourceCode: editorValue,
+        },
+        token
+      })).unwrap()
+
+      console.log('rsult: ', result)
+      setOutput(
+        result.stdout || result.stderr || result.error || 'Program executed with no output'
+      )
+
     } catch (error) {
+      setOutput('Failed to run code')
       toast.error(typeof error === 'string' ? error : 'Failed to run code')
+    }finally{
+      setRunning(false)
     }
   }
 
@@ -101,7 +130,7 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
 
       <Box
         sx={{
-          border: 'ipx solid #1F2937',
+          border: '1px solid #1F2937',
           borderRadius: 3,
           overflow: 'hidden'
         }}
@@ -122,7 +151,7 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
            }}       
         />
       </Box>
-      <TextField
+      {/* <TextField
         fullWidth
         multiline
         minRows={5}
@@ -142,9 +171,10 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
             color: "#E5E7EB",
           },
         }}
-      />
+      /> */}
       <Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>
         <Button
+          type="button"
           variant="contained"
           startIcon={running ? (
                 <CircularProgress size={18} color="inherit" />

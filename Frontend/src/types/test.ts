@@ -6,7 +6,7 @@ export type CandidateStatus = 'DRAFT' | 'VERIFIED' | 'INVITED' | 'IN_PROGRESS'| 
 export type CandidateSelectionStatus = 'PENDING' | 'SHORTLISTED' | 'REJECTED'
 export type ModalMode = 'create' | 'edit'
 export type CandidateTestGateStep = 'LOADING' | 'NOT_STARTED' | 'DETAILS' | 'INSTRUCTIONS' | 'EXPIRED' | 'READY' | 'LOGIN' | 'QUESTIONS' | 'SUBMITTED' | 'TERMINATED' | 'DISQUALIFIED' | 'EXPIRED'
-
+export type CodingLanguage = 'javascript' | 'python'
 
 export interface TestCandidate {
     id: string
@@ -192,4 +192,17 @@ export interface CandidateTest {
 export interface TestCandidateResponse {
     candidate: TestCandidate
     test: CandidateTest
+}
+
+export interface CodeRunnerArgs {
+    language: CodingLanguage
+    sourceCode: string
+    input?: string
+}
+
+export interface CodeRunnerResponse {
+    stdout: string
+    stderr: string
+    error: string | null
+    exitCode: number | null
 }

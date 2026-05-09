@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { CandidateTest, TestCandidate, TestCandidateResponse } from "../../../../types/test"
+import type { CandidateTest, CodeRunnerArgs, CodeRunnerResponse, TestCandidate, TestCandidateResponse } from "../../../../types/test"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
 
 interface CandidateTestState {
     loading: boolean
+    codeRunning: boolean
     error: string | null
     test: CandidateTest | null
     candidate: TestCandidate | null
@@ -13,6 +14,7 @@ interface CandidateTestState {
 
 const initialState: CandidateTestState = {
     loading: false,
+    codeRunning: false,
     error: null,
     test: null,
     candidate: null
@@ -77,6 +79,24 @@ TestCandidateResponse,
     }
 })
 
+export const testRunCode = createAsyncThunk<
+CodeRunnerResponse,
+{data: CodeRunnerArgs, token: string},
+{rejectValue: string}
+>('candidate/runCode', async({data, token}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.CANDIDATE.TEST.RUN_CODE(token), data)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to run code')
+    }
+})
+
 const candidateTestSlice = createSlice({
     name: 'CandidateTestSlice',
     initialState,
@@ -117,6 +137,16 @@ const candidateTestSlice = createSlice({
         })
         .addCase(startTest.rejected, (state, action) => {
             state.loading = false
+            state.error = action.payload || 'Failed to login'
+        })
+        .addCase(testRunCode.pending, (state) => {
+            state.codeRunning = true
+        })
+        .addCase(testRunCode.fulfilled, (state) => {
+            state.codeRunning = false
+        })
+        .addCase(testRunCode.rejected, (state, action) => {
+            state.codeRunning = false
             state.error = action.payload || 'Failed to login'
         })
     }

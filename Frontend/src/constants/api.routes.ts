@@ -23,7 +23,9 @@ export const API_ROUTES = {
       TEST_LOGIN: (token: string) =>
         `/candidate/test/${token}/login`, 
       START: (token: string) =>
-        `/candidate/test/${token}/start`
+        `/candidate/test/${token}/start`,
+      RUN_CODE: (token: string) => 
+        `/candidate/test/${token}/run`,
     }
   },
 

@@ -50,8 +50,6 @@ const getTimeLeft = (time? : Date | string) => {
 
 const CandidateTestHeader: React.FC<CandidateTestHeaderProps> = ({ test, onSubmit}) => {
     const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(test.endTime))
-
-    console.log('test from header: ', test)
     useEffect(() => {
         const interval = setInterval(() => {
             setTimeLeft(getTimeLeft(test.endTime))
