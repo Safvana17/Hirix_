@@ -7,15 +7,14 @@ import type { CandidateTestGateStep } from '../../../types/test'
 import TestNotStartedPage from '../../components/candidate/test/TestNotStartedPage'
 import TestExpiredPage from '../../components/candidate/test/TestExpiredPage'
 import TestStartPage from '../../components/candidate/test/TestStartPage'
-// import TestCandidateLogin from './TestCandidateLogin'
 import TestCandidateInstructions from './TestCandidateInstructions'
+import TestQuestions from './TestQuestions'
 
 const CandidateTestGateway: React.FC = () => {
     const { token } = useParams()
     const dispatch = useDispatch<AppDispatch>()
     const { test, loading, candidate } = useSelector((state: RootState) => state.candidateTest )
 
-    console.log('token: ', token)
     useEffect(() => {
         if (token) {
             dispatch(getTestByToken({ token }))
@@ -66,7 +65,7 @@ const CandidateTestGateway: React.FC = () => {
         return <TestCandidateInstructions />
     }
     if(step === 'QUESTIONS'){
-        return <p>questions</p>
+        return <TestQuestions />
     }
     if(step === 'SUBMITTED') {
         return <p>submitted</p>

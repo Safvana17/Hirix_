@@ -54,6 +54,29 @@ TestCandidateResponse,
     }
 })
 
+export const startTest = createAsyncThunk<
+TestCandidateResponse,
+{token: string},
+{rejectValue: string}
+>('candidate/startTest', async({token}, {rejectWithValue}) => {
+    try {
+        console.log('from start test slice')
+
+         const url = API_ROUTES.CANDIDATE.TEST.START(token)
+
+    console.log('START TEST URL:', url)
+        const response = await api.patch(API_ROUTES.CANDIDATE.TEST.START(token))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log('response start', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to start test')
+    }
+})
+
 const candidateTestSlice = createSlice({
     name: 'CandidateTestSlice',
     initialState,
@@ -81,6 +104,18 @@ const candidateTestSlice = createSlice({
             state.test = action.payload.test
         })
         .addCase(testCandidateLogin.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to login'
+        })
+        .addCase(startTest.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(startTest.fulfilled, (state, action) => {
+            state.loading = false
+            state.candidate = action.payload.candidate
+            state.test = action.payload.test
+        })
+        .addCase(startTest.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to login'
         })

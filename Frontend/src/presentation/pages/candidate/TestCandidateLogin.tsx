@@ -42,8 +42,6 @@ const TestCandidateLogin: React.FC = () => {
             return
         }
 
-        console.log('candidate login data:', formData)
-
        try {
          if(token){
             await dispatch(testCandidateLogin({data: formData, token: token})).unwrap()

@@ -7,20 +7,23 @@ import {
     Typography,
 } from '@mui/material'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import type { RootState } from '../../../redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
+import { startTest } from '../../../redux/slices/features/test/CandidateTestSlice'
+import { useNavigate, useParams } from 'react-router-dom'
+import { ROUTES } from '../../../constants/routes'
 
 const TestCandidateInstructions: React.FC = () => {
     const [accepted, setAccepted] = useState(false)
-
     const { test } = useSelector((state: RootState) => state.candidateTest)
+    const dispatch = useDispatch<AppDispatch>()
+    const { token } = useParams()
+    const navigate = useNavigate()
 
     if (!test?.rules) {
         return <div>Loading instructions...</div>
     }
-    console.log('rules: ', test.rules)
-
     const { timing, navigation, proctoring, behavior, autoSave } = test.rules
 
     const timingRules = [
@@ -47,7 +50,7 @@ const TestCandidateInstructions: React.FC = () => {
         navigation.autoSubmitOnTabViolation &&
             'The test will be automatically submitted if tab switch violations exceed the allowed limit.',
 
-        navigation.shuffleQuestion &&
+        navigation.shuffleQuestions &&
             'Questions will be shown in random order.',
 
         navigation.shuffleOptions &&
@@ -58,38 +61,38 @@ const TestCandidateInstructions: React.FC = () => {
             : 'You cannot go back to previous questions after moving forward.',
     ].filter(Boolean) as string[]
 
-const proctoringRules = [
-    proctoring.enableCamera &&
-        'Your camera must remain enabled throughout the assessment.',
+    const proctoringRules = [
+        proctoring.enableCamera &&
+            'Your camera must remain enabled throughout the assessment.',
 
-    proctoring.enableCamera &&
-        'Ensure your face is clearly visible during the entire test.',
+        proctoring.enableCamera &&
+            'Ensure your face is clearly visible during the entire test.',
 
-    proctoring.captureSnapshots &&
-        proctoring.snapshotIntervalSeconds > 0 &&
-        `Snapshots may be captured every ${proctoring.snapshotIntervalSeconds} seconds for monitoring purposes.`,
+        proctoring.captureSnapshots &&
+            proctoring.snapshotIntervalSeconds > 0 &&
+            `Snapshots may be captured every ${proctoring.snapshotIntervalSeconds} seconds for monitoring purposes.`,
 
-    proctoring.detectNoFace &&
-        'Warnings may be triggered if your face is not detected by the camera.',
+        proctoring.detectNoFace &&
+            'Warnings may be triggered if your face is not detected by the camera.',
 
-    proctoring.detectMultipleFaces &&
-        'Multiple face detection may trigger warnings or disqualification.',
+        proctoring.detectMultipleFaces &&
+            'Multiple face detection may trigger warnings or disqualification.',
 
-    proctoring.detectMultipleFaces &&
-        'No other person should appear in front of the camera during the assessment.',
+        proctoring.detectMultipleFaces &&
+            'No other person should appear in front of the camera during the assessment.',
 
-    proctoring.maxWarningsAllowed > 0 &&
-        `Maximum warnings allowed: ${proctoring.maxWarningsAllowed}.`,
+        proctoring.maxWarningsAllowed > 0 &&
+            `Maximum warnings allowed: ${proctoring.maxWarningsAllowed}.`,
 
-    proctoring.autoSubmitOnMaxWarnings &&
-        'The assessment may be automatically submitted after exceeding the maximum warning limit.',
+        proctoring.autoSubmitOnMaxWarnings &&
+            'The assessment may be automatically submitted after exceeding the maximum warning limit.',
 
-    proctoring.enableCamera &&
-        'Avoid poor lighting or covering your camera during the assessment.',
+        proctoring.enableCamera &&
+            'Avoid poor lighting or covering your camera during the assessment.',
 
-    proctoring.enableCamera &&
-        'Suspicious activities may be logged and reviewed by the administrator.',
-].filter(Boolean) as string[]
+        proctoring.enableCamera &&
+            'Suspicious activities may be logged and reviewed by the administrator.',
+    ].filter(Boolean) as string[]
 
     const behaviorRules = [
         behavior.enforceFullScreen &&
@@ -120,14 +123,18 @@ const proctoringRules = [
             'Your answer will be saved whenever you answer a question.',
     ].filter(Boolean) as string[]
 
-    const handleStartTest = () => {
+    const handleStartTest = async() => {
         if (!accepted) {
             toast.error('Please mark that you accepted the rules')
         }
-
-        // TODO: call start test API here
-        // dispatch(startCandidateTest(...))
-        // navigate to test attending page
+        try {
+            if(token){
+              await dispatch(startTest({token})).unwrap()
+              navigate(ROUTES.CANDIDATE.TEST_QUESTIONS)
+            }
+        } catch (error) {
+            toast.error(typeof error === 'string' ? error : 'Failed to start test')
+        }
     }
 
     return (

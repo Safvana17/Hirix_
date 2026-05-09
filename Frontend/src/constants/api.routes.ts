@@ -22,6 +22,8 @@ export const API_ROUTES = {
         `/candidate/test/${token}` ,
       TEST_LOGIN: (token: string) =>
         `/candidate/test/${token}/login`, 
+      START: (token: string) =>
+        `/candidate/test/${token}/start`
     }
   },
 
