@@ -90,7 +90,8 @@ export const ROUTES = {
         },
         TEST: {
             GET_BY_TOKEN: '/test/:token',
-            TEST_LOGIN: '/test/:token/login'
+            TEST_LOGIN: '/test/:token/login',
+            START: '/test/:token/start'
         }
     },
 

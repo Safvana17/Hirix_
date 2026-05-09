@@ -19,7 +19,7 @@ export class SendTrialEndReminderUsecase implements ISendTrialEndReminderUsecase
     async execute(): Promise<void> {
         const now = new Date()
         const OneDayLater = new Date()
-        OneDayLater.setDate(now.getDate() + 3)
+        OneDayLater.setDate(now.getDate() + 1)
         const expiringSoon = await this._subscriptionRepository.findTrialEndSoon(OneDayLater)
         if(!expiringSoon?.length) return
 

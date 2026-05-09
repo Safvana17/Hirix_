@@ -6,11 +6,13 @@ import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
 import { ICandidateTestLoginUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.testLogin.usecase";
+import { ICandidateStartTestUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.startTest.usecase";
 
 export class CandidatetestController {
     constructor (
         private _getTestByToken: ICandidateGetTestByTokenUsecase,
         private _candidateLogin: ICandidateTestLoginUsecase,
+        private _startTest: ICandidateStartTestUsecase,
     ) {}
 
     getTestByToken = asyncHandler(async(req: Request, res: Response) => {
@@ -24,5 +26,12 @@ export class CandidatetestController {
         const { token } = req.validatedParams as TestTokenParams
         const {test, candidate} = await this._candidateLogin.execute({token, ...req.body})
         return sendSuccess(res, statusCode.OK, '', {test, candidate})
+    })
+
+    startTest = asyncHandler(async(req: Request, res: Response) => {
+        const {token} = req.validatedParams as TestTokenParams
+        logger.info(token)
+        const  {test, candidate} = await this._startTest.execute({token})
+        return sendSuccess(res, statusCode.OK, '', { test, candidate })
     })
 }

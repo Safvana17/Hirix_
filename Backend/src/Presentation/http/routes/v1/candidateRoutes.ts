@@ -32,4 +32,9 @@ router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iU
 //test
 router.get(ROUTES.CANDIDATE.TEST.GET_BY_TOKEN, validate(TestTokenSchema, 'params'), ICandidateTestController.getTestByToken)
 router.post(ROUTES.CANDIDATE.TEST.TEST_LOGIN, validate(TestTokenSchema, 'params'), validate(TestCandidateLoginSchema, 'body'), ICandidateTestController.candidateLogin)
+router.patch(ROUTES.CANDIDATE.TEST.START, validate(TestTokenSchema, 'params'), ICandidateTestController.startTest)
+
+
+
+
 export default router

@@ -34,6 +34,7 @@ export class MarkSubscriptionExpired implements IMarkExpiredUsecase{
                 endDate: null,
                 status: subscriptionStatus.ACTIVE,
                 isCurrent: true,
+                isTrial: false
             })
         }
     }
