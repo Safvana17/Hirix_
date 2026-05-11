@@ -49,7 +49,9 @@ export class TestCandidateMapper {
             selectionStatus: entity.selectionStatus,
             warningCount: entity.warningCount,
             candidateAnswers: entity.candidateAnswers.map((answer) => ({
-                _id: new Types.ObjectId(answer.id),
+                _id: Types.ObjectId.isValid(answer.id)
+                   ? new Types.ObjectId(answer.id)
+                   : new Types.ObjectId(),
                 testQuestionId: new Types.ObjectId(answer.testQuestionId),
                 questionType: answer.questionType,
                 timeTakenInSeconds: answer.timeTakenInSeconds,

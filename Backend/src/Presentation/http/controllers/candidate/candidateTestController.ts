@@ -8,6 +8,7 @@ import { logger } from "../../../../utils/logging/loger";
 import { ICandidateTestLoginUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.testLogin.usecase";
 import { ICandidateStartTestUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.startTest.usecase";
 import { ICandidateRunCodeUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.runCode.usecase";
+import { ICandidateSubmitTestUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.submitTest.usecase";
 
 export class CandidatetestController {
     constructor (
@@ -15,6 +16,7 @@ export class CandidatetestController {
         private _candidateLogin: ICandidateTestLoginUsecase,
         private _startTest: ICandidateStartTestUsecase,
         private _runCode: ICandidateRunCodeUsecase,
+        private _submitTest: ICandidateSubmitTestUsecase,
     ) {}
 
     getTestByToken = asyncHandler(async(req: Request, res: Response) => {
@@ -41,5 +43,11 @@ export class CandidatetestController {
         const { token } = req.validatedParams as TestTokenParams
         const {stdout, stderr, error, exitCode } = await this._runCode.execute({token, ...req.body})
         return sendSuccess(res, statusCode.OK, '', {stdout, stderr, error, exitCode})
+    })
+
+    submittest = asyncHandler(async(req: Request, res: Response) => {
+        const { token } = req.validatedParams as TestTokenParams
+        await this._submitTest.execute({token, ...req.body})
+        return sendSuccess(res, statusCode.OK, '')
     })
 }

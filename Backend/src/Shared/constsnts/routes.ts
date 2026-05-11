@@ -93,6 +93,7 @@ export const ROUTES = {
             TEST_LOGIN: '/test/:token/login',
             START: '/test/:token/start',
             RUN_CODE: '/test/:token/run',
+            SUBMIT: '/test/:token/submit',
         }
     },
 

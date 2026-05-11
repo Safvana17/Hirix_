@@ -185,3 +185,22 @@ export const CandidateRunCodeSchema = z.object({
     sourceCode: z.string().min(1, 'Source code is required'),
     input: z.string().optional(),
 })
+
+export const codingAnswerSchema = z.object({
+    language: z.string().min(1, "Language is required"),
+    code: z.string().min(1, "Code is required"),
+    output: z.string().optional()
+});
+
+export const candidateAnswerSchema = z.object({
+    testQuestionId: z.string({message: "Question id is required"}),
+    questionType: z.nativeEnum(QuestionType),
+    timeTakenInSeconds: z.number().min(0, "Time taken cannot be negative"),
+    selectedOptionIds: z.array(z.string()).optional(),
+    descriptiveAnswer: z.string().optional(),
+    codingAnswer: codingAnswerSchema.optional(),
+})
+
+export const submitTestSchema = z.object({
+    answer: z.array(candidateAnswerSchema)
+})

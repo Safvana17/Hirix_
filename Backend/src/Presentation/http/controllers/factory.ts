@@ -165,6 +165,7 @@ import CandidateEntity from "../../../Domain/entities/candidate.entity";
 import CompanyEntity from "../../../Domain/entities/company.entity";
 import { MarkSubscriptionExpired } from "../../../Application/common/usecases/markExpired.usecase";
 import { SendTrialEndReminderUsecase } from "../../../Application/common/usecases/sendTrialEndReminder.usecase";
+import { CandidateSubmitTestUsecase } from "../../../Application/candidate/useCases/test/candidate.submittest.usecase";
 
 
 
@@ -353,6 +354,10 @@ const iCandidateStartTest = new CandidateStartTestUsecase (
 const iCandidateRunCode = new CandidateRunCodeUsecase (
     iTestCandidateRepository,
     iCodeRunnerService
+)
+const iCandidateSubmitTest = new CandidateSubmitTestUsecase (
+    iTestCandidateRepository,
+    iTestRepository
 )
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -943,5 +948,6 @@ export const ICandidateTestController = new CandidatetestController(
     iCandidateGetTestByToken,
     iCandidateTestLogin,
     iCandidateStartTest,
-    iCandidateRunCode
+    iCandidateRunCode,
+    iCandidateSubmitTest,
 )
