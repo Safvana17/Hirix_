@@ -61,6 +61,7 @@ export const ROUTES = {
         RESHEDULE: '/test/:testId/reshedule',
         DELETE: '/test/:testId',
         GET_QUESTIONS: '/test/questions',
+        EVALUATE: '/test/:testId/evaluate',
       }
     },
 

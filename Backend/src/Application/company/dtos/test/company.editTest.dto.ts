@@ -12,7 +12,7 @@ export interface EditTestQuestionInputDTO {
     questionId?: string
     description?: string
     options?: string[]
-    answer?: string
+    answer?: string[]
     testCase?: TestCase[]
 }
 

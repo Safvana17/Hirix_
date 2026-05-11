@@ -3,7 +3,10 @@ import { QuestionSource, TestStatus } from "../../../Domain/enums/Test";
 import { TestRules } from "../../../Domain/valueObjects/test.rules";
 import QuestionType from "../../../Domain/enums/questionType";
 
-
+export interface ITestCase{
+    input?: string
+    expectedOutput: string
+}
 export interface ITestQuestion{
     _id: Types.ObjectId
     source: QuestionSource
@@ -13,9 +16,9 @@ export interface ITestQuestion{
     mark: number
     questionId?: Types.ObjectId
     description?: string
-    testCase?: string[]
+    testCase?: ITestCase[]
     options?: string[]
-    answer?: string
+    answer?: string[]
 }
 
 export interface ITest extends Document {
@@ -194,6 +197,18 @@ const TestRulesSchema = new Schema({
     _id: false 
 })
 
+const TestCaseSchema = new Schema({
+    input: {
+        type: String,
+        required: true
+    },
+    expectedOutput: {
+        type: String,
+        reuired: true
+    }
+}, {
+    _id: false
+})
 const TestQuestionSchema: Schema<ITestQuestion> = new Schema({
     source: {
         type: String,
@@ -221,13 +236,15 @@ const TestQuestionSchema: Schema<ITestQuestion> = new Schema({
         type: String
     },
     testCase: {
-        type: [String]
+        type: [TestCaseSchema],
+        default: []
     },
     options: {
         type: [String]
     },
     answer: {
-        type: String
+        type: [String],
+        default: []
     }
 }, {
     _id: true

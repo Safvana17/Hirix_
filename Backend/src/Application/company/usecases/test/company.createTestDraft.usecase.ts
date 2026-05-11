@@ -141,6 +141,7 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
             )
         })
 
+        const totalMarks = questions.reduce((acc, curr) => acc + curr.mark, 0)
         const test = new TestEntity(
             '',
             request.name,
@@ -166,6 +167,8 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
                     CandidateTestStatus.DRAFT,
                     0,
                     [],
+                    totalMarks,
+                    test.questions.length
                 )
                 return this._testCandidateRepository.create(testCandidate)
             })

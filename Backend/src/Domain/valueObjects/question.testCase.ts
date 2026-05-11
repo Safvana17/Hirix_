@@ -1,6 +1,6 @@
 export interface TestCase {
-    input: string;
+    input?: string;
     expectedOutput: string;
-    explanantion?: string;
-    isHidden?: boolean
+    // explanantion?: string;
+    // isHidden?: boolean
 }

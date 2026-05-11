@@ -25,5 +25,6 @@ export const TestMessages = {
         UNSUPPORTED_LANGUAGE: 'Unsupported language',
         SUBMIT_TEST_NOT_ALLOWED: 'You cannot submit your test',
         NOT_PUBLISHED_TEST: 'You can only submit published test',
+        AI_EVALUATION_FAILED: 'Ai evaluation failed: empty response'
     }
 }

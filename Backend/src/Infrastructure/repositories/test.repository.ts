@@ -21,14 +21,14 @@ export class TestRepository extends BaseRepository<TestEntity, ITest> implements
         const document = await this._model.findOne({
             name, 
             companyId,
-            testStatus: 'ACTIVE'
+            testStatus: TestStatus.PUBLISHED
         })
         if(!document) return null
         return this.mapToEntity(document)
     }
 
     async findByJobroleId(jobRoleId: string, companyId: string): Promise<TestEntity | null> {
-        const document = await this._model.findOne({jobRoleId, companyId, testStatus: 'PUBLISHED'})
+        const document = await this._model.findOne({jobRoleId, companyId, testStatus: TestStatus.PUBLISHED})
         if(!document) return null
         return this.mapToEntity(document)
     }
@@ -83,7 +83,7 @@ export class TestRepository extends BaseRepository<TestEntity, ITest> implements
                 $lt: endOfMonth
             },
             testStatus: {
-                $nin: ['DELETED', 'CANCELLED']
+                $nin: [TestStatus.DELETED, TestStatus.CANCELLED]
             }
         })
     }

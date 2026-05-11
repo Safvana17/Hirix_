@@ -11,7 +11,7 @@ export interface CreateTestQuestionInputDTO {
     questionId?: string
     description?: string
     options?: string[]
-    answer?: string
+    answer?: string[]
     testCase?: TestCase[]
 }
 

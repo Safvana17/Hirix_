@@ -1,5 +1,6 @@
 import { CompanyMapper } from "../../Application/Mappers/mapper.company";
 import CompanyEntity from "../../Domain/entities/company.entity";
+import { UserStatus } from "../../Domain/enums/userStatus.enum";
 import ICompanyRepository from "../../Domain/repositoryInterface/iCompany.repository";
 import { companyModel, ICompany } from "../database/Model/company";
 import { BaseRepository } from "./base.repository";
@@ -54,17 +55,17 @@ export class CompanyRepository extends BaseRepository<CompanyEntity, ICompany> i
             }
 
             else if (query.status === "active") {
-            filter.status = "active"
+            filter.status = UserStatus.ACTIVE
             filter.isBlocked = false
             }
 
             else if (query.status === "pending") {
-            filter.status = "pending"
+            filter.status = UserStatus.PENDING
             filter.isBlocked = false
             }
 
             else if (query.status === "rejected") {
-            filter.status = "rejected"
+            filter.status = UserStatus.REJECTED
             }
         }
 

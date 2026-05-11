@@ -33,7 +33,7 @@ export class AdminCreateQuestionUsecase implements IAdminCreateQuestionUsecase {
         }
 
         if(request.type === QuestionType.MCQ){
-            if(request.answer === undefined || request.answer === null ){
+            if(!request.answer || request.answer.length === 0 ){
                 throw new AppError(questionMessages.error.ANSWER_REQUIRED, statusCode.BAD_REQUEST)
             }
             if(!request.options || request.options.length < 2){
@@ -49,8 +49,16 @@ export class AdminCreateQuestionUsecase implements IAdminCreateQuestionUsecase {
             if(uniqueOptions.size !== options.length){
                 throw new AppError(questionMessages.error.DUPLICATE_OPTION, statusCode.BAD_REQUEST)
             }
+            const answers = request.answer.map(ans => ans.trim())
+            if(answers.length === 0){
+                throw new AppError(questionMessages.error.ANSWER_REQUIRED, statusCode.BAD_REQUEST)
+            }
+            if(answers.some(ans => ans === "")){
+                throw new AppError(questionMessages.error.ANSWER_REQUIRED, statusCode.BAD_REQUEST)
+            }
+            const invalidAnswers = answers.filter(ans => !options.includes(ans))
 
-            if(!request.options.includes(request.answer)){
+            if(invalidAnswers.length > 0){
                 throw new AppError(questionMessages.error.INCORRECT_ANSWER, statusCode.BAD_REQUEST)
             }
         }

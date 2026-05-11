@@ -14,6 +14,12 @@ export enum QuestionSource {
     TEST_ONLY = 'TEST_ONLY'
 }
 
+export enum ValuationStatus {
+    NOT_EVALUATED = "NOT_EVALUATED",
+    EVALUATED = "EVALUATED",
+    FAILED = "FAILED"
+}
+
 export enum CandidateTestStatus {
    DRAFT = 'DRAFT',
    VERIFIED = 'VERIFIED',
@@ -22,13 +28,16 @@ export enum CandidateTestStatus {
    SUBMITTED = 'SUBMITTED',
    EXPIRED = 'EXPIRED',
    DISQUALIFIED = 'DISQUALIFIED',
-   REMOVED = 'REMOVED'
+   REMOVED = 'REMOVED',
+   SHORTLISTED = 'SHORTLISTED',
+   REJECTED = 'REJECTED'
 }
 
 export enum CandidateSelectionStatus {
-    PENDING = 'PENDING',
-    SHORTLISTED = 'SHORTLISTED',
-    REJECTED = 'REJECTED'
+    NOT_EVALUATED = 'NOT_EVALUATED',
+    EVALUATING = 'EVALUATING',
+    EVALUATED = 'EVALUATED',
+    FAILED = 'FAILED'
 }
 
 export enum CodingLanguage {

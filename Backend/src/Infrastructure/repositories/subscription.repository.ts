@@ -1,5 +1,6 @@
 import { SubscriptionMapper } from "../../Application/Mappers/mapper.subscription";
 import { SubscriptionEntity } from "../../Domain/entities/Subscription.entity";
+import { subscriptionStatus } from "../../Domain/enums/subscription";
 import { ISubscriptionRepository } from "../../Domain/repositoryInterface/iSubscription.repository";
 import { logger } from "../../utils/logging/loger";
 import { ISubscription, SubscriptionModel } from "../database/Model/Subscription";
@@ -26,7 +27,7 @@ export class SubscriptionRepository extends BaseRepository<SubscriptionEntity, I
                 $gte: new Date(expiringDate.setHours(0, 0, 0)),
                 $lte: new Date(expiringDate.setHours(23, 59, 59))
             },
-            status: 'active',
+            status: subscriptionStatus.ACTIVE,
             isTrial: false
         })
 
@@ -40,7 +41,7 @@ export class SubscriptionRepository extends BaseRepository<SubscriptionEntity, I
             endDate: {
                 $lte: now
             },
-            status: 'active'
+            status: subscriptionStatus.ACTIVE
         })
 
         if(!documents) return null
@@ -64,7 +65,7 @@ export class SubscriptionRepository extends BaseRepository<SubscriptionEntity, I
                 $gt: expiringDate.setHours(0, 0, 0),
                 $lt: expiringDate.setHours(23, 59, 59)
             },
-            status: 'active',
+            status: subscriptionStatus.ACTIVE,
             isTrial: true
         })
         if(!documents) return null

@@ -53,13 +53,10 @@ export class TestMapper {
                q.description,
                q.options,
                q.answer,
-               q.testCase?.map(tc => {
-                try {
-                    return JSON.parse(tc)
-                } catch {
-                    return tc
-                }
-            }),
+               q.testCase?.map(tc => ({
+                input: tc.input,
+                expectedOutput: tc.expectedOutput
+               })),
             )
         )
         const test = new TestEntity(
@@ -136,9 +133,10 @@ export class TestMapper {
                 description: q.description,
                 options: q.options,
                 answer: q.answer,
-                testCase: q.testCase?.map(tc => 
-                  JSON.stringify(tc)
-                ),
+                testCase: q.testCase?.map(tc => ({
+                    input: tc.input,
+                    expectedOutput: tc.expectedOutput
+                })),
             }))
         }
     }

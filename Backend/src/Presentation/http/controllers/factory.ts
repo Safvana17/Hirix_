@@ -166,6 +166,8 @@ import CompanyEntity from "../../../Domain/entities/company.entity";
 import { MarkSubscriptionExpired } from "../../../Application/common/usecases/markExpired.usecase";
 import { SendTrialEndReminderUsecase } from "../../../Application/common/usecases/sendTrialEndReminder.usecase";
 import { CandidateSubmitTestUsecase } from "../../../Application/candidate/useCases/test/candidate.submittest.usecase";
+import { CompanyEvaluateTestUsecase } from "../../../Application/company/usecases/test/company.evaluateTest.usecase";
+import { AiEvaluationService } from "../../../Infrastructure/services/AiEvaluation.service";
 
 
 
@@ -198,6 +200,7 @@ const iPdfService = new PdfService()
 const iTemplateRenderService = new RenderTemplateService()
 const iTextFormatService = new TextFormatService()
 const iCodeRunnerService = new DockerCodeRunnerService()
+const iEvaluateService = new AiEvaluationService()
 
 //notification
 const iProcessNotification = new AdminProcessNotificationEventUsecase(
@@ -620,6 +623,13 @@ const iCompanyEditTest = new CompanyEditTestUsecase(
     iJobRoleRepository,
     iProcessNotification
 )
+const iCompanyEvaluateTest = new CompanyEvaluateTestUsecase(
+    iCompanyRepository,
+    iTestRepository,
+    iTestCandidateRepository,
+    iEvaluateService,
+    iCodeRunnerService
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -941,7 +951,8 @@ export const iCompanyTestController = new CompanyTestController (
     iCompanyCancelTest,
     iCompanyResheduleTest,
     iCompanyGetTestById,
-    iCompanyEditTest
+    iCompanyEditTest,
+    iCompanyEvaluateTest
 )
 
 export const ICandidateTestController = new CandidatetestController(

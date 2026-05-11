@@ -1,7 +1,8 @@
 import QuestionType from "../enums/questionType"
+import { CodingLanguage, ValuationStatus } from "../enums/Test"
 
 export interface CodingAnswer {
-    language: string
+    language: CodingLanguage
     code: string
     output?: string
 }
@@ -17,6 +18,8 @@ export class CandidateAnswerEntity {
     isCorrect?: boolean
     marksObtained?: number
     totalMarks?: number
+    evaluationStatus?: ValuationStatus
+    aiFeedback?: string
 
     constructor (
         id: string,
@@ -28,7 +31,9 @@ export class CandidateAnswerEntity {
         codingAnswer?: CodingAnswer,
         isCorrect?: boolean,
         marksObtained?: number,
-        totalMarks?: number
+        totalMarks?: number,
+        evaluationStatus?: ValuationStatus,
+        aiFeedback?: string
     ) {
         this.id = id
         this.testQuestionId = testQuestionId
@@ -40,5 +45,7 @@ export class CandidateAnswerEntity {
         this.isCorrect = isCorrect
         this.marksObtained = marksObtained
         this.totalMarks = totalMarks
+        this.aiFeedback = aiFeedback
+        this.evaluationStatus = evaluationStatus
     }
 }

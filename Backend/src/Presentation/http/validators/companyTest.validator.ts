@@ -19,7 +19,7 @@ const CreateTestQuestionSchema = z
     questionId: z.string().optional(),
     description: z.string().optional(),
     options: z.array(z.string()).optional(),
-    answer: z.string().optional(),
+    answer: z.array(z.string()).optional(),
     testCase: z.array(TestCaseSchema).optional(),
   })
   .superRefine((q, ctx) => {
@@ -31,7 +31,7 @@ const CreateTestQuestionSchema = z
           path: ['options'],
         })
       }
-      if (!q.answer) {
+      if (!q.answer || q.answer.length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'MCQ must have an answer',

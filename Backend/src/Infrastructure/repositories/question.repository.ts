@@ -26,11 +26,11 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
         }
 
         if(query.role === userRole.Admin){
-            filter.createdBy = 'Admin'
+            filter.createdBy = userRole.Admin
         }
 
         if(query.role === userRole.Company){
-            filter.createdBy = 'Company'
+            filter.createdBy = userRole.Company
             filter.createdById = query.userId
         }
         if(query.search){
@@ -116,12 +116,12 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
 
         if(query.includeCompany){
             filter.$or = [
-                {createdBy: 'Admin'},
+                {createdBy: userRole.Company},
                 {createdById: query.companyId}
             ]
         }else{
             filter.$or = [
-                {createdBy: 'Admin'}
+                {createdBy: userRole.Admin}
             ]
         }
         if(query.category){

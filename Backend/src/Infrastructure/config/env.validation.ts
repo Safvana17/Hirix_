@@ -22,5 +22,7 @@ export const envSchema = z.object({
     BCRYPT_sALT_ROUNDS: z.coerce.number().int().min(8).max(15),
     FRONTEND_URL:z.string().min(1),
     RAZORPAY_API_KEY:z.string().min(1),
-    RAZORPAY_API_SECRET: z.string().min(1)
+    RAZORPAY_API_SECRET: z.string().min(1),
+    GROQ_API_KEY: z.string().min(1),
+    GROQ_MODEL: z.string().min(1)
 })

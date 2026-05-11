@@ -13,7 +13,7 @@ export interface AdminCreateQuestionInputDTO {
     isPremium: boolean;
     isPractice: boolean;
     // visibility: QuestionVisibility;
-    answer?: string;
+    answer?: string[];
     options?: string[];
     testCases?: TestCase[]
     user: {

@@ -1,10 +1,10 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
-import { CandidateSelectionStatus, CandidateTestStatus } from "../../../Domain/enums/Test";
+import { CandidateSelectionStatus, CandidateTestStatus, CodingLanguage, ValuationStatus } from "../../../Domain/enums/Test";
 import QuestionType from "../../../Domain/enums/questionType";
 
 
 export interface ICodingAnswer {
-    language: string
+    language: CodingLanguage
     code: string
     output?: string
 }
@@ -20,6 +20,8 @@ export interface ICandidateAnswer {
     isCorrect?: boolean
     marksObtained?: number
     totalMarks?: number
+    evaluationStatus?: ValuationStatus
+    aiFeedback?: string
 }
 
 export interface ITestCandidate extends Document {
@@ -39,6 +41,7 @@ export interface ITestCandidate extends Document {
     totalQuestionsCount: number
     startedAt: Date
     submittedAt: Date
+    evaluatedAt: Date
 }
 
 const CodingAnswerSchema: Schema<ICodingAnswer> = new Schema({
@@ -88,6 +91,17 @@ const CandidateAnswerSchema: Schema<ICandidateAnswer> = new Schema({
     marksObtained: {
         type: Number,
         default: 0
+    },
+    totalMarks: {
+        type: Number,
+        default: 0
+    },
+    evaluationStatus: {
+        type: String,
+        enum: Object.values(ValuationStatus)
+    },
+    aiFeedback: {
+        type: String
     }
 }, {
     timestamps: true
@@ -128,6 +142,30 @@ const TestCandidateSchema: Schema<ITestCandidate> = new Schema({
         type: Date
     },
     submittedAt: {
+        type: Date
+    },
+    selectionStatus: {
+        type: String,
+        enum: Object.values(CandidateSelectionStatus),
+        default: CandidateSelectionStatus.NOT_EVALUATED
+    },
+    totalMarks:{
+        type: Number,
+        default: 0
+    },
+    marksObtained: {
+        type: Number,
+        default: 0
+    },
+    correctAnswerCount: {
+        type: Number,
+        default: 0
+    },
+    totalQuestionsCount: {
+        type:Number,
+        default: 0
+    },
+    evaluatedAt: {
         type: Date
     }
 }, {

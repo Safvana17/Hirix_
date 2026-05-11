@@ -15,7 +15,10 @@ export class TestQuestionMapper {
             doc.description,
             doc.options,
             doc.answer,
-            doc.testCase
+            doc.testCase?.map(tc => ({
+                input: tc.input,
+                expectedOutput: tc.expectedOutput
+            }))
         )
 
         return testQuestion
@@ -32,7 +35,10 @@ export class TestQuestionMapper {
             description: entity.description,
             options: entity.options,
             answer: entity.answer,
-            testCase: entity.testCase
+            testCase: entity.testCase?.map((tc)=> ({
+                input: tc.input,
+                expectedOutput: tc.expectedOutput
+        }))
         }
     }
 }

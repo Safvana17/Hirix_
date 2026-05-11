@@ -11,7 +11,7 @@ export interface AdminEditQuestionInputDTO {
     categoryId: string;
     isPremium: boolean;
     isPractice: boolean;
-    answer?: string;
+    answer?: string[];
     options?: string[];
     testCases?: TestCase[]
 }

@@ -23,17 +23,20 @@ export class TestCandidateMapper {
                     answer.codingAnswer,
                     answer.isCorrect,
                     answer.marksObtained,
-                    answer.totalMarks
+                    answer.totalMarks,
+                    answer.evaluationStatus,
+                    answer.aiFeedback
                 )
             }),
-            doc.selectionStatus,
-            doc.aiRank,
             doc.totalMarks,
+            doc.totalQuestionsCount,
+            doc.aiRank,
             doc.marksObtained,
             doc.correctAnswerCount,
-            doc.totalQuestionsCount,
+            doc.selectionStatus,
             doc.startedAt,
-            doc.submittedAt
+            doc.submittedAt,
+            doc.evaluatedAt
         )
         testCandidate.name = doc.name
 
@@ -60,7 +63,9 @@ export class TestCandidateMapper {
                 codingAnswer: answer.codingAnswer,
                 isCorrect: answer.isCorrect,
                 marksObtained: answer.marksObtained,
-                totalMarks: answer.totalMarks
+                totalMarks: answer.totalMarks,
+                evaluationStatus: answer.evaluationStatus,
+                aiFeedback: answer.aiFeedback
             })),
             aiRank: entity.aiRank,
             totalMarks: entity.totalMarks,
@@ -69,7 +74,8 @@ export class TestCandidateMapper {
             totalQuestionsCount: entity.totalQuestionsCount,
             name: entity.name,
             startedAt: entity.startedAt,
-            submittedAt: entity.submittedAt
+            submittedAt: entity.submittedAt,
+            evaluatedAt: entity.evaluatedAt
 
         }
     }

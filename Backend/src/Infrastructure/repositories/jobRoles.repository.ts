@@ -4,6 +4,7 @@ import { JobRolesEntity } from "../../Domain/entities/JobRoles.entity";
 import { IJobRepository } from "../../Domain/repositoryInterface/iJobRoles.repository";
 import { IJobRoles, JobRolesModel } from "../database/Model/JobRoles";
 import { BaseRepository } from "./base.repository";
+import jobRoleStatus from "../../Domain/enums/jobRoleStatus";
 
 export class JobRolesRepository extends BaseRepository<JobRolesEntity, IJobRoles> implements IJobRepository {
     constructor(){
@@ -40,15 +41,15 @@ export class JobRolesRepository extends BaseRepository<JobRolesEntity, IJobRoles
         }
         if (query.status) {
             if (query.status === "Active") {
-            filter.status = "Active"
+            filter.status = jobRoleStatus.Active
             }
 
             else if (query.status === "Closed") {
-            filter.status = "Closed"
+            filter.status = jobRoleStatus.Closed
             }
 
             else if (query.status === "Deleted") {
-            filter.status = "Deleted"
+            filter.status = jobRoleStatus.Deleted
             }
         }
 

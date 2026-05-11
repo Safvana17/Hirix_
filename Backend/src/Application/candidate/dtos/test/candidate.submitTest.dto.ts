@@ -1,4 +1,5 @@
 import QuestionType from "../../../../Domain/enums/questionType"
+import { CodingLanguage } from "../../../../Domain/enums/Test"
 
 export interface CandidateSubmitAnswerDTO {
     testQuestionId: string
@@ -7,7 +8,7 @@ export interface CandidateSubmitAnswerDTO {
     selectedOptionIds?: string[]
     descriptiveAnswer?: string
     codingAnswer?: {
-        language: string
+        language: CodingLanguage
         code: string
         output?: string
     }

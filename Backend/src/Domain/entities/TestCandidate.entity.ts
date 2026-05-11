@@ -11,13 +11,14 @@ export class TestCandidateEntity {
     warningCount: number
     candidateAnswers: CandidateAnswerEntity[]
     selectionStatus?: CandidateSelectionStatus
-    aiRank?: number
     totalMarks?: number
+    totalQuestionsCount?: number
+    aiRank?: number
     marksObtained?: number
     correctAnswerCount?: number
-    totalQuestionsCount?: number
     startedAt?: Date
     submittedAt?: Date
+    evaluatedAt?: Date
 
     constructor(
         id: string,
@@ -27,14 +28,15 @@ export class TestCandidateEntity {
         candidateTestStatus: CandidateTestStatus,
         warningCount: number,
         candidateAnswers: CandidateAnswerEntity[],
-        selectionStatus?: CandidateSelectionStatus,
-        aiRank?: number,
         totalMarks?: number,
+        totalQuestionCount?: number,
+        aiRank?: number,
         marksObtained?: number,
         correctAnswerCount?: number,
-        totalQuestionCount?: number,
+        selectionStatus?: CandidateSelectionStatus,
         startedAt?: Date,
-        submittedAt?: Date
+        submittedAt?: Date,
+        evaluatedAt?: Date,
     ) {
         this.id = id
         this.testId = testId
@@ -51,5 +53,6 @@ export class TestCandidateEntity {
         this.correctAnswerCount = correctAnswerCount
         this.startedAt = startedAt
         this.submittedAt = submittedAt
+        this.evaluatedAt = evaluatedAt
     }
 }

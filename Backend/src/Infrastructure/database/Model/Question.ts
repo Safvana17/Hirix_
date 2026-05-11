@@ -19,7 +19,7 @@ export interface IQuestion extends Document {
     isPremium: boolean;
     isPractice: boolean;
     isDeleted: boolean;
-    answer: string;
+    answer: string[];
     createdAt: Date;
     updatedAt: Date
 }
@@ -76,7 +76,8 @@ const QuestionSchema: Schema<IQuestion> = new Schema({
         default: false
     },
     answer: {
-        type: String
+        type: [String],
+        default: []
     }
 },{
     timestamps: true

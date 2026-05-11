@@ -12,7 +12,7 @@ export class TestQuestionEntity {
     questionId?: string
     description?: string
     options?: string[]
-    answer?: string
+    answer?: string[]
     testCase?: TestCase[]
 
     constructor(
@@ -25,7 +25,7 @@ export class TestQuestionEntity {
         questionId?: string,
         description?: string,
         options?: string[],
-        answer?: string,
+        answer?: string[],
         testCase?: TestCase[]
     ) {
         this.id = id
