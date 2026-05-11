@@ -10,6 +10,12 @@ import type { CandidateTest, TestCandidate } from '../../../types/test'
 import QuestionRenderer from '../../components/candidate/test/QuestionRender'
 import { useTestRunTime } from '../../../hooks/useTestRunTime'
 import TestWarningBanner from '../../components/candidate/test/TestWarningBanner'
+import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import type { AppDispatch } from '../../../redux/store'
+import { submitTest } from '../../../redux/slices/features/test/CandidateTestSlice'
+import { useNavigate, useParams } from 'react-router-dom'
+import { ROUTES } from '../../../constants/routes'
 // import { useFullScreenMonitor } from '../../../hooks/useFullScreenMonitor'
 
 
@@ -19,20 +25,29 @@ interface TestQuestionsProps {
 }
  
 const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
+    const { token } = useParams()
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
     const questions = test?.questions ?? []
     const currentQuestion = questions[currentQuestionIndex]
     const [warningMessage, setWarningMessage] = useState<string | null>(null)
+    const dispatch = useDispatch<AppDispatch>()
+    const navigate = useNavigate()
 
     const runTime = useTestRunTime({
       test,
       rules: test.rules,
       candidate: candidate!,
-      onSaveAnswers: async (answers) => {
-        console.log('save answers', answers)
+      onSaveAnswers: async () => {
+        console.log('saved answers')
       },
       onSubmitTest: async (answers) => {
-        console.log('submit test', answers)
+        try {
+          if(!token) return
+          await dispatch(submitTest({token, answer: Object.values(answers)})).unwrap()
+          navigate(ROUTES.CANDIDATE.TEST_SUBMIT)
+        } catch (error) {
+          toast.error(typeof error === 'string' ? error : 'Failed to submit test')
+        }
       },
       onTerminateTest: async (reason, answers) => {
         console.log('terminated', reason, answers)

@@ -31,7 +31,8 @@ import EditTestPage from '../presentation/pages/company/EditTestPage'
 import CandidateTestGateway from '../presentation/pages/candidate/CandidateTestGateWay'
 import TestCandidateLogin from '../presentation/pages/candidate/TestCandidateLogin'
 import TestCandidateInstructions from '../presentation/pages/candidate/TestCandidateInstructions'
-import TestQuestions from '../presentation/pages/candidate/TestQuestions'
+// import TestQuestions from '../presentation/pages/candidate/TestQuestions'
+import TestSubmittedPage from '../presentation/components/candidate/test/TestSubmittedPage'
 
 
 
@@ -188,8 +189,11 @@ const App = () => {
             <TestCandidateInstructions />
           } />
 
-          <Route path={ROUTES.CANDIDATE.TEST_QUESTIONS} element={
+          {/* <Route path={ROUTES.CANDIDATE.TEST_QUESTIONS} element={
             <TestQuestions />
+          } /> */}
+          <Route path={ROUTES.CANDIDATE.TEST_SUBMIT} element={
+            <TestSubmittedPage />
           } />
           
           <Route path={ROUTES.ADMIN.LOGIN} element={<PublicRoute><AdminLogin /></PublicRoute>} />

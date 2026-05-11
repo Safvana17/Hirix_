@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { CandidateTest, CodeRunnerArgs, CodeRunnerResponse, TestCandidate, TestCandidateResponse } from "../../../../types/test"
+import type { CandidateTest, CodeRunnerArgs, CodeRunnerResponse, TestCandidate, TestCandidateAnswer, TestCandidateResponse } from "../../../../types/test"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -62,16 +62,10 @@ TestCandidateResponse,
 {rejectValue: string}
 >('candidate/startTest', async({token}, {rejectWithValue}) => {
     try {
-        console.log('from start test slice')
-
-         const url = API_ROUTES.CANDIDATE.TEST.START(token)
-
-    console.log('START TEST URL:', url)
         const response = await api.patch(API_ROUTES.CANDIDATE.TEST.START(token))
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('response start', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -94,6 +88,23 @@ CodeRunnerResponse,
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to run code')
+    }
+})
+
+export const submitTest = createAsyncThunk<
+void,
+{token: string, answer: TestCandidateAnswer[]},
+{rejectValue: string}
+>('candidate/submitTest', async({token, answer}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.CANDIDATE.TEST.SUBMIT(token), {answer})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to submit test')
     }
 })
 
@@ -148,6 +159,16 @@ const candidateTestSlice = createSlice({
         .addCase(testRunCode.rejected, (state, action) => {
             state.codeRunning = false
             state.error = action.payload || 'Failed to login'
+        })
+        .addCase(submitTest.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(submitTest.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(submitTest.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to submit test'
         })
     }
 })

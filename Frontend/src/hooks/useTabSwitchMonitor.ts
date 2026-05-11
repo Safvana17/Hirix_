@@ -40,45 +40,72 @@
 //   return { tabSwitchCount };
 // }
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useTabSwitchMonitor({
-    allowTabSwitch,
-    onViolation,
+  allowTabSwitch,
+  onViolation,
 }: {
-    allowTabSwitch: boolean;
-    onViolation: (count: number) => void;
+  allowTabSwitch: boolean;
+  onViolation: (count: number) => void;
 }) {
-    const [tabSwitchCount, setTabSwitchCount] = useState(0);
-    const countedWhileHiddenRef = useRef(false);
+  const [tabSwitchCount, setTabSwitchCount] = useState(0);
 
-    useEffect(() => {
-        if (allowTabSwitch) return;
+  const countRef = useRef(0);
+  const isAwayRef = useRef(false);
+  const onViolationRef = useRef(onViolation);
 
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === "hidden") {
-                if (countedWhileHiddenRef.current) return;
+  useEffect(() => {
+    onViolationRef.current = onViolation;
+  }, [onViolation]);
 
-                countedWhileHiddenRef.current = true;
+  const countViolation = useCallback(() => {
+    countRef.current += 1;
 
-                setTabSwitchCount((prev) => {
-                    const next = prev + 1;
-                    onViolation(next);
-                    return next;
-                });
-            }
+    const nextCount = countRef.current;
 
-            if (document.visibilityState === "visible") {
-                countedWhileHiddenRef.current = false;
-            }
-        };
+    console.log("[TAB] COUNTED ONCE:", nextCount);
 
-        document.addEventListener("visibilitychange", handleVisibilityChange);
+    setTabSwitchCount(nextCount);
+    onViolationRef.current(nextCount);
+  }, []);
 
-        return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-        };
-    }, [allowTabSwitch, onViolation]);
+  useEffect(() => {
+    if (allowTabSwitch) return;
 
-    return { tabSwitchCount };
+    const handleVisibilityChange = () => {
+      console.log("[TAB] event", {
+        visibilityState: document.visibilityState,
+        hidden: document.hidden,
+        isAway: isAwayRef.current,
+        currentCount: countRef.current,
+      });
+
+      if (document.visibilityState === "hidden") {
+        if (isAwayRef.current) {
+          console.log("[TAB] already away, skip");
+          return;
+        }
+
+        isAwayRef.current = true;
+        countViolation();
+      }
+
+      if (document.visibilityState === "visible") {
+        console.log("[TAB] returned to test tab, not counting");
+        isAwayRef.current = false;
+      }
+    };
+
+    console.log("[TAB] monitor attached");
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      console.log("[TAB] monitor removed");
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [allowTabSwitch, countViolation]);
+
+  return { tabSwitchCount };
 }

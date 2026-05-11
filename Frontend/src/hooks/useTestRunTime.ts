@@ -41,6 +41,7 @@ export function useTestRunTime ({
     const answerRef = useRef<RunTimeAnswers>(answers)
     const isSubmittingRef = useRef(false)
     const isTerminatingRef = useRef(false)
+    const warningCountRef = useRef(candidate.warningCount ?? 0);
     const currentQuestionStartTimeRef = useRef(Date.now())
     const currentQuestionIdRef = useRef<string | null>(null)
 
@@ -140,7 +141,7 @@ export function useTestRunTime ({
     const trackQuestionTime = useCallback((questionId: string) => {
         const now = Date.now()
         if(currentQuestionIdRef.current){
-            const spendSeconds = Math.floor(now - currentQuestionStartTimeRef.current) / 1000
+            const spendSeconds = Math.floor((now - currentQuestionStartTimeRef.current) / 1000)
             setAnswers((prev) => {
                 const existing = prev[currentQuestionIdRef.current!]
                 if(!existing) return prev
@@ -187,19 +188,52 @@ export function useTestRunTime ({
         }
     }, [onTerminateTest, saveAnswers])
 
-    const handleViolation = useCallback( async (type: ViolationType) => {
-        setWarningCount((prev) => {
-            const nextCount = prev + 1
-            onWarning?.({
-                type,
-                warningCount: nextCount
-            })
-            if(rules.warning.autoSubmitOnMaxWarnings && nextCount >= rules.warning.maxWarningCount) {
-                void handleTerminate(type)
-            }
-            return nextCount
-        })
-    }, [onWarning, handleTerminate, rules.warning.autoSubmitOnMaxWarnings, rules.warning.maxWarningCount])
+    // const handleViolation = useCallback( async (type: ViolationType) => {
+    //     setWarningCount((prev) => {
+    //         const nextCount = prev + 1
+    //         onWarning?.({
+    //             type,
+    //             warningCount: nextCount
+    //         })
+    //         if(rules.warning.autoSubmitOnMaxWarnings && nextCount >= rules.warning.maxWarningCount) {
+    //             void handleTerminate(type)
+    //         }
+    //         return nextCount
+    //     })
+    // }, [onWarning, handleTerminate, rules.warning.autoSubmitOnMaxWarnings, rules.warning.maxWarningCount])
+
+const handleViolation = useCallback(
+  async (type: ViolationType) => {
+    warningCountRef.current += 1;
+
+    const nextCount = warningCountRef.current;
+
+    console.log("[VIOLATION] counted", {
+      type,
+      nextCount,
+    });
+
+    setWarningCount(nextCount);
+
+    onWarning?.({
+      type,
+      warningCount: nextCount,
+    });
+
+    if (
+      rules.warning.autoSubmitOnMaxWarnings &&
+      nextCount > rules.warning.maxWarningCount
+    ) {
+      void handleTerminate(type);
+    }
+  },
+  [
+    onWarning,
+    handleTerminate,
+    rules.warning.autoSubmitOnMaxWarnings,
+    rules.warning.maxWarningCount,
+  ]
+);
 
     useEffect(() => {
         const interval = setInterval(() => {

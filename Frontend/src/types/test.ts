@@ -232,3 +232,7 @@ export interface CodeRunnerResponse {
     error: string | null
     exitCode: number | null
 }
+
+export interface SubmitTestPayload {
+  answers: TestCandidateAnswer[]
+}
