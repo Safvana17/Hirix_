@@ -1,3 +1,5 @@
+import QuestionType from "./questionType"
+
 export enum TestStatus {
     DRAFT = 'DRAFT',
     PUBLISHED = 'PUBLISHED',
@@ -33,3 +35,18 @@ export enum CodingLanguage {
     JAVASCRIPT = 'javascript',
     PYTHON = 'python'
 }
+
+export const QuestionMarks: Record<QuestionType, number> = {
+    [QuestionType.MCQ]: 2,
+    [QuestionType.CODING]: 5,
+    [QuestionType.DESCRIPTIVE]: 5,
+}
+
+export type ViolationType =
+    | 'TAB_SWITCH'
+    | 'FULLSCREEN_EXIT'
+    | 'COPY_PASTE'
+    | 'RIGHT_CLICK'
+    | 'KEYBOARD_SHORTCUT'
+    | 'NO_FACE'
+    | 'MULTIPLE_FACE'

@@ -1,7 +1,7 @@
 import { TestEntity } from "../../../../Domain/entities/Test.entity";
 import { TestCandidateEntity } from "../../../../Domain/entities/TestCandidate.entity";
 import { TestQuestionEntity } from "../../../../Domain/entities/TestQuestion.entity";
-import { CandidateTestStatus, TestStatus } from "../../../../Domain/enums/Test";
+import { CandidateTestStatus, QuestionMarks, TestStatus } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
@@ -9,7 +9,7 @@ import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
-import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules } from "../../../../Domain/valueObjects/test.rules";
+import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules, WarningRules } from "../../../../Domain/valueObjects/test.rules";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
@@ -92,14 +92,11 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
         
         const rules = new TestRules(
             new TimingRules(
-                request.rules.timing.durationInMinutes,
                 request.rules.timing.autoSubmitOnTimeEnd,
                 request.rules.timing.warningBeforeEndInMinutes
             ),
             new NavigationRules(
                 request.rules.navigation.allowTabSwitch,
-                request.rules.navigation.maxTabSwitchCount,
-                request.rules.navigation.autoSubmitOnTabViolation,
                 request.rules.navigation.shuffleQuestions,
                 request.rules.navigation.shuffleOptions,
                 request.rules.navigation.allowBackNavigation,
@@ -110,20 +107,21 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
                 request.rules.proctoring.snapshotIntervalSeconds ?? 60,
                 request.rules.proctoring.detectNoFace ?? false,
                 request.rules.proctoring.detectMultipleFaces ?? false,
-                request.rules.proctoring.maxWarningsAllowed ?? 3,
-                request.rules.proctoring.autoSubmitOnMaxWarnings ?? true
             ),
             new BehaviorRules(
                 request.rules.behavior.enforceFullScreen ?? true,
-                request.rules.behavior.autoSubmitOnFullScreenExit ?? true,
                 request.rules.behavior.allowCopyPaste ?? false,
                 request.rules.behavior.allowRightClick ?? false,
-                request.rules.behavior.allowKeyboardShortcuts ?? false
+                request.rules.behavior.allowKeyboardShortcuts ?? false,
             ),
             new AutoSaveRules(
                 request.rules.autoSave.enabled ?? true,
                 request.rules.autoSave.intervalInSeconds ?? 10,
                 request.rules.autoSave.saveOnEveryAnswer ??true
+            ),
+            new WarningRules(
+                request.rules.warning.maxWarningCount ?? 0,
+                request.rules.warning.autoSubmitOnMaxWarnings ?? true
             )
         )
 
@@ -134,7 +132,7 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
                 q.type,
                 q.title,
                 q.order ?? idx + 1,
-                q.mark,
+                QuestionMarks[q.type],
                 q.questionId,
                 q.description,
                 q.options,

@@ -160,6 +160,11 @@ import { CandidateTestLoginUsecase } from "../../../Application/candidate/useCas
 import { CandidateStartTestUsecase } from "../../../Application/candidate/useCases/test/candidate.startTest.usecase";
 import { CandidateRunCodeUsecase } from "../../../Application/candidate/useCases/test/candidate.runCode.usecase";
 import { DockerCodeRunnerService } from "../../../Infrastructure/services/DockerCodeRunner.service";
+import { SendExpireSubscriptionReminderUsecase } from "../../../Application/common/usecases/sendExpireReminder.usecase";
+import CandidateEntity from "../../../Domain/entities/candidate.entity";
+import CompanyEntity from "../../../Domain/entities/company.entity";
+import { MarkSubscriptionExpired } from "../../../Application/common/usecases/markExpired.usecase";
+import { SendTrialEndReminderUsecase } from "../../../Application/common/usecases/sendTrialEndReminder.usecase";
 
 
 
@@ -702,7 +707,11 @@ const repositoryRegistry = new Map<userRole, IAuthRepository<UserEntity>>([
     [userRole.Candidate, iCandidateRepository],
     [userRole.Company, iCompanyRepository],
     [userRole.Admin, iAdminRepository]
-]);
+])
+const subscriptionRepositoryRegistry = new Map<userRole, IAuthRepository<CandidateEntity | CompanyEntity>>([
+    [userRole.Candidate, iCandidateRepository],
+    [userRole.Company, iCompanyRepository],
+])
 
 
 const iUnifiedGetMe = new UnifiedGetMeUsecase(
@@ -762,6 +771,22 @@ const iMarkAllAsRead = new UnifiedMarkAllAsReadUsecase (
     iNotificationRepository
 )
 
+export const sendSubscriptionEndReminder = new SendExpireSubscriptionReminderUsecase(
+    subscriptionRepositoryRegistry,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
+    iProcessNotification
+)
+export const markSubscriptionExpired = new MarkSubscriptionExpired(
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
+)
+export const sendTrialEndReminder = new SendTrialEndReminderUsecase(
+    subscriptionRepositoryRegistry,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
+    iProcessNotification
+)
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,

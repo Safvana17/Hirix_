@@ -16,7 +16,6 @@ const CreateTestQuestionSchema = z
     type: z.nativeEnum(QuestionType),
     title: z.string().min(1, 'Question title is required'),
     order: z.number().min(1),
-    mark: z.number().min(0),
     questionId: z.string().optional(),
     description: z.string().optional(),
     options: z.array(z.string()).optional(),
@@ -55,15 +54,12 @@ const CreateTestCandidateSchema = z.object({
 })
 
 const TimingRulesSchema = z.object({
-  durationInMinutes: z.number().min(1),
   autoSubmitOnTimeEnd: z.boolean(),
   warningBeforeEndInMinutes: z.number().min(1),
 })
 
 const NavigationRulesSchema = z.object({
   allowTabSwitch: z.boolean(),
-  maxTabSwitchCount: z.number().min(0),
-  autoSubmitOnTabViolation: z.boolean(),
   shuffleQuestions: z.boolean(),
   shuffleOptions: z.boolean(),
   allowBackNavigation: z.boolean(),
@@ -75,13 +71,10 @@ const ProctoringRulesSchema = z.object({
   snapshotIntervalSeconds: z.number().min(1),
   detectNoFace: z.boolean(),
   detectMultipleFaces: z.boolean(),
-  maxWarningsAllowed: z.number().min(0),
-  autoSubmitOnMaxWarnings: z.boolean(),
 })
 
 const BehaviorRulesSchema = z.object({
   enforceFullScreen: z.boolean(),
-  autoSubmitOnFullScreenExit: z.boolean(),
   allowCopyPaste: z.boolean(),
   allowRightClick: z.boolean(),
   allowKeyboardShortcuts: z.boolean(),
@@ -92,6 +85,10 @@ const AutoSaveRulesSchema = z.object({
   intervalInSeconds: z.number().min(1),
   saveOnEveryAnswer: z.boolean(),
 })
+const WarningRuleSchema = z.object({
+    maxWarningCount: z.number().min(0),
+    autoSubmitOnMaxWarnings: z.boolean(),
+})
 
 const CreateTestRulesSchema = z.object({
   timing: TimingRulesSchema,
@@ -99,6 +96,7 @@ const CreateTestRulesSchema = z.object({
   proctoring: ProctoringRulesSchema,
   behavior: BehaviorRulesSchema,
   autoSave: AutoSaveRulesSchema,
+  warning: WarningRuleSchema
 })
 
 export const createTestValidator = z

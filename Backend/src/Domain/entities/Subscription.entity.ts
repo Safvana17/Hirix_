@@ -10,7 +10,8 @@ export class SubscriptionEntity {
     status: subscriptionStatus;
     isTrial: boolean;
     isCurrent: boolean;
-    paymentId?: string
+    paymentId?: string;
+    isReminderSend?: boolean
 
     constructor(
         id: string,

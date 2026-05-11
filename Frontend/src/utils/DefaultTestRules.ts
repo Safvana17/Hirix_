@@ -2,30 +2,24 @@ import type { TestRules } from "../types/test";
 
 export const createDefaultTestRules = (): TestRules => ({
   timing: {
-    durationInMinutes: 60,
-    autoSubmissionOnTimeEnds: true,
+    autoSubmitOnTimeEnd: true,
     warningBeforeEndInMinutes: 5,
   },
   navigation: {
     allowTabSwitch: false,
-    maxTabSwitchCount: 3,
-    autoSubmissionOnTabViolation: true,
-    shuffleQuestion: false,
+    shuffleQuestions: false,
     shuffleOptions: false,
     allowBackNavigation: true,
   },
   proctoring: {
     enableCamera: false,
-    captureSnapShots: false,
-    snapShotIntervalSeconds: 30,
+    captureSnapshots: false,
+    snapshotIntervalSeconds: 30,
     detectNoFace: false,
-    detectMultipleFace: false,
-    maxWarningsAllowed: 3,
-    autoSubmissionOnMaxWarnings: true,
+    detectMultipleFaces: false,
   },
   behavior: {
     enforceFullScreen: false,
-    autoSubmissionFullScreenExit: true,
     allowCopyPaste: false,
     allowRightClick: false,
     allowKeyboardShortcuts: false,
@@ -35,4 +29,8 @@ export const createDefaultTestRules = (): TestRules => ({
     intervalInSeconds: 30,
     saveOnEveryAnswer: true,
   },
+  warning: {
+    maxWarningCount: 0,
+    autoSubmitOnMaxWarnings: true
+  }
 })

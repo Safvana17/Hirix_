@@ -21,7 +21,6 @@ const CreateTestQuestionSchema = z
     type: QuestionTypeSchema,
     title: z.string().min(1, 'Question title is required'),
     order: z.number().min(1),
-    mark: z.number().min(0),
     questionId: z.string().optional(),
     description: z.string().optional(),
     options: z.array(z.string()).optional(),
@@ -63,33 +62,27 @@ const CreateTestCandidateSchema = z.object({
 })
 
 const TimingRulesSchema = z.object({
-  durationInMinutes: z.number().min(1, 'Duration must be greater than 0'),
-  autoSubmissionOnTimeEnds: z.boolean(),
+  autoSubmitOnTimeEnd: z.boolean(),
   warningBeforeEndInMinutes: z.number().min(0),
 })
 
 const NavigationRulesSchema = z.object({
   allowTabSwitch: z.boolean(),
-  maxTabSwitchCount: z.number().min(0),
-  autoSubmissionOnTabViolation: z.boolean(),
-  shuffleQuestion: z.boolean(),
+  shuffleQuestions: z.boolean(),
   shuffleOptions: z.boolean(),
   allowBackNavigation: z.boolean(),
 })
 
 const ProctoringRulesSchema = z.object({
   enableCamera: z.boolean(),
-  captureSnapShots: z.boolean(),
-  snapShotIntervalSeconds: z.number().min(0),
+  captureSnapshots: z.boolean(),
+  snapshotIntervalSeconds: z.number().min(0),
   detectNoFace: z.boolean(),
-  detectMultipleFace: z.boolean(),
-  maxWarningsAllowed: z.number().min(0),
-  autoSubmissionOnMaxWarnings: z.boolean(),
+  detectMultipleFaces: z.boolean(),
 })
 
 const BehaviorRulesSchema = z.object({
   enforceFullScreen: z.boolean(),
-  autoSubmissionFullScreenExit: z.boolean(),
   allowCopyPaste: z.boolean(),
   allowRightClick: z.boolean(),
   allowKeyboardShortcuts: z.boolean(),
@@ -100,13 +93,17 @@ const AutoSaveRulesSchema = z.object({
   intervalInSeconds: z.number().min(0),
   saveOnEveryAnswer: z.boolean(),
 })
-
+const WarningRuleSchema = z.object({
+    maxWarningCount: z.number().min(0),
+    autoSubmitOnMaxWarnings: z.boolean(),
+})
 const CreateTestRulesSchema = z.object({
   timing: TimingRulesSchema,
   navigation: NavigationRulesSchema,
   proctoring: ProctoringRulesSchema,
   behavior: BehaviorRulesSchema,
   autoSave: AutoSaveRulesSchema,
+  warning: WarningRuleSchema
 })
 
 export const createTestValidator = z
@@ -133,17 +130,6 @@ export const createTestValidator = z
         code: z.ZodIssueCode.custom,
         message: 'Start time must be before end time',
         path: ['startTime'],
-      })
-    }
-
-    if (
-      data.rules.timing.warningBeforeEndInMinutes >=
-      data.rules.timing.durationInMinutes
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Warning time must be less than duration',
-        path: ['rules', 'timing', 'warningBeforeEndInMinutes'],
       })
     }
 

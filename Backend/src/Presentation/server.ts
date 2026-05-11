@@ -3,7 +3,8 @@ dotenv.config();
 import { env } from '../Infrastructure/config/env';
 import { logger } from '../utils/logging/loger';
 import app from './app';
-
+import { SubscriptionCron } from '../Infrastructure/cron/subscription.cron'
+import { markSubscriptionExpired, sendSubscriptionEndReminder, sendTrialEndReminder } from './http/controllers/factory'
 
 
 const PORT = env.PORT || 4000;
@@ -11,4 +12,9 @@ const PORT = env.PORT || 4000;
 
 app.listen(PORT, () => {
     logger.info({port: PORT}, 'Server connected.')
+    SubscriptionCron(
+        sendSubscriptionEndReminder,
+        markSubscriptionExpired,
+        sendTrialEndReminder
+    )  
 })

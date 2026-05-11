@@ -33,10 +33,10 @@ export interface ITest extends Document {
 }
 
 const TimingRulesSchema = new Schema({
-    durationInMinutes: { 
-        type: Number, 
-        required: true 
-    },
+    // durationInMinutes: { 
+    //     type: Number, 
+    //     required: true 
+    // },
     autoSubmitOnTimeEnd: { 
         type: Boolean, 
         default: true 
@@ -54,14 +54,14 @@ const NavigationRulesSchema = new Schema({
         type: Boolean, 
         default: false 
     },
-    maxTabSwitchCount: { 
-        type: Number, 
-        default: 2 
-    },
-    autoSubmitOnTabViolation: { 
-        type: Boolean, 
-        default: true 
-    },
+    // maxTabSwitchCount: { 
+    //     type: Number, 
+    //     default: 2 
+    // },
+    // autoSubmitOnTabViolation: { 
+    //     type: Boolean, 
+    //     default: true 
+    // },
     shuffleQuestions: { 
         type: Boolean, 
         default: true 
@@ -99,14 +99,14 @@ const ProctoringRulesSchema = new Schema({
         type: Boolean, 
         default: false 
     },
-    maxWarningsAllowed: { 
-        type: Number, 
-        default: 3 
-    },
-    autoSubmitOnMaxWarnings: { 
-        type: Boolean, 
-        default: true 
-    }
+    // maxWarningsAllowed: { 
+    //     type: Number, 
+    //     default: 3 
+    // },
+    // autoSubmitOnMaxWarnings: { 
+    //     type: Boolean, 
+    //     default: true 
+    // }
 }, { 
     _id: false 
 })
@@ -116,10 +116,10 @@ const BehaviorRulesSchema = new Schema({
         type: Boolean, 
         default: true 
     },
-    autoSubmitOnFullScreenExit: { 
-        type: Boolean, 
-        default: true 
-    },
+    // autoSubmitOnFullScreenExit: { 
+    //     type: Boolean, 
+    //     default: true 
+    // },
     allowCopyPaste: { 
         type: Boolean, 
         default: false 
@@ -153,6 +153,18 @@ const AutoSaveRulesSchema = new Schema({
     _id: false 
 })
 
+const WarningRuleSchema = new Schema({
+    maxWarningCount: {
+        type: Number,
+        default: 0
+    },
+    autoSubmitOnMaxWarnings: {
+        type: Boolean,
+        default: true
+    }
+}, {
+    _id: false
+})
 const TestRulesSchema = new Schema({
     timing: { 
         type: TimingRulesSchema, 
@@ -173,6 +185,10 @@ const TestRulesSchema = new Schema({
     autoSave: { 
         type: AutoSaveRulesSchema, 
         required: true 
+    },
+    warning: {
+        type: WarningRuleSchema,
+        required: true
     }
 }, { 
     _id: false 

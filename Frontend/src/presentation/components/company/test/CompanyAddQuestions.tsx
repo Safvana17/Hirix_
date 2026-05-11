@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import type { CreateTestPayload, TestQuestions } from '../../../../types/test'
+import { type CreateTestPayload, type TestQuestions } from '../../../../types/test'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../../redux/store'
 import type { Question, QuestionDifficulty, QuestionFormData, QuestionType } from '../../../../types/question'
@@ -50,7 +50,6 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
       type: q.type,
       title: q.title,
       order: data.questions.length + 1,
-      mark: 1,
       questionId: q.id,
       description: q.description,
       options: q.options,
@@ -69,8 +68,6 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
       type: q.type,
       title: q.title,
       order: data.questions.length + 1,
-      mark: 1,
-
       description: q.description,
       options: q.options,
       answer: q.answer,

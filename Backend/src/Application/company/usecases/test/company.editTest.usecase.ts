@@ -1,14 +1,14 @@
 import { TestCandidateEntity } from "../../../../Domain/entities/TestCandidate.entity";
 import { TestQuestionEntity } from "../../../../Domain/entities/TestQuestion.entity";
 import { NotificationEvents } from "../../../../Domain/enums/notification";
-import { CandidateTestStatus } from "../../../../Domain/enums/Test";
+import { CandidateTestStatus, QuestionMarks } from "../../../../Domain/enums/Test";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
-import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules } from "../../../../Domain/valueObjects/test.rules";
+import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules, WarningRules } from "../../../../Domain/valueObjects/test.rules";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
@@ -73,14 +73,11 @@ export class CompanyEditTestUsecase implements ICompanyEditTestUsecase{
 
         const rules = new TestRules(
             new TimingRules(
-                request.rules.timing.durationInMinutes,
                 request.rules.timing.autoSubmitOnTimeEnd ?? true,
                 request.rules.timing.warningBeforeEndInMinutes ?? 3
             ),
             new NavigationRules(
                 request.rules.navigation.allowTabSwitch ?? false,
-                request.rules.navigation.maxTabSwitchCount ?? 0,
-                request.rules.navigation.autoSubmitOnTabViolation ?? true,
                 request.rules.navigation.shuffleQuestions ?? true,
                 request.rules.navigation.shuffleOptions ?? true,
                 request.rules.navigation.allowBackNavigation ?? true,
@@ -91,12 +88,9 @@ export class CompanyEditTestUsecase implements ICompanyEditTestUsecase{
                 request.rules.proctoring.snapshotIntervalSeconds ?? 60,
                 request.rules.proctoring.detectNoFace ?? false,
                 request.rules.proctoring.detectMultipleFaces ?? false,
-                request.rules.proctoring.maxWarningsAllowed ?? 3,
-                request.rules.proctoring.autoSubmitOnMaxWarnings ?? true
             ),
             new BehaviorRules(
                 request.rules.behavior.enforceFullScreen ?? true,
-                request.rules.behavior.autoSubmitOnFullScreenExit ?? true,
                 request.rules.behavior.allowCopyPaste ?? false,
                 request.rules.behavior.allowRightClick ?? false,
                 request.rules.behavior.allowKeyboardShortcuts ?? false
@@ -105,6 +99,10 @@ export class CompanyEditTestUsecase implements ICompanyEditTestUsecase{
                 request.rules.autoSave.enabled ?? true,
                 request.rules.autoSave.intervalInSeconds ?? 10,
                 request.rules.autoSave.saveOnEveryAnswer ??true
+            ),
+            new WarningRules(
+                request.rules.warning.maxWarningCount ?? 0,
+                request.rules.warning.autoSubmitOnMaxWarnings ?? true
             )
         )
         test.name = request.name
@@ -117,7 +115,7 @@ export class CompanyEditTestUsecase implements ICompanyEditTestUsecase{
                 q.type,
                 q.title,
                 q.order ?? idx + 1,
-                q.mark ?? 1,
+                QuestionMarks[q.type],
                 q.questionId,
                 q.description,
                 q.options,

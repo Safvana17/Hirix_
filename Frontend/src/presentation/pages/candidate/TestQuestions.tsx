@@ -1,6 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
-import type { RootState } from '../../../redux/store'
 import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
@@ -8,74 +6,116 @@ import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded
 import BookmarkRoundedIcon from '@mui/icons-material/BookmarkRounded'
 import CandidateTestHeader from '../../components/candidate/test/CandidateTestHeader'
 import CandidateTestSidebar from '../../components/candidate/test/CandidateTestSidebar'
-import type { TestQuestions } from '../../../types/test'
+import type { CandidateTest, TestCandidate } from '../../../types/test'
 import QuestionRenderer from '../../components/candidate/test/QuestionRender'
+import { useTestRunTime } from '../../../hooks/useTestRunTime'
+import TestWarningBanner from '../../components/candidate/test/TestWarningBanner'
+// import { useFullScreenMonitor } from '../../../hooks/useFullScreenMonitor'
 
 
-type AnswerState = Record<string, string>
-
-const TestQuestions: React.FC = () => {
-    const { test } = useSelector((state: RootState) => state.candidateTest)
+interface TestQuestionsProps {
+  test: CandidateTest
+  candidate: TestCandidate
+}
+ 
+const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-    const [answers, setAnswers] = useState<AnswerState>({})
-    const [reviewQuestionIds, setReviewQuestionIds] = useState<string[]>([])
     const questions = test?.questions ?? []
     const currentQuestion = questions[currentQuestionIndex]
+    const [warningMessage, setWarningMessage] = useState<string | null>(null)
+
+    const runTime = useTestRunTime({
+      test,
+      rules: test.rules,
+      candidate: candidate!,
+      onSaveAnswers: async (answers) => {
+        console.log('save answers', answers)
+      },
+      onSubmitTest: async (answers) => {
+        console.log('submit test', answers)
+      },
+      onTerminateTest: async (reason, answers) => {
+        console.log('terminated', reason, answers)
+      },
+      onWarning: ({type, warningCount}) => {
+        const messageMap = {
+            TAB_SWITCH: 'Tab switch detected! Please stay on the test window.',
+            FULLSCREEN_EXIT: 'Fullscreen exit detected! Please stay in fullscreen mode.',
+            COPY_PASTE: 'Copy or paste action detected.',
+            RIGHT_CLICK: 'Right click is not allowed during the test.',
+            KEYBOARD_SHORTCUT: 'Keyboard shortcuts are restricted during the test.',
+            NO_FACE: 'No face detected in camera.',
+            MULTIPLE_FACE: 'Multiple faces detected in camera.',
+        }
+        console.log('warning: ',type, warningCount)
+        setWarningMessage(messageMap[type] || 'Rule violation detected.')
+      }
+    })
+
+    // const handleFullScreenExit = useCallback(() => {
+    //   void runTime.handleViolation("FULLSCREEN_EXIT");
+    // }, [runTime]);
+
+    // const { enterFullScreen } = useFullScreenMonitor({
+    //   enforceFullScreen: test.rules.behavior.enforceFullScreen,
+    //   onExit: handleFullScreenExit,
+    // });
+
+    // useEffect(() => {
+    //   if (test.rules.behavior.enforceFullScreen) {
+    //     void enterFullScreen();
+    //   }
+    // }, [test.rules.behavior.enforceFullScreen, enterFullScreen])
 
     const answeredQuestionIds = useMemo(() => {
-        return Object.keys(answers).filter((questionId) => {
-            return answers[questionId]?.trim()
+        return Object.keys(runTime.answers).filter((questionId) => {
+          const answer = runTime.answers[questionId]
+            return (
+              answer.selectedOptionIds?.length ||
+              answer.descriptiveAnswer ||
+              answer.codingAnswer?.code
+            )
         })
-    }, [answers])
+    }, [runTime.answers])
 
-    if (!test) return null
-
-
-    const handleSubmit = () => {
-        console.log('submit answers:', answers)
-    }
+    if(!test || !candidate) return null
 
     const handleQuestionClick = (index: number) => {
-        setCurrentQuestionIndex(index)
-    }
-
-    const handleAnswerChange = (questionId: string, value: string) => {
-        setAnswers((prev) => ({
-            ...prev,
-            [questionId]: value,
-        }))
-    }
-
-    const handleMarkForReview = () => {
-        if (!currentQuestion) return
-        setReviewQuestionIds((prev) => {
-            if (prev.includes(currentQuestion.id)) {
-                return prev.filter((id) => id !== currentQuestion.id)
-            }
-            return [...prev, currentQuestion.id]
-        })
+      runTime.trackQuestionTime(questions[index].id)
+      setCurrentQuestionIndex(index)
     }
 
     const handleNext = () => {
+        runTime.trackQuestionTime(currentQuestion.id)
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prev) => prev + 1)
         }
     }
 
     const handlePrevious = () => {
-        if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex((prev) => prev - 1)
-        }
+      runTime.trackQuestionTime(currentQuestion.id)
+      if (currentQuestionIndex > 0) {
+        setCurrentQuestionIndex((prev) => prev - 1)
+      }
     }
 
     if (!currentQuestion) {
         return <p>No questions found</p>
     }
 
-    const isMarkedForReview = reviewQuestionIds.includes(currentQuestion.id)
+
+    const isMarkedForReview = runTime.answers[currentQuestion.id] ?.isMarkedForReview ?? false
     return (
       <Box sx={{ height: '100vh', overflow: 'hidden', background: 'linear-gradient(to bottom, #021A30, #0B0707)', }} >
-        <CandidateTestHeader test={test} onSubmit={handleSubmit} />
+        <CandidateTestHeader test={test} onSubmit={runTime.handleSubmit} />
+        {warningMessage && (
+          <TestWarningBanner 
+             warningCount={runTime.warningCount}
+             maxWarningCount={test.rules.warning.maxWarningCount}
+             message={warningMessage}
+             onClose={() => setWarningMessage(null)}
+          />
+        )}
         <Box sx={{ display: 'flex', height: 'calc(100vh - 108px)'}} >
           <Box
             component="main"
@@ -156,8 +196,20 @@ const TestQuestions: React.FC = () => {
                 <Box sx={{ px: { xs: 3, md: 4 }, py: 4 }}>
                   <QuestionRenderer
                     question={currentQuestion}
-                    value={answers[currentQuestion.id] || ''}
-                    onChange={(value) =>handleAnswerChange(currentQuestion.id, value)}
+                    value={
+                      runTime.answers[currentQuestion.id]
+                        ?.descriptiveAnswer || 
+                      runTime.answers[currentQuestion.id]
+                        ?.codingAnswer?.code ||
+                      runTime.answers[currentQuestion.id]
+                        ?.selectedOptionIds?.[0]  || ""
+                    }
+                    onChange={(value) =>
+                      runTime.updateAnswer({
+                        question: currentQuestion,
+                        value
+                      })
+                    }
                   />
                   <Divider sx={{ my: 4 }} />
                   <Stack
@@ -192,7 +244,7 @@ const TestQuestions: React.FC = () => {
                             <BookmarkBorderRoundedIcon />
                           )
                         }
-                        onClick={handleMarkForReview}
+                        onClick={() => runTime.toggleMarkForReview(currentQuestion)}
                         sx={{                        
                           borderRadius: 999,
                           textTransform: 'none',
@@ -243,7 +295,9 @@ const TestQuestions: React.FC = () => {
               test={test}
               currentQuestionIndex={currentQuestionIndex}
               answeredQuestionIds={answeredQuestionIds}
-              reviewQuestionIds={reviewQuestionIds}
+              reviewQuestionIds={Object.keys(runTime.answers).filter((questionId) =>
+                runTime.answers[questionId]?.isMarkedForReview 
+              )}
               onQuestionClick={handleQuestionClick}
             />
           </Box>
@@ -252,4 +306,4 @@ const TestQuestions: React.FC = () => {
     )
 }
 
-export default TestQuestions
+export default TestQuestion

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useMemo, useState } from "react"
 import { Box, Button, CircularProgress, FormControl, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded"
 import QuestionText from "./QuestionText"
@@ -26,13 +26,16 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
     return CODING_LANGUAGES.find((item) => item.value === language)!
   }, [language])
 
+  // const [editorCode, setEditorCode] = useState(
+  //   value || selectedLanguage.defaultCode
+  // )
   const editorValue = value || selectedLanguage.defaultCode
 
-  useEffect(() => {
-  if (!value) {
-    onChange(selectedLanguage.defaultCode)
-  }
-}, [language])
+//   useEffect(() => {
+//   if (!value) {
+//     onChange(selectedLanguage.defaultCode)
+//   }
+// }, [language])
 
   const handleLanguageChange = (newLanguage: CodingLanguages) => {
     setLanguage(newLanguage)
@@ -140,7 +143,10 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
            language={language} 
            theme="vs-dark"
            value={editorValue}
-           onChange={(newValue) => onChange(newValue || '')}
+           onChange={(newValue) =>{
+            // setEditorCode(newValue || '')
+            onChange(newValue || '')
+           }}
            options={{
             minimap: { enabled: false},
             fontSize: 14,

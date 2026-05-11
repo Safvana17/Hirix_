@@ -4,22 +4,20 @@ import { IMarkExpiredUsecase } from '../../Application/common/interfaces/IMarkEx
 import { ISendTrialEndReminderUsecase } from '../../Application/common/interfaces/ISendTrialEndReminder.usecase'
 
 
-
-
-export const subscriptionExpireReminder = (
+export const SubscriptionCron = (
     sendReminder: ISendExpireSubscriptionReminderUsecase,
     markExpired: IMarkExpiredUsecase,
     sendTrialEndReminder: ISendTrialEndReminderUsecase
 ) => {
-    cron.schedule("0 9 * * *", async () => {
+    cron.schedule("0 * * * *", async () => {
        await sendReminder.execute()
     })
 
-    cron.schedule('0 0 * * *', async () => {
+    cron.schedule('0 * * * *', async () => {
         await markExpired.execute()
     })
 
-    cron.schedule("0 9 * * *", async () => {
+    cron.schedule("0 * * * *", async () => {
        await sendTrialEndReminder.execute()
     })
 }

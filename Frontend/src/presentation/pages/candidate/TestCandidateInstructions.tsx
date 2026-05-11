@@ -11,25 +11,27 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
 import { startTest } from '../../../redux/slices/features/test/CandidateTestSlice'
-import { useNavigate, useParams } from 'react-router-dom'
-import { ROUTES } from '../../../constants/routes'
+import { useParams } from 'react-router-dom'
+// import { useFullScreenMonitor } from '../../../hooks/useFullScreenMonitor'
 
 const TestCandidateInstructions: React.FC = () => {
     const [accepted, setAccepted] = useState(false)
     const { test } = useSelector((state: RootState) => state.candidateTest)
     const dispatch = useDispatch<AppDispatch>()
     const { token } = useParams()
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
+
+    // const { enterFullScreen } = useFullScreenMonitor({
+    //     enforceFullScreen: test?.rules.behavior.enforceFullScreen ?? false,
+    //     onExit: () => {}
+    // })
 
     if (!test?.rules) {
         return <div>Loading instructions...</div>
     }
-    const { timing, navigation, proctoring, behavior, autoSave } = test.rules
+    const { timing, navigation, proctoring, behavior, autoSave, warning } = test.rules
 
     const timingRules = [
-        timing.durationInMinutes > 0 &&
-            `You have ${timing.durationInMinutes} minutes to complete the test.`,
-
         timing.autoSubmitOnTimeEnd &&
             'The test will be automatically submitted when time ends.',
 
@@ -39,16 +41,8 @@ const TestCandidateInstructions: React.FC = () => {
 
     const navigationRules = [
         navigation.allowTabSwitch
-            ? navigation.maxTabSwitchCount > 0
-                ? `Tab switching is allowed up to ${navigation.maxTabSwitchCount} times.`
-                : 'Tab switching is allowed.'
+            ?  'Tab switching is allowed.'
             : 'Tab switching or minimizing the window is not allowed.',
-
-        navigation.maxTabSwitchCount > 0 &&
-            `Maximum tab switch count allowed is ${navigation.maxTabSwitchCount}.`,
-
-        navigation.autoSubmitOnTabViolation &&
-            'The test will be automatically submitted if tab switch violations exceed the allowed limit.',
 
         navigation.shuffleQuestions &&
             'Questions will be shown in random order.',
@@ -81,12 +75,6 @@ const TestCandidateInstructions: React.FC = () => {
         proctoring.detectMultipleFaces &&
             'No other person should appear in front of the camera during the assessment.',
 
-        proctoring.maxWarningsAllowed > 0 &&
-            `Maximum warnings allowed: ${proctoring.maxWarningsAllowed}.`,
-
-        proctoring.autoSubmitOnMaxWarnings &&
-            'The assessment may be automatically submitted after exceeding the maximum warning limit.',
-
         proctoring.enableCamera &&
             'Avoid poor lighting or covering your camera during the assessment.',
 
@@ -97,9 +85,6 @@ const TestCandidateInstructions: React.FC = () => {
     const behaviorRules = [
         behavior.enforceFullScreen &&
             'Fullscreen mode is required during the test.',
-
-        behavior.autoSubmitOnFullScreenExit &&
-            'The test will be automatically submitted if you exit fullscreen mode.',
 
         behavior.allowCopyPaste
             ? 'Copy and paste is allowed.'
@@ -114,6 +99,14 @@ const TestCandidateInstructions: React.FC = () => {
             : 'Keyboard shortcuts are disabled during the test.',
     ].filter(Boolean) as string[]
 
+    const warningRules = [
+        warning.maxWarningCount > 0 &&
+            `Maximum warnings allowed: ${warning.maxWarningCount}.`,
+
+        warning.autoSubmitOnMaxWarnings &&
+            'The assessment may be automatically submitted after exceeding the maximum warning limit.',
+    ].filter(Boolean) as string[]
+
     const autoSaveRules = [
         autoSave?.enabled &&
             autoSave.intervalInSeconds > 0 &&
@@ -126,12 +119,20 @@ const TestCandidateInstructions: React.FC = () => {
     const handleStartTest = async() => {
         if (!accepted) {
             toast.error('Please mark that you accepted the rules')
+            return
+        }
+        if(!token){
+            toast.error("Invalid test link")
+            return
         }
         try {
-            if(token){
-              await dispatch(startTest({token})).unwrap()
-              navigate(ROUTES.CANDIDATE.TEST_QUESTIONS)
-            }
+            // if(test.rules.behavior.enforceFullScreen){
+            //     await document.documentElement.requestFullscreen()
+            // }
+
+            await dispatch(startTest({token})).unwrap()
+            // navigate(`/candidate/test/${token}`)
+
         } catch (error) {
             toast.error(typeof error === 'string' ? error : 'Failed to start test')
         }
@@ -218,6 +219,11 @@ const TestCandidateInstructions: React.FC = () => {
                         <RuleSection
                             title="Behavior Rules"
                             rules={behaviorRules}
+                        />
+
+                        <RuleSection
+                            title="Warning Rules"
+                            rules={warningRules}
                         />
 
                         <RuleSection

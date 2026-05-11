@@ -7,6 +7,29 @@ export type CandidateSelectionStatus = 'PENDING' | 'SHORTLISTED' | 'REJECTED'
 export type ModalMode = 'create' | 'edit'
 export type CandidateTestGateStep = 'LOADING' | 'NOT_STARTED' | 'DETAILS' | 'INSTRUCTIONS' | 'EXPIRED' | 'READY' | 'LOGIN' | 'QUESTIONS' | 'SUBMITTED' | 'TERMINATED' | 'DISQUALIFIED' | 'EXPIRED'
 export type CodingLanguage = 'javascript' | 'python'
+export type ViolationType = 'TAB_SWITCH' | 'FULLSCREEN_EXIT' 
+export const QuestionMark = {
+    mcq: 2,
+    coding: 5,
+    descriptive: 5
+}
+
+export interface TestCandidateAnswer {
+    testQuestionId: string
+    questionType: QuestionType
+    selectedOptionIds?: string[]
+    descriptiveAnswer?: string
+    codingAnswer?: {
+        language: CodingLanguage
+        code: string
+        output?: string
+    }
+    isMarkedForReview?: boolean
+    timeTakenInSeconds: number
+    totalMarks?: number
+    visited?: boolean
+    answeredAt?: string
+}
 
 export interface TestCandidate {
     id: string
@@ -43,15 +66,14 @@ export interface TestCandidate {
 
 export interface TestRules {
   timing: {
-    durationInMinutes: number
     autoSubmitOnTimeEnd: boolean
     warningBeforeEndInMinutes: number
   }
 
   navigation: {
     allowTabSwitch: boolean
-    maxTabSwitchCount: number
-    autoSubmitOnTabViolation: boolean
+    // maxTabSwitchCount: number
+    // autoSubmitOnTabViolation: boolean
     shuffleQuestions: boolean
     shuffleOptions: boolean
     allowBackNavigation: boolean
@@ -63,13 +85,13 @@ export interface TestRules {
     snapshotIntervalSeconds: number
     detectNoFace: boolean
     detectMultipleFaces: boolean
-    maxWarningsAllowed: number
-    autoSubmitOnMaxWarnings: boolean
+    // maxWarningsAllowed: number
+    // autoSubmitOnMaxWarnings: boolean
   }
 
   behavior: {
     enforceFullScreen: boolean
-    autoSubmitOnFullScreenExit: boolean
+    // autoSubmitOnFullScreenExit: boolean
     allowCopyPaste: boolean
     allowRightClick: boolean
     allowKeyboardShortcuts: boolean
@@ -80,6 +102,10 @@ export interface TestRules {
     intervalInSeconds: number
     saveOnEveryAnswer: boolean
   }
+  warning: {
+    maxWarningCount: number
+    autoSubmitOnMaxWarnings: boolean
+  }
 }
 
 export interface TestQuestions {
@@ -88,7 +114,7 @@ export interface TestQuestions {
    type: QuestionType
    title: string
    order: number
-   mark: number
+   mark?: number
    questionId?: string
    description?: string
    options?: string[]

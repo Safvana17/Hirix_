@@ -9,7 +9,6 @@ export interface EditTestQuestionInputDTO {
     type: QuestionType
     title: string
     order: number
-    mark: number
     questionId?: string
     description?: string
     options?: string[]
@@ -22,18 +21,15 @@ export interface EditTestCandiateInputDTO {
 }
 
 export interface TimingRulesDTO {
-    durationInMinutes: number
     autoSubmitOnTimeEnd: boolean
-    warningBeforeEndInMinutes?: number
+    warningBeforeEndInMinutes: number
 }
 
 export interface NavigationRulesDTO {
-    allowTabSwitch?: boolean
-    maxTabSwitchCount?: number
-    autoSubmitOnTabViolation?: boolean
-    shuffleQuestions?: boolean
-    shuffleOptions?: boolean
-    allowBackNavigation?: boolean
+    allowTabSwitch: boolean
+    shuffleQuestions: boolean
+    shuffleOptions: boolean
+    allowBackNavigation: boolean
 }
 
 export interface ProctoringRulesDTO {
@@ -42,13 +38,10 @@ export interface ProctoringRulesDTO {
     snapshotIntervalSeconds?: number
     detectNoFace?: boolean
     detectMultipleFaces?: boolean
-    maxWarningsAllowed?: number
-    autoSubmitOnMaxWarnings?: boolean
 }
 
 export interface BehaviorRulesDTO {
     enforceFullScreen?: boolean
-    autoSubmitOnFullScreenExit?: boolean
     allowCopyPaste?: boolean
     allowRightClick?: boolean
     allowKeyboardShortcuts?: boolean
@@ -59,6 +52,10 @@ export interface AutoSaveRulesDTO {
     intervalInSeconds?: number
     saveOnEveryAnswer?: boolean
 }
+export interface WarningRuleDTO {
+    maxWarningCount?: number
+    autoSubmitOnMaxWarnings?: boolean
+}
 
 export interface EditTestRulesDTO {
     timing: TimingRulesDTO
@@ -66,6 +63,7 @@ export interface EditTestRulesDTO {
     proctoring: ProctoringRulesDTO
     behavior: BehaviorRulesDTO
     autoSave: AutoSaveRulesDTO
+    warning: WarningRuleDTO
 }
 
 export interface CompanyEditTestInputDTO {

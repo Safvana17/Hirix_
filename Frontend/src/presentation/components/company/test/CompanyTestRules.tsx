@@ -59,13 +59,13 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                 }
               />
 
-              <RuleInput
+              {/* <RuleInput
                 label="Duration In Minutes"
                 value={data.rules.timing.durationInMinutes}
                 onChange={(value) =>
                   updateRules('timing', { durationInMinutes: value })
                 }
-              />
+              /> */}
 
               <RuleInput
                 label="Warning Before End In Minutes"
@@ -88,15 +88,15 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                 }
               />
 
-              <RuleInput
+              {/* <RuleInput
                 label="Max Tab Switch Count"
                 value={data.rules.navigation.maxTabSwitchCount}
                 onChange={(value) =>
                   updateRules('navigation', { maxTabSwitchCount: value })
                 }
-              />
+              /> */}
 
-              <RuleSwitch
+              {/* <RuleSwitch
                 title="Auto Submit On Tab Violation"
                 description="Submit test if tab switch limit is reached"
                 checked={data.rules.navigation.autoSubmitOnTabViolation}
@@ -105,7 +105,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                     autoSubmitOnTabViolation: checked,
                   })
                 }
-              />
+              /> */}
 
               <RuleSwitch
                 title="Shuffle Questions"
@@ -182,7 +182,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                 }
               />
 
-              <RuleInput
+              {/* <RuleInput
                 label="Max Warnings Allowed"
                 value={data.rules.proctoring.maxWarningsAllowed}
                 onChange={(value) =>
@@ -199,7 +199,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                     autoSubmitOnMaxWarnings: checked,
                   })
                 }
-              />
+              /> */}
             </RuleCard>
           </Grid>
 
@@ -214,7 +214,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                 }
               />
 
-              <RuleSwitch
+              {/* <RuleSwitch
                 title="Auto Submit Full Screen Exit"
                 description="Submit if candidate exits full screen"
                 checked={data.rules.behavior.autoSubmitOnFullScreenExit}
@@ -223,7 +223,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                     autoSubmitOnFullScreenExit: checked,
                   })
                 }
-              />
+              /> */}
 
               <RuleSwitch
                 title="Allow Copy Paste"
@@ -249,6 +249,29 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                 checked={data.rules.behavior.allowKeyboardShortcuts}
                 onChange={(checked) =>
                   updateRules('behavior', { allowKeyboardShortcuts: checked })
+                }
+              />
+            </RuleCard>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            <RuleCard title="Warning Rules">
+              <RuleInput
+                label="Max Warnings Allowed"
+                value={data.rules.warning.maxWarningCount}
+                onChange={(value) =>
+                  updateRules('warning', { maxWarningCount: value })
+                }
+              />
+
+              <RuleSwitch
+                title="Auto Submit On Max Warnings"
+                description="Submit when warning limit is reached"
+                checked={data.rules.warning.autoSubmitOnMaxWarnings}
+                onChange={(checked) =>
+                  updateRules('warning', {
+                    autoSubmitOnMaxWarnings: checked,
+                  })
                 }
               />
             </RuleCard>

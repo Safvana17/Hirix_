@@ -1,6 +1,6 @@
 export class TimingRules {
     constructor(
-        public durationInMinutes: number,
+        // public durationInMinutes: number,
         public autoSubmitOnTimeEnd: boolean,
         public warningBeforeEndInMinutes: number
     ){}
@@ -9,8 +9,8 @@ export class TimingRules {
 export class NavigationRules {
     constructor(
         public allowTabSwitch: boolean,
-        public maxTabSwitchCount: number,
-        public autoSubmitOnTabViolation: boolean,
+        // public maxTabSwitchCount: number,
+        // public autoSubmitOnTabViolation: boolean,
         public shuffleQuestions: boolean,
         public shuffleOptions: boolean,
         public allowBackNavigation: boolean
@@ -24,15 +24,15 @@ export class ProctoringRules {
         public snapshotIntervalSeconds: number,
         public detectNoFace: boolean,
         public detectMultipleFaces: boolean,
-        public maxWarningsAllowed: number,
-        public autoSubmitOnMaxWarnings: boolean
+        // public maxWarningsAllowed: number,
+        // public autoSubmitOnMaxWarnings: boolean
     ) {}
 }
 
 export class BehaviorRules {
     constructor (
         public enforceFullScreen: boolean,
-        public autoSubmitOnFullScreenExit: boolean,
+        // public autoSubmitOnFullScreenExit: boolean,
         public allowCopyPaste: boolean,
         public allowRightClick: boolean,
         public allowKeyboardShortcuts: boolean
@@ -47,13 +47,23 @@ export class AutoSaveRules {
     ) {}
 }
 
+export class WarningRules {
+    constructor (
+        public maxWarningCount: number,
+        public autoSubmitOnMaxWarnings: boolean
+    ) {}
+}
+
 export class TestRules {
     constructor (
         public timing: TimingRules,
         public navigation: NavigationRules,
         public proctoring: ProctoringRules,
         public behavior: BehaviorRules,
-        public autoSave: AutoSaveRules
+        public autoSave: AutoSaveRules,
+        public warning: WarningRules
     ) {}
 }
+
+
 

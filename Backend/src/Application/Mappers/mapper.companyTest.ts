@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import { TestEntity } from "../../Domain/entities/Test.entity";
 import { ITest } from "../../Infrastructure/database/Model/Test";
-import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules } from "../../Domain/valueObjects/test.rules";
+import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules, WarningRules } from "../../Domain/valueObjects/test.rules";
 import { TestQuestionEntity } from "../../Domain/entities/TestQuestion.entity";
 
 export class TestMapper {
@@ -9,14 +9,11 @@ export class TestMapper {
 
         const rules = new TestRules(
             new TimingRules(
-                doc.rules.timing.durationInMinutes,
                 doc.rules.timing.autoSubmitOnTimeEnd,
                 doc.rules.timing.warningBeforeEndInMinutes
             ),
             new NavigationRules(
                 doc.rules.navigation.allowTabSwitch,
-                doc.rules.navigation.maxTabSwitchCount,
-                doc.rules.navigation.autoSubmitOnTabViolation,
                 doc.rules.navigation.shuffleQuestions,
                 doc.rules.navigation.shuffleOptions,
                 doc.rules.navigation.allowBackNavigation
@@ -27,12 +24,9 @@ export class TestMapper {
                 doc.rules.proctoring.snapshotIntervalSeconds,
                 doc.rules.proctoring.detectNoFace,
                 doc.rules.proctoring.detectMultipleFaces,
-                doc.rules.proctoring.maxWarningsAllowed,
-                doc.rules.proctoring.autoSubmitOnMaxWarnings
             ),
             new BehaviorRules(
                 doc.rules.behavior.enforceFullScreen,
-                doc.rules.behavior.autoSubmitOnFullScreenExit,
                 doc.rules.behavior.allowCopyPaste,
                 doc.rules.behavior.allowRightClick,
                 doc.rules.behavior.allowKeyboardShortcuts
@@ -41,6 +35,10 @@ export class TestMapper {
                 doc.rules.autoSave.enabled,
                 doc.rules.autoSave.intervalInSeconds,
                 doc.rules.autoSave.saveOnEveryAnswer
+            ),
+            new WarningRules(
+                doc.rules.warning.maxWarningCount,
+                doc.rules.warning.autoSubmitOnMaxWarnings
             )
         )
         const questions = doc.questions.map((q) => 
@@ -93,14 +91,11 @@ export class TestMapper {
             isDeleted: entity.isDeleted,
             rules: {
                 timing: {
-                    durationInMinutes: entity.rules.timing.durationInMinutes,
                     autoSubmitOnTimeEnd: entity.rules.timing.autoSubmitOnTimeEnd,
                     warningBeforeEndInMinutes: entity.rules.timing.warningBeforeEndInMinutes
                 },
                 navigation: {
                     allowTabSwitch: entity.rules.navigation.allowTabSwitch,
-                    maxTabSwitchCount: entity.rules.navigation.maxTabSwitchCount,
-                    autoSubmitOnTabViolation: entity.rules.navigation.autoSubmitOnTabViolation,
                     shuffleQuestions: entity.rules.navigation.shuffleQuestions,
                     shuffleOptions: entity.rules.navigation.shuffleOptions,
                     allowBackNavigation: entity.rules.navigation.allowBackNavigation
@@ -111,12 +106,9 @@ export class TestMapper {
                     snapshotIntervalSeconds: entity.rules.proctoring.snapshotIntervalSeconds,
                     detectNoFace: entity.rules.proctoring.detectNoFace,
                     detectMultipleFaces: entity.rules.proctoring.detectMultipleFaces,
-                    maxWarningsAllowed: entity.rules.proctoring.maxWarningsAllowed,
-                    autoSubmitOnMaxWarnings: entity.rules.proctoring.autoSubmitOnMaxWarnings,
                 },
                 behavior: {
                     enforceFullScreen: entity.rules.behavior.enforceFullScreen,
-                    autoSubmitOnFullScreenExit: entity.rules.behavior.autoSubmitOnFullScreenExit,
                     allowCopyPaste: entity.rules.behavior.allowCopyPaste,
                     allowRightClick: entity.rules.behavior.allowRightClick,
                     allowKeyboardShortcuts: entity.rules.behavior.allowKeyboardShortcuts
@@ -125,6 +117,10 @@ export class TestMapper {
                     enabled: entity.rules.autoSave.enabled,
                     intervalInSeconds: entity.rules.autoSave.intervalInSeconds,
                     saveOnEveryAnswer: entity.rules.autoSave.saveOnEveryAnswer
+                },
+                warning: {
+                    maxWarningCount: entity.rules.warning.maxWarningCount,
+                    autoSubmitOnMaxWarnings: entity.rules.warning.autoSubmitOnMaxWarnings
                 }
             },
             questions: entity.questions.map(q => ({

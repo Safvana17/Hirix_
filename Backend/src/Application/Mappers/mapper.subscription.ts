@@ -17,6 +17,7 @@ export class SubscriptionMapper{
             doc.paymentId
         )
 
+        subscription.isReminderSend = doc.isReminderSend
         return subscription
     }
 
@@ -30,7 +31,8 @@ export class SubscriptionMapper{
             status: entity.status,
             isTrial: entity.isTrial,
             isCurrent: entity.isCurrent,
-            paymentId: entity.paymentId
+            paymentId: entity.paymentId,
+            isReminderSend: entity.isReminderSend
         }
     }
 }

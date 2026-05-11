@@ -12,6 +12,7 @@ export interface ISubscription extends Document {
     isTrial: boolean
     isCurrent: boolean
     paymentId: string
+    isReminderSend: boolean
     createdAt: Date
     updatedAt: Date
 }
@@ -45,6 +46,10 @@ const SubscriptionSchema: Schema<ISubscription> = new Schema ({
     },
     paymentId: {
         type: String
+    },
+    isReminderSend: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true

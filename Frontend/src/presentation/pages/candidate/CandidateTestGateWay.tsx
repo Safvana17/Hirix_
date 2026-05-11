@@ -8,7 +8,8 @@ import TestNotStartedPage from '../../components/candidate/test/TestNotStartedPa
 import TestExpiredPage from '../../components/candidate/test/TestExpiredPage'
 import TestStartPage from '../../components/candidate/test/TestStartPage'
 import TestCandidateInstructions from './TestCandidateInstructions'
-import TestQuestions from './TestQuestions'
+import TestQuestion from './TestQuestions'
+
 
 const CandidateTestGateway: React.FC = () => {
     const { token } = useParams()
@@ -64,8 +65,15 @@ const CandidateTestGateway: React.FC = () => {
     if(step === 'INSTRUCTIONS') {
         return <TestCandidateInstructions />
     }
-    if(step === 'QUESTIONS'){
-        return <TestQuestions />
+    if (step === 'QUESTIONS') {
+        if (!test || !candidate) {
+            return (
+                <div className="flex h-screen items-center justify-center">
+                    <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-600"></div>
+                </div>
+            )
+        }
+        return <TestQuestion test={test} candidate={candidate} />
     }
     if(step === 'SUBMITTED') {
         return <p>submitted</p>
