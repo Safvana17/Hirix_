@@ -1,25 +1,11 @@
 import React, { useMemo, useState } from "react";
 import type { TestCandidate } from "../../../../types/test";
-import {
-  Box,
-  Button,
-  Chip,
-  Divider,
-  Paper,
-  Stack,
-  Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Chip, Divider, Paper, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Typography } from "@mui/material";
 
 interface TestCandidatesTabProps {
   candidates: TestCandidate[];
+  isEvaluating?: boolean;
+  onEvaluateSubmitted?: () => void;
   onViewAnswers?: (candidateId: string) => void;
   onShortlist?: (candidateId: string) => void;
   onReject?: (candidateId: string) => void;
@@ -29,6 +15,8 @@ type CandidateTab = "attended" | "notAttended";
 
 const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
   candidates,
+  isEvaluating = false,
+  onEvaluateSubmitted,
   onViewAnswers,
   onShortlist,
   onReject,
@@ -45,6 +33,15 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
     [candidates]
   );
 
+  const canEvaluate = useMemo(() => {
+    return attendedCandidates.some(
+      (candidate) =>
+        !candidate.evaluationStatus ||
+        candidate.evaluationStatus === "NOT_EVALUATED" ||
+        candidate.evaluationStatus === "FAILED"
+    );
+  }, [attendedCandidates]);
+
   const visibleCandidates =
     activeTab === "attended" ? attendedCandidates : notAttendedCandidates;
 
@@ -56,15 +53,39 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
 
   return (
     <Box>
-      <Box mb={2.5}>
-        <Typography variant="h6" fontWeight={700}>
-          Candidates
-        </Typography>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        justifyContent="space-between"
+        alignItems={{ xs: "stretch", sm: "center" }}
+        spacing={2}
+        mb={2.5}
+      >
+        <Box>
+          <Typography variant="h6" fontWeight={700}>
+            Candidates
+          </Typography>
 
-        <Typography variant="body2" color="text.secondary" mt={0.5}>
-          Review candidate submissions and shortlist suitable candidates.
-        </Typography>
-      </Box>
+          <Typography variant="body2" color="text.secondary" mt={0.5}>
+            Evaluate submitted candidates before shortlisting or rejecting.
+          </Typography>
+        </Box>
+
+        <Button
+          variant="contained"
+          disabled={!canEvaluate || isEvaluating}
+          onClick={onEvaluateSubmitted}
+          sx={{
+            backgroundColor: "#021A30",
+            textTransform: "none",
+            fontWeight: 700,
+            borderRadius: 2,
+            px: 2.5,
+            alignSelf: { xs: "stretch", sm: "center" },
+          }}
+        >
+          {isEvaluating ? "Evaluating..." : "Evaluate Submitted Candidates"}
+        </Button>
+      </Stack>
 
       <Paper
         elevation={0}
@@ -122,7 +143,6 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
           />
         ) : (
           <>
-            {/* Mobile card view */}
             <Stack
               spacing={1.5}
               sx={{
@@ -141,7 +161,6 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
               ))}
             </Stack>
 
-            {/* Desktop / tablet table view */}
             <TableContainer
               sx={{
                 display: { xs: "none", md: "block" },
@@ -149,7 +168,7 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
                 overflowX: "auto",
               }}
             >
-              <Table size="small" sx={{ minWidth: 1050 }}>
+              <Table size="small" sx={{ minWidth: 1200 }}>
                 <TableHead>
                   <TableRow
                     sx={{
@@ -166,11 +185,13 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
                   >
                     <TableCell>Email</TableCell>
                     <TableCell>Test Status</TableCell>
+                    <TableCell>Evaluation</TableCell>
                     <TableCell>Selection</TableCell>
+                    <TableCell>Score</TableCell>
+                    <TableCell>AI Rank</TableCell>
                     <TableCell>Started At</TableCell>
                     <TableCell>Submitted At</TableCell>
                     <TableCell>Warnings</TableCell>
-                    <TableCell>AI Rank</TableCell>
                     <TableCell align="right">Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -200,7 +221,26 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
                       </TableCell>
 
                       <TableCell>
+                        <EvaluationChip status={candidate.evaluationStatus} />
+                      </TableCell>
+
+                      <TableCell>
                         <SelectionChip status={candidate.selectionStatus} />
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2" fontWeight={600}>
+                          {formatScore(
+                            candidate.marksObtained,
+                            candidate.totalMarks
+                          )}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2" fontWeight={600}>
+                          {candidate.aiRank ?? "-"}
+                        </Typography>
                       </TableCell>
 
                       <TableCell>
@@ -216,8 +256,6 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
                       </TableCell>
 
                       <TableCell>{candidate.warningCount ?? 0}</TableCell>
-
-                      <TableCell>{candidate.aiRank ?? "-"}</TableCell>
 
                       <TableCell align="right">
                         <CandidateActions
@@ -267,9 +305,7 @@ const CandidateMobileCard = ({
           <Typography
             variant="body2"
             fontWeight={700}
-            sx={{
-              wordBreak: "break-word",
-            }}
+            sx={{ wordBreak: "break-word" }}
           >
             {candidate.email}
           </Typography>
@@ -277,18 +313,23 @@ const CandidateMobileCard = ({
 
         <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
           <StatusChip status={candidate.candidateTestStatus} />
+          <EvaluationChip status={candidate.evaluationStatus} />
           <SelectionChip status={candidate.selectionStatus} />
         </Stack>
 
         <Divider />
 
+        <InfoRow
+          label="Score"
+          value={formatScore(candidate.marksObtained, candidate.totalMarks)}
+        />
+        <InfoRow label="AI Rank" value={String(candidate.aiRank ?? "-")} />
         <InfoRow label="Started At" value={formatDateTime(candidate.startedAt)} />
         <InfoRow
           label="Submitted At"
           value={formatDateTime(candidate.submittedAt)}
         />
         <InfoRow label="Warnings" value={String(candidate.warningCount ?? 0)} />
-        <InfoRow label="AI Rank" value={String(candidate.aiRank ?? "-")} />
 
         <Box pt={0.5}>
           <CandidateActions
@@ -300,19 +341,6 @@ const CandidateMobileCard = ({
         </Box>
       </Stack>
     </Paper>
-  );
-};
-
-const InfoRow = ({ label, value }: { label: string; value: string }) => {
-  return (
-    <Stack direction="row" justifyContent="space-between" spacing={2}>
-      <Typography variant="caption" color="text.secondary">
-        {label}
-      </Typography>
-      <Typography variant="caption" fontWeight={600} textAlign="right">
-        {value}
-      </Typography>
-    </Stack>
   );
 };
 
@@ -329,6 +357,8 @@ const CandidateActions = ({
 }) => {
   const isSubmitted = candidate.candidateTestStatus === "SUBMITTED";
   const selectionStatus = candidate.selectionStatus || "PENDING";
+  const isEvaluated = candidate.evaluationStatus === "EVALUATED";
+  const isEvaluating = candidate.evaluationStatus === "EVALUATING";
 
   if (!isSubmitted) {
     return (
@@ -343,9 +373,7 @@ const CandidateActions = ({
       direction={{ xs: "column", sm: "row" }}
       spacing={1}
       justifyContent="flex-end"
-      sx={{
-        width: { xs: "100%", sm: "auto" },
-      }}
+      sx={{ width: { xs: "100%", sm: "auto" } }}
     >
       <Button
         size="small"
@@ -361,7 +389,7 @@ const CandidateActions = ({
         View Answers
       </Button>
 
-      {selectionStatus === "PENDING" && (
+      {selectionStatus === "PENDING" && isEvaluated && (
         <>
           <Button
             size="small"
@@ -394,6 +422,34 @@ const CandidateActions = ({
           </Button>
         </>
       )}
+
+      {selectionStatus === "PENDING" && !isEvaluated && (
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: { xs: "center", sm: "flex-end" },
+            minWidth: 90,
+          }}
+        >
+          {isEvaluating ? "Evaluating..." : "Evaluate first"}
+        </Typography>
+      )}
+    </Stack>
+  );
+};
+
+const InfoRow = ({ label, value }: { label: string; value: string }) => {
+  return (
+    <Stack direction="row" justifyContent="space-between" spacing={2}>
+      <Typography variant="caption" color="text.secondary">
+        {label}
+      </Typography>
+      <Typography variant="caption" fontWeight={600} textAlign="right">
+        {value}
+      </Typography>
     </Stack>
   );
 };
@@ -416,10 +472,20 @@ const EmptyState = ({ message }: { message: string }) => {
 
 const StatusChip = ({ status }: { status?: string }) => {
   const config: Record<string, { bg: string; color: string; label: string }> = {
+    DRAFT: {
+      bg: "#F5F5F5",
+      color: "#616161",
+      label: "Draft",
+    },
     INVITED: {
       bg: "#EEF2FF",
       color: "#3949AB",
       label: "Invited",
+    },
+    IN_PROGRESS: {
+      bg: "#FFF4E5",
+      color: "#B26A00",
+      label: "In Progress",
     },
     STARTED: {
       bg: "#FFF4E5",
@@ -436,6 +502,11 @@ const StatusChip = ({ status }: { status?: string }) => {
       color: "#616161",
       label: "Expired",
     },
+    DISQUALIFIED: {
+      bg: "#FDECEA",
+      color: "#D32F2F",
+      label: "Disqualified",
+    },
   };
 
   const selectedConfig =
@@ -444,6 +515,45 @@ const StatusChip = ({ status }: { status?: string }) => {
       color: "#616161",
       label: status || "-",
     };
+
+  return (
+    <Chip
+      label={selectedConfig.label}
+      size="small"
+      sx={{
+        bgcolor: selectedConfig.bg,
+        color: selectedConfig.color,
+        fontWeight: 600,
+      }}
+    />
+  );
+};
+
+const EvaluationChip = ({ status }: { status?: string }) => {
+  const config: Record<string, { bg: string; color: string; label: string }> = {
+    NOT_EVALUATED: {
+      bg: "#F5F5F5",
+      color: "#616161",
+      label: "Not Evaluated",
+    },
+    EVALUATING: {
+      bg: "#FFF4E5",
+      color: "#B26A00",
+      label: "Evaluating",
+    },
+    EVALUATED: {
+      bg: "#E8F5E9",
+      color: "#2E7D32",
+      label: "Evaluated",
+    },
+    FAILED: {
+      bg: "#FDECEA",
+      color: "#D32F2F",
+      label: "Failed",
+    },
+  };
+
+  const selectedConfig = config[status || "NOT_EVALUATED"];
 
   return (
     <Chip
@@ -490,6 +600,16 @@ const SelectionChip = ({ status }: { status?: string }) => {
       }}
     />
   );
+};
+
+const formatScore = (marksObtained?: number, totalMarks?: number) => {
+  if (marksObtained === undefined || marksObtained === null) return "-";
+
+  if (totalMarks === undefined || totalMarks === null) {
+    return String(marksObtained);
+  }
+
+  return `${marksObtained} / ${totalMarks}`;
 };
 
 const formatDateTime = (date?: string | Date) => {

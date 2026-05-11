@@ -42,6 +42,10 @@ const CreateTestPage: React.FC = () => {
             ...data
         }))
     }
+
+    console.log("FORM DATA QUESTIONS:", formData.questions)
+console.log("FIRST QUESTION ANSWER:", formData.questions[0]?.answer)
+console.log("IS ARRAY:", Array.isArray(formData.questions[0]?.answer))
     const validate = () => {
         const result = createTestValidator.safeParse(formData)
         if(result.success) return true

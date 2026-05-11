@@ -30,7 +30,7 @@ export interface Question {
     isPremium: boolean;
     isPractice: boolean;
     isDeleted: boolean;
-    answer: string
+    answer: string[]
 }
 
 export type QuestionFormData = {
@@ -42,7 +42,7 @@ export type QuestionFormData = {
   categoryId: string;
   categoryName: string;
   options: string[];
-  answer: string;
+  answer: string[];
   testCases: TestCase[];
   isPremium: boolean;
   isPractice: boolean;

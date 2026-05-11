@@ -52,7 +52,7 @@ interface QuestionModalProps {
     categoryId: initialData?.categoryId || '',
     categoryName: initialData?.categoryName || '',
     options: initialData?.options || [],
-    answer: initialData?.answer || '',
+    answer: initialData?.answer || [],
     testCases: initialData?.testCases || [],
     isPremium: initialData?.isPremium || false,
     isPractice: initialData?.isPractice || false,
@@ -228,17 +228,25 @@ interface QuestionModalProps {
                 
               ))}
               {localError.options && <p className='text-[#FBBEBE] text-sm'>{localError.options}</p>}
-
               <TextField
+                select
                 label="Correct Answer"
                 fullWidth
                 margin="normal"
                 InputProps={{
                   readOnly: mode === 'view'
                 }}
-                value={formData.answer}
-                onChange={(e) => handleChange('answer', e.target.value)}
-              />
+                value={formData.answer[0] || ''}
+                onChange={(e) =>
+                  handleChange('answer', [e.target.value])
+                }
+              >
+                {formData.options.map((opt, index) => (
+                  <MenuItem key={index} value={opt}>
+                    {opt}
+                  </MenuItem>
+                ))}
+              </TextField>
               {localError.answer && <p className='text-[#FBBEBE] text-sm'>{localError.answer}</p>}
               {mode !== 'view' &&
                 <Button onClick={addOptions}>Add Options</Button>

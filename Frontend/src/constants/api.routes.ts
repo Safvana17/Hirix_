@@ -74,7 +74,9 @@ export const API_ROUTES = {
       GET_ALL: '/company/tests',
       GET_BY_ID: (id: string) => 
         `/company/test/${id}`,
-      GET_QUESTIONS: '/company/test/questions'
+      GET_QUESTIONS: '/company/test/questions',
+      EVALUATE: (id: string) => 
+        `/company/test/${id}/evaluate`
     }
   },
 

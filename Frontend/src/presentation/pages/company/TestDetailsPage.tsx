@@ -12,13 +12,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import InternalLayout from "../../layouts/InternalLayout";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../redux/store";
-import { getTestById } from "../../../redux/slices/features/test/companyTestSlice";
+import { evaluateTest, getTestById } from "../../../redux/slices/features/test/companyTestSlice";
 import { companySidebarItems } from "../../../constants/sidebarItems";
 import TestInfoTab from "../../components/company/test/TestInfoTab";
 import TestQuestionsTab from "../../components/company/test/TestQuestionsTab";
 import TestCandidatesTab from "../../components/company/test/TestCandidatesTab";
 import { ArrowBack } from "@mui/icons-material";
 import { ROUTES } from "../../../constants/routes";
+import CandidateAnswersPage from "../../components/company/test/CandidateAnswerPage";
+import toast from "react-hot-toast";
 
 type TabValue = "info" | "questions" | "candidates" | "shortlisted";
 
@@ -28,6 +30,7 @@ const TestDetailsPage = () => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<TabValue>("info")
   const { selectedTest, loading } = useSelector((state: RootState) => state.companyTest) 
+  const [selectedCandidateId, setSelectedCandidateId] = useState('')
   
   useEffect(() => {
     if(!testId) {
@@ -38,6 +41,7 @@ const TestDetailsPage = () => {
   }, [dispatch, testId])
 
   if(!selectedTest) return
+  
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" mt={8}>
@@ -46,6 +50,30 @@ const TestDetailsPage = () => {
     );
   }
 
+  const handleViewAnswer = (candidateId: string) => {
+    setSelectedCandidateId(candidateId)
+  }
+  const selectedCandidate = selectedTest.candidates.find(
+    (candidate) => candidate.id === selectedCandidateId
+  )
+
+  if(selectedCandidate){
+    return (
+      <CandidateAnswersPage candidate={selectedCandidate} questions={selectedTest.questions} onBack={() => navigate(ROUTES.COMPANY.TEST)} />
+    )
+  }
+
+  const handleEvaluation = async() => {
+    try {
+      if(testId){
+        await dispatch(evaluateTest({testId})).unwrap()
+        toast.success("Candidate answers evaluated successfully")
+        await dispatch(getTestById({id: testId}))
+      }
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to evaluate candidate answers')
+    }
+  }
   return (
     <InternalLayout title={selectedTest.name} subTitle={selectedTest.jobrole} sidebarItems={companySidebarItems}>
       <Button
@@ -83,7 +111,7 @@ const TestDetailsPage = () => {
                 <TestQuestionsTab questions={selectedTest.questions} />
             )}
             {activeTab === "candidates" && (
-                <TestCandidatesTab candidates={selectedTest.candidates} />
+                <TestCandidatesTab candidates={selectedTest.candidates} onViewAnswers={handleViewAnswer} onEvaluateSubmitted={handleEvaluation}/>
             )}
             {/* {activeTab === "shortlisted" && (
                 <TestCandidatesTab candidates={test.shortlistedCandidates} />

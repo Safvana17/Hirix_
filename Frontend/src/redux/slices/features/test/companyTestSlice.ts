@@ -182,6 +182,24 @@ Test,
     }
 })
 
+export const evaluateTest = createAsyncThunk<
+void,
+{testId: string},
+{rejectValue: string}
+>('test/evaluate', async({testId}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.COMPANY.TEST.EVALUATE(testId))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to evalaute test')
+    }
+})
+
+
 const CompanyTestSlice = createSlice({
     name: 'CompanyTestSlice',
     initialState,
@@ -276,6 +294,16 @@ const CompanyTestSlice = createSlice({
             state.loading = false
         })
         .addCase(editTest.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to edit test'
+        })
+        .addCase(evaluateTest.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(evaluateTest.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(evaluateTest.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to edit test'
         })

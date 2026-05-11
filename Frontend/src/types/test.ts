@@ -8,6 +8,9 @@ export type ModalMode = 'create' | 'edit'
 export type CandidateTestGateStep = 'LOADING' | 'NOT_STARTED' | 'DETAILS' | 'INSTRUCTIONS' | 'EXPIRED' | 'READY' | 'LOGIN' | 'QUESTIONS' | 'SUBMITTED' | 'TERMINATED' | 'DISQUALIFIED' | 'EXPIRED'
 export type CodingLanguage = 'javascript' | 'python'
 export type ViolationType = 'TAB_SWITCH' | 'FULLSCREEN_EXIT' 
+export type EvaluationStatus = "NOT_EVALUATED" | "EVALUATING" | "EVALUATED" | "FAILED"
+
+
 export const QuestionMark = {
     mcq: 2,
     coding: 5,
@@ -29,15 +32,19 @@ export interface TestCandidateAnswer {
     totalMarks?: number
     visited?: boolean
     answeredAt?: string
+    aiFeedback?: string
+    evaluationStatus?: EvaluationStatus
 }
 
 export interface TestCandidate {
     id: string
     email: string
     token: string
+    name: string
     testId: string
     candidateTestStatus: CandidateStatus
     selectionStatus: CandidateSelectionStatus
+    evaluationStatus: EvaluationStatus
     warningCount: number
     candidateAnswers: {
         id: string
@@ -47,13 +54,15 @@ export interface TestCandidate {
         selectedOptionIds?: string[]
         descriptiveAnswer?: string
         codingAnswer?: {
-            language: string
+            language: CodingLanguage
             code: string
             output?: string
         }
         isCorrect?: boolean
         marksObtained?: number
         totalMarks: number
+        aiFeedback?: string
+        evaluationStatus?: EvaluationStatus
     }[],
     aiRank: number
     totalMarks: number
@@ -62,6 +71,7 @@ export interface TestCandidate {
     marksObtained: number
     startedAt: string
     submittedAt: string
+    evaluatedAt?: string | Date
 }
 
 export interface TestRules {
@@ -118,8 +128,8 @@ export interface TestQuestions {
    questionId?: string
    description?: string
    options?: string[]
-   answer?: string
-   testCase: TestCase[]
+   answer?: string[]
+   testCase?: TestCase[]
 }
 
 export interface CreateTestCandidatePayload {

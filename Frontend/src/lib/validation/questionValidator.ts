@@ -18,7 +18,7 @@ export const questionSchema = z.object({
   categoryId: z.string().min(1, "Category is required"),
   isPremium: z.boolean(),
   isPractice: z.boolean(),
-  answer: z.string().optional(),
+  answer: z.array(z.string()).optional(),
   options: z.array(z.string().min(1)).optional(),
   testCases: z.array(testCaseSchema).optional()
 })
@@ -32,21 +32,21 @@ export const questionSchema = z.object({
       });
     }
 
-    if (!data.answer || data.answer.trim() === "") {
-      ctx.addIssue({
-        path: ['answer'],
-        message: "Answer is required for MCQ",
-        code: z.ZodIssueCode.custom
-      });
-    }
+    // if (!data.answer || data.answer.trim() === "") {
+    //   ctx.addIssue({
+    //     path: ['answer'],
+    //     message: "Answer is required for MCQ",
+    //     code: z.ZodIssueCode.custom
+    //   });
+    // }
 
-    if (data.options && !data.options.includes(data.answer!)) {
-      ctx.addIssue({
-        path: ['answer'],
-        message: "Answer must be one of the options",
-        code: z.ZodIssueCode.custom
-      });
-    }
+    // if (data.options && !data.options.includes(data.answer!)) {
+    //   ctx.addIssue({
+    //     path: ['answer'],
+    //     message: "Answer must be one of the options",
+    //     code: z.ZodIssueCode.custom
+    //   });
+    // }
   }
 
   if (data.type === 'coding') {

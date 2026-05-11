@@ -5,6 +5,7 @@ import AssignmentTurnedInRoundedIcon from '@mui/icons-material/AssignmentTurnedI
 import LibraryAddRoundedIcon from '@mui/icons-material/LibraryAddRounded'
 import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded'
 import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../../../constants/routes'
 
 const TestSubmittedPage: React.FC = () => {
     const navigate = useNavigate()
@@ -129,7 +130,7 @@ const TestSubmittedPage: React.FC = () => {
                                 bgcolor: '#0A2E4E',
                             },
                         }}
-                        onClick={() => navigate('/candidate/register')}
+                        onClick={() => navigate(ROUTES.PUBLIC.HOME)}
                     >
                         Create Account for Practice
                     </Button>
