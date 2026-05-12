@@ -3,6 +3,8 @@ import type { CandidateTest, CodeRunnerArgs, CodeRunnerResponse, TestCandidate, 
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
+import type { QuestionFormData } from "../../../../types/question"
+import type { Category } from "../../../../types/category"
 
 interface CandidateTestState {
     loading: boolean
@@ -10,6 +12,7 @@ interface CandidateTestState {
     error: string | null
     test: CandidateTest | null
     candidate: TestCandidate | null
+    categories: Category[]
 }
 
 const initialState: CandidateTestState = {
@@ -17,7 +20,8 @@ const initialState: CandidateTestState = {
     codeRunning: false,
     error: null,
     test: null,
-    candidate: null
+    candidate: null,
+    categories: []
 }
 
 export const getTestByToken = createAsyncThunk<
@@ -125,6 +129,41 @@ void,
     }
 })
 
+export const submitQuestion = createAsyncThunk<
+void,
+{token: string, data: QuestionFormData},
+{rejectValue: string}
+>('candidate/submitQuestion', async({token, data}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.CANDIDATE.TEST.SUBMIT_QUESTION(token), data)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to submit question')
+    }
+})
+
+export const getAllPublicCategories = createAsyncThunk<
+{categories: Category[]},
+{token: string},
+{rejectValue: string}
+>('candidate/getAllCategories', async({token},{rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.CANDIDATE.TEST.GET_CATEGORIES(token))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get all categories')
+    }
+})
+
 const candidateTestSlice = createSlice({
     name: 'CandidateTestSlice',
     initialState,
@@ -196,6 +235,27 @@ const candidateTestSlice = createSlice({
         .addCase(terninateTest.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to terminate'
+        })
+        .addCase(submitQuestion.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(submitQuestion.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(submitQuestion.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to submit question'
+        })
+        .addCase(getAllPublicCategories.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(getAllPublicCategories.fulfilled, (state, action) => {
+            state.loading = false
+            state.categories = action.payload.categories
+        })
+        .addCase(getAllPublicCategories.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get categories'
         })
     }
 })

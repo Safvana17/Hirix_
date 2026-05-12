@@ -30,6 +30,10 @@ export const API_ROUTES = {
         `/candidate/test/${token}/submit`,
       TERMINATE: (token: string) => 
         `/candidate/test/${token}/terminate`,
+      SUBMIT_QUESTION: (token: string) =>
+        `/candidate/test/${token}/question`,
+      GET_CATEGORIES: (token: string) =>
+        `/candidate/test/${token}/categories`,
     } 
   },
 

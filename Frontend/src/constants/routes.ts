@@ -38,6 +38,7 @@ export const ROUTES = {
     TEST_QUESTIONS: '/candidate/test/questions',
     TEST_SUBMIT: '/candidate/test/submit',
     TEST_TERMINATE: '/candidate/test/terminate',
+    QUESTION_SUBMITTED: '/candidate/test/quesion-submitted'
   },
 
   COMMON: {

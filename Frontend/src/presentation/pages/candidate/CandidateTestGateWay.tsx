@@ -9,6 +9,8 @@ import TestExpiredPage from '../../components/candidate/test/TestExpiredPage'
 import TestStartPage from '../../components/candidate/test/TestStartPage'
 import TestCandidateInstructions from './TestCandidateInstructions'
 import TestQuestion from './TestQuestions'
+import TestSubmittedPage from '../../components/candidate/test/TestSubmittedPage'
+import TestTerminatedPage from '../../components/candidate/test/TestTerminated'
 
 
 const CandidateTestGateway: React.FC = () => {
@@ -76,10 +78,10 @@ const CandidateTestGateway: React.FC = () => {
         return <TestQuestion test={test} candidate={candidate} />
     }
     if(step === 'SUBMITTED') {
-        return <p>submitted</p>
+        return <TestSubmittedPage />
     }
     if(step === 'TERMINATED') {
-        return <p>terminated</p>
+        return <TestTerminatedPage />
     }
     if(step === 'DISQUALIFIED'){
         return <p>disqualified</p>

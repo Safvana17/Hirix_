@@ -34,6 +34,7 @@ import TestCandidateInstructions from '../presentation/pages/candidate/TestCandi
 // import TestQuestions from '../presentation/pages/candidate/TestQuestions'
 import TestSubmittedPage from '../presentation/components/candidate/test/TestSubmittedPage'
 import TestTerminatedPage from '../presentation/components/candidate/test/TestTerminated'
+import QuestionSubmittedPage from '../presentation/components/candidate/test/CandidateQuestionSubmittedPages'
 
 
 
@@ -195,6 +196,10 @@ const App = () => {
           } />
           <Route path={ROUTES.CANDIDATE.TEST_TERMINATE} element={
             <TestTerminatedPage />
+          } />
+
+          <Route path={ROUTES.CANDIDATE.QUESTION_SUBMITTED} element={
+            <QuestionSubmittedPage />
           } />
           
           <Route path={ROUTES.ADMIN.LOGIN} element={<PublicRoute><AdminLogin /></PublicRoute>} />

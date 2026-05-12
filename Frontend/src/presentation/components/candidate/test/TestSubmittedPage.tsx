@@ -1,15 +1,54 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Button, Divider, Stack, Typography } from '@mui/material'
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded'
 import AssignmentTurnedInRoundedIcon from '@mui/icons-material/AssignmentTurnedInRounded'
 import LibraryAddRoundedIcon from '@mui/icons-material/LibraryAddRounded'
 import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTES } from '../../../../constants/routes'
+import QuestionModal from '../../modal/QuestionModal'
+import type { ModalMode, QuestionFormData } from '../../../../types/question'
+import { useDispatch, useSelector } from 'react-redux'
+import type { AppDispatch, RootState } from '../../../../redux/store'
+import toast from 'react-hot-toast'
+import { getAllPublicCategories, submitQuestion } from '../../../../redux/slices/features/test/CandidateTestSlice'
+
 
 const TestSubmittedPage: React.FC = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [modalMode, setModalMode] = useState<ModalMode>('create')
+    const { categories } = useSelector((state: RootState) => state.candidateTest)
     const navigate = useNavigate()
+    const dispatch = useDispatch<AppDispatch>()
+    const { token } = useParams()
 
+    // useEffect(() => {
+    //     if(token)
+    //       dispatch(getAllPublicCategories({token}))
+    // }, [dispatch, token])
+
+    const handleAddQuestion = () => {
+        setModalMode('create')
+        if(token && categories.length === 0){
+            dispatch(getAllPublicCategories({token}))
+        }
+        setIsModalOpen(true)
+    }
+    
+    const handleSaveQuestion = async(data: QuestionFormData) => {
+        try {
+            if(modalMode === 'create' && token){
+            console.log('from create')
+                await dispatch(submitQuestion({data, token})).unwrap()
+                console.log('reached here')
+                setIsModalOpen(false)
+                toast.success('Question added successfully')
+                navigate(ROUTES.CANDIDATE.QUESTION_SUBMITTED)
+            }
+        } catch (error) {
+            toast.error(typeof error === 'string' ? error : 'Failed to create question')
+        }
+    }
     return (
         <Box
             sx={{
@@ -146,7 +185,7 @@ const TestSubmittedPage: React.FC = () => {
                             borderColor: '#02182C',
                             color: '#02182C',
                         }}
-                        onClick={() => navigate('/candidate/practice/submit-question')}
+                        onClick={handleAddQuestion}
                     >
                         Submit a Question to Practice Library
                     </Button>
@@ -156,6 +195,18 @@ const TestSubmittedPage: React.FC = () => {
                     You can close this window
                 </Typography>
             </Box>
+            <QuestionModal
+                key={modalMode}
+                isOpen={isModalOpen}
+                mode={modalMode}
+                categories={categories}
+                role='Candidate'
+                initialData={null}
+                onClose={() => {
+                  setIsModalOpen(false)
+                }}
+                onSave={handleSaveQuestion}
+            />
         </Box>
     )
 }
