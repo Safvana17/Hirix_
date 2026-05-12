@@ -13,7 +13,7 @@ import TestWarningBanner from '../../components/candidate/test/TestWarningBanner
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
-import { submitTest } from '../../../redux/slices/features/test/CandidateTestSlice'
+import { submitTest, terninateTest } from '../../../redux/slices/features/test/CandidateTestSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTES } from '../../../constants/routes'
 // import { useFullScreenMonitor } from '../../../hooks/useFullScreenMonitor'
@@ -43,14 +43,21 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
       onSubmitTest: async (answers) => {
         try {
           if(!token) return
-          await dispatch(submitTest({token, answer: Object.values(answers)})).unwrap()
+          await dispatch(submitTest({token, answer: Object.values(answers), warningCount: runTime.warningCount})).unwrap()
           navigate(ROUTES.CANDIDATE.TEST_SUBMIT)
         } catch (error) {
           toast.error(typeof error === 'string' ? error : 'Failed to submit test')
         }
       },
       onTerminateTest: async (reason, answers) => {
-        console.log('terminated', reason, answers)
+        console.log("terminated", reason)
+        try {
+          if(!token) return
+          await dispatch(terninateTest({token, answer: Object.values(answers), warningCount: runTime.warningCount})).unwrap()
+          navigate(ROUTES.CANDIDATE.TEST_TERMINATE)
+        } catch (error) {
+          toast.error(typeof error === 'string' ? error : 'Failed to terminate test')
+        }
       },
       onWarning: ({type, warningCount}) => {
         const messageMap = {
@@ -64,23 +71,9 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
         }
         console.log('warning: ',type, warningCount)
         setWarningMessage(messageMap[type] || 'Rule violation detected.')
+        console.log("WARNING MESSAGE STATE:", warningMessage)
       }
     })
-
-    // const handleFullScreenExit = useCallback(() => {
-    //   void runTime.handleViolation("FULLSCREEN_EXIT");
-    // }, [runTime]);
-
-    // const { enterFullScreen } = useFullScreenMonitor({
-    //   enforceFullScreen: test.rules.behavior.enforceFullScreen,
-    //   onExit: handleFullScreenExit,
-    // });
-
-    // useEffect(() => {
-    //   if (test.rules.behavior.enforceFullScreen) {
-    //     void enterFullScreen();
-    //   }
-    // }, [test.rules.behavior.enforceFullScreen, enterFullScreen])
 
     const answeredQuestionIds = useMemo(() => {
         return Object.keys(runTime.answers).filter((questionId) => {

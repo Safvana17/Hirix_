@@ -3,6 +3,7 @@ import { Box, Button, Divider, Stack, Typography } from '@mui/material'
 import BlockRoundedIcon from '@mui/icons-material/BlockRounded'
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded'
 import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../../../constants/routes'
 
 const TestTerminatedPage: React.FC = () => {
     const navigate = useNavigate()
@@ -120,7 +121,7 @@ const TestTerminatedPage: React.FC = () => {
                             bgcolor: '#991B1B',
                         },
                     }}
-                    onClick={() => navigate('/candidate/practice')}
+                    onClick={() => navigate(ROUTES.CANDIDATE.DASHBOARD)}
                 >
                     Go to Practice
                 </Button>

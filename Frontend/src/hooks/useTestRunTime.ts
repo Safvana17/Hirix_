@@ -5,7 +5,6 @@ import { useAutosave } from "./useAutoSave";
 import { useFullScreenMonitor } from "./useFullScreenMonitor";
 
 
-
 export type RunTimeAnswers = Record<string, TestCandidateAnswer>
 
 interface useTestRunTimeProps {
@@ -202,38 +201,24 @@ export function useTestRunTime ({
     //     })
     // }, [onWarning, handleTerminate, rules.warning.autoSubmitOnMaxWarnings, rules.warning.maxWarningCount])
 
-const handleViolation = useCallback(
-  async (type: ViolationType) => {
-    warningCountRef.current += 1;
-
-    const nextCount = warningCountRef.current;
-
-    console.log("[VIOLATION] counted", {
-      type,
-      nextCount,
-    });
-
-    setWarningCount(nextCount);
-
-    onWarning?.({
-      type,
-      warningCount: nextCount,
-    });
-
-    if (
-      rules.warning.autoSubmitOnMaxWarnings &&
-      nextCount > rules.warning.maxWarningCount
-    ) {
-      void handleTerminate(type);
-    }
-  },
-  [
-    onWarning,
-    handleTerminate,
-    rules.warning.autoSubmitOnMaxWarnings,
-    rules.warning.maxWarningCount,
-  ]
-);
+    const handleViolation = useCallback(
+    async (type: ViolationType) => {
+        warningCountRef.current += 1
+        const nextCount = warningCountRef.current
+        console.log("[VIOLATION] counted", { type, nextCount})
+        setWarningCount(nextCount)
+        onWarning?.({type,warningCount: nextCount,})
+        if ( rules.warning.autoSubmitOnMaxWarnings && nextCount >= rules.warning.maxWarningCount) {
+          void handleTerminate(type);
+        }
+    },
+    [
+        onWarning,
+        handleTerminate,
+        rules.warning.autoSubmitOnMaxWarnings,
+        rules.warning.maxWarningCount,
+    ]
+    )
 
     useEffect(() => {
         const interval = setInterval(() => {

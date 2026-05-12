@@ -93,11 +93,11 @@ CodeRunnerResponse,
 
 export const submitTest = createAsyncThunk<
 void,
-{token: string, answer: TestCandidateAnswer[]},
+{token: string, answer: TestCandidateAnswer[], warningCount: number},
 {rejectValue: string}
->('candidate/submitTest', async({token, answer}, {rejectWithValue}) => {
+>('candidate/submitTest', async({token, answer, warningCount}, {rejectWithValue}) => {
     try {
-        const response = await api.post(API_ROUTES.CANDIDATE.TEST.SUBMIT(token), {answer})
+        const response = await api.post(API_ROUTES.CANDIDATE.TEST.SUBMIT(token), {answer, warningCount})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
@@ -105,6 +105,23 @@ void,
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to submit test')
+    }
+})
+
+export const terninateTest = createAsyncThunk<
+void,
+{token: string, answer: TestCandidateAnswer[], warningCount: number},
+{rejectValue: string}
+>('candidate/terminateTest', async({token, answer, warningCount}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.CANDIDATE.TEST.TERMINATE(token), {answer, warningCount})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to terminate')
     }
 })
 
@@ -169,6 +186,16 @@ const candidateTestSlice = createSlice({
         .addCase(submitTest.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to submit test'
+        })
+        .addCase(terninateTest.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(terninateTest.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(terninateTest.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to terminate'
         })
     }
 })

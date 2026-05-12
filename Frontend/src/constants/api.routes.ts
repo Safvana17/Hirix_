@@ -30,8 +30,6 @@ export const API_ROUTES = {
         `/candidate/test/${token}/submit`,
       TERMINATE: (token: string) => 
         `/candidate/test/${token}/terminate`,
-      WARNING: (token: string) => 
-        `/candidate/test/${token}/warning`,
     } 
   },
 

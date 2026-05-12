@@ -33,6 +33,7 @@ import TestCandidateLogin from '../presentation/pages/candidate/TestCandidateLog
 import TestCandidateInstructions from '../presentation/pages/candidate/TestCandidateInstructions'
 // import TestQuestions from '../presentation/pages/candidate/TestQuestions'
 import TestSubmittedPage from '../presentation/components/candidate/test/TestSubmittedPage'
+import TestTerminatedPage from '../presentation/components/candidate/test/TestTerminated'
 
 
 
@@ -189,11 +190,11 @@ const App = () => {
             <TestCandidateInstructions />
           } />
 
-          {/* <Route path={ROUTES.CANDIDATE.TEST_QUESTIONS} element={
-            <TestQuestions />
-          } /> */}
           <Route path={ROUTES.CANDIDATE.TEST_SUBMIT} element={
             <TestSubmittedPage />
+          } />
+          <Route path={ROUTES.CANDIDATE.TEST_TERMINATE} element={
+            <TestTerminatedPage />
           } />
           
           <Route path={ROUTES.ADMIN.LOGIN} element={<PublicRoute><AdminLogin /></PublicRoute>} />
