@@ -6,6 +6,7 @@ import { verifyCsrf } from '../../middlewares/csrfVerify'
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
 import { CandidateRunCodeSchema, submitTestSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
+import { createQuestionSchema } from '../../validators/questionValidator'
 
 
 const router = Express.Router()
@@ -36,5 +37,7 @@ router.patch(ROUTES.CANDIDATE.TEST.START, validate(TestTokenSchema, 'params'), I
 router.post(ROUTES.CANDIDATE.TEST.RUN_CODE, validate(TestTokenSchema, 'params'), validate(CandidateRunCodeSchema, 'body'), ICandidateTestController.runCode)
 router.post(ROUTES.CANDIDATE.TEST.SUBMIT, validate(TestTokenSchema, 'params'), validate(submitTestSchema, 'body'), ICandidateTestController.submittest)
 router.patch(ROUTES.CANDIDATE.TEST.TERMINATE, validate(TestTokenSchema, 'params'),validate(submitTestSchema, 'body'), ICandidateTestController.terminateTest)
+router.post(ROUTES.CANDIDATE.TEST.SUBMIT_QUESTION, validate(TestTokenSchema, 'params'), validate(createQuestionSchema, 'body'), ICandidateTestController.submitQuestion)
+router.get(ROUTES.CANDIDATE.TEST.GET_CATEGORIES, validate(TestTokenSchema, 'params'), ICandidateTestController.getAllCategories)
 
 export default router

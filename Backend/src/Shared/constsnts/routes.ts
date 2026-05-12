@@ -97,6 +97,7 @@ export const ROUTES = {
             SUBMIT: '/test/:token/submit',
             TERMINATE: '/test/:token/terminate',
             SUBMIT_QUESTION: '/test/:token/question',
+            GET_CATEGORIES: '/test/:token/categories'
         }
     },
 

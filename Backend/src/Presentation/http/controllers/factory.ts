@@ -169,6 +169,8 @@ import { CandidateSubmitTestUsecase } from "../../../Application/candidate/useCa
 import { CompanyEvaluateTestUsecase } from "../../../Application/company/usecases/test/company.evaluateTest.usecase";
 import { AiEvaluationService } from "../../../Infrastructure/services/AiEvaluation.service";
 import { CandidateTerminateTestUsecase } from "../../../Application/candidate/useCases/test/candidate.terminateTest.usecase";
+import { CandidateSubmitQuestionUsecase } from "../../../Application/candidate/useCases/test/candidate.submitQuestion.usecase";
+import { CandidateGetAllCategoriesUsecase } from "../../../Application/candidate/useCases/test/candidate.getAllCategories.usecase";
 
 
 
@@ -363,9 +365,17 @@ const iCandidateSubmitTest = new CandidateSubmitTestUsecase (
     iTestCandidateRepository,
     iTestRepository
 )
-const iCandidateCountWarnings = new CandidateTerminateTestUsecase(
+const iCandidateTerminateTest = new CandidateTerminateTestUsecase(
     iTestCandidateRepository,
     iTestRepository
+)
+const iCandidateSubmitQuestion = new CandidateSubmitQuestionUsecase (
+    iQuestionRepository,
+    iCategoryRepository
+)
+const iCandidateGetCategories = new CandidateGetAllCategoriesUsecase(
+    iTestCandidateRepository,
+    iCategoryRepository
 )
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -967,5 +977,7 @@ export const ICandidateTestController = new CandidatetestController(
     iCandidateStartTest,
     iCandidateRunCode,
     iCandidateSubmitTest,
-    iCandidateCountWarnings
+    iCandidateTerminateTest,
+    iCandidateSubmitQuestion,
+    iCandidateGetCategories
 )

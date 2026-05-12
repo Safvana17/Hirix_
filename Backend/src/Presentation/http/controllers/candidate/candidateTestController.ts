@@ -10,6 +10,8 @@ import { ICandidateStartTestUsecase } from "../../../../Application/candidate/in
 import { ICandidateRunCodeUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.runCode.usecase";
 import { ICandidateSubmitTestUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.submitTest.usecase";
 import { ICandidateTerminateTestUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.terminateTest.usecase";
+import { ICandidateSubmitQuestionUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.submitQuestion.usecase";
+import { ICandidateGetAllCategoriesUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.getAllCategories.usecase";
 
 export class CandidatetestController {
     constructor (
@@ -18,7 +20,9 @@ export class CandidatetestController {
         private _startTest: ICandidateStartTestUsecase,
         private _runCode: ICandidateRunCodeUsecase,
         private _submitTest: ICandidateSubmitTestUsecase,
-        private _countWarnings: ICandidateTerminateTestUsecase,
+        private _terminateCandidate: ICandidateTerminateTestUsecase,
+        private _submitQuestion: ICandidateSubmitQuestionUsecase,
+        private _getAllCategories: ICandidateGetAllCategoriesUsecase,
     ) {}
 
     getTestByToken = asyncHandler(async(req: Request, res: Response) => {
@@ -55,7 +59,19 @@ export class CandidatetestController {
 
     terminateTest = asyncHandler(async(req: Request, res: Response) => {
         const { token } = req.validatedParams as TestTokenParams
-        await this._countWarnings.execute({token, ...req.body})
+        await this._terminateCandidate.execute({token, ...req.body})
         return sendSuccess(res, statusCode.OK, '')
+    })
+
+    submitQuestion = asyncHandler(async(req: Request, res: Response) => {
+        const { token } = req.validatedParams as TestTokenParams
+        await this._submitQuestion.execute({token, ...req.body})
+        return sendSuccess(res, statusCode.OK, '')
+    })
+
+    getAllCategories = asyncHandler(async(req: Request, res: Response) => {
+        const { token } = req.validatedParams as TestTokenParams
+        const categories = await this._getAllCategories.execute({token})
+        return sendSuccess(res, statusCode.OK, '', categories)
     })
 }
