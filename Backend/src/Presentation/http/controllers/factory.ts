@@ -168,6 +168,7 @@ import { SendTrialEndReminderUsecase } from "../../../Application/common/usecase
 import { CandidateSubmitTestUsecase } from "../../../Application/candidate/useCases/test/candidate.submittest.usecase";
 import { CompanyEvaluateTestUsecase } from "../../../Application/company/usecases/test/company.evaluateTest.usecase";
 import { AiEvaluationService } from "../../../Infrastructure/services/AiEvaluation.service";
+import { CandidateTerminateTestUsecase } from "../../../Application/candidate/useCases/test/candidate.terminateTest.usecase";
 
 
 
@@ -359,6 +360,10 @@ const iCandidateRunCode = new CandidateRunCodeUsecase (
     iCodeRunnerService
 )
 const iCandidateSubmitTest = new CandidateSubmitTestUsecase (
+    iTestCandidateRepository,
+    iTestRepository
+)
+const iCandidateCountWarnings = new CandidateTerminateTestUsecase(
     iTestCandidateRepository,
     iTestRepository
 )
@@ -630,6 +635,7 @@ const iCompanyEvaluateTest = new CompanyEvaluateTestUsecase(
     iEvaluateService,
     iCodeRunnerService
 )
+
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -961,4 +967,5 @@ export const ICandidateTestController = new CandidatetestController(
     iCandidateStartTest,
     iCandidateRunCode,
     iCandidateSubmitTest,
+    iCandidateCountWarnings
 )

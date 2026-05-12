@@ -1,7 +1,7 @@
 import QuestionType from "../../../../Domain/enums/questionType"
 import { CodingLanguage } from "../../../../Domain/enums/Test"
 
-export interface CandidateSubmitAnswerDTO {
+export interface CandidateAnswerDTO {
     testQuestionId: string
     questionType: QuestionType
     timeTakenInSeconds: number
@@ -13,12 +13,13 @@ export interface CandidateSubmitAnswerDTO {
         output?: string
     }
 }
-export interface CandidateSubmitTestInputDTO{
+
+export interface CandidateTerminateTestInputDTO {
     token: string
-    answer: CandidateSubmitAnswerDTO[]
     warningCount: number
+    answer: CandidateAnswerDTO[]
 }
 
-export interface CandidateSubmitTestOutputDTO {
+export interface CandidateTerminateTestOutputDTO {
     success: boolean
 }

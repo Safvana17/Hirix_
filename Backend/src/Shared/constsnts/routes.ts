@@ -95,6 +95,8 @@ export const ROUTES = {
             START: '/test/:token/start',
             RUN_CODE: '/test/:token/run',
             SUBMIT: '/test/:token/submit',
+            TERMINATE: '/test/:token/terminate',
+            SUBMIT_QUESTION: '/test/:token/question',
         }
     },
 

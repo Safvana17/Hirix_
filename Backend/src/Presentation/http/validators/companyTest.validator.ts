@@ -202,5 +202,6 @@ export const candidateAnswerSchema = z.object({
 })
 
 export const submitTestSchema = z.object({
-    answer: z.array(candidateAnswerSchema)
+    answer: z.array(candidateAnswerSchema),
+    warningCount: z.number().min(0)
 })
