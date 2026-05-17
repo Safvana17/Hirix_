@@ -1,5 +1,5 @@
 import QuestionType from "../../../../Domain/enums/questionType";
-import { CandidateSelectionStatus, CandidateTestStatus, CodingLanguage, TestStatus } from "../../../../Domain/enums/Test";
+import { CandidateSelectionStatus, CandidateTestStatus, CodingLanguage, TestStatus, ValuationStatus } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
@@ -7,7 +7,7 @@ import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IAiEvaluationService } from "../../../interface/service/IAiEvaluationService";
-import { ICodeRunnerService } from "../../../interface/service/IcodeRunnerService";
+import { ICandidateRankingService } from "../../../interface/service/ICandidateRankingService";
 import { CompanyEvaluateTestInputDTO, CompanyEvaluateTestOutputDTO } from "../../dtos/test/company.evaluate.Test.dto";
 import { ICompanyEvaluateTestUsecase } from "../../interfaces/test/ICompany.evaluateTest.usecase";
 
@@ -17,7 +17,7 @@ export class CompanyEvaluateTestUsecase implements ICompanyEvaluateTestUsecase {
         private _testRepository: ITestRepository,
         private _testCandidateRepository: ITestCandidateRepository,
         private _aiEvaluationService: IAiEvaluationService,
-        private _codeRunnerService: ICodeRunnerService
+        private _candidateRankingService: ICandidateRankingService
     ) {}
 
     async execute(request: CompanyEvaluateTestInputDTO): Promise<CompanyEvaluateTestOutputDTO> {
@@ -72,25 +72,20 @@ export class CompanyEvaluateTestUsecase implements ICompanyEvaluateTestUsecase {
                    if(result.isCorrect) correctAnswerCount++
                 }
                 if(question.type === QuestionType.CODING){
-                   let passedCount = 0
-                   const totalTestCases = question.testCase?.length ?? 0
+                   const result = await this._aiEvaluationService.evaluateCoding({
+                    language: candidateAnswer.codingAnswer?.language ?? CodingLanguage.JAVASCRIPT,
+                    code: candidateAnswer.codingAnswer?.code ?? "",
+                    testCase: (question.testCase ?? []).map((tc) => ({
+                        input: tc.input ?? "",
+                        expectedOutput: tc.expectedOutput ?? ""
+                    })),
+                    maxMarks: question.mark
+                   })
 
-                   for(const testCase of question.testCase!){
-                       const result = await this._codeRunnerService.runCode({
-                            language: candidateAnswer.codingAnswer?.language ?? CodingLanguage.JAVASCRIPT,
-                            sourceCode: candidateAnswer.codingAnswer?.code ?? "",
-                            input: testCase.input
-                       })
-                       if(result.stdout.trim() === testCase.expectedOutput.trim()){
-                        passedCount++
-                       }
-                   }
-
-                   const codingMarks = Math.round((passedCount/totalTestCases) * question.mark)
-                   candidateAnswer.isCorrect = passedCount === totalTestCases
-                   candidateAnswer.marksObtained = codingMarks
-                   candidateAnswer.aiFeedback = `${passedCount}/${totalTestCases} test cases passed`
-                   if(passedCount === totalTestCases) correctAnswerCount++
+                   candidateAnswer.isCorrect = result.isCorrect
+                   candidateAnswer.marksObtained = result.marksObtained
+                   candidateAnswer.aiFeedback = result.feedback
+                   if(result.isCorrect) correctAnswerCount++
                    marksObtained += candidateAnswer.marksObtained
                 }
             }
@@ -98,10 +93,13 @@ export class CompanyEvaluateTestUsecase implements ICompanyEvaluateTestUsecase {
             candidate.marksObtained = marksObtained
             candidate.evaluatedAt = new Date()
             candidate.correctAnswerCount = correctAnswerCount
-            candidate.selectionStatus = CandidateSelectionStatus.EVALUATED
+            candidate.selectionStatus = CandidateSelectionStatus.PENDING
+            candidate.evaluationStatus = ValuationStatus.EVALUATED
 
             await this._testCandidateRepository.update(candidate.id, candidate)
         }
+
+       await this._candidateRankingService.rankCandidate(test.id)
 
         return{
             success: true

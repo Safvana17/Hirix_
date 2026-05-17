@@ -34,10 +34,9 @@ export enum CandidateTestStatus {
 }
 
 export enum CandidateSelectionStatus {
-    NOT_EVALUATED = 'NOT_EVALUATED',
-    EVALUATING = 'EVALUATING',
-    EVALUATED = 'EVALUATED',
-    FAILED = 'FAILED'
+    PENDING = 'PENDING',
+    SHORTLISTED = 'SHORTLISTED',
+    REJECTED = 'REJECTED',    
 }
 
 export enum CodingLanguage {

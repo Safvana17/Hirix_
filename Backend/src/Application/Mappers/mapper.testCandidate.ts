@@ -34,6 +34,8 @@ export class TestCandidateMapper {
             doc.marksObtained,
             doc.correctAnswerCount,
             doc.selectionStatus,
+            doc.evaluationStatus,
+            doc.totalTimeTakenInSeconds,
             doc.startedAt,
             doc.submittedAt,
             doc.evaluatedAt
@@ -50,6 +52,7 @@ export class TestCandidateMapper {
             testToken: entity.testToken,
             candidateTestStatus: entity.candidateTestStatus,
             selectionStatus: entity.selectionStatus,
+            evaluationStatus: entity.evaluationStatus,
             warningCount: entity.warningCount,
             candidateAnswers: entity.candidateAnswers.map((answer) => ({
                 _id: Types.ObjectId.isValid(answer.id)
@@ -73,6 +76,7 @@ export class TestCandidateMapper {
             correctAnswerCount: entity.correctAnswerCount,
             totalQuestionsCount: entity.totalQuestionsCount,
             name: entity.name,
+            totalTimeTakenInSeconds: entity.totalTimeTakenInSeconds,
             startedAt: entity.startedAt,
             submittedAt: entity.submittedAt,
             evaluatedAt: entity.evaluatedAt

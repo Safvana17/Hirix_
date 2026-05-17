@@ -4,12 +4,16 @@ import { env } from "../config/env";
 import { AppError } from "../../Domain/errors/app.error";
 import { TestMessages } from "../../Shared/constsnts/messages/testMessages";
 import { statusCode } from "../../Shared/Enumes/statusCode";
+import { ICodeRunnerService } from "../../Application/interface/service/IcodeRunnerService";
+import { CodingLanguage } from "../../Domain/enums/Test";
 
 
 export class AiEvaluationService implements IAiEvaluationService {
 
   private _client: Groq
-  constructor() {
+  constructor(
+    private _codeRunner: ICodeRunnerService
+  ) {
     this._client = new Groq({
       apiKey: env.GROQ_API_KEY
     })
@@ -22,9 +26,35 @@ export class AiEvaluationService implements IAiEvaluationService {
     return sortedQuestionAnswer.every((value, index) => value === sortedCandidateAnswer[index])
   }
 
-  // async evaluateCoding(input: { question: string; language: CodingLanguage; code: string; output?: string; testCase: { input: string; output: string; }; maxMarks: number; }): Promise<{ isCorrect: boolean; marksObtained: number; feedback: string; }> {
-    
-  // }
+  async evaluateCoding(input: {language: CodingLanguage; code: string; output?: string; testCase: { input: string; expectedOutput: string; }[]; maxMarks: number; }): Promise<{ isCorrect: boolean; marksObtained: number; feedback: string; }> {
+    const totalTestCases = input.testCase.length
+    if(totalTestCases === 0){
+      return {
+        isCorrect: false,
+        marksObtained: 0,
+        feedback: "No test cases available for evaluation"
+      }
+    }
+    let passedCount = 0
+    for(const testCase of input.testCase){
+      const result = await this._codeRunner.runCode({
+        language: input.language,
+        sourceCode: input.code,
+        input: testCase.input
+      })
+      const actualOutput = result.stdout.trim()
+      const expectedOutput = testCase.expectedOutput.trim()
+      if(actualOutput === expectedOutput){
+        passedCount++
+      }
+    }
+    const marksObtained = Math.round((passedCount/totalTestCases) * input.maxMarks)
+    return {
+      isCorrect: passedCount === totalTestCases,
+      marksObtained,
+      feedback: `${passedCount}/${totalTestCases} test cases passed`
+    }
+  }
 
   async evaluateDescriptive(input: { question: string; candidateAnswer: string; maxMarks: number; }): Promise<{ marksObtained: number; isCorrect: boolean; feedback: string; }> {
     const completion = await this._client.chat.completions.create({

@@ -32,6 +32,7 @@ export interface ITestCandidate extends Document {
     email: string
     candidateTestStatus: CandidateTestStatus
     selectionStatus: CandidateSelectionStatus
+    evaluationStatus: ValuationStatus
     warningCount: number
     candidateAnswers: ICandidateAnswer[]
     aiRank: number
@@ -39,6 +40,7 @@ export interface ITestCandidate extends Document {
     marksObtained: number
     correctAnswerCount: number
     totalQuestionsCount: number
+    totalTimeTakenInSeconds: number
     startedAt: Date
     submittedAt: Date
     evaluatedAt: Date
@@ -147,7 +149,12 @@ const TestCandidateSchema: Schema<ITestCandidate> = new Schema({
     selectionStatus: {
         type: String,
         enum: Object.values(CandidateSelectionStatus),
-        default: CandidateSelectionStatus.NOT_EVALUATED
+        default: CandidateSelectionStatus.PENDING
+    },
+    evaluationStatus: {
+        type: String,
+        enum: Object.values(ValuationStatus),
+        default: ValuationStatus.NOT_EVALUATED
     },
     totalMarks:{
         type: Number,
@@ -167,6 +174,9 @@ const TestCandidateSchema: Schema<ITestCandidate> = new Schema({
     },
     evaluatedAt: {
         type: Date
+    },
+    totalTimeTakenInSeconds: {
+        type: Number
     }
 }, {
     timestamps: true

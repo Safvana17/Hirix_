@@ -172,6 +172,7 @@ import { CandidateTerminateTestUsecase } from "../../../Application/candidate/us
 import { CandidateSubmitQuestionUsecase } from "../../../Application/candidate/useCases/test/candidate.submitQuestion.usecase";
 import { CandidateGetAllCategoriesUsecase } from "../../../Application/candidate/useCases/test/candidate.getAllCategories.usecase";
 import { DynamicEmailBuilderService } from "../../../Infrastructure/services/DynamicTemplateBuilder.service";
+import { CandidateRankingService } from "../../../Infrastructure/services/CandidateRanking.service";
 
 
 
@@ -193,7 +194,6 @@ const iTestRepository = new TestRepository()
 const iTestCandidateRepository = new TestCandidateRepository()
 
 
-
 const iHashService = new HashService()
 const iOtpService = new OtpService()
 export const iTokenService = new TokenService()
@@ -205,7 +205,8 @@ const iTemplateRenderService = new RenderTemplateService()
 const iTextFormatService = new TextFormatService()
 const iDynamictemplateBuilderService = new DynamicEmailBuilderService(iTemplateRenderService, iTextFormatService)
 const iCodeRunnerService = new DockerCodeRunnerService()
-const iEvaluateService = new AiEvaluationService()
+const iEvaluateService = new AiEvaluationService(iCodeRunnerService)
+const iRankCandidateService = new CandidateRankingService(iTestCandidateRepository)
 
 //notification
 const iProcessNotification = new AdminProcessNotificationEventUsecase(
@@ -644,7 +645,8 @@ const iCompanyEvaluateTest = new CompanyEvaluateTestUsecase(
     iTestRepository,
     iTestCandidateRepository,
     iEvaluateService,
-    iCodeRunnerService
+    iRankCandidateService
+
 )
 
 //admin
