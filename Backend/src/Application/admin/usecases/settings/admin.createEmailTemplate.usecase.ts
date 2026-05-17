@@ -1,4 +1,5 @@
-import { TemplateEntity } from "../../../../Domain/entities/Template.entity";
+import { randomUUID } from "crypto";
+import { TemplateEntity, TemplateField } from "../../../../Domain/entities/Template.entity";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { ITemplateRepository } from "../../../../Domain/repositoryInterface/iTemplate.repository";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
@@ -14,29 +15,33 @@ export class AdminCreateEmailTemplateUsecase implements IAdminCreateEmailTemplat
     async execute(request: AdminCreateEmailTemplateInputDTO): Promise<AdminCreateEmailTemplateOutputDTO> {
         const existing = await this._templateRepository.findByKey(request.key)
         if(existing){
-            throw new AppError(settingsMessages.error.TEMPLATE_ALREADY_EXISTING, statusCode.NOT_FOUND)
+            throw new AppError(settingsMessages.error.TEMPLATE_ALREADY_EXISTING, statusCode.CONFLICT)
         }
+        const fields: TemplateField[] = request.fields.map((field, index) => {
+            return {
+                id: randomUUID(),
+                name: field.name,
+                label: field.label,
+                type: field.type,
+                required: field.required,
+                placeHolder: field.placeholder,
+                purpose: field.purpose,
+                order: field.order ?? index + 1,
+                options: field.options
+            }
+        })
         const template = new TemplateEntity(
             '',
             request.key,
             request.name,
             request.channel,
-            request.subject,
-            request.title,
-            request.body,
+            fields,
+            request.values,
             true,
             false
         )
-        const savedTemplate = await this._templateRepository.create(template)
-        savedTemplate.footerText = request.footerText
-        savedTemplate.ctaText = request.ctaText
-        savedTemplate.ctaUrl = request.ctaUrl
-        savedTemplate.showOtpBox = request.showOtpBox
-        savedTemplate.otpLabel = request.otpLabel
-        savedTemplate.expiryText = request.expiryText
-        savedTemplate.supportText = request.supportText
+        await this._templateRepository.create(template)
 
-        await this._templateRepository.update(savedTemplate.id, savedTemplate)
         return {
             success: true
         }

@@ -1,42 +1,44 @@
 import type { NotificationChannel } from "./notification";
 
 export type TemplateChannel = 'EMAIL' | 'IN_APP'
+export type TemplateFieldType = "text" | "textarea" | "number" | "dropdown" | "checkbox" | "button";
+export type TemplateFieldPurpose = "SUBJECT" | "TITLE" | "BODY" | "FOOTER" | "CTA_BUTTON" | "OTP_LABEL" | "OTP_CODE" | "EXPIRY_TEXT" | "SUPPORT_TEXT" | "CUSTOM";
+export interface TemplateFieldOption {
+  label: string;
+  value: string;
+}
+
+export interface TemplateField {
+  id?: string;
+  name: string;
+  label: string;
+  type: TemplateFieldType;
+  required: boolean;
+  placeholder?: string;
+  order: number;
+  purpose?: TemplateFieldPurpose
+  options?: TemplateFieldOption[];
+}
 
 export interface EmailTemplate {
-    id: string
-    key: string;
-    name: string;
-    channel: TemplateChannel;
-    subject: string | null;
-    title: string | null;
-    body: string;
-    footerText?: string
-    ctaText?: string
-    ctaUrl?: string
-    showOtpBox?: boolean
-    otpLabel?: string
-    expiryText?: string
-    supportText?: string
-    isActive: boolean;
-    isDeleted: boolean;
+  id: string;
+  key: string;
+  name: string;
+  channel: TemplateChannel;
+  fields: TemplateField[];
+  values: Record<string, unknown>;
+  isActive: boolean;
+  isDeleted: boolean;
 }
 
 export interface TemplatePayload {
-    id: string
-    key: string
-    name: string;
-    channel: TemplateChannel;
-    subject?: string | null;
-    title?: string | null;  
-    body: string;
-    footerText?: string
-    ctaText?: string
-    ctaUrl?: string
-    showOtpBox?: boolean
-    otpLabel?: string
-    expiryText?: string
-    supportText?: string
-    isActive: boolean;
+  id?: string;
+  key: string;
+  name: string;
+  channel: TemplateChannel;
+  fields: TemplateField[];
+  values: Record<string, unknown>;
+  isActive: boolean;
 }
 
 // export interface editTemplatePayload {

@@ -1,5 +1,5 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
-import { EmailLayoutType, NotificationChannel } from "../../../Domain/enums/notification";
+import { NotificationChannel, TemplateFieldPurpose, TemplateFieldType } from "../../../Domain/enums/notification";
 
 
 export interface ITemplate extends Document{
@@ -7,23 +7,77 @@ export interface ITemplate extends Document{
     key: string;
     name: string;
     channel: NotificationChannel;
-    subject: string | null;
-    title: string | null;
-    body: string;
-    footerText?: string;
-    ctaText?: string;
-    ctaUrl?: string;
-    showOtpBox?: boolean;
-    otpLabel?: string;
-    expiryText?: string;
-    supportText?: string;
-    layOutType?: EmailLayoutType;
+    fields: {
+        id: string
+        name: string
+        label: string
+        type: TemplateFieldType
+        required: boolean
+        purpose?: TemplateFieldPurpose
+        placeholder?: string
+        order: number
+        options?: {
+            label: string
+            value: string
+        }[]
+    }[]
+    values: Record<string, unknown>
     isActive: boolean;
     isDeleted: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
 
+const TemplateFieldOptionSchema = new Schema({
+    label: {
+        type: String,
+        required: true
+    },
+    value: {
+        type: String,
+        required: true
+    }
+}, {
+    _id: false
+})
+
+const TemplateFieldSchema =new Schema({
+    id: {
+        type: String,
+        required: true
+    },
+    name: {
+        type: String,
+        required:  true
+    },
+    label: {
+        type: String,
+        required: true
+    },
+    purpose: {
+        type: String,
+        enum: [ "SUBJECT", "TITLE", "BODY", "FOOTER", "CTA_BUTTON", "OTP_LABEL", "EXPIRY_TEXT", "SUPPORT_TEXT", "CUSTOM" ]
+    },
+    type: {
+        type: String,
+        enum: ["text", "textarea", "button", "number", "dropdown", "checkbox"],
+        required: true
+    },
+    required: {
+        type: Boolean,
+        required: true
+    },
+    order: {
+        type: Number,
+        required: true
+    },
+    options: {
+        type: [TemplateFieldOptionSchema],
+        default: undefined
+    }
+}, {
+    _id: false
+})
 const TemplateSchema: Schema<ITemplate> = new Schema ({
     key: {
         type: String,
@@ -41,17 +95,13 @@ const TemplateSchema: Schema<ITemplate> = new Schema ({
         enum: ['EMAIL', 'IN_APP'],
         required: true
     },
-    subject: {
-        type:String,
-        default: null
+    fields: {
+       type: [TemplateFieldSchema],
+       default: []
     },
-    title: {
-        type: String,
-        default: null
-    },
-    body: {
-        type: String,
-        required: true
+    values: {
+        type: Schema.Types.Mixed,
+        default: {}
     },
     isActive: {
         type: Boolean,
@@ -61,32 +111,6 @@ const TemplateSchema: Schema<ITemplate> = new Schema ({
         type: Boolean,
         default: false
     },
-    footerText: {
-        type: String
-    },
-    ctaText: {
-        type: String
-    },
-    ctaUrl: {
-        type: String
-    },
-    showOtpBox: {
-        type: Boolean,
-        default: false
-    },
-    otpLabel: {
-        type: String
-    },
-    expiryText: {
-        type: String
-    },
-    supportText:{
-        type: String
-    },
-    layOutType:{
-        type: String,
-        enum: ['COMMON']
-    }
 }, {
     timestamps: true
 })

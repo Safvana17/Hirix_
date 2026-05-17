@@ -8,22 +8,11 @@ export class TemplateMapper {
             doc.key,
             doc.name,
             doc.channel,
-            doc.subject,
-            doc.title,
-            doc.body,
+            doc.fields || [],
+            doc.values || {},
             doc.isActive,
             doc.isDeleted
         )
-
-        template.footerText = doc.footerText
-        template.ctaText = doc.ctaText
-        template.ctaUrl = doc.ctaUrl
-        template.showOtpBox = doc.showOtpBox
-        template.otpLabel = doc.otpLabel
-        template.supportText = doc.supportText
-        template.expiryText = doc.expiryText
-        template.layOutType = doc.layOutType
-
         return template
     }
 
@@ -32,17 +21,8 @@ export class TemplateMapper {
             key: entity.key,
             name: entity.name,
             channel: entity.channel,
-            subject: entity.subject,
-            title: entity.title,
-            body: entity.body,
-            footerText: entity.footerText,
-            ctaText: entity.ctaText,
-            ctaUrl: entity.ctaUrl,
-            otpLabel: entity.otpLabel,
-            expiryText: entity.expiryText,
-            supportText: entity.supportText,
-            showOtpBox: entity.showOtpBox,
-            layOutType: entity.layOutType,
+            fields: entity.fields,
+            values: entity.values,
             isActive:  entity.isActive,
             isDeleted: entity.isDeleted
         }

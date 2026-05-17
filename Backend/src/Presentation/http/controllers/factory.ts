@@ -171,6 +171,7 @@ import { AiEvaluationService } from "../../../Infrastructure/services/AiEvaluati
 import { CandidateTerminateTestUsecase } from "../../../Application/candidate/useCases/test/candidate.terminateTest.usecase";
 import { CandidateSubmitQuestionUsecase } from "../../../Application/candidate/useCases/test/candidate.submitQuestion.usecase";
 import { CandidateGetAllCategoriesUsecase } from "../../../Application/candidate/useCases/test/candidate.getAllCategories.usecase";
+import { DynamicEmailBuilderService } from "../../../Infrastructure/services/DynamicTemplateBuilder.service";
 
 
 
@@ -202,6 +203,7 @@ const iRazorpayService = new RazorpayService()
 const iPdfService = new PdfService()
 const iTemplateRenderService = new RenderTemplateService()
 const iTextFormatService = new TextFormatService()
+const iDynamictemplateBuilderService = new DynamicEmailBuilderService(iTemplateRenderService, iTextFormatService)
 const iCodeRunnerService = new DockerCodeRunnerService()
 const iEvaluateService = new AiEvaluationService()
 
@@ -211,8 +213,7 @@ const iProcessNotification = new AdminProcessNotificationEventUsecase(
     iNotificationRuleRepository,
     iTemplateREpository,
     iMailService,
-    iTemplateRenderService,
-    iTextFormatService,
+    iDynamictemplateBuilderService,
     iAdminRepository
 )
 //candidates

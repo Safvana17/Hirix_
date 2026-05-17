@@ -16,6 +16,11 @@ export class NotificationRuleRepository extends BaseRepository<NotificationRuleE
         return documents.map(d => this.mapToEntity(d))
     }   
 
+    async findByTemplateKey(key: string): Promise<NotificationRuleEntity[]> {
+        const documents = await this._model.find({templateKey: key, isActive: true})
+        return documents.map(t => this.mapToEntity(t))
+    }
+
     async findAllFiltered(query: {search?: string, channel?: NotificationChannel, page: number; limit: number; }): Promise<{ data: NotificationRuleEntity[]; totalPages: number; totalCount: number; }> {
         const filter: QueryFilter<INotificationRule> = {
             isDeleted: false

@@ -79,8 +79,9 @@ export class RegisterCandidateUsecase implements ICandidateRegisterUsecase{
             variables: {
                 userName: savedCandidate.getName(),
                 otpCode: otp,
-                expiryTime: '120',
-                platformName: 'Hirix'
+                expiryTime: '2',
+                platformName: 'Hirix',
+                signatureName: 'Hirix'
             },
             metaData: {
                 candidateId: savedCandidate.id

@@ -1,19 +1,25 @@
-import { NotificationChannel } from "../../../../Domain/enums/notification";
+import { NotificationChannel, TemplateFieldPurpose, TemplateFieldType } from "../../../../Domain/enums/notification";
 
+export interface TemplateFieldOptionsInputDTO {
+    label: string
+    value: string
+}
+export interface TemplateFieldInputDTO {
+    name: string
+    label: string
+    type: TemplateFieldType
+    required: boolean
+    placeholder?: string
+    purpose?: TemplateFieldPurpose
+    order?: number
+    options?: TemplateFieldOptionsInputDTO[]
+}
 export interface AdminCreateEmailTemplateInputDTO {
     key: string;
     name: string;
     channel: NotificationChannel;
-    subject: string;
-    title: string;
-    body: string;
-    footerText?: string;
-    ctaText?: string
-    ctaUrl?: string
-    showOtpBox?: boolean
-    otpLabel?: string
-    expiryText?: string
-    supportText?: string
+    fields: TemplateFieldInputDTO[];
+    values: Record<string, unknown>
 }
 
 export interface AdminCreateEmailTemplateOutputDTO {

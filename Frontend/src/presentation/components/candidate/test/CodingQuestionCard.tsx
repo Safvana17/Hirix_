@@ -18,7 +18,6 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
   const { token } = useParams()
   const dispatch= useDispatch<AppDispatch>()
   const [language, setLanguage] = useState<CodingLanguages>('javascript')
-  // const [customInput, setCustomInput] = useState('')
   const [output, setOutput] = useState('Output will appear here...')
   const [running, setRunning] = useState(false)
 
@@ -26,20 +25,10 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
     return CODING_LANGUAGES.find((item) => item.value === language)!
   }, [language])
 
-  // const [editorCode, setEditorCode] = useState(
-  //   value || selectedLanguage.defaultCode
-  // )
   const editorValue = value || selectedLanguage.defaultCode
-
-//   useEffect(() => {
-//   if (!value) {
-//     onChange(selectedLanguage.defaultCode)
-//   }
-// }, [language])
 
   const handleLanguageChange = (newLanguage: CodingLanguages) => {
     setLanguage(newLanguage)
-
     const selected = CODING_LANGUAGES.find((item) => item.value === newLanguage)
     onChange(selected?.defaultCode || '')
     setOutput('Output will appear here...')
@@ -49,23 +38,8 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
     if(!token) return
     try {
       setRunning(true)
-      console.log('input: ', {
-        language,
-        editorValue,
-      })
-      const result = await dispatch(testRunCode({
-        data: {
-          language,
-          sourceCode: editorValue,
-        },
-        token
-      })).unwrap()
-
-      console.log('rsult: ', result)
-      setOutput(
-        result.stdout || result.stderr || result.error || 'Program executed with no output'
-      )
-
+      const result = await dispatch(testRunCode({ data: { language, sourceCode: editorValue, }, token })).unwrap()
+      setOutput( result.stdout || result.stderr || result.error || 'Program executed with no output')
     } catch (error) {
       setOutput('Failed to run code')
       toast.error(typeof error === 'string' ? error : 'Failed to run code')
@@ -143,10 +117,7 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
            language={language} 
            theme="vs-dark"
            value={editorValue}
-           onChange={(newValue) =>{
-            // setEditorCode(newValue || '')
-            onChange(newValue || '')
-           }}
+           onChange={(newValue) =>{ onChange(newValue || '')}}
            options={{
             minimap: { enabled: false},
             fontSize: 14,

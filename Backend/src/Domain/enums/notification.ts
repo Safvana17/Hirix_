@@ -1,5 +1,6 @@
 export type NotificationChannel = 'EMAIL' | 'IN_APP'
-
+export type TemplateFieldType = "text" | "textarea" | "number" | "dropdown" | "checkbox" | "button"
+export type TemplateFieldPurpose = "SUBJECT" | "TITLE" | "BODY" | "FOOTER" | "CTA_BUTTON" | "OTP_LABEL" | "OTP_CODE" | "EXPIRY_TEXT" | "SUPPORT_TEXT" | "CUSTOM"
 export type EmailLayoutType = 'COMMON'
 
 export const TemplateStatus = {
@@ -21,6 +22,8 @@ export const NotificationEvents = {
     RESCHEDULE_TEST: 'RESCHEDULE_TEST',
     TEST_REMOVED: 'TEST_REMOVED',
     TRIAL_END_REMINDER: 'TRIAL_END_REMINDER',
+    CANDIDATE_SHORTLISTED: 'CANDIDATE_SHORTLISTED',
+    CANDIDATE_REJECTED: 'CANDIDATE_REJECTED',
 } as const
 
 export type NotificationEvent = (typeof NotificationEvents)[keyof typeof NotificationEvents]

@@ -1,20 +1,73 @@
 import { z } from 'zod'
 import { NotificationChannels, TemplateStatus } from '../../../Domain/enums/notification';
 
+
+export const TemplateFieldOptionSchema = z.object({
+  label: z.string().min(1),
+  value: z.string().min(1),
+});
+
+export const ButtonValueSchema = z.object({
+  text: z.string(),
+  url: z.string(),
+});
+
+export const TemplateFieldSchema = z.object({
+  name: z.string().min(1),
+  label: z.string().min(1),
+  type: z.enum([
+    "text",
+    "textarea",
+    "number",
+    "dropdown",
+    "checkbox",
+    "button",
+  ]),
+
+  purpose: z.enum([
+    "SUBJECT",
+    "TITLE",
+    "BODY",
+    "FOOTER",
+    "CTA_BUTTON",
+    "OTP_LABEL",
+    "OTP_CODE",
+    "EXPIRY_TEXT",
+    "SUPPORT_TEXT",
+    "CUSTOM",
+  ]),
+
+  required: z.boolean(),
+
+  placeholder: z.string().optional(),
+
+  order: z.number(),
+
+  options: z.array(TemplateFieldOptionSchema).optional(),
+});
+
+export const TemplateValuesSchema = z.record(
+  z.string(),
+  z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    ButtonValueSchema,
+  ])
+)
+
 export const TemplateSchema = z.object({
   key: z.string().min(3).max(100),
+
   name: z.string().min(3).max(100),
-  channel: z.enum(['EMAIL', 'IN_APP']),
-  subject: z.string().optional(),
-  title: z.string().optional(),
-  body: z.string().min(1),
-  footerText: z.string().optional(),
-  ctaText: z.string().optional(),
-  ctaUrl: z.string().optional(),
-  showOtpBox: z.boolean().optional(),
-  otpLabel: z.string().optional(),
-  expiryText: z.string().optional(),
-  supportText: z.string().optional(),
+
+  channel: z.enum(["EMAIL", "IN_APP"]),
+
+  fields: z.array(TemplateFieldSchema),
+
+  values: TemplateValuesSchema,
+
+  isActive: z.boolean().optional(),
 });
 
 export const getAllTemplateQSchema = z.object({

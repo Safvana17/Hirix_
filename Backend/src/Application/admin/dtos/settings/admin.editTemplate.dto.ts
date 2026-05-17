@@ -1,4 +1,4 @@
-import { TemplateEntity } from "../../../../Domain/entities/Template.entity";
+import { TemplateEntity, TemplateField } from "../../../../Domain/entities/Template.entity";
 import { NotificationChannel } from "../../../../Domain/enums/notification";
 
 export interface AdminEditTemplateInputDTO {
@@ -6,16 +6,8 @@ export interface AdminEditTemplateInputDTO {
     key: string;
     channel: NotificationChannel;
     name: string;
-    subject: string;
-    body: string
-    title?: string
-    footerText?: string;
-    ctaText?: string
-    ctaUrl?: string
-    showOtpBox?: boolean
-    otpLabel?: string
-    expiryText?: string
-    supportText?: string
+    fields: TemplateField[]
+    values: Record<string, unknown>
 }
 
 export interface AdminEditTemplateOutputDTO {

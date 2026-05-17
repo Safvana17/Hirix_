@@ -12,6 +12,7 @@ import { Search } from '@mui/icons-material'
 import type { NotificationChannel } from '../../../types/notification'
 import { useDebounce } from '../../../hooks/useDebounce'
 
+
 const notificationChannel: NotificationChannel[] = ['EMAIL', 'IN_APP']
 
 export default function TemplatePage() {
@@ -115,7 +116,7 @@ export default function TemplatePage() {
         toast.success('Email template added successfully')
         setFormModalOpen(false)
       }
-      if(mode === 'edit'){
+      if(mode === 'edit' && payload.id){
          await dispatch(editEmailTemplate({data: payload, id: payload.id})).unwrap()
          toast.success('Email template edited successfully')
          setFormModalOpen(false)

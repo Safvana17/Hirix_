@@ -21,17 +21,8 @@ export class AdminEditTemplateUsecase implements IAdminEditTemplateUsecase {
         template.name = request.name
         template.key = request.key
         template.channel = request.channel
-        template.subject = request.subject
-        template.body = request.body
-        template.title = request.title ?? null
-        template.footerText = request.footerText
-        template.ctaText = request.ctaText
-        template.ctaUrl = request.ctaUrl
-        template.otpLabel = request.otpLabel
-        template.showOtpBox = request.showOtpBox
-        template.supportText = request.supportText
-        template.expiryText = request.expiryText
-
+        template.fields = request.fields
+        template.values = request.values
         const updatedTemplate = await this._templateRepository.update(template.id, template)
 
         return {

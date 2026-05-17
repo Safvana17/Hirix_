@@ -21,6 +21,8 @@ export class AdminDeleteNotificationRuleUsecase implements IAdminDeleteNotificat
         }
 
         rule.isDeleted = true
+        rule.isActive = false
+        await this._notificationRuleRepository.update(rule.id, rule)
         return {
             success: true
         }
