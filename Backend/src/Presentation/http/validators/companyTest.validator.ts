@@ -205,3 +205,7 @@ export const submitTestSchema = z.object({
     answer: z.array(candidateAnswerSchema),
     warningCount: z.number().min(0)
 })
+
+export const ShortlistCandidateSchema = z.object({
+     candidateId: z.string().regex(/^[0-9a-fA-F]{24}$/)
+})

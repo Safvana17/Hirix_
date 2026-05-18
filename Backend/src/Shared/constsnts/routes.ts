@@ -62,6 +62,8 @@ export const ROUTES = {
         DELETE: '/test/:testId',
         GET_QUESTIONS: '/test/questions',
         EVALUATE: '/test/:testId/evaluate',
+        SHORTLIST: '/test/:testId/shortlist',
+        REJECT: '/test/testId/reject'
       }
     },
 

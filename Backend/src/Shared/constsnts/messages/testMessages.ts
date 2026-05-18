@@ -27,5 +27,8 @@ export const TestMessages = {
         NOT_PUBLISHED_TEST: 'You can only submit published test',
         AI_EVALUATION_FAILED: 'Ai evaluation failed: empty response',
         TEST_NOT_STARTED: 'Test not started',
+        TEST_ID_MISMATCH: 'Test id is not matching',
+        NOT_EVALUATED_CANDIDATE: 'Only evaluted candidates can be shortlisted',
+        ALREADY_SHORTLISTED: 'Candidate is already shortlisted',
     }
 }

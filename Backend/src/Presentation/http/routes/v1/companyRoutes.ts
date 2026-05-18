@@ -10,7 +10,7 @@ import { createJobRoleSchema, EditJobRoleSchema, updateJobRoleSchema} from "../.
 import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updateProfileSchema } from "../../validators/settingsValidator";
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from "../../validators/subscriptionValidators";
 import { certificateUpload } from "../../middlewares/certificateUpload";
-import { CancelTestSchema, CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator, ResheduleTestSchema, TestParamsSchema } from "../../validators/companyTest.validator";
+import { CancelTestSchema, CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator, ResheduleTestSchema, ShortlistCandidateSchema, TestParamsSchema } from "../../validators/companyTest.validator";
 
 const router = Express.Router()
 
@@ -64,6 +64,6 @@ router.patch(ROUTES.COMPANY.TEST.RESHEDULE, authHandler(iTokenService), verifyCs
 router.get(ROUTES.COMPANY.TEST.GET_BY_ID, authHandler(iTokenService), validate(TestParamsSchema, 'params'), iCompanyTestController.getTestById)
 router.post(ROUTES.COMPANY.TEST.EDIT, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(createTestValidator, 'body'), iCompanyTestController.editTest)
 router.post(ROUTES.COMPANY.TEST.EVALUATE, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), iCompanyTestController.evaluateTest)
-
+router.patch(ROUTES.COMPANY.TEST.SHORTLIST, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(ShortlistCandidateSchema, 'body'), iCompanyTestController.shortlistCandidate)
 
 export default router;
