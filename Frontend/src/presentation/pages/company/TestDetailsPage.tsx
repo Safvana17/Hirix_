@@ -12,7 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import InternalLayout from "../../layouts/InternalLayout";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../redux/store";
-import { evaluateTest, getTestById, shortlistCandidate } from "../../../redux/slices/features/test/companyTestSlice";
+import { evaluateTest, getTestById, rejectCandidate, shortlistCandidate } from "../../../redux/slices/features/test/companyTestSlice";
 import { companySidebarItems } from "../../../constants/sidebarItems";
 import TestInfoTab from "../../components/company/test/TestInfoTab";
 import TestQuestionsTab from "../../components/company/test/TestQuestionsTab";
@@ -86,6 +86,17 @@ const TestDetailsPage = () => {
       toast.error(typeof error === 'string' ? error : 'Failed to short list candidate')
     }
   }
+  const handleRejectCandidate = async(candidateId: string) => {
+    try {
+      if(candidateId && testId){
+        await dispatch(rejectCandidate({testId, candidateId})).unwrap()
+        toast.success("Rejected candidate successfully")
+        await dispatch(getTestById({id: testId}))
+      }
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to reject candidate')
+    }
+  }
   return (
     <InternalLayout title={selectedTest.name} subTitle={selectedTest.jobrole} sidebarItems={companySidebarItems}>
       <Button
@@ -123,7 +134,7 @@ const TestDetailsPage = () => {
                 <TestQuestionsTab questions={selectedTest.questions} />
             )}
             {activeTab === "candidates" && (
-                <TestCandidatesTab candidates={selectedTest.candidates} onViewAnswers={handleViewAnswer} onEvaluateSubmitted={handleEvaluation} onShortlist={handleShortlist}/>
+                <TestCandidatesTab candidates={selectedTest.candidates} onViewAnswers={handleViewAnswer} onEvaluateSubmitted={handleEvaluation} onShortlist={handleShortlist} onReject={handleRejectCandidate}/>
             )}
             {/* {activeTab === "shortlisted" && (
                 <TestCandidatesTab candidates={test.shortlistedCandidates} />
