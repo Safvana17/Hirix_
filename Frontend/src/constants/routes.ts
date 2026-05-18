@@ -20,6 +20,7 @@ export const ROUTES = {
     TEST: '/company/tests',
     EDIT_TEST: '/company/TEST/edit/:id',
     CREATE_TEST: '/company/test/create',
+    RESCHEDULE_TEST: '/company/test/reschedule/:id',
     CREATE_TEST_SUCCESS: '/company/test/success',
     CANCEL_TEST: '/company/test/:id/cancel',
     RESHEDULE_TEST: '/company/test/reschedule',

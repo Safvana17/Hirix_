@@ -129,7 +129,7 @@ CancelTestArgs,
     }
 })
 
-export const resheduleTest = createAsyncThunk<
+export const rescheduleTest = createAsyncThunk<
 void,
 ResheduleTestArgs,
 {rejectValue: string}
@@ -233,7 +233,27 @@ void,
     }
 })
 
-
+export const scheduleAgainTest = createAsyncThunk<
+Test,
+{data: CreateTestPayload, id: string},
+{rejectValue: {message: string, code?: string}}
+>('test/scheduleAgain', async({data, id}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.COMPANY.TEST.SCHEDULE_AGAIN(id), data)
+        if(!response.data.success){
+            return rejectWithValue({
+                message: 'Invalid response'
+            })
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string, code?: string}>
+        return rejectWithValue({
+            message: err.response?.data.message || 'Failed to again schedule test',
+            code: err.response?.data.code
+        })
+    }
+})
 const CompanyTestSlice = createSlice({
     name: 'CompanyTestSlice',
     initialState,
@@ -300,13 +320,13 @@ const CompanyTestSlice = createSlice({
             state.loading = false
             state.error = action.payload || 'Failed to delete test'
         })
-        .addCase(resheduleTest.pending, (state) => {
+        .addCase(rescheduleTest.pending, (state) => {
             state.loading = true
         })
-        .addCase(resheduleTest.fulfilled, (state) => {
+        .addCase(rescheduleTest.fulfilled, (state) => {
             state.loading = false
         })
-        .addCase(resheduleTest.rejected, (state, action) => {
+        .addCase(rescheduleTest.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to reshedule test'
         })
@@ -360,6 +380,20 @@ const CompanyTestSlice = createSlice({
         .addCase(rejectCandidate.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to reject candidate'
+        })
+        .addCase(scheduleAgainTest.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(scheduleAgainTest.fulfilled, (state, action) => {
+            state.loading = false
+            state.tests.unshift(action.payload)
+        })
+        .addCase(scheduleAgainTest.rejected, (state, action) => {
+            state.loading = false
+            if(action.payload?.code === 'FEATURE_LOCKED'){
+                state.featureLocked = true
+            }
+            state.error = action.payload?.message || 'Failed to again schedule test'
         })
     },
 })

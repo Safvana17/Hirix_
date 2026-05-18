@@ -16,8 +16,6 @@ import { ROUTES } from '../../../constants/routes';
 import { createTestValidator } from '../../../lib/validation/testValidation';
 
 
-
-
 const steps = ['Test Details', 'Candidates', 'Questions', 'Rules', 'Publish']
 
 const EditTestPage: React.FC = () => {

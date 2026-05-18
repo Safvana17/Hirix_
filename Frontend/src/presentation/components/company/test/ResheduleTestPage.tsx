@@ -12,7 +12,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import toast from "react-hot-toast"
 import type { AppDispatch } from "../../../../redux/store"
-import { resheduleTest } from "../../../../redux/slices/features/test/companyTestSlice"
+import { rescheduleTest } from "../../../../redux/slices/features/test/companyTestSlice"
 
 const ResheduleTestPage: React.FC = () => {
   const location = useLocation()
@@ -47,7 +47,7 @@ const ResheduleTestPage: React.FC = () => {
         toast.error("Please provide correct time")
         return
       }
-      await dispatch(resheduleTest({ id: test.id, startTime: formData.startTime, endTime: formData.endTime,})).unwrap()
+      await dispatch(rescheduleTest({ id: test.id, startTime: formData.startTime, endTime: formData.endTime,})).unwrap()
       toast.success("Test rescheduled successfully")
       navigate("/company/tests")
     } catch (error) {

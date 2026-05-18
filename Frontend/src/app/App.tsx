@@ -122,6 +122,12 @@ const App = () => {
             </RoleRoute>
           } />
 
+          <Route path={ROUTES.COMPANY.RESCHEDULE_TEST} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <CreateTestPage />
+            </RoleRoute>
+          } />
+
           <Route path={ROUTES.COMPANY.CREATE_TEST_SUCCESS} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <TestCreateSuccessPage />

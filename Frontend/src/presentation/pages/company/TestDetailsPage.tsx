@@ -21,6 +21,7 @@ import { ArrowBack } from "@mui/icons-material";
 import { ROUTES } from "../../../constants/routes";
 import CandidateAnswersPage from "../../components/company/test/CandidateAnswerPage";
 import toast from "react-hot-toast";
+import ShortlistedCandidatesTab from "../../components/company/test/ShortlistedCandidatesTab";
 
 type TabValue = "info" | "questions" | "candidates" | "shortlisted";
 
@@ -63,6 +64,8 @@ const TestDetailsPage = () => {
     )
   }
 
+  const shortlistedCandidates = selectedTest.candidates.filter((candidate) => candidate.selectionStatus === 'SHORTLISTED')
+
   const handleEvaluation = async() => {
     try {
       if(testId){
@@ -96,6 +99,11 @@ const TestDetailsPage = () => {
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'Failed to reject candidate')
     }
+  }
+
+  const handleScheduleAgain = async() => {
+    if(testId)
+      navigate(`/company/test/reschedule/${testId}`)
   }
   return (
     <InternalLayout title={selectedTest.name} subTitle={selectedTest.jobrole} sidebarItems={companySidebarItems}>
@@ -134,11 +142,11 @@ const TestDetailsPage = () => {
                 <TestQuestionsTab questions={selectedTest.questions} />
             )}
             {activeTab === "candidates" && (
-                <TestCandidatesTab candidates={selectedTest.candidates} onViewAnswers={handleViewAnswer} onEvaluateSubmitted={handleEvaluation} onShortlist={handleShortlist} onReject={handleRejectCandidate}/>
+                <TestCandidatesTab candidates={selectedTest.candidates} onViewAnswers={handleViewAnswer} onEvaluateSubmitted={handleEvaluation} onShortlist={handleShortlist} onReject={handleRejectCandidate} onScheduleAgain={handleScheduleAgain}/>
             )}
-            {/* {activeTab === "shortlisted" && (
-                <TestCandidatesTab candidates={test.shortlistedCandidates} />
-            )} */}
+            {activeTab === "shortlisted" && (
+                <ShortlistedCandidatesTab candidates={shortlistedCandidates} />
+            )}
             </Box>
         </Card>
         </Container>

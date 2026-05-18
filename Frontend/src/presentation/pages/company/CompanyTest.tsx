@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react"
 import InternalLayout from "../../layouts/InternalLayout"
 import { companySidebarItems } from "../../../constants/sidebarItems"
-import {
-  CalendarClock,
-  Edit2Icon,
-  Eye,
-  Plus,
-  Send,
-  Trash2,
-  XCircle,
-} from "lucide-react"
+import { CalendarClock, Edit2Icon, Eye, Plus, Send, Trash2, XCircle} from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "../../../redux/store"
@@ -89,9 +81,6 @@ const CompanyTest: React.FC = () => {
   const closeModal = () => {
     setModalConfig(prev => ({...prev, isOpen: false}))
   }
-
-  console.log("test: ", testList)
-
   const handleCreateTest = () => {
     navigate("/company/test/create")
   }

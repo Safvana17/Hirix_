@@ -3,12 +3,13 @@ import type { TestCandidate } from "../../../../types/test";
 import { Box, Button, Chip, Divider, Paper, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Typography } from "@mui/material";
 
 interface TestCandidatesTabProps {
-  candidates: TestCandidate[];
-  isEvaluating?: boolean;
-  onEvaluateSubmitted?: () => void;
-  onViewAnswers?: (candidateId: string) => void;
-  onShortlist?: (candidateId: string) => void;
-  onReject?: (candidateId: string) => void;
+  candidates: TestCandidate[]
+  isEvaluating?: boolean
+  onEvaluateSubmitted?: () => void
+  onScheduleAgain: () => void
+  onViewAnswers?: (candidateId: string) => void
+  onShortlist?: (candidateId: string) => void
+  onReject?: (candidateId: string) => void
 }
 
 type CandidateTab = "attended" | "notAttended";
@@ -17,21 +18,18 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
   candidates,
   isEvaluating = false,
   onEvaluateSubmitted,
+  onScheduleAgain,
   onViewAnswers,
   onShortlist,
   onReject,
 }) => {
-  const [activeTab, setActiveTab] = useState<CandidateTab>("attended");
-
-  const attendedCandidates = useMemo(
-    () => candidates.filter((c) => c.candidateTestStatus === "SUBMITTED"),
+  const [activeTab, setActiveTab] = useState<CandidateTab>("attended")
+  const attendedCandidates = useMemo(() => candidates.filter((c) => c.candidateTestStatus === "SUBMITTED"),
     [candidates]
-  );
-
-  const notAttendedCandidates = useMemo(
-    () => candidates.filter((c) => c.candidateTestStatus !== "SUBMITTED"),
+  )
+  const notAttendedCandidates = useMemo(() => candidates.filter((c) => c.candidateTestStatus !== "SUBMITTED"),
     [candidates]
-  );
+  )
 
   const canEvaluate = useMemo(() => {
     return attendedCandidates.some(
@@ -40,17 +38,15 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
         candidate.evaluationStatus === "NOT_EVALUATED" ||
         candidate.evaluationStatus === "FAILED"
     );
-  }, [attendedCandidates]);
+  }, [attendedCandidates])
 
-  const visibleCandidates =
-    activeTab === "attended" ? attendedCandidates : notAttendedCandidates;
+  const visibleCandidates = activeTab === "attended" ? attendedCandidates : notAttendedCandidates
 
   if (!candidates.length) {
     return (
       <EmptyState message="No candidates have been invited for this test." />
-    );
+    )
   }
-
   return (
     <Box>
       <Stack
@@ -69,7 +65,6 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
             Evaluate submitted candidates before shortlisting or rejecting.
           </Typography>
         </Box>
-
         <Button
           variant="contained"
           disabled={!canEvaluate || isEvaluating}
@@ -132,7 +127,37 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
             />
           </Tabs>
         </Box>
-
+        {activeTab === "notAttended" && notAttendedCandidates.length > 0 && (
+          <Box
+            sx={{
+              px: { xs: 1.5, sm: 2 },
+              py: 1.5,
+              display: "flex",
+              justifyContent: "flex-start",
+              borderBottom: "1px solid",
+              borderColor: "divider",
+              bgcolor: "#fff",
+            }}
+          >
+            <Button
+              variant="contained"
+              onClick={onScheduleAgain}
+              sx={{
+                backgroundColor: "#6B4705",
+                textTransform: "none",
+                fontWeight: 700,
+                borderRadius: 2,
+                px: 2.5,
+                width: { xs: "100%", sm: "auto" },
+                "&:hover": {
+                  backgroundColor: "#5A3B04",
+                },
+              }}
+            >
+              Schedule Again
+            </Button>
+          </Box>
+        )}
         {!visibleCandidates.length ? (
           <EmptyState
             message={
@@ -160,7 +185,6 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
                 />
               ))}
             </Stack>
-
             <TableContainer
               sx={{
                 display: { xs: "none", md: "block" },
@@ -341,8 +365,8 @@ const CandidateMobileCard = ({
         </Box>
       </Stack>
     </Paper>
-  );
-};
+  )
+}
 
 const CandidateActions = ({
   candidate,
@@ -451,8 +475,8 @@ const InfoRow = ({ label, value }: { label: string; value: string }) => {
         {value}
       </Typography>
     </Stack>
-  );
-};
+  )
+}
 
 const EmptyState = ({ message }: { message: string }) => {
   return (

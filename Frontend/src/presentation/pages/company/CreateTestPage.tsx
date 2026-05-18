@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Stepper, Step, StepLabel, Button, Typography, Paper } from '@mui/material';
 import type { AppDispatch, RootState } from '../../../redux/store';
 import CompanyTestBasicInfo from '../../components/company/test/CompanyTestBasicInfo';
-import { createTest } from '../../../redux/slices/features/test/companyTestSlice';
+import { createTest, getTestById, scheduleAgainTest } from '../../../redux/slices/features/test/companyTestSlice';
 import CompanyAddCandidates from '../../components/company/test/CompanyAddCandidates';
 import CompanyAddQuestions from '../../components/company/test/CompanyAddQuestions';
 import CompanyTestPublishPage from '../../components/company/test/CompanyTestPublishPage';
 import CompanyTestRules from '../../components/company/test/CompanyTestRules';
-import type { CreateTestPayload } from '../../../types/test';
+import type { CreateTestPayload, ModalMode } from '../../../types/test';
 import { createDefaultTestRules } from '../../../utils/DefaultTestRules';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
 import { createTestValidator } from '../../../lib/validation/testValidation';
 
@@ -21,19 +21,30 @@ import { createTestValidator } from '../../../lib/validation/testValidation';
 const steps = ['Test Details', 'Candidates', 'Questions', 'Rules', 'Publish']
 
 const CreateTestPage: React.FC = () => {
+    const {id} = useParams()
+    const location = useLocation()
     const dispatch = useDispatch<AppDispatch>();
-    const { loading } = useSelector((state: RootState) => state.companyTest)
+    const { loading, selectedTest } = useSelector((state: RootState) => state.companyTest)
     const navigate = useNavigate()
     const [currentStep, setCurrentStep] = useState(0)
+    const mode: ModalMode = location.pathname.includes("reschedule") ? 'reschedule' : 'create'
+    const isRescheduleMode = mode === 'reschedule'
+
+    useEffect(() => {
+        if(isRescheduleMode && id){
+            dispatch(getTestById({id}))
+        }
+    }, [dispatch, id, isRescheduleMode])
+
     const [formData, setFormData] = useState<CreateTestPayload>({
-        jobRoleId: '',
-        name: '',
-        description: '',
+        jobRoleId: selectedTest?.jobRoleId || '',
+        name: isRescheduleMode ? `${selectedTest?.name} - Resheduled` : selectedTest?.name || '',
+        description: selectedTest?.description || '',
         startTime: '',
         endTime: '',
-        candidates: [],
-        questions: [],
-        rules: createDefaultTestRules()
+        candidates: selectedTest?.candidates.filter((candidate) => candidate.candidateTestStatus !== 'SUBMITTED') ||  [],
+        questions: selectedTest?.questions || [],
+        rules: selectedTest?.rules ||  createDefaultTestRules()
     })
 
     const updateFormDate = (data: Partial<CreateTestPayload>) => {
@@ -42,10 +53,6 @@ const CreateTestPage: React.FC = () => {
             ...data
         }))
     }
-
-    console.log("FORM DATA QUESTIONS:", formData.questions)
-console.log("FIRST QUESTION ANSWER:", formData.questions[0]?.answer)
-console.log("IS ARRAY:", Array.isArray(formData.questions[0]?.answer))
     const validate = () => {
         const result = createTestValidator.safeParse(formData)
         if(result.success) return true
@@ -61,9 +68,16 @@ console.log("IS ARRAY:", Array.isArray(formData.questions[0]?.answer))
                     console.log('validation error')
                     return
                 }
-                await dispatch(createTest(formData)).unwrap()
-                toast.success('Test created successfully')
-                navigate(ROUTES.COMPANY.CREATE_TEST_SUCCESS)
+                if(mode === 'create'){
+                    await dispatch(createTest(formData)).unwrap()
+                    toast.success('Test created successfully')
+                    navigate(ROUTES.COMPANY.CREATE_TEST_SUCCESS)
+                }
+                if(mode === 'reschedule' && id){
+                    await dispatch(scheduleAgainTest({data: formData, id}))
+                    toast.success('Test Scheduled again successfully')
+                    navigate(ROUTES.COMPANY.TEST)
+                }
             } catch (error) {
                 toast.error(typeof error === 'string' ? error : 'Failed to create Test')
             }
@@ -77,7 +91,7 @@ console.log("IS ARRAY:", Array.isArray(formData.questions[0]?.answer))
 
     return (
         <Box sx={{ p: 4, backgroundColor: '#E6DECF', minHeight: '100vh' }}>
-             <Typography variant="h5" fontWeight="bold" mb={4}>Create Assessment</Typography>
+             <Typography variant="h5" fontWeight="bold" mb={4}>{mode === 'create' ? 'Create Assessment' : 'Reschedule Assessment'}</Typography>
             
             <Paper elevation={0} sx={{ p: 4, backgroundColor: '#E6DECF' }}>
                 <Stepper
@@ -116,11 +130,11 @@ console.log("IS ARRAY:", Array.isArray(formData.questions[0]?.answer))
 
 
                 <Box sx={{ minHeight: '400px' }}>
-                    {currentStep === 0 && <CompanyTestBasicInfo data={formData} updateData={updateFormDate} mode='create'/>}
-                    {currentStep === 1 && <CompanyAddCandidates data={formData} updateData={updateFormDate} mode = 'create' />}
+                    {currentStep === 0 && <CompanyTestBasicInfo data={formData} updateData={updateFormDate} mode={mode}/>}
+                    {currentStep === 1 && <CompanyAddCandidates data={formData} updateData={updateFormDate} mode={mode} />}
                     {currentStep === 2 && <CompanyAddQuestions data={formData} updateData={updateFormDate} />}
                     {currentStep === 3 && <CompanyTestRules data={formData} updateData={updateFormDate}/>}
-                    {currentStep === 4 && <CompanyTestPublishPage mode='create' />}
+                    {currentStep === 4 && <CompanyTestPublishPage mode={mode} />}
                 </Box>
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4, gap: 2 }}>
@@ -142,7 +156,7 @@ console.log("IS ARRAY:", Array.isArray(formData.questions[0]?.answer))
                             backgroundColor: "#6B4705",
                         }}
                     >
-                        {loading ? 'Saving...' : currentStep === steps.length - 1 ? 'Save Draft' : 'Save & Next'}
+                        {loading ? 'Saving...' : currentStep === steps.length - 1 ? mode === 'reschedule' ? 'Schedule Again' : 'Save Draft' : 'Save & Next'}
                     </Button>
                 </Box>
             </Paper> 

@@ -83,6 +83,8 @@ export const API_ROUTES = {
         `/company/test/${id}/shortlist`,
       REJECT: (id: string) => 
         `/company/test/${id}/reject`,
+      SCHEDULE_AGAIN: (id: string) => 
+        `/company/test/${id}/schedule-again`
     }
   },
 
