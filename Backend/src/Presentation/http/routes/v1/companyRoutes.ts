@@ -65,5 +65,5 @@ router.get(ROUTES.COMPANY.TEST.GET_BY_ID, authHandler(iTokenService), validate(T
 router.post(ROUTES.COMPANY.TEST.EDIT, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(createTestValidator, 'body'), iCompanyTestController.editTest)
 router.post(ROUTES.COMPANY.TEST.EVALUATE, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), iCompanyTestController.evaluateTest)
 router.patch(ROUTES.COMPANY.TEST.SHORTLIST, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(ShortlistCandidateSchema, 'body'), iCompanyTestController.shortlistCandidate)
-
+router.patch(ROUTES.COMPANY.TEST.REJECT, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(ShortlistCandidateSchema, 'body'), iCompanyTestController.rejectCandidate)
 export default router;

@@ -63,7 +63,7 @@ export const ROUTES = {
         GET_QUESTIONS: '/test/questions',
         EVALUATE: '/test/:testId/evaluate',
         SHORTLIST: '/test/:testId/shortlist',
-        REJECT: '/test/testId/reject'
+        REJECT: '/test/:testId/reject'
       }
     },
 

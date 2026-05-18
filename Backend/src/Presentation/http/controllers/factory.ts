@@ -174,6 +174,7 @@ import { CandidateGetAllCategoriesUsecase } from "../../../Application/candidate
 import { DynamicEmailBuilderService } from "../../../Infrastructure/services/DynamicTemplateBuilder.service";
 import { CandidateRankingService } from "../../../Infrastructure/services/CandidateRanking.service";
 import { CompanyShortlistCandidateUsecase } from "../../../Application/company/usecases/test/company.shortlistCandidate.usecase";
+import { CompanyRejectCandidateUsecase } from "../../../Application/company/usecases/test/company.rejectCandidate.usecase";
 
 
 
@@ -656,7 +657,13 @@ const iCompanyShortlistCandidate = new CompanyShortlistCandidateUsecase (
     iCompanyRepository,
     iJobRoleRepository
 )
-
+const iCompanyRejectCandidate = new CompanyRejectCandidateUsecase (
+    iTestCandidateRepository,
+    iProcessNotification,
+    iTestRepository,
+    iCompanyRepository,
+    iJobRoleRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -981,6 +988,7 @@ export const iCompanyTestController = new CompanyTestController (
     iCompanyEditTest,
     iCompanyEvaluateTest,
     iCompanyShortlistCandidate,
+    iCompanyRejectCandidate
 )
 
 export const ICandidateTestController = new CandidatetestController(
