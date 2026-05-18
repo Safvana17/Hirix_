@@ -30,7 +30,8 @@ export enum CandidateTestStatus {
    TERMINATED = 'TERMINATED',
    REMOVED = 'REMOVED',
    SHORTLISTED = 'SHORTLISTED',
-   REJECTED = 'REJECTED'
+   REJECTED = 'REJECTED',
+   RESCHEDULED = 'RESCHEDULED',
 }
 
 export enum CandidateSelectionStatus {

@@ -30,5 +30,7 @@ export const TestMessages = {
         TEST_ID_MISMATCH: 'Test id is not matching',
         NOT_EVALUATED_CANDIDATE: 'Only evaluted candidates can be shortlisted',
         ALREADY_SHORTLISTED: 'Candidate is already shortlisted',
+        CANNOT_RESCHEDULT_CANDIDATE: 'Cannot reschedult test for this candidate',
+        DUPLICATE_CANDIDATE_EMAIL: 'Duplicate candidate email',
     }
 }

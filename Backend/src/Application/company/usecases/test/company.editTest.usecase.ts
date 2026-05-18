@@ -25,7 +25,7 @@ export class CompanyEditTestUsecase implements ICompanyEditTestUsecase{
         private _testCandidateRepository: ITestCandidateRepository,
         private _tokenService: ITokenService,
         private _jobRoleRepository: IJobRepository,
-        private  _processNotificationUsecase: IAdminProcessNotificationUsecase
+        private _processNotificationUsecase: IAdminProcessNotificationUsecase
     ) {}
 
     async execute(request: CompanyEditTestInputDTO): Promise<CompanyEditTestOutputDTO> {
