@@ -199,6 +199,23 @@ void,
     }
 })
 
+export const shortlistCandidate = createAsyncThunk<
+void,
+{testId: string, candidateId: string},
+{rejectValue: string}
+>('test/shortlist', async({testId, candidateId}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMPANY.TEST.SHORTLIST(testId),{ candidateId})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to shortlist candidate')
+    }
+})
+
 
 const CompanyTestSlice = createSlice({
     name: 'CompanyTestSlice',
@@ -306,6 +323,16 @@ const CompanyTestSlice = createSlice({
         .addCase(evaluateTest.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to edit test'
+        })
+        .addCase(shortlistCandidate.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(shortlistCandidate.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(shortlistCandidate.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to shortlist candidate'
         })
     },
 })

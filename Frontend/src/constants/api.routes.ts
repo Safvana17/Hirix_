@@ -78,7 +78,11 @@ export const API_ROUTES = {
         `/company/test/${id}`,
       GET_QUESTIONS: '/company/test/questions',
       EVALUATE: (id: string) => 
-        `/company/test/${id}/evaluate`
+        `/company/test/${id}/evaluate`,
+      SHORTLIST: (id: string) => 
+        `/company/test/${id}/shortlist`,
+      REJECT: (id: string) => 
+        `/company/test/${id}/reject`,
     }
   },
 
