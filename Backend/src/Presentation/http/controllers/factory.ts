@@ -176,6 +176,7 @@ import { CandidateRankingService } from "../../../Infrastructure/services/Candid
 import { CompanyShortlistCandidateUsecase } from "../../../Application/company/usecases/test/company.shortlistCandidate.usecase";
 import { CompanyRejectCandidateUsecase } from "../../../Application/company/usecases/test/company.rejectCandidate.usecase";
 import { CompanyScheduleTestAgainUsecase } from "../../../Application/company/usecases/test/company.testScheduleAgain.usecase";
+import { CandidateGetQuestionByIdUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getQuestion.usecase";
 
 
 
@@ -287,7 +288,12 @@ const iCandidateGetAllPracticeQuestions = new CandidateGetAllPracticeQuestionsUs
     iSubscriptionPlanRepository,
     iQuestionRepository
 )
-
+const iCandidateGetQuestionById = new CandidateGetQuestionByIdUsecase(
+    iCandidateRepository,
+    iQuestionRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
+)
 //subscription
 const iCandidateGetAllPlans = new CandidateGetAllPlanUsecase(
     iSubscriptionPlanRepository
@@ -933,7 +939,8 @@ export const iCompanyQuestionController = new CompanyQuestionController(
 )
 
 export const iPracticeLibraryController = new PracticeLibraryController (
-    iCandidateGetAllPracticeQuestions
+    iCandidateGetAllPracticeQuestions,
+    iCandidateGetQuestionById
 )
 
 export const iSubscriptionPlanController = new SubscriptionPlanController (

@@ -6,13 +6,14 @@ import { verifyCsrf } from '../../middlewares/csrfVerify'
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
 import { CandidateRunCodeSchema, submitTestSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
-import { createQuestionSchema } from '../../validators/questionValidator'
+import { createQuestionSchema, questionParamsSchema } from '../../validators/questionValidator'
 
 
 const router = Express.Router()
 
 //practice
 router.get(ROUTES.CANDIDATE.PRACTICE.GET_ALL, authHandler(iTokenService), iPracticeLibraryController.getAllPracticeQuestions)
+router.get(ROUTES.CANDIDATE.PRACTICE.GET_BY_ID, authHandler(iTokenService), validate(questionParamsSchema, 'params'), iPracticeLibraryController.getQuestionById)
 
 //subscription
 router.get(ROUTES.CANDIDATE.SUBSCRIPTION.GET_ALL, authHandler(iTokenService), iCandidateSubscriptionController.getAllPlan)

@@ -92,7 +92,7 @@ export const editQuestionSchema = z.object({
                 path: ["answer"],
                 message: "Answer is required for MCQ",
                 code: z.ZodIssueCode.custom
-            });
+            })
         }
     }
     if (data.type === QuestionType.CODING ) {
@@ -101,7 +101,13 @@ export const editQuestionSchema = z.object({
                 path: ["testCases"],
                 message: "Test cases are required for coding questions",
                 code: z.ZodIssueCode.custom
-            });
+            })
         }
     }
-});
+})
+
+export const questionParamsSchema = z.object({
+    questionId: z.string().regex(/^[0-9a-fA-F]{24}$/)
+})
+
+export type QuestionParams = z.infer<typeof questionParamsSchema>

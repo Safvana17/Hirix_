@@ -78,7 +78,10 @@ export const ROUTES = {
         VERIFY_OTP: "/candidate/verifyotp",
         VERIFY_OTP_RESET: '/candidate/verifyotpforforgotpassword',
         PRACTICE: {
-            GET_ALL: '/practice-questions'
+            GET_ALL: '/practice-questions',
+            GET_BY_ID: '/practice-question/:questionId',
+            SUBMIT: '/practice-question/:questionId/submit',
+            GET_RELATED: '/practice-question/:questionId/related'
         },
         SUBSCRIPTION: {
             GET_ALL: '/plans',
@@ -101,7 +104,7 @@ export const ROUTES = {
             TERMINATE: '/test/:token/terminate',
             SUBMIT_QUESTION: '/test/:token/question',
             GET_CATEGORIES: '/test/:token/categories'
-        }
+        },
     },
 
     COMMON: {
