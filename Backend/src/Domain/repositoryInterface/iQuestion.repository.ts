@@ -9,4 +9,5 @@ export interface IQuestionRepository extends IBaseRepository<QuestionEntity> {
     findByTitle(title: string): Promise<QuestionEntity | null>
     findAllPracticeQuestions(query: {search?: string, difficulty?: QuestionDifficulty, type?: QuestionType, category?: string, page: number, limit: number}): Promise<{data: QuestionEntity[], totalCount: number, totalPages: number}>
     findAllForTest(query: {difficulty?: QuestionDifficulty, type?: QuestionType, category?: string, companyId: string, includeCompany: boolean}): Promise<{questions: QuestionEntity[]}>
+    findRelated(query: {currentQuestionId: string, category: string, isIncludePremium: boolean}): Promise<QuestionEntity[]>
 }

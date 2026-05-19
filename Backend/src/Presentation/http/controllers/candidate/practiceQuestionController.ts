@@ -5,11 +5,13 @@ import { getAllQuestionSchema, QuestionParams } from "../../validators/questionV
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { ICandidateGetQuestionByIdUsecase } from "../../../../Application/candidate/interfaces/practiceLibrary/ICandidate.getQuestionById.usecase";
+import { ICandidateGetRelatedQuestionsUsecase } from "../../../../Application/candidate/interfaces/practiceLibrary/ICandidate.getRelatedQuestions.usecase";
 
 export class PracticeLibraryController{
     constructor(
         private _getAllQuestions: ICandidateGetAllPracticeQuestionUsecase,
         private _getQuestionById: ICandidateGetQuestionByIdUsecase,
+        private _getRelatedQuestions: ICandidateGetRelatedQuestionsUsecase,
     ) {}
 
     getAllPracticeQuestions = asyncHandler( async(req: Request, res: Response) => {
@@ -25,4 +27,11 @@ export class PracticeLibraryController{
         const question = await this._getQuestionById.execute({candidateId, questionId})
         return sendSuccess(res, statusCode.OK, '', {question})
     }) 
+
+    getRelatedQuestions = asyncHandler(async(req: Request, res: Response) => {
+        const candidateId = req.user.id
+        const { questionId } = req.validatedParams as QuestionParams
+        const {questions} = await this._getRelatedQuestions.execute({candidateId, questionId})  
+        return sendSuccess(res, statusCode.OK, '', questions)     
+    })
 }

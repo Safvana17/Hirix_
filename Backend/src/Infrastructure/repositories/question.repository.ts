@@ -142,6 +142,19 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
             questions: documents.map(d => this.mapToEntity(d))
         }
     }
+
+    async findRelated(query: { currentQuestionId: string, category: string; isIncludePremium: boolean; }): Promise<QuestionEntity[]> {
+        const filter: QueryFilter<IQuestion> = {
+            _id: {$ne: query.currentQuestionId},
+            categoryId: query.category,
+            isDeleted: false
+        }
+        if(!query.isIncludePremium){
+            filter.isPremium = false
+        }
+        const documents = await this._model.find(filter).sort({createdAt: -1})
+        return documents.map((q) => this.mapToEntity(q))
+    }
     
     protected mapToEntity(doc: IQuestion): QuestionEntity {
         return QuestionMapper.toEntity(doc)

@@ -177,6 +177,7 @@ import { CompanyShortlistCandidateUsecase } from "../../../Application/company/u
 import { CompanyRejectCandidateUsecase } from "../../../Application/company/usecases/test/company.rejectCandidate.usecase";
 import { CompanyScheduleTestAgainUsecase } from "../../../Application/company/usecases/test/company.testScheduleAgain.usecase";
 import { CandidateGetQuestionByIdUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getQuestion.usecase";
+import { CandidateGetRelatedQuestionsUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getRelatedQuestions.usecase";
 
 
 
@@ -289,6 +290,12 @@ const iCandidateGetAllPracticeQuestions = new CandidateGetAllPracticeQuestionsUs
     iQuestionRepository
 )
 const iCandidateGetQuestionById = new CandidateGetQuestionByIdUsecase(
+    iCandidateRepository,
+    iQuestionRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
+)
+const iCandidateGetRelatedQuestions = new CandidateGetRelatedQuestionsUsecase(
     iCandidateRepository,
     iQuestionRepository,
     iSubscriptionRepository,
@@ -940,7 +947,8 @@ export const iCompanyQuestionController = new CompanyQuestionController(
 
 export const iPracticeLibraryController = new PracticeLibraryController (
     iCandidateGetAllPracticeQuestions,
-    iCandidateGetQuestionById
+    iCandidateGetQuestionById,
+    iCandidateGetRelatedQuestions
 )
 
 export const iSubscriptionPlanController = new SubscriptionPlanController (
