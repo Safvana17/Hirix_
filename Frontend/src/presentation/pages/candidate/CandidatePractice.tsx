@@ -15,10 +15,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CandidateHeader from '../../components/layout/CandidateHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../redux/store';
-import { getQuestionById } from '../../../redux/slices/features/question/practiceQuestionSlice';
+import { getQuestionById, getRelatedQuestions } from '../../../redux/slices/features/question/practiceQuestionSlice';
 import PracticeMcqQuestion from '../../components/candidate/practice/PracticeMcqQuestion';
 import PracticeDescriptiveQuestion from '../../components/candidate/practice/PracticeDescriptiveQuestion';
 import PracticeCodingQuestion from '../../components/candidate/practice/PracticeCodingQuestion';
+import RelatedPracticeQuestions from '../../components/candidate/practice/RelatedPracticeQuestions';
 
 const CandidatePractice: React.FC = () => {
   const navigate = useNavigate()
@@ -28,11 +29,12 @@ const CandidatePractice: React.FC = () => {
   const [descriptiveAnswer, setDescriptiveAnswer] = useState('')
   const [code, setCode] = useState('')
   const [showResult, setShowResult] = useState(false)
-  const { selectedPracticeQuestion} = useSelector((state: RootState) => state.practiceQuestion)
+  const { selectedPracticeQuestion, PracticeQuestions} = useSelector((state: RootState) => state.practiceQuestion)
 
   useEffect(() => {
     if(questionId) {
       dispatch(getQuestionById({questionId}))
+      dispatch(getRelatedQuestions({questionId}))
     }
   }, [dispatch, questionId])
 
@@ -155,6 +157,7 @@ const CandidatePractice: React.FC = () => {
             </Card>
           </Grid>
         </Grid>
+        <RelatedPracticeQuestions questions={PracticeQuestions} onTry={(questionId) => navigate(`/candidate/practice/${questionId}`)} />
       </Container>
     </Box>
   );

@@ -38,10 +38,10 @@ export const API_ROUTES = {
     PRACTICE: {
       GET_BY_ID: (questionId: string) => 
         `/candidate/practice-question/${questionId}`,
-      GET_RELATED: (id: string) => 
-        `/candidate/practice-question/${id}/related`,
-      SUBMIT: (id: string) =>
-        `/candidate/practice-question/${id}`
+      GET_RELATED: (questionId: string) => 
+        `/candidate/practice-question/${questionId}/related`,
+      SUBMIT: (questionId: string) =>
+        `/candidate/practice-question/${questionId}`
     } 
   },
 

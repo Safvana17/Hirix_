@@ -63,11 +63,29 @@ PracticeQuestion,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('response from slice: ', response)
+
         return response.data.data.question
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get practice question')
+    }
+})
+
+export const getRelatedQuestions = createAsyncThunk<
+Question[],
+{questionId: string},
+{rejectValue: string}
+>('practiceQuestions/getRelated', async({questionId}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.CANDIDATE.PRACTICE.GET_RELATED(questionId))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+console.log('from related', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get related practice questions')
     }
 })
 
@@ -105,6 +123,17 @@ const PraticeQuestionSlice = createSlice({
          .addCase(getQuestionById.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get practice question'
+         })
+         .addCase(getRelatedQuestions.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getRelatedQuestions.fulfilled, (state, action) => {
+            state.loading = false
+            state.PracticeQuestions = action.payload
+         })
+         .addCase(getRelatedQuestions.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get related practice questions'
          })
     }
 })
