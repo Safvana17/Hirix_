@@ -34,6 +34,14 @@ export const API_ROUTES = {
         `/candidate/test/${token}/question`,
       GET_CATEGORIES: (token: string) =>
         `/candidate/test/${token}/categories`,
+    },
+    PRACTICE: {
+      GET_BY_ID: (questionId: string) => 
+        `/candidate/practice-question/${questionId}`,
+      GET_RELATED: (id: string) => 
+        `/candidate/practice-question/${id}/related`,
+      SUBMIT: (id: string) =>
+        `/candidate/practice-question/${id}`
     } 
   },
 

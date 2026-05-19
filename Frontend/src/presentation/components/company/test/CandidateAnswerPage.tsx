@@ -137,6 +137,9 @@ const CandidateAnswersPage: React.FC<CandidateAnswerPageProps> = ({ candidate, q
                         />                        
                       )}
                     </Stack>
+                      <Typography variant="body2" fontWeight={800}>
+                        {question?.description || "Question"}
+                      </Typography>
                     <Typography variant="caption" color="text.secondary">
                       Answer:
                     </Typography>

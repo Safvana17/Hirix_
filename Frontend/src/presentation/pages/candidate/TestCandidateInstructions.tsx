@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import toast from 'react-hot-toast'
 import { startTest } from '../../../redux/slices/features/test/CandidateTestSlice'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 // import { useFullScreenMonitor } from '../../../hooks/useFullScreenMonitor'
 
 const TestCandidateInstructions: React.FC = () => {
@@ -19,7 +19,7 @@ const TestCandidateInstructions: React.FC = () => {
     const { test } = useSelector((state: RootState) => state.candidateTest)
     const dispatch = useDispatch<AppDispatch>()
     const { token } = useParams()
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
 
     // const { enterFullScreen } = useFullScreenMonitor({
     //     enforceFullScreen: test?.rules.behavior.enforceFullScreen ?? false,
@@ -130,8 +130,9 @@ const TestCandidateInstructions: React.FC = () => {
             //     await document.documentElement.requestFullscreen()
             // }
 
-            await dispatch(startTest({token})).unwrap()
-            // navigate(`/candidate/test/${token}`)
+            const result = await dispatch(startTest({token})).unwrap()
+            console.log("Start result status:", result.candidate.candidateTestStatus)
+            navigate(`/candidate/test/${token}`)
 
         } catch (error) {
             toast.error(typeof error === 'string' ? error : 'Failed to start test')

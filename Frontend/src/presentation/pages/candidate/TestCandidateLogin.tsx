@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
 import { testCandidateLogin } from '../../../redux/slices/features/test/CandidateTestSlice'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ROUTES } from '../../../constants/routes'
+
 
 const TestCandidateLogin: React.FC = () => {
     const { token } = useParams()
@@ -45,7 +45,7 @@ const TestCandidateLogin: React.FC = () => {
        try {
          if(token){
             await dispatch(testCandidateLogin({data: formData, token: token})).unwrap()
-            navigate(ROUTES.CANDIDATE.TEST_INSTRUCTIONS)
+            navigate(`/candidate/test/instructions/${token}`)
          }
        } catch (error) {
         toast.error(typeof error === 'string' ? error : 'Failed to login')

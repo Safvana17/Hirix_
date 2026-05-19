@@ -35,11 +35,12 @@ export const ROUTES = {
     SUBSCRIPTION: '/candidate/subscription',
     START_TEST: '/candidate/test/:token',
     TEST_LOGIN: '/candidate/test/:token/login',
-    TEST_INSTRUCTIONS: '/candidate/test/instructions',
-    TEST_QUESTIONS: '/candidate/test/questions',
+    TEST_INSTRUCTIONS: '/candidate/test/instructions/:token',
+    TEST_QUESTIONS: '/candidate/test/questions/:token',
     TEST_SUBMIT: '/candidate/test/submit',
     TEST_TERMINATE: '/candidate/test/terminate',
-    QUESTION_SUBMITTED: '/candidate/test/quesion-submitted'
+    QUESTION_SUBMITTED: '/candidate/test/quesion-submitted',
+    PRACTICE: '/candidate/practice/:questionId'
   },
 
   COMMON: {

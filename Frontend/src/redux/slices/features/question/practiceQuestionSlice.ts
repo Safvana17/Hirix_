@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { getAllQuestionsParams, getAllQuestionsResponse, Question } from "../../../../types/question";
+import type { getAllQuestionsParams, getAllQuestionsResponse, PracticeQuestion, Question } from "../../../../types/question";
 import type { UserRole } from "../../../../constants/role";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
@@ -9,7 +9,7 @@ interface PracticeQuestionState {
     PracticeQuestions: Question[];
     error: string | null;
     loading: boolean;
-    selectedPracticeQuestion: Question | null;
+    selectedPracticeQuestion: PracticeQuestion | null;
     pagination: {
         PracticeQuestion: {
             totalCount: number;
@@ -53,6 +53,24 @@ getAllQuestionsResponse,
     }
 })
 
+export const getQuestionById = createAsyncThunk<
+PracticeQuestion,
+{questionId: string},
+{rejectValue: string}
+>('practiceQuestions/getById', async({questionId}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.CANDIDATE.PRACTICE.GET_BY_ID(questionId))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log('response from slice: ', response)
+        return response.data.data.question
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get practice question')
+    }
+})
+
 const PraticeQuestionSlice = createSlice({
     name: 'PracticeQuestion',
     initialState,
@@ -76,6 +94,17 @@ const PraticeQuestionSlice = createSlice({
          .addCase(getAllPracticeQuestions.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get all practice questions'
+         })
+         .addCase(getQuestionById.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getQuestionById.fulfilled, (state, action) => {
+            state.loading = false
+            state.selectedPracticeQuestion = action.payload
+         })
+         .addCase(getQuestionById.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get practice question'
          })
     }
 })

@@ -33,6 +33,18 @@ export interface Question {
     answer: string[]
 }
 
+export interface PracticeQuestion {
+  id: string
+  title: string
+  description: string
+  type: QuestionType
+  options?: string[]
+  testCase?: TestCase[]
+  difficulty: QuestionDifficulty
+  categoryId: string
+  categoryName: string
+  isPremium: boolean
+}
 export type QuestionFormData = {
   id: string;
   title: string;

@@ -19,10 +19,10 @@ const CandidateTestGateway: React.FC = () => {
     const { test, loading, candidate } = useSelector((state: RootState) => state.candidateTest )
 
     useEffect(() => {
-        if (token) {
+        if (token && !test && !candidate) {
             dispatch(getTestByToken({ token }))
         }
-    }, [dispatch, token])
+    }, [dispatch, token, candidate, test])
 
     const step: CandidateTestGateStep = useMemo(() => {
         if (loading || !test || !candidate) return 'LOADING'
@@ -31,7 +31,7 @@ const CandidateTestGateway: React.FC = () => {
         const endTime = new Date(test.endTime)
         if (now < startTime) return 'NOT_STARTED'
         if (now > endTime && candidate.candidateTestStatus !== 'SUBMITTED') return 'EXPIRED'
-
+        console.log("Gateway candidate status:", candidate?.candidateTestStatus)
         switch(candidate.candidateTestStatus){
             case 'INVITED': 
                 return 'READY'
@@ -52,6 +52,11 @@ const CandidateTestGateway: React.FC = () => {
                 
         }
     }, [loading, test, candidate])
+
+        if(!test || !candidate){
+        console.log('not found')
+        return
+    }
     if(step === 'NOT_STARTED'){
         return <TestNotStartedPage test={test} />
     }
@@ -61,20 +66,17 @@ const CandidateTestGateway: React.FC = () => {
     if(step === 'READY'){
         return <TestStartPage test={test} />
     }
-    // if(step === 'LOGIN') {
-    //     return <TestCandidateLogin />
-    // }
     if(step === 'INSTRUCTIONS') {
         return <TestCandidateInstructions />
     }
     if (step === 'QUESTIONS') {
-        if (!test || !candidate) {
-            return (
-                <div className="flex h-screen items-center justify-center">
-                    <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-600"></div>
-                </div>
-            )
-        }
+        // if (!test || !candidate) {
+        //     return (
+        //         <div className="flex h-screen items-center justify-center">
+        //             <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-600"></div>
+        //         </div>
+        //     )
+        // }
         return <TestQuestion test={test} candidate={candidate} />
     }
     if(step === 'SUBMITTED') {

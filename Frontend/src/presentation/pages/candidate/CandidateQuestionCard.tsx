@@ -3,10 +3,11 @@ import { Card, Box, Typography, Chip, Button } from '@mui/material';
 import type { Question } from '../../../types/question';
 
 interface QuestionCardProps {
-  question: Question;
+  question: Question
+  onTry: (questionId: string) => void
 }
 
-const CandidateQuestionCard: React.FC<QuestionCardProps> = ({ question }) => (
+const CandidateQuestionCard: React.FC<QuestionCardProps> = ({ question, onTry }) => (
   <Card
     sx={{
       p: 2,
@@ -63,7 +64,7 @@ const CandidateQuestionCard: React.FC<QuestionCardProps> = ({ question }) => (
       </Box>
 
       <Box display="flex" alignItems="center" gap={1}>
-        <Button sx={{background: '#000', borderRadius:2, color: "#FFF"}}>Try</Button>
+        <Button sx={{background: '#000', borderRadius:2, color: "#FFF" }} onClick={() => onTry(question.id)}>Try</Button>
       </Box>
     </Box>
   </Card>

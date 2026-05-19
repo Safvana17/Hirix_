@@ -35,6 +35,7 @@ import TestCandidateInstructions from '../presentation/pages/candidate/TestCandi
 import TestSubmittedPage from '../presentation/components/candidate/test/TestSubmittedPage'
 import TestTerminatedPage from '../presentation/components/candidate/test/TestTerminated'
 import QuestionSubmittedPage from '../presentation/components/candidate/test/CandidateQuestionSubmittedPages'
+import CandidatePractice from '../presentation/pages/candidate/CandidatePractice'
 
 
 
@@ -208,6 +209,11 @@ const App = () => {
             <QuestionSubmittedPage />
           } />
           
+          <Route path={ROUTES.CANDIDATE.PRACTICE} element={
+            <RoleRoute allowedRoles={[ROLES.CANDIDATE]}>
+              <CandidatePractice />
+            </RoleRoute>
+          } />
           <Route path={ROUTES.ADMIN.LOGIN} element={<PublicRoute><AdminLogin /></PublicRoute>} />
           <Route path={ROUTES.ADMIN.DASHBOARD} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>

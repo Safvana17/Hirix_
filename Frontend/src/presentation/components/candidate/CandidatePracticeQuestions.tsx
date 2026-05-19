@@ -4,6 +4,7 @@ import type { QuestionType, QuestionDifficulty, Question } from '../../../types/
 import CandidateQuestionCard from '../../pages/candidate/CandidateQuestionCard';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../redux/store';
+import { useNavigate } from 'react-router-dom';
 
 const questionType: QuestionType[] = ['mcq', 'coding', 'descriptive'];
 const questionDifficulty: QuestionDifficulty[] = ['easy', 'medium', 'hard'];
@@ -34,6 +35,10 @@ const CandidatePracticeQuestions: React.FC<CandidatePracticeQuestionsProps> = ({
 
   const { pagination } = useSelector((state: RootState) => state.practiceQuestion)
   console.log('pagination: ', pagination)
+  const navigate = useNavigate()
+  const handleTry = (questionId: string) => {
+     navigate(`/candidate/practice/${questionId}`)
+  }
   return (
     <Box p={4}>
       <Box mb={3}>
@@ -128,7 +133,7 @@ const CandidatePracticeQuestions: React.FC<CandidatePracticeQuestionsProps> = ({
       </Box>
       <Box>
         {questions.length > 0 ? (
-          questions.map((q) => <CandidateQuestionCard key={q.id} question={q} />)
+          questions.map((q) => <CandidateQuestionCard key={q.id} question={q} onTry={() => handleTry(q.id)}/>)
         ) : (
           <Box display="flex" justifyContent="center" py={10}>
             <Typography variant="h6" color="text.secondary">
