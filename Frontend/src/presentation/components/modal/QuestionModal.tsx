@@ -54,11 +54,20 @@ interface QuestionModalProps {
     options: initialData?.options || [],
     answer: initialData?.answer || [],
     testCases: initialData?.testCases || [],
+    starterCode: initialData?.starterCode || "",
+    functionName: initialData?.functionName || '',
     isPremium: initialData?.isPremium || false,
     isPractice: initialData?.isPractice || false,
   });
   const [localError, setLocalError] = useState<Record<string, string>>({})
 
+  const [testCaseInputs, setTestCaseInputs] = useState<string[]>(
+  formData.testCases.map((tc) =>
+    Array.isArray(tc.input)
+      ? tc.input.map((arg) => JSON.stringify(arg)).join(", ")
+      : ""
+  )
+)
   console.log('initial data: ', initialData)
 
   const handleChange = <K extends keyof QuestionFormData>(field: K, value: QuestionFormData[K]) => {
@@ -85,35 +94,83 @@ interface QuestionModalProps {
   };
 
   const addTestCase = () => {
-    handleChange('testCases', [...formData.testCases, { input: '', expectedOutput: '' }]);
+    handleChange('testCases', [...formData.testCases, { input: [], expectedOutput: '' }])
+    setTestCaseInputs([
+      ...testCaseInputs,
+      ""
+    ])
   };
 
   const addOptions = () => {
     handleChange('options', [...formData.options, ''])
   }
-    const validate = () => {
-        try {
-        questionSchema.parse(formData)
-        setLocalError({})
-        return true
+    // const validate = () => {
+    //     try {
+    //     questionSchema.parse(formData)
+    //     setLocalError({})
+    //     return true
 
-        } catch (error) {
-        if(error instanceof ZodError){
-            const errors: Record<string, string> = {}
-            error.issues.forEach((issue) => {
-            const field = issue.path[0] 
-            if(typeof field === 'string' ||typeof field === 'number')
-            errors[field] = issue.message
-            })
-            setLocalError(errors)
-        }
-        return false
-        }
+    //     } catch (error) {
+    //     if(error instanceof ZodError){
+    //         const errors: Record<string, string> = {}
+    //         error.issues.forEach((issue) => {
+    //         const field = issue.path[0] 
+    //         if(typeof field === 'string' ||typeof field === 'number')
+    //         errors[field] = issue.message
+    //         })
+    //         setLocalError(errors)
+    //     }
+    //     return false
+    //     }
+    // }
+  // const handleSubmit = () => {
+  //   if(!validate()) return
+  //   if(onSave) onSave(formData);
+  // }
+
+const handleSubmit = () => {
+  try {
+    const preparedData = {
+      ...formData,
+      testCases: formData.testCases.map((tc, index) => ({
+        ...tc,
+        input: Function(
+          `"use strict"; return [${testCaseInputs[index] || ""}]`
+        )(),
+      })),
     }
-  const handleSubmit = () => {
-    if(!validate()) return
-    if(onSave) onSave(formData);
-  };
+
+    console.log("preparedData:", preparedData)
+
+    questionSchema.parse(preparedData)
+
+    setLocalError({})
+
+    if (onSave) {
+      onSave(preparedData)
+    }
+  } catch (error) {
+    console.log("submit error:", error)
+
+    if (error instanceof ZodError) {
+      const errors: Record<string, string> = {}
+
+      error.issues.forEach((issue) => {
+        const field = issue.path[0]
+        if (typeof field === "string") {
+          errors[field] = issue.message
+        }
+      })
+
+      setLocalError(errors)
+      return
+    }
+
+    setLocalError({
+      testCases: "Invalid test case input format",
+    })
+  }
+}
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
@@ -255,7 +312,42 @@ interface QuestionModalProps {
           )}
 
           {formData.type === 'coding' && (
-            <Grid size={12}>
+            <Grid size={12} spacing={2}>
+              <Grid size={12}>
+                <TextField
+                  sx={{mb: 2}}
+                  label="Function Name"
+                  fullWidth
+                  InputProps={{
+                    readOnly: mode === "view",
+                  }}
+                  value={formData.functionName || ""}
+                  onChange={(e) =>
+                    handleChange("functionName", e.target.value)
+                  }
+                  placeholder="Example: reverse"
+                />
+              </Grid>
+
+              <Grid size={12}>
+                <TextField
+                  sx={{mb: 2}}
+                  label="Starter Code"
+                  fullWidth
+                  multiline
+                  rows={8}
+                  InputProps={{
+                    readOnly: mode === "view",
+                  }}
+                  value={formData.starterCode || ""}
+                  onChange={(e) =>
+                    handleChange("starterCode", e.target.value)
+                  }
+                  placeholder={`function reverse(str){
+
+              }`}
+                />
+              </Grid>
               <Typography variant="subtitle1">Test Cases</Typography>
               {formData.testCases.map((tc, index) => (
                 <Box key={index} display="flex" gap={2} mb={2}>
@@ -265,8 +357,14 @@ interface QuestionModalProps {
                     InputProps={{
                       readOnly: mode === 'view'
                     }}
-                    value={tc.input}
-                    onChange={(e) => handleTestCaseChange(index, 'input', e.target.value)}
+                    placeholder={`Examples: [1,2,3], 5`}
+                    value={testCaseInputs[index] || ""}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      const updatedInputs = [...testCaseInputs]
+                      updatedInputs[index] = value
+                      setTestCaseInputs(updatedInputs)
+                    }}
                   />
                   {localError.input && <p className='text-[#FBBEBE] text-sm'>{localError.input}</p>}
                   <TextField

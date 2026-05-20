@@ -41,7 +41,7 @@ export const API_ROUTES = {
       GET_RELATED: (questionId: string) => 
         `/candidate/practice-question/${questionId}/related`,
       SUBMIT: (questionId: string) =>
-        `/candidate/practice-question/${questionId}`
+        `/candidate/practice-question/${questionId}/submit`
     } 
   },
 

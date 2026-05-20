@@ -13,10 +13,11 @@ import { CODING_LANGUAGES, type CodingLanguages } from "../../../../constants/co
 interface PracticeCodingQuestionProps {
     question: PracticeQuestion
     value: string
+    onLanguageChange: (value: CodingLanguages) => void
     onChange: (value: string) => void
 }
 
-const PracticeCodingQuestion: React.FC<PracticeCodingQuestionProps> = ({ question, value, onChange }) => {
+const PracticeCodingQuestion: React.FC<PracticeCodingQuestionProps> = ({ question, value,onLanguageChange, onChange }) => {
   const testCases = question.testCase ?? []
 //   const { token } = useParams()
 //   const dispatch= useDispatch<AppDispatch>()
@@ -28,12 +29,13 @@ const PracticeCodingQuestion: React.FC<PracticeCodingQuestionProps> = ({ questio
     return CODING_LANGUAGES.find((item) => item.value === language)!
   }, [language])
 
-  const editorValue = value || selectedLanguage.defaultCode
+  const editorValue = value || question.starterCode || selectedLanguage.defaultCode
 
   const handleLanguageChange = (newLanguage: CodingLanguages) => {
     setLanguage(newLanguage)
     const selected = CODING_LANGUAGES.find((item) => item.value === newLanguage)
     onChange(selected?.defaultCode || '')
+    onLanguageChange(newLanguage)
     // setOutput('Output will appear here...')
   }
 
@@ -97,6 +99,7 @@ const PracticeCodingQuestion: React.FC<PracticeCodingQuestionProps> = ({ questio
            <Select
               value={language}
               onChange={(e) => handleLanguageChange(e.target.value)}
+              
            >
              {CODING_LANGUAGES.map((item) => (
               <MenuItem key={item.value} value={item.value}>

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { getAllQuestionsParams, getAllQuestionsResponse, PracticeQuestion, Question } from "../../../../types/question";
+import type { getAllQuestionsParams, getAllQuestionsResponse, PracticeQuestion, PracticeResultResponse, PracticeSubmitAnswerData, Question } from "../../../../types/question";
 import type { UserRole } from "../../../../constants/role";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
@@ -81,11 +81,29 @@ Question[],
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-console.log('from related', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get related practice questions')
+    }
+})
+
+export const submitAnswer = createAsyncThunk<
+PracticeResultResponse,
+{questionId: string, data: PracticeSubmitAnswerData},
+{rejectValue: string}
+>('practiceQuestions/submit', async({questionId, data}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.CANDIDATE.PRACTICE.SUBMIT(questionId), data)
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to submit answer')
     }
 })
 
@@ -134,6 +152,16 @@ const PraticeQuestionSlice = createSlice({
          .addCase(getRelatedQuestions.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get related practice questions'
+         })
+         .addCase(submitAnswer.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(submitAnswer.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(submitAnswer.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to submit answer'
          })
     }
 })

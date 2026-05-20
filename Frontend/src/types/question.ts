@@ -1,4 +1,5 @@
 import type { UserRole } from "../constants/role";
+import type { CodingLanguage } from "./test";
 
 export type ModalMode = 'create' | 'edit' | 'view'
 
@@ -8,10 +9,8 @@ export type QuestionType = 'mcq' | 'descriptive' | 'coding'
 export type QuestionVisibility = 'free' | 'pro'
 
 export type TestCase = {
-   input: string;
+   input: string[];
    expectedOutput: string;
-   explanation?: string;
-   isHidden?: boolean;
 }
 
 export interface Question {
@@ -27,6 +26,8 @@ export interface Question {
     createdBy: UserRole
     createdById?: string | null;
     visibility: QuestionVisibility;
+    functionName?: string
+    starterCode?: string
     isPremium: boolean;
     isPractice: boolean;
     isDeleted: boolean;
@@ -40,10 +41,28 @@ export interface PracticeQuestion {
   type: QuestionType
   options?: string[]
   testCase?: TestCase[]
+  starterCode?: string
+  functionName?: string
   difficulty: QuestionDifficulty
   categoryId: string
   categoryName: string
   isPremium: boolean
+}
+
+export interface PracticeResultResponse {
+  isCorrect: boolean
+  feedBack?: string
+}
+
+export interface PracticeSubmitAnswerData {
+  questionType: QuestionType
+  selectedOption?: string[]
+  descriptiveAnswer?: string
+  codingAnswer?: {
+    language?: CodingLanguage
+    sourceCode?: string
+    input?: string[]
+  }
 }
 export type QuestionFormData = {
   id: string;
@@ -56,6 +75,8 @@ export type QuestionFormData = {
   options: string[];
   answer: string[];
   testCases: TestCase[];
+  starterCode: string
+  functionName: string
   isPremium: boolean;
   isPractice: boolean;
 };

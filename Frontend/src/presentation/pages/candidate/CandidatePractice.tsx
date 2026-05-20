@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Alert,
   Box,
   Button,
   Card,
@@ -15,11 +14,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CandidateHeader from '../../components/layout/CandidateHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../redux/store';
-import { getQuestionById, getRelatedQuestions } from '../../../redux/slices/features/question/practiceQuestionSlice';
+import { getQuestionById, getRelatedQuestions, submitAnswer } from '../../../redux/slices/features/question/practiceQuestionSlice';
 import PracticeMcqQuestion from '../../components/candidate/practice/PracticeMcqQuestion';
 import PracticeDescriptiveQuestion from '../../components/candidate/practice/PracticeDescriptiveQuestion';
 import PracticeCodingQuestion from '../../components/candidate/practice/PracticeCodingQuestion';
 import RelatedPracticeQuestions from '../../components/candidate/practice/RelatedPracticeQuestions';
+import toast from 'react-hot-toast';
+import type { CodingLanguage } from '../../../types/test';
+import type { PracticeResultResponse } from '../../../types/question';
+
 
 const CandidatePractice: React.FC = () => {
   const navigate = useNavigate()
@@ -28,7 +31,9 @@ const CandidatePractice: React.FC = () => {
   const [selectedAnswer, setSelectedAnswer] = useState('')
   const [descriptiveAnswer, setDescriptiveAnswer] = useState('')
   const [code, setCode] = useState('')
+  const [language, setLanguage] = useState<CodingLanguage>('javascript')
   const [showResult, setShowResult] = useState(false)
+  const [result, setResult] = useState<PracticeResultResponse | null>(null)
   const { selectedPracticeQuestion, PracticeQuestions} = useSelector((state: RootState) => state.practiceQuestion)
 
   useEffect(() => {
@@ -38,13 +43,49 @@ const CandidatePractice: React.FC = () => {
     }
   }, [dispatch, questionId])
 
+  const getAnswer = () => {
+    if(!selectedPracticeQuestion) return null
+    switch(selectedPracticeQuestion.type){
+      case 'mcq':
+        return {
+          questionType: selectedPracticeQuestion.type,
+          selectedOption: selectedAnswer ? [selectedAnswer] : []
+        }
+      case 'descriptive':
+        return {
+          questionType: selectedPracticeQuestion.type,
+          descriptiveAnswer: descriptiveAnswer 
+        }
+      case 'coding': 
+        return {
+          questionType: selectedPracticeQuestion.type,
+          codingAnswer: {
+            sourceCode: code,
+            language: language
+          }
+        }
+      default:
+        return null
+    }
+  }
+  const handleSubmit = async () => {
+    if(!questionId) return
+    const data = getAnswer()
+    if(!data){
+      toast.error("Please enter your answer")
+      return
+    }
+    console.log('data from practice: ', data)
 
-  const mockResult = {
-    isCorrect: selectedAnswer === 'O(1)',
-    correctAnswer: 'O(1)',
-    aiFeedback:
-      'Good attempt. The correct answer is O(1) because array elements are accessed directly using their index.',
-  };
+    try {
+      const result = await dispatch(submitAnswer({questionId, data})).unwrap()
+      setResult(result)
+      setShowResult(true)
+      toast.success(result.isCorrect ? 'Correct Answer' : 'Wrong Answer')
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to submit answer')
+    }
+  }
 
   return (
     <Box minHeight="100vh" sx={{ background: 'linear-gradient(to bottom, #021A30, #0B0707)' }}>
@@ -83,14 +124,14 @@ const CandidatePractice: React.FC = () => {
               )}
 
               {selectedPracticeQuestion?.type === 'coding' && (
-                <PracticeCodingQuestion question={selectedPracticeQuestion} value={code} onChange={setCode} />
+                <PracticeCodingQuestion question={selectedPracticeQuestion} value={code} onLanguageChange={setLanguage} onChange={setCode} />
               )}
 
               <Button
                 fullWidth
                 variant="contained"
                 startIcon={<Send />}
-                onClick={() => setShowResult(true)}
+                onClick={handleSubmit}
                 sx={{
                   mt: 3,
                   background: '#001E33',
@@ -108,7 +149,7 @@ const CandidatePractice: React.FC = () => {
 
           <Grid size={{xs: 12, md: 4}}>
             <Card sx={{ p: 3, borderRadius: 3, background: '#fff', minHeight: 500 }}>
-              {!showResult ? (
+              {!showResult || !result ? (
                 <Box textAlign="center" mt={15}>
                   <Typography fontWeight={700} color="text.secondary">
                     Submit your answer to see the result
@@ -117,7 +158,7 @@ const CandidatePractice: React.FC = () => {
               ) : (
                 <>
                   <Stack alignItems="center" spacing={1} mb={3}>
-                    {mockResult.isCorrect ? (
+                    {result.isCorrect ? (
                       <CheckCircle sx={{ color: '#2E7D32', fontSize: 48 }} />
                     ) : (
                       <CheckCircle sx={{ color: '#C62828', fontSize: 48 }} />
@@ -126,17 +167,18 @@ const CandidatePractice: React.FC = () => {
                     <Typography
                       variant="h6"
                       fontWeight={800}
-                      color={mockResult.isCorrect ? '#2E7D32' : '#C62828'}
+                      color={result.isCorrect ? '#2E7D32' : '#C62828'}
                     >
-                      {mockResult.isCorrect ? 'Correct Answer' : 'Wrong Answer'}
+                      {result.isCorrect ? 'Correct Answer' : 'Wrong Answer'}
                     </Typography>
                   </Stack>
 
-                  {!mockResult.isCorrect && (
+
+                  {/* {!result.isCorrect && (
                     <Alert severity="info" sx={{ mb: 2 }}>
-                      Correct answer: {mockResult.correctAnswer}
+                      Correct answer: {result.correctAnswer}
                     </Alert>
-                  )}
+                  )} */}
 
                   {/* {isPremiumUser ? (
                     <Box>

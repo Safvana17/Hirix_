@@ -4,10 +4,8 @@ const QuestionTypeEnum = z.enum(['mcq', 'descriptive', 'coding']);
 const QuestionDifficultyEnum = z.enum(['easy', 'medium', 'hard']);
 
 export const testCaseSchema = z.object({
-  input: z.string().min(1, "Test case input is required"),
+  input: z.array(z.unknown()).min(1, "Test case input is required"),
   expectedOutput: z.string().min(1, "Expected output is required"),
-  explanation: z.string().optional(),
-  isHidden: z.boolean().optional()
 });
 
 export const questionSchema = z.object({
@@ -19,6 +17,8 @@ export const questionSchema = z.object({
   isPremium: z.boolean(),
   isPractice: z.boolean(),
   answer: z.array(z.string()).optional(),
+      functionName: z.string().optional(),
+    starterCode: z.string().optional(),
   options: z.array(z.string().min(1)).optional(),
   testCases: z.array(testCaseSchema).optional()
 })
