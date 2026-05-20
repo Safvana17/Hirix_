@@ -5,10 +5,8 @@ import QuestionDifficulty from "../../../Domain/enums/questionDifficulty";
 
 
 const TestCaseSchema = z.object({
-    input: z.string().min(1, "Test case input is required"),
+  input: z.array(z.unknown()).min(1, "Test case input is required"),
     expectedOutput: z.string().min(1, "Expected output is required"),
-    explanation: z.string().optional(),
-    isHidden: z.boolean().optional()
 });
 const CreateTestQuestionSchema = z
   .object({
@@ -18,6 +16,8 @@ const CreateTestQuestionSchema = z
     order: z.number().min(1),
     questionId: z.string().optional(),
     description: z.string().optional(),
+      functionName: z.string().optional(),
+    starterCode: z.string().optional(),
     options: z.array(z.string()).optional(),
     answer: z.array(z.string()).optional(),
     testCase: z.array(TestCaseSchema).optional(),
@@ -183,7 +183,7 @@ export const TestCandidateLoginSchema = z.object({
 export const CandidateRunCodeSchema = z.object({
     language: z.enum(['javascript', 'python']),
     sourceCode: z.string().min(1, 'Source code is required'),
-    input: z.string().optional(),
+    questionId: z.string().regex(/^[0-9a-fA-F]{24}$/)
 })
 
 export const codingAnswerSchema = z.object({

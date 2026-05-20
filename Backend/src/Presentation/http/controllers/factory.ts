@@ -180,6 +180,7 @@ import { CandidateGetQuestionByIdUsecase } from "../../../Application/candidate/
 import { CandidateGetRelatedQuestionsUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getRelatedQuestions.usecase";
 import { CandidateSubmitAnswerUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.submitAnswer.usecase";
 import { PracticeEvaluationService } from "../../../Infrastructure/services/PracticeEvaluationService";
+import { TestCodeRunService } from "../../../Infrastructure/services/TestCodeRunService";
 
 
 
@@ -215,6 +216,7 @@ const iCodeRunnerService = new DockerCodeRunnerService()
 const iEvaluateService = new TestEvaluationService(iCodeRunnerService)
 const iPracticeEvaluateService = new PracticeEvaluationService(iCodeRunnerService)
 const iRankCandidateService = new CandidateRankingService(iTestCandidateRepository)
+const iTestCodeRunService = new TestCodeRunService(iCodeRunnerService)
 
 //notification
 const iProcessNotification = new AdminProcessNotificationEventUsecase(
@@ -283,6 +285,8 @@ const iCandidateGoogleLogin = new CandidateGoogleLoginUsecase(
     iCandidateRepository,
     iTokenService,
     iHashService,
+    iSubscriptionPlanRepository,
+    iSubscriptionRepository,
     iGoogleAuthService,
 )
 //practice
@@ -387,7 +391,8 @@ const iCandidateStartTest = new CandidateStartTestUsecase (
 )
 const iCandidateRunCode = new CandidateRunCodeUsecase (
     iTestCandidateRepository,
-    iCodeRunnerService
+    iTestCodeRunService,
+    iTestRepository
 )
 const iCandidateSubmitTest = new CandidateSubmitTestUsecase (
     iTestCandidateRepository,
@@ -462,6 +467,8 @@ const iCompanyGoogleLogin = new CompanyGoogleLoginUsecase(
     iCompanyRepository,
     iTokenService,
     iHashService,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
     iGoogleAuthService
 )
 

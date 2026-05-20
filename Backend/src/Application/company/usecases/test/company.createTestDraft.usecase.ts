@@ -136,6 +136,8 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
                 q.questionId,
                 q.description,
                 q.options,
+                q.starterCode,
+                q.functionName,
                 q.answer,
                 q.testCase
             )

@@ -53,6 +53,8 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
       questionId: q.id,
       description: q.description,
       options: q.options,
+      starterCode: q.starterCode,
+      functionName: q.functionName,
       answer: q.answer,
       testCase: q.testCases?.map((tc) => ({
         input: tc.input,
@@ -71,6 +73,8 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
       description: q.description,
       options: q.options,
       answer: q.answer,
+      starterCode: q.starterCode,
+      functionName: q.functionName,
       testCase: q.testCases?.map((tc) => ({
         input: tc.input,
         expectedOutput: tc.expectedOutput

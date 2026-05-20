@@ -52,6 +52,8 @@ export class TestMapper {
                q.questionId ? q.questionId.toString() : undefined,
                q.description,
                q.options,
+               q.starterCode,
+               q.functionName,
                q.answer,
                q.testCase?.map(tc => ({
                 input: tc.input,
@@ -132,6 +134,8 @@ export class TestMapper {
                 questionId: q.questionId ? new Types.ObjectId(q.questionId) : undefined,
                 description: q.description,
                 options: q.options,
+                starterCode: q.starterCode,
+                functionName: q.functionName,
                 answer: q.answer,
                 testCase: q.testCase?.map(tc => ({
                     input: tc.input,

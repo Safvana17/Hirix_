@@ -9,12 +9,12 @@ import { markSubscriptionExpired, sendSubscriptionEndReminder, sendTrialEndRemin
 
 const PORT = env.PORT || 4000;
 
-
-app.listen(PORT, () => {
-    logger.info({port: PORT}, 'Server connected.')
     SubscriptionCron(
         sendSubscriptionEndReminder,
         markSubscriptionExpired,
         sendTrialEndReminder
-    )  
+    )
+
+app.listen(PORT, () => {
+    logger.info({port: PORT}, 'Server connected.')  
 })

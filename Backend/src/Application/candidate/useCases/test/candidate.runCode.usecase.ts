@@ -1,16 +1,18 @@
 import { CandidateTestStatus } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
+import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
-import { ICodeRunnerService } from "../../../interface/service/IcodeRunnerService";
+import { ITestCodeRunService } from "../../../interface/service/ITestCodeRunService";
 import { CandidateRunCodeInputDTO, CanadidateRunCodeOutputDTO } from "../../dtos/test/candidate.runCode.dto";
 import { ICandidateRunCodeUsecase } from "../../interfaces/test/ICandidate.runCode.usecase";
 
 export class CandidateRunCodeUsecase implements ICandidateRunCodeUsecase {
     constructor(
         private _testCandidateRepository: ITestCandidateRepository,
-        private _codeRunnerService: ICodeRunnerService
+        private _codeRunnerService: ITestCodeRunService,
+        private _testRepository: ITestRepository
     ) {}
     
     async execute(request: CandidateRunCodeInputDTO): Promise<CanadidateRunCodeOutputDTO> {
@@ -22,11 +24,20 @@ export class CandidateRunCodeUsecase implements ICandidateRunCodeUsecase {
         if(candidate.candidateTestStatus !== CandidateTestStatus.IN_PROGRESS){
             throw new AppError(TestMessages.error.CANNOT_RUN_CODE, statusCode.BAD_REQUEST)
         }
+        const test = await this._testRepository.findById(candidate.testId)
+        if(!test){
+            throw new AppError(TestMessages.error.TEST_NOT_FOUND, statusCode.NOT_FOUND)
+        }
 
-        return this._codeRunnerService.runCode({
+        const question = test.questions.find((q) => q.id === request.questionId)
+        if(!question || !question.testCase){
+            throw new AppError(TestMessages.error.QUESTION_NOT_FOUND, statusCode.NOT_FOUND)
+        }
+        return this._codeRunnerService.runTestCases({
+            functionName: question.functionName!,
             language: request.language,
             sourceCode: request.sourceCode,
-            input: request.input
+            testCases: question.testCase
         })
     }
 }

@@ -1,9 +1,13 @@
 import CandidateEntity from "../../../../Domain/entities/candidate.entity";
+import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
+import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
+import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
+import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
 import { IGoogleAuthService } from "../../../interface/service/IGoogleAuthService";
@@ -19,6 +23,8 @@ export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
         private _candidateRepository: ICandidateRepository,
         private _tokenService: ITokenService,
         private _hashService: IHashService,
+        private _subscriptionPlanRepository: ISubscriptionPlanRepository,
+        private _subscriptionRepository: ISubscriptionRepository,
         private _googleAuthService: IGoogleAuthService
     ) {}
 
@@ -47,6 +53,21 @@ export class CandidateGoogleLoginUsecase implements IGoogleLoginUsecase{
             )
 
             candidate = await this._candidateRepository.create(newCandidate)
+            const freePlan = await this._subscriptionPlanRepository.findFreePlan(TargetType.CANDIDATE)
+            if(!freePlan){
+                throw new AppError(subscriptionPlanMessages.error.MISSING_FREE_PLAN, statusCode.SERVER_ERROR)
+            }
+            await this._subscriptionRepository.create({
+                id: '',
+                ownerType: TargetType.CANDIDATE,
+                ownerId: candidate.id,
+                planId: freePlan.id,
+                startDate: new Date(),
+                endDate: null,
+                status: subscriptionStatus.ACTIVE,
+                isTrial: false,
+                isCurrent: true
+            })
         }else{
             if(!candidate.getGoogleId()){
                 candidate = await this._candidateRepository.updateGoogleId(googleCandidateInfo.email, googleCandidateInfo.googleId) || candidate

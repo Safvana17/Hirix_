@@ -51,7 +51,7 @@ export interface PracticeQuestion {
 
 export interface PracticeResultResponse {
   isCorrect: boolean
-  feedBack?: string
+  feedback?: string
 }
 
 export interface PracticeSubmitAnswerData {

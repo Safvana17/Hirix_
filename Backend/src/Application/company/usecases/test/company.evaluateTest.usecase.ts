@@ -73,6 +73,7 @@ export class CompanyEvaluateTestUsecase implements ICompanyEvaluateTestUsecase {
                 }
                 if(question.type === QuestionType.CODING){
                    const result = await this._aiEvaluationService.evaluateCoding({
+                    functionName: question.functionName!,
                     language: candidateAnswer.codingAnswer?.language ?? CodingLanguage.JAVASCRIPT,
                     code: candidateAnswer.codingAnswer?.code ?? "",
                     testCase: (question.testCase ?? []).map((tc) => ({

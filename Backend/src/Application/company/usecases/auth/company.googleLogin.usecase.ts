@@ -1,10 +1,14 @@
 import CompanyEntity from "../../../../Domain/entities/company.entity";
+import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
+import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
+import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
+import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { logger } from "../../../../utils/logging/loger";
 import { IGoogleAuthService } from "../../../interface/service/IGoogleAuthService";
@@ -19,6 +23,8 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
         private _companyRepository: ICompanyRepository,
         private _tokenService: ITokenService,
         private _hashService: IHashService,
+        private _subscriptionRepository: ISubscriptionRepository,
+        private _subscriptionPlanRepository :ISubscriptionPlanRepository,
         private _googleAuthService: IGoogleAuthService
     ) {}
 
@@ -44,6 +50,21 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
             )
 
             company = await this._companyRepository.create(newCompany)
+            const freePlan = await this._subscriptionPlanRepository.findFreePlan(TargetType.COMPANY)
+            if(!freePlan){
+                throw new AppError(subscriptionPlanMessages.error.MISSING_FREE_PLAN, statusCode.SERVER_ERROR)
+            }
+            await this._subscriptionRepository.create({
+                id: '',
+                ownerType: TargetType.COMPANY,
+                ownerId: company.id,
+                planId: freePlan.id,
+                startDate: new Date(),
+                endDate: null,
+                status: subscriptionStatus.ACTIVE,
+                isTrial: false,
+                isCurrent: true
+            })
         }else{
             if(!company.getGoogleId()){
                 company = await this._companyRepository.updateGoogleId(googleCompanyInfo.email, googleCompanyInfo.googleId) || company
@@ -70,9 +91,9 @@ export class CompanyGoogleLoginUsecase implements ICompanyGoogleLoginUsecase{
             throw new AppError(settingsMessages.error.ACCOUNT_DEACTIVATED, statusCode.FORBIDDEN)
         }
         
-        if(company.getStatus() === UserStatus.PENDING){
-            throw new AppError(authMessages.success.COMPANY_REGISTER_PENDING, statusCode.FORBIDDEN)
-        }
+        // if(company.getStatus() === UserStatus.PENDING){
+        //     throw new AppError(authMessages.success.COMPANY_REGISTER_PENDING, statusCode.FORBIDDEN)
+        // }
 
         if(company.getStatus() === UserStatus.BLOCKED){
             throw new AppError(authMessages.error.COMPANY_BLOCKED, statusCode.FORBIDDEN)

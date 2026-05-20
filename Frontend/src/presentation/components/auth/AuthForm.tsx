@@ -130,9 +130,7 @@ const AuthForm: React.FC<AuthFormProps> = ({mode, role}) => {
                 navigate(`/${role}/dashboard`)
             }else{
                     const errorMsg = result.payload as string;
-                if (errorMsg.includes('pending admin verification')) {
-                    toast.error('Your account is pending admin approval. We will notify you via email.');
-                } else if (errorMsg.includes('rejected')) {
+                if (errorMsg.includes('rejected')) {
                     toast.error('Your registration was rejected by the admin.');
                 } else if (errorMsg.includes('blocked')) {
                     toast.error('Your account has been blocked. Please contact support.');

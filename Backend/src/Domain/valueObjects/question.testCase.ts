@@ -1,4 +1,4 @@
 export interface TestCase {
-    input?: string[];
+    input?: unknown[];
     expectedOutput: string;
 }

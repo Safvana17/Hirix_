@@ -8,7 +8,7 @@ export interface IPracticeEvaluationService{
         code: string
         functionName: string
         testCase: {
-            input: string[]
+            input: unknown[]
             expectedOutput: string
         }[]
     }): Promise<{isCorrect: boolean; feedback: string}>

@@ -47,8 +47,8 @@ export class CandidatetestController {
 
     runCode = asyncHandler(async(req: Request, res: Response) => {
         const { token } = req.validatedParams as TestTokenParams
-        const {stdout, stderr, error, exitCode } = await this._runCode.execute({token, ...req.body})
-        return sendSuccess(res, statusCode.OK, '', {stdout, stderr, error, exitCode})
+        const { feedback } = await this._runCode.execute({token, ...req.body})
+        return sendSuccess(res, statusCode.OK, '', {feedback})
     })
 
     submittest = asyncHandler(async(req: Request, res: Response) => {

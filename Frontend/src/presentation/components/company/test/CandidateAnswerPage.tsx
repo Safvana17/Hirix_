@@ -184,6 +184,11 @@ const CandidateAnswersPage: React.FC<CandidateAnswerPageProps> = ({ candidate, q
                         </>
                       )}
                     </Box>
+                        {answer.aiFeedback && (
+                          <Typography sx={{color: "red"}}>
+                           Feedback: {answer.aiFeedback}
+                          </Typography>
+                        )}
                   </Box>
                 </Stack>
               </Box>

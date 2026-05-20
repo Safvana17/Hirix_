@@ -13,6 +13,7 @@ export const TestMessages = {
         CANNOT_CANCEL: 'You can cancel this test after publishing it.',
         TEST_STARTED: 'You cannot cancel started test',
         CANDIDATES_NOT_FOUND: 'Test candidates not found',
+        QUESTION_NOT_FOUND: 'Question not found',
         TEST_UPDATE_FAILED: 'Failed to update test',
         TEST_LIMIT_EXCEEDED: 'Max test limit exceeded',
         TEST_CANDIDATES_COUNT_EXCEEDED: 'You max candidate limit exceeded',

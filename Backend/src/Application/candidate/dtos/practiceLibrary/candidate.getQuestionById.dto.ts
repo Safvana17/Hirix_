@@ -17,7 +17,7 @@ export interface CandidateGetQuestionOutputDTO {
     isPremium: boolean
     starterCode?: string
     testCases?: {
-        input?: string[]
+        input?: unknown[]
         expectedOutput?: string
     }[]
     options?: string[]

@@ -25,7 +25,7 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
     return CODING_LANGUAGES.find((item) => item.value === language)!
   }, [language])
 
-  const editorValue = value || selectedLanguage.defaultCode
+  const editorValue = value || question.starterCode ||  selectedLanguage.defaultCode
 
   const handleLanguageChange = (newLanguage: CodingLanguages) => {
     setLanguage(newLanguage)
@@ -38,8 +38,8 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
     if(!token) return
     try {
       setRunning(true)
-      const result = await dispatch(testRunCode({ data: { language, sourceCode: editorValue, }, token })).unwrap()
-      setOutput( result.stdout || result.stderr || result.error || 'Program executed with no output')
+      const result = await dispatch(testRunCode({ data: { questionId: question.id, language, sourceCode: editorValue, }, token })).unwrap()
+      setOutput( result.feedback || 'Program executed with no output')
     } catch (error) {
       setOutput('Failed to run code')
       toast.error(typeof error === 'string' ? error : 'Failed to run code')
@@ -47,6 +47,8 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
       setRunning(false)
     }
   }
+
+  console.log("question", question)
 
   return (
     <Box>
@@ -69,7 +71,7 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
             {testCases.slice(0, 2).map((testCase: TestCase, index) => (
               <Box key={index}>
                 <Typography sx={{ fontSize: 13 }}>
-                  <strong>Input:</strong> {testCase.input || "-"}
+                  <strong>Input:</strong> {Array.isArray(testCase.input) ? testCase.input.map((arg) => JSON.stringify(arg)).join(", "): "-"}
                 </Typography>
 
                 <Typography sx={{ fontSize: 13 }}>

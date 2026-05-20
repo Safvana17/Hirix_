@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -9,7 +10,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { ArrowBack, CheckCircle, Send } from '@mui/icons-material';
+import { ArrowBack, CheckCircle, Lock, Send } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import CandidateHeader from '../../components/layout/CandidateHeader';
 import { useDispatch, useSelector } from 'react-redux';
@@ -86,7 +87,7 @@ const CandidatePractice: React.FC = () => {
       toast.error(typeof error === 'string' ? error : 'Failed to submit answer')
     }
   }
-
+console.log("result: ", result)
   return (
     <Box minHeight="100vh" sx={{ background: 'linear-gradient(to bottom, #021A30, #0B0707)' }}>
      <CandidateHeader />
@@ -173,27 +174,24 @@ const CandidatePractice: React.FC = () => {
                     </Typography>
                   </Stack>
 
-
-                  {/* {!result.isCorrect && (
-                    <Alert severity="info" sx={{ mb: 2 }}>
-                      Correct answer: {result.correctAnswer}
-                    </Alert>
-                  )} */}
-
-                  {/* {isPremiumUser ? (
-                    <Box>
-                      <Typography fontWeight={800} mb={1}>
-                        AI Feedback
-                      </Typography>
-                      <Typography color="text.secondary" lineHeight={1.8}>
-                        {mockResult.aiFeedback}
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Alert icon={<Lock />} severity="warning" sx={{ background: '#D3C1A0', color: '#1E1E1E' }}>
-                      Free users can only see whether the answer is correct or wrong.
-                    </Alert>
-                  )} */}
+{result.feedback ? (
+  <Box>
+    <Typography fontWeight={800} mb={1}>
+      AI Feedback
+    </Typography>
+    <Typography color="text.secondary" lineHeight={1.8}>
+      {result.feedback}
+    </Typography>
+  </Box>
+) : (
+  <Alert
+    icon={<Lock />}
+    severity="warning"
+    sx={{ background: "#D3C1A0", color: "#1E1E1E" }}
+  >
+    Free users can only see whether the answer is correct or wrong.
+  </Alert>
+)}
                 </>
               )}
             </Card>

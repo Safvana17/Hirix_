@@ -26,7 +26,7 @@ export class PracticeEvaluationService implements IPracticeEvaluationService {
     return sortedQuestionAnswer.every((value, index) => value === sortedCandidateAnswer[index])
   }
 
-  async evaluateCoding(input: {language: CodingLanguage; code: string; functionName: string; testCase: { input: string[]; expectedOutput: string; }[]}): Promise<{ isCorrect: boolean; feedback: string; }> {
+  async evaluateCoding(input: {language: CodingLanguage; code: string; functionName: string; testCase: { input: unknown[]; expectedOutput: string; }[]}): Promise<{ isCorrect: boolean; feedback: string; }> {
     const totalTestCases = input.testCase.length
     if(!input.functionName.trim()) {
       return {
@@ -42,7 +42,8 @@ export class PracticeEvaluationService implements IPracticeEvaluationService {
     }
     let passedCount = 0
     for(const testCase of input.testCase){
-      const serializeArgs = testCase.input.map((arg) => JSON.stringify(arg)).join(",")
+      const args = testCase.input ?? []
+      const serializeArgs = args.map((arg) => JSON.stringify(arg)).join(",")
       let executableCode = input.code
       if(input.language === CodingLanguage.JAVASCRIPT){
         executableCode = `
@@ -57,6 +58,12 @@ export class PracticeEvaluationService implements IPracticeEvaluationService {
         sourceCode: executableCode,
 
       })
+      if(result.error || result.stderr){
+        return {
+          isCorrect: false,
+          feedback: result.error || result.stderr || "Code execution failed"
+        }
+      }
       const actualOutput = result.stdout.trim()
       const expectedOutput = testCase.expectedOutput.trim()
       if(actualOutput === expectedOutput){

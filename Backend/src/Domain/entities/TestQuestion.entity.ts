@@ -10,6 +10,8 @@ export class TestQuestionEntity {
     order: number
     mark: number
     questionId?: string
+    starterCode?: string
+    functionName?: string
     description?: string
     options?: string[]
     answer?: string[]
@@ -25,6 +27,8 @@ export class TestQuestionEntity {
         questionId?: string,
         description?: string,
         options?: string[],
+        starterCode?: string,
+        functionName?: string,
         answer?: string[],
         testCase?: TestCase[]
     ) {
@@ -39,5 +43,7 @@ export class TestQuestionEntity {
         this.options = options
         this.answer = answer
         this.testCase = testCase
+        this.starterCode = starterCode
+        this.functionName = functionName
     }
 }

@@ -155,6 +155,8 @@ export class CompanyScheduleTestAgainUsecase implements ICompanyScheduleTestAgai
                 q.questionId,
                 q.description,
                 q.options,
+                q.starterCode,
+                q.functionName,
                 q.answer,
                 q.testCase
             )

@@ -127,6 +127,8 @@ export interface TestQuestions {
    mark?: number
    questionId?: string
    description?: string
+  starterCode?: string
+  functionName?: string
    options?: string[]
    answer?: string[]
    testCase?: TestCase[]
@@ -231,16 +233,18 @@ export interface TestCandidateResponse {
 }
 
 export interface CodeRunnerArgs {
+    questionId: string
     language: CodingLanguage
     sourceCode: string
     input?: string
 }
 
 export interface CodeRunnerResponse {
-    stdout: string
-    stderr: string
-    error: string | null
-    exitCode: number | null
+    // stdout: string
+    // stderr: string
+    // error: string | null
+    // exitCode: number | null
+    feedback: string
 }
 
 export interface SubmitTestPayload {

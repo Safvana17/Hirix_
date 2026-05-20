@@ -115,8 +115,8 @@ const validate = () => {
                 }
                 if(!id || !formData) return
                 await dispatch(editTest({data: formData, id: id})).unwrap()
-                toast.success('Test created successfully')
-                navigate(ROUTES.COMPANY.CREATE_TEST_SUCCESS)
+                toast.success('Test Edited successfully')
+                navigate(ROUTES.COMPANY.TEST)
             } catch (error) {
                 toast.error(typeof error === 'string' ? error : 'Failed to create Test')
             }

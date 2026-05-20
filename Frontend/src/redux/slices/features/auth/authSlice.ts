@@ -7,8 +7,6 @@ import type { AdminLoginPayload } from "../../../../types/admin";
 import { API_ROUTES } from "../../../../constants/api.routes";
 
 
-
-
 const initialState: AuthState = {
     user: null,
     loading: true,
@@ -16,14 +14,6 @@ const initialState: AuthState = {
     role:  null,
     isAuthenticated: false
 }
-
-// interface LoginPayload {
-//     role: UserRole;
-//     data: {
-//         email: string;
-//         password: string;
-//     }
-// }
 
 export const registerUser = createAsyncThunk<
 {email: string; role: UserRole},RegisterPayload,{rejectValue: string}
@@ -87,7 +77,7 @@ export const googleLogin = createAsyncThunk<
     try {
         const response = await api.post(API_ROUTES.AUTH.GOOGLE_LOGIN(role), {role, token})
 
-        const user = response.data.data.company
+        const user = response.data.data.company || response.data.data.candidate
         if(!user){
             return rejectWithValue('Invalid response')
         }

@@ -10,6 +10,8 @@ export interface CreateTestQuestionInputDTO {
     order: number
     questionId?: string
     description?: string
+    starterCode?: string,
+    functionName?: string,
     options?: string[]
     answer?: string[]
     testCase?: TestCase[]

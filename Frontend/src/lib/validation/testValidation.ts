@@ -9,10 +9,8 @@ const QuestionSourceSchema = z.enum([
 const QuestionTypeSchema = z.enum(['mcq', 'coding', 'descriptive'])
 
 const TestCaseSchema = z.object({
-  input: z.string().min(1, 'Test case input is required'),
+  input: z.array(z.unknown()).min(1, "Test case input is required"),
   expectedOutput: z.string().min(1, 'Expected output is required'),
-  explanation: z.string().optional(),
-  isHidden: z.boolean().optional(),
 })
 
 const CreateTestQuestionSchema = z
@@ -23,6 +21,8 @@ const CreateTestQuestionSchema = z
     order: z.number().min(1),
     questionId: z.string().optional(),
     description: z.string().optional(),
+      functionName: z.string().optional(),
+    starterCode: z.string().optional(),
     options: z.array(z.string()).optional(),
     answer: z.array(z.string()).optional(),
     testCase: z.array(TestCaseSchema).optional(),
