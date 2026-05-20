@@ -6,7 +6,7 @@ import { verifyCsrf } from '../../middlewares/csrfVerify'
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
 import { CandidateRunCodeSchema, submitTestSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
-import { createQuestionSchema, questionParamsSchema } from '../../validators/questionValidator'
+import { createQuestionSchema, questionParamsSchema, submitPraticeAnswerSchema } from '../../validators/questionValidator'
 
 
 const router = Express.Router()
@@ -16,6 +16,7 @@ router.get(ROUTES.CANDIDATE.PRACTICE.GET_ALL, authHandler(iTokenService), iPract
 router.get(ROUTES.CANDIDATE.PRACTICE.GET_BY_ID, authHandler(iTokenService), validate(questionParamsSchema, 'params'), iPracticeLibraryController.getQuestionById)
 router.get(ROUTES.CANDIDATE.PRACTICE.GET_RELATED, authHandler(iTokenService), validate(questionParamsSchema, 'params'), iPracticeLibraryController.getRelatedQuestions)
 
+router.post(ROUTES.CANDIDATE.PRACTICE.SUBMIT,authHandler(iTokenService), verifyCsrf, validate(questionParamsSchema, 'params'), validate(submitPraticeAnswerSchema, 'body'), iPracticeLibraryController.submitAnswer)
 
 //subscription
 router.get(ROUTES.CANDIDATE.SUBSCRIPTION.GET_ALL, authHandler(iTokenService), iCandidateSubscriptionController.getAllPlan)

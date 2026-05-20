@@ -167,7 +167,7 @@ import { MarkSubscriptionExpired } from "../../../Application/common/usecases/ma
 import { SendTrialEndReminderUsecase } from "../../../Application/common/usecases/sendTrialEndReminder.usecase";
 import { CandidateSubmitTestUsecase } from "../../../Application/candidate/useCases/test/candidate.submittest.usecase";
 import { CompanyEvaluateTestUsecase } from "../../../Application/company/usecases/test/company.evaluateTest.usecase";
-import { AiEvaluationService } from "../../../Infrastructure/services/AiEvaluation.service";
+import { TestEvaluationService } from "../../../Infrastructure/services/TestEvaluation.service";
 import { CandidateTerminateTestUsecase } from "../../../Application/candidate/useCases/test/candidate.terminateTest.usecase";
 import { CandidateSubmitQuestionUsecase } from "../../../Application/candidate/useCases/test/candidate.submitQuestion.usecase";
 import { CandidateGetAllCategoriesUsecase } from "../../../Application/candidate/useCases/test/candidate.getAllCategories.usecase";
@@ -178,6 +178,8 @@ import { CompanyRejectCandidateUsecase } from "../../../Application/company/usec
 import { CompanyScheduleTestAgainUsecase } from "../../../Application/company/usecases/test/company.testScheduleAgain.usecase";
 import { CandidateGetQuestionByIdUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getQuestion.usecase";
 import { CandidateGetRelatedQuestionsUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getRelatedQuestions.usecase";
+import { CandidateSubmitAnswerUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.submitAnswer.usecase";
+import { PracticeEvaluationService } from "../../../Infrastructure/services/PracticeEvaluationService";
 
 
 
@@ -210,7 +212,8 @@ const iTemplateRenderService = new RenderTemplateService()
 const iTextFormatService = new TextFormatService()
 const iDynamictemplateBuilderService = new DynamicEmailBuilderService(iTemplateRenderService, iTextFormatService)
 const iCodeRunnerService = new DockerCodeRunnerService()
-const iEvaluateService = new AiEvaluationService(iCodeRunnerService)
+const iEvaluateService = new TestEvaluationService(iCodeRunnerService)
+const iPracticeEvaluateService = new PracticeEvaluationService(iCodeRunnerService)
 const iRankCandidateService = new CandidateRankingService(iTestCandidateRepository)
 
 //notification
@@ -300,6 +303,13 @@ const iCandidateGetRelatedQuestions = new CandidateGetRelatedQuestionsUsecase(
     iQuestionRepository,
     iSubscriptionRepository,
     iSubscriptionPlanRepository
+)
+const iCandidateSubmitAnswer = new CandidateSubmitAnswerUsecase(
+    iCandidateRepository,
+    iQuestionRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
+    iPracticeEvaluateService
 )
 //subscription
 const iCandidateGetAllPlans = new CandidateGetAllPlanUsecase(
@@ -948,7 +958,8 @@ export const iCompanyQuestionController = new CompanyQuestionController(
 export const iPracticeLibraryController = new PracticeLibraryController (
     iCandidateGetAllPracticeQuestions,
     iCandidateGetQuestionById,
-    iCandidateGetRelatedQuestions
+    iCandidateGetRelatedQuestions,
+    iCandidateSubmitAnswer
 )
 
 export const iSubscriptionPlanController = new SubscriptionPlanController (

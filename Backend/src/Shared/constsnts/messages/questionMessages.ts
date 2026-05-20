@@ -25,5 +25,7 @@ export const questionMessages = {
         COMPANY_CANNOT_DELETE_OTHER_QUESTION: 'Company can only delete questions created by their own',
         NOT_PRACTICE_QUESTION: 'The question is not for practice',
         CANNOT_ACCESS_PREMIUM_QUESTIONS: 'You do not have access to premium question',
+        FUNCTION_NAME_REQUIRED: 'Function name is required',
+        STARTED_CODE_REQUIRED: 'Started code required'
     }
 }

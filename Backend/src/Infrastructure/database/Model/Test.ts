@@ -4,7 +4,7 @@ import { TestRules } from "../../../Domain/valueObjects/test.rules";
 import QuestionType from "../../../Domain/enums/questionType";
 
 export interface ITestCase{
-    input?: string
+    input?: string[]
     expectedOutput: string
 }
 export interface ITestQuestion{
@@ -199,7 +199,7 @@ const TestRulesSchema = new Schema({
 
 const TestCaseSchema = new Schema({
     input: {
-        type: String,
+        type: [String],
         required: true
     },
     expectedOutput: {

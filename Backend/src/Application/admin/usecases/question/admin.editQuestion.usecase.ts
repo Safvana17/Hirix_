@@ -67,6 +67,12 @@ export class AdminEditQuestionUsecase implements IAdminEditQuestionUsecase {
         }
 
         if(request.type === QuestionType.CODING) {
+            if(!request.starterCode?.trim()){
+                throw new AppError(questionMessages.error.STARTED_CODE_REQUIRED, statusCode.BAD_REQUEST)
+            }
+            if(!request.functionName?.trim()) {
+                throw new AppError(questionMessages.error.FUNCTION_NAME_REQUIRED, statusCode.BAD_REQUEST)
+            }
             if(!request.testCases || request.testCases.length === 0){
                 throw new AppError(questionMessages.error.REQUIRED_TEST_CASES, statusCode.BAD_REQUEST)
             }
@@ -83,7 +89,8 @@ export class AdminEditQuestionUsecase implements IAdminEditQuestionUsecase {
         question.type = request.type
         question.difficulty = request.difficulty
         question.categoryId = request.categoryId
-
+        question.functionName = request.functionName
+        question.starterCode = request.starterCode
         question.visibility = visibility
         question.isPremium = request.isPremium
         question.isPractice = request.isPractice

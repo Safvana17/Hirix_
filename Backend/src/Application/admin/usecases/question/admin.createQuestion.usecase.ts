@@ -64,6 +64,12 @@ export class AdminCreateQuestionUsecase implements IAdminCreateQuestionUsecase {
         }
 
         if(request.type === QuestionType.CODING) {
+            if(!request.starterCode?.trim()){
+                throw new AppError(questionMessages.error.STARTED_CODE_REQUIRED, statusCode.BAD_REQUEST)
+            }
+            if(!request.functionName?.trim()) {
+                throw new AppError(questionMessages.error.FUNCTION_NAME_REQUIRED, statusCode.BAD_REQUEST)
+            }
             if(!request.testCases || request.testCases.length === 0){
                 throw new AppError(questionMessages.error.REQUIRED_TEST_CASES, statusCode.BAD_REQUEST)
             }
@@ -88,6 +94,8 @@ export class AdminCreateQuestionUsecase implements IAdminCreateQuestionUsecase {
             request.isPremium,
             request.isPractice,
             false,
+            request.starterCode,
+            request.functionName,
             request.answer,
             request.options,
             request.testCases

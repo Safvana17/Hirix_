@@ -16,6 +16,8 @@ export class QuestionEntity {
     createdBy: userRole
     createdById?: string | null;
     visibility: QuestionVisibility;
+    functionName?: string
+    starterCode?: string
     isPremium: boolean;
     isPractice: boolean;
     isDeleted: boolean;
@@ -34,6 +36,8 @@ export class QuestionEntity {
         isPremium: boolean,
         isPractice: boolean,
         isDeleted: boolean,
+        starterCode?: string,
+        functionName?: string,
         answer?: string[],
         options?: string[],
         testCases?: TestCase[],
@@ -51,6 +55,8 @@ export class QuestionEntity {
         this.isPremium = isPremium;
         this.isPractice = isPractice;
         this.isDeleted = isDeleted;
+        this.starterCode = starterCode
+        this.functionName = functionName
         this.answer = answer;
         this.options = options;
         this.testCases = testCases;

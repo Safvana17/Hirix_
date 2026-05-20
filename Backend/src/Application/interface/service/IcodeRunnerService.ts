@@ -3,7 +3,7 @@ import { CodingLanguage } from "../../../Domain/enums/Test";
 export interface CodeRunnerRequest {
     language: CodingLanguage
     sourceCode: string
-    input?: string
+    input?: string[]
 }
 
 export interface CodeRunnerResult {

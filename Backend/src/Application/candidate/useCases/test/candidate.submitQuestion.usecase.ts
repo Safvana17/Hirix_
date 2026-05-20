@@ -87,6 +87,8 @@ export class CandidateSubmitQuestionUsecase implements ICandidateSubmitQuestionU
             request.isPremium,
             true,
             false,
+            request.starterCode,
+            request.functionName,
             request.answer,
             request.options,
             request.testCases

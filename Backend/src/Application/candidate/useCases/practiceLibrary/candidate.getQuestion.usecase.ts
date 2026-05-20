@@ -48,6 +48,7 @@ export class CandidateGetQuestionByIdUsecase implements ICandidateGetQuestionByI
             difficulty: question.difficulty,
             category: question.categoryId,
             options: question.options,
+            starterCode: question.starterCode,
             testCases: question.testCases,
             isPremium: question.isPremium
         }

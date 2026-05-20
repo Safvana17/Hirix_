@@ -17,6 +17,8 @@ export class QuestionMapper {
             doc.isPremium,
             doc.isPractice,
             doc.isDeleted,
+            doc.starterCode,
+            doc.functionName,
             doc.answer,
             doc.options,
             doc.testCases?.map(tc => {
@@ -48,6 +50,8 @@ export class QuestionMapper {
             isPremium: entity.isPremium,
             isPractice: entity.isPractice,
             isDeleted: entity.isDeleted,
+            starterCode: entity.starterCode,
+            functionName: entity.functionName,
             answer: entity.answer,
             options: entity.options,
             testCases: entity.testCases?.map(tc => 

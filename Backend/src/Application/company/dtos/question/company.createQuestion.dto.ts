@@ -12,6 +12,8 @@ export interface CompanyCreateQuestionInputDTO {
     categoryId: string;
     isPremium: boolean;
     isPractice: boolean;
+    starterCode?: string
+    functionName?: string
     answer?: string[];
     options?: string[];
     testCases?: TestCase[]

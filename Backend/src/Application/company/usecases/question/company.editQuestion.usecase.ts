@@ -67,6 +67,12 @@ export class CompanyEditQuestionUsecase implements ICompanyEditQuestionUsecase {
         }
 
         if(request.type === QuestionType.CODING) {
+            if(!request.starterCode?.trim()){
+                throw new AppError(questionMessages.error.STARTED_CODE_REQUIRED, statusCode.BAD_REQUEST)
+            }
+            if(!request.functionName?.trim()) {
+                throw new AppError(questionMessages.error.FUNCTION_NAME_REQUIRED, statusCode.BAD_REQUEST)
+            }
             if(!request.testCases || request.testCases.length === 0){
                 throw new AppError(questionMessages.error.REQUIRED_TEST_CASES, statusCode.BAD_REQUEST)
             }
@@ -95,6 +101,8 @@ export class CompanyEditQuestionUsecase implements ICompanyEditQuestionUsecase {
         question.answer = request.answer
         question.options = request.options
         question.testCases = request.testCases
+        question.starterCode = request.starterCode
+        question.functionName = request.functionName
 
 
         const updatedQuestion = await this._questionRepository.update(question.id, question)

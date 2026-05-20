@@ -1,4 +1,4 @@
-import { IAiEvaluationService } from "../../Application/interface/service/IAiEvaluationService";
+import { IPracticeEvaluationService } from "../../Application/interface/service/IPracticeEvaluationService";
 import Groq from "groq-sdk"
 import { env } from "../config/env";
 import { AppError } from "../../Domain/errors/app.error";
@@ -8,7 +8,7 @@ import { ICodeRunnerService } from "../../Application/interface/service/IcodeRun
 import { CodingLanguage } from "../../Domain/enums/Test";
 
 
-export class AiEvaluationService implements IAiEvaluationService {
+export class PracticeEvaluationService implements IPracticeEvaluationService {
 
   private _client: Groq
   constructor(
@@ -26,21 +26,36 @@ export class AiEvaluationService implements IAiEvaluationService {
     return sortedQuestionAnswer.every((value, index) => value === sortedCandidateAnswer[index])
   }
 
-  async evaluateCoding(input: {language: CodingLanguage; code: string; output?: string; testCase: { input: string; expectedOutput: string; }[]; maxMarks: number; }): Promise<{ isCorrect: boolean; marksObtained: number; feedback: string; }> {
+  async evaluateCoding(input: {language: CodingLanguage; code: string; functionName: string; testCase: { input: string[]; expectedOutput: string; }[]}): Promise<{ isCorrect: boolean; feedback: string; }> {
     const totalTestCases = input.testCase.length
+    if(!input.functionName.trim()) {
+      return {
+        isCorrect: false,
+        feedback: "Function name is missing"
+      }
+    }
     if(totalTestCases === 0){
       return {
         isCorrect: false,
-        marksObtained: 0,
         feedback: "No test cases available for evaluation"
       }
     }
     let passedCount = 0
     for(const testCase of input.testCase){
+      const serializeArgs = testCase.input.map((arg) => JSON.stringify(arg)).join(",")
+      let executableCode = input.code
+      if(input.language === CodingLanguage.JAVASCRIPT){
+        executableCode = `
+        ${input.code}
+
+        const result = ${input.functionName}(${serializeArgs});
+        console.log(typeof result === "object" ? JSON.stringify(result) : result)
+        `
+      }
       const result = await this._codeRunner.runCode({
         language: input.language,
-        sourceCode: input.code,
-        input: testCase.input
+        sourceCode: executableCode,
+
       })
       const actualOutput = result.stdout.trim()
       const expectedOutput = testCase.expectedOutput.trim()
@@ -48,15 +63,13 @@ export class AiEvaluationService implements IAiEvaluationService {
         passedCount++
       }
     }
-    const marksObtained = Math.round((passedCount/totalTestCases) * input.maxMarks)
     return {
       isCorrect: passedCount === totalTestCases,
-      marksObtained,
       feedback: `${passedCount}/${totalTestCases} test cases passed`
     }
   }
 
-  async evaluateDescriptive(input: { question: string; candidateAnswer: string; maxMarks: number; }): Promise<{ marksObtained: number; isCorrect: boolean; feedback: string; }> {
+  async evaluateDescriptive(input: { question: string; candidateAnswer: string;}): Promise<{ isCorrect: boolean; feedback: string; }> {
     const completion = await this._client.chat.completions.create({
       model: env.GROQ_MODEL || "llama-3.3-70b-versatile",
       temperature: 0.2,
@@ -68,20 +81,26 @@ export class AiEvaluationService implements IAiEvaluationService {
           role: "system",
           content: `
             You are an exam validator.
-            Evaluate the candidate answer fairly.
+            Evaluate whether the candidate answer is meaningfully correct for the given question.
             Rules:
-              -Give marks between 0 and maxMarks only.
-              -Do not give extra marks.
-              -If answer is empty or irrelevant, marks should be 0.
+              -Do not use marks.
+              -Do not mention marks.
+              -Estimate how much of the expected answer is covered as a percentage from 0 to 100.
+              -If the answer covers 35% or more of the expected answer, isCorrect should be true.
+              -If the answer covers less than 35%, isCorrect should be false
+              -If the answer is empty, unrelated, or too vague, isCorrect should be false.
+              -Feedback should explain what is correct and what is missing.
+              -Feedback should be helpful for learning.
               -Return only valid JSON.
               -No markdown.
               -No explanation outside JSON.
 
               JSON format: 
                 {
-                  "marksObtained": number,
                   "isCorrect": boolean,
-                  "feedback": string
+                  "feedback": string,
+                  "missingPoints": string[],
+                  coveragePercentage": number
                  }
           `,
         }, {
@@ -89,12 +108,11 @@ export class AiEvaluationService implements IAiEvaluationService {
            content: JSON.stringify({
               question: input.question,
               candidateAnswer: input.candidateAnswer,
-              maxMarks: input.maxMarks,
               evaluationCriteria: [
-                "relevance",
-                "correctness",
-                "clarity",
-                "completeness"
+                "relevance to the question",
+                "conceptual correctness",
+                "clarity of explanation",
+                "coverage of important points"
               ]
            })
         }
@@ -106,14 +124,20 @@ export class AiEvaluationService implements IAiEvaluationService {
         throw new AppError(TestMessages.error.AI_EVALUATION_FAILED, statusCode.SERVER_ERROR)
       } 
       const parsed = JSON.parse(content) as {
-        marksObtained: number;
-        isCorrect: boolean;
+        isCorrect: boolean
         feedback: string
+        coveragePercentage: number
+        missingPoints: string[]
       }
+      const coveragePercentage = Math.min(Math.max(Number(parsed.coveragePercentage) || 0, 0), 100)
+      const isCorrect = coveragePercentage >= 35
+      const missingText = parsed.missingPoints && parsed.missingPoints.length > 0 
+           ? `You are missing: ${parsed.missingPoints.join(", ")}`
+           : ""
+
       return {
-        marksObtained: Math.min(Math.max(Number(parsed.marksObtained) || 0, 0), input.maxMarks),
-        isCorrect: Boolean(parsed.isCorrect),
-        feedback: parsed.feedback || "No feedback provided"
+        isCorrect,
+        feedback: parsed.feedback || `Your answer covers about ${coveragePercentage}% of the expected answer. ${missingText}`
       }
     }
 }

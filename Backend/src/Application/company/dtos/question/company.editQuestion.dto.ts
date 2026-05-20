@@ -11,6 +11,8 @@ export interface CompanyEditQuestionInputDTO {
     categoryId: string;
     isPremium: boolean;
     isPractice: boolean;
+    starterCode?: string
+    functionName?: string
     answer?: string[];
     options?: string[];
     testCases?: TestCase[]

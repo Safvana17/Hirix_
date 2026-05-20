@@ -11,6 +11,8 @@ export interface CandidateSubmitQuestionInputDTO {
     categoryId: string;
     isPremium: boolean;
     isPractice: boolean;
+    starterCode?: string
+    functionName?: string
     // visibility: QuestionVisibility;
     answer?: string[];
     options?: string[];

@@ -190,7 +190,7 @@ export const codingAnswerSchema = z.object({
     language: z.string().min(1, "Language is required"),
     code: z.string().min(1, "Code is required"),
     output: z.string().optional()
-});
+})
 
 export const candidateAnswerSchema = z.object({
     testQuestionId: z.string({message: "Question id is required"}),

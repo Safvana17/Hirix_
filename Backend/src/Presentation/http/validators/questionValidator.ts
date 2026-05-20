@@ -5,10 +5,8 @@ import QuestionDifficulty from "../../../Domain/enums/questionDifficulty";
 
 
 const testCaseSchema = z.object({
-    input: z.string().min(1, "Test case input is required"),
-    expectedOutput: z.string().min(1, "Expected output is required"),
-    explanation: z.string().optional(),
-    isHidden: z.boolean().optional()
+  input: z.array(z.unknown()).min(1, "Test case input is required"),
+  expectedOutput: z.string().min(1, "Expected output is required"),
 });
 
 
@@ -20,6 +18,8 @@ export const createQuestionSchema = z.object({
     categoryId: z.string().min(1, "Category is required"),
     isPremium: z.boolean(),
     isPractice: z.boolean(),
+        functionName: z.string().optional(),
+    starterCode: z.string().optional(),
     answer: z.array(z.string()).optional(),
     options: z.array(z.string().min(1)).optional(),
     testCases: z.array(testCaseSchema).optional()
@@ -73,7 +73,9 @@ export const editQuestionSchema = z.object({
     categoryId: z.string().min(1, "Category is required"),
     isPremium: z.boolean(),
     isPractice: z.boolean(),
-    answer: z.string().optional(),
+        functionName: z.string().optional(),
+    starterCode: z.string().optional(),
+    answer: z.array(z.string()).optional(),
     options: z.array(z.string().min(1)).optional(),
     testCases: z.array(testCaseSchema).optional()
 })
@@ -87,13 +89,13 @@ export const editQuestionSchema = z.object({
             });
         }
 
-        if (!data.answer || data.answer.trim() === "") {
-            ctx.addIssue({
-                path: ["answer"],
-                message: "Answer is required for MCQ",
-                code: z.ZodIssueCode.custom
-            })
-        }
+        // if (!data.answer || data.answer.trim() === "") {
+        //     ctx.addIssue({
+        //         path: ["answer"],
+        //         message: "Answer is required for MCQ",
+        //         code: z.ZodIssueCode.custom
+        //     })
+        // }
     }
     if (data.type === QuestionType.CODING ) {
         if (!data.testCases || data.testCases.length === 0) {
@@ -111,3 +113,14 @@ export const questionParamsSchema = z.object({
 })
 
 export type QuestionParams = z.infer<typeof questionParamsSchema>
+
+export const codingAnswerSchema = z.object({
+    language: z.string().min(1, "Language is required"),
+    sourceCode: z.string().min(1, "Code is required"),
+});
+export const submitPraticeAnswerSchema = z.object({
+    questionType: z.nativeEnum(QuestionType),
+    selectedOption: z.array(z.string()).optional(),
+    descriptiveAnswer: z.string().optional(),
+    codingAnswer: codingAnswerSchema.optional()
+})

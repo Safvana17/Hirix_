@@ -6,7 +6,7 @@ import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.re
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
-import { IAiEvaluationService } from "../../../interface/service/IAiEvaluationService";
+import { ITestEvaluationService } from "../../../interface/service/ITestEvaluationService";
 import { ICandidateRankingService } from "../../../interface/service/ICandidateRankingService";
 import { CompanyEvaluateTestInputDTO, CompanyEvaluateTestOutputDTO } from "../../dtos/test/company.evaluate.Test.dto";
 import { ICompanyEvaluateTestUsecase } from "../../interfaces/test/ICompany.evaluateTest.usecase";
@@ -16,7 +16,7 @@ export class CompanyEvaluateTestUsecase implements ICompanyEvaluateTestUsecase {
         private _companyRepository: ICompanyRepository,
         private _testRepository: ITestRepository,
         private _testCandidateRepository: ITestCandidateRepository,
-        private _aiEvaluationService: IAiEvaluationService,
+        private _aiEvaluationService: ITestEvaluationService,
         private _candidateRankingService: ICandidateRankingService
     ) {}
 
@@ -76,7 +76,7 @@ export class CompanyEvaluateTestUsecase implements ICompanyEvaluateTestUsecase {
                     language: candidateAnswer.codingAnswer?.language ?? CodingLanguage.JAVASCRIPT,
                     code: candidateAnswer.codingAnswer?.code ?? "",
                     testCase: (question.testCase ?? []).map((tc) => ({
-                        input: tc.input ?? "",
+                        input: tc.input ?? [],
                         expectedOutput: tc.expectedOutput ?? ""
                     })),
                     maxMarks: question.mark

@@ -16,6 +16,8 @@ export interface IQuestion extends Document {
     createdBy: userRole;
     createdById: Types.ObjectId | null;
     visibility: QuestionVisibility;
+    starterCode: string
+    functionName: string
     isPremium: boolean;
     isPractice: boolean;
     isDeleted: boolean;
@@ -62,6 +64,12 @@ const QuestionSchema: Schema<IQuestion> = new Schema({
     visibility: {
         type: String,
         default: QuestionVisibility.FREE
+    },
+    starterCode: {
+        type: String
+    },
+    functionName: {
+        type: String
     },
     isPremium: {
         type: Boolean,

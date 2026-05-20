@@ -4,7 +4,7 @@ export interface CandidateRunCodeInputDTO {
     token: string
     language: CodingLanguage
     sourceCode: string
-    input?: string
+    input?: string[]
 }
 
 export interface CanadidateRunCodeOutputDTO {
