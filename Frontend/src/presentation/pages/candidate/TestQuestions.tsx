@@ -44,7 +44,7 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
         try {
           if(!token) return
           await dispatch(submitTest({token, answer: Object.values(answers), warningCount: runTime.warningCount})).unwrap()
-          navigate(ROUTES.CANDIDATE.TEST_SUBMIT)
+          navigate(`/candidate/test/${token}`)
         } catch (error) {
           toast.error(typeof error === 'string' ? error : 'Failed to submit test')
         }
@@ -101,9 +101,14 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
     }
 
     const handlePrevious = () => {
-      runTime.trackQuestionTime(currentQuestion.id)
-      if (currentQuestionIndex > 0) {
-        setCurrentQuestionIndex((prev) => prev - 1)
+      if(!test.rules.navigation.allowBackNavigation){
+         toast.error("Back navigation is not allowed")
+         return
+      }else{
+        runTime.trackQuestionTime(currentQuestion.id)
+        if (currentQuestionIndex > 0) {
+          setCurrentQuestionIndex((prev) => prev - 1)
+        }
       }
     }
 

@@ -234,17 +234,14 @@ const EvaluationResultChip = ({
   totalMarks?: number;
   questionType: string;
 }) => {
-  if (
-    isCorrect === undefined &&
-    marksObtained === undefined
-  ) {
+  if (isCorrect === undefined && marksObtained === undefined) {
     return (
       <Chip
         label="Not Evaluated"
         size="small"
         sx={{fontWeight: 700}}
       />
-    );
+    )
   }
   if (questionType === "CODING") {
     return (
@@ -254,7 +251,17 @@ const EvaluationResultChip = ({
         color={(marksObtained ?? 0) ===  (totalMarks ?? 0)  ? "success"  : "warning" }
        sx={{ fontWeight: 700 }}
        />
-    );
+    )
+  }
+    if (questionType === "DESCRIPTIVE") {
+    return (
+      <Chip
+        label={`${marksObtained ?? 0} / ${totalMarks ?? 0}`}
+        size="small"
+        color={(marksObtained ?? 0) ===  (totalMarks ?? 0)  ? "success"  : "warning" }
+       sx={{ fontWeight: 700 }}
+       />
+    )
   }
   return (
     <Chip
@@ -263,5 +270,5 @@ const EvaluationResultChip = ({
       color={ isCorrect ? "success" : "error"}
       sx={{fontWeight: 700}}
     />
-  );
-};
+  )
+}

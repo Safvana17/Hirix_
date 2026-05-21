@@ -37,6 +37,10 @@ const TestSubmittedPage: React.FC = () => {
     
     const handleSaveQuestion = async(data: QuestionFormData) => {
         try {
+                    if(!token){
+            toast.error("No token available")
+            return
+        }
             if(modalMode === 'create' && token){
             console.log('from create')
                 await dispatch(submitQuestion({data, token})).unwrap()

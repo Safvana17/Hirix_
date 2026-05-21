@@ -10,7 +10,6 @@ export type CodingLanguage = 'javascript' | 'python'
 export type ViolationType = 'TAB_SWITCH' | 'FULLSCREEN_EXIT' 
 export type EvaluationStatus = "NOT_EVALUATED" | "EVALUATING" | "EVALUATED" | "FAILED"
 
-
 export const QuestionMark = {
     mcq: 2,
     coding: 5,

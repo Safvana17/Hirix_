@@ -126,9 +126,9 @@ const TestCandidateInstructions: React.FC = () => {
             return
         }
         try {
-            // if(test.rules.behavior.enforceFullScreen){
-            //     await document.documentElement.requestFullscreen()
-            // }
+            if(test.rules.behavior.enforceFullScreen && !document.fullscreenElement){
+                await document.documentElement.requestFullscreen()
+            }
 
             const result = await dispatch(startTest({token})).unwrap()
             console.log("Start result status:", result.candidate.candidateTestStatus)

@@ -72,6 +72,6 @@ export class CandidatetestController {
     getAllCategories = asyncHandler(async(req: Request, res: Response) => {
         const { token } = req.validatedParams as TestTokenParams
         const categories = await this._getAllCategories.execute({token})
-        return sendSuccess(res, statusCode.OK, '', categories)
+        return sendSuccess(res, statusCode.OK, '', categories.categories)
     })
 }

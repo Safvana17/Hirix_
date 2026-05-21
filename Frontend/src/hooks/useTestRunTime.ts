@@ -3,6 +3,7 @@ import type { CandidateTest, CodingLanguage, TestCandidate, TestCandidateAnswer,
 import { useTabSwitchMonitor } from "./useTabSwitchMonitor";
 import { useAutosave } from "./useAutoSave";
 import { useFullScreenMonitor } from "./useFullScreenMonitor";
+import { useBehaviourRules } from "./useBahaviourRules";
 
 
 export type RunTimeAnswers = Record<string, TestCandidateAnswer>
@@ -254,6 +255,13 @@ export function useTestRunTime ({
             void handleViolation('TAB_SWITCH')
         },
     })
+
+    useBehaviourRules({
+        allowCopyPaste: rules.behavior.allowCopyPaste,
+        allowRightClick: rules.behavior.allowRightClick,
+        allowKeyboardShortcuts: rules.behavior.allowKeyboardShortcuts
+    })
+    
     return {
         answers,
         warningCount,

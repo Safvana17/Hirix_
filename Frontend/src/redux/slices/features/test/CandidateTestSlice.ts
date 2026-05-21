@@ -147,7 +147,7 @@ void,
 })
 
 export const getAllPublicCategories = createAsyncThunk<
-{categories: Category[]},
+Category[],
 {token: string},
 {rejectValue: string}
 >('candidate/getAllCategories', async({token},{rejectWithValue}) => {
@@ -156,7 +156,7 @@ export const getAllPublicCategories = createAsyncThunk<
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-
+console.log('categories: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -251,7 +251,7 @@ const candidateTestSlice = createSlice({
         })
         .addCase(getAllPublicCategories.fulfilled, (state, action) => {
             state.loading = false
-            state.categories = action.payload.categories
+            state.categories = action.payload
         })
         .addCase(getAllPublicCategories.rejected, (state, action) => {
             state.loading = false

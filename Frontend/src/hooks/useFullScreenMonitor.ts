@@ -7,7 +7,6 @@ export function useFullScreenMonitor({
    enforceFullScreen: boolean;
    onExit: () => void;
 }) {
-
     const enterFullScreen = useCallback( async () => {
         if(!document.fullscreenElement){
             try {

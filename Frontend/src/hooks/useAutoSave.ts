@@ -14,6 +14,7 @@ export function useAutosave({
         if(!enabled) return 
 
         const interval = setInterval(() => {
+            console.log("saving...")
             onSave()
         }, intervalInSeconds * 1000)
 
