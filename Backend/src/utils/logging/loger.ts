@@ -1,3 +1,68 @@
+import pino, { Logger, DestinationStream } from "pino";
+import fs from "fs";
+import path from "path";
+import { createStream } from 'rotating-file-stream'
+
+class LoggerService {
+    private static instance: Logger
+
+    private constructor() {}
+
+    public static getLogger(): Logger {
+        if (!LoggerService.instance) {
+            LoggerService.instance = LoggerService.createLogger()
+        }
+
+        return LoggerService.instance
+    }
+
+    private static createLogger(): Logger {
+        const isProduction = process.env.NODE_ENV === "production"
+
+        const logDir = path.join(process.cwd(), "logs")
+
+        if (!fs.existsSync(logDir)) {
+            fs.mkdirSync(logDir, { recursive: true })
+        }
+
+        // const logFile = path.join(logDir, "app.log")
+
+        const fileStream: DestinationStream = createStream("app.log", {
+            interval: "1d",
+            path: logDir,
+            maxFiles: 14,
+            compress: "gzip"
+        })
+
+        return pino(
+            {
+                level: isProduction ? "info" : "debug",
+                timestamp: pino.stdTimeFunctions.isoTime,
+                formatters: {
+                    level(label) {
+                        return { level: label}
+                    }
+                },
+                base: undefined,
+            },
+
+            isProduction
+                ? fileStream
+                : pino.transport({
+                      target: "pino-pretty",
+                      options: {
+                          colorize: true,
+                          translateTime: "SYS:standard",
+                          ignore: "pid,hostname",
+                      },
+                  })
+        )
+    }
+}
+
+export const logger = LoggerService.getLogger()
+
+
 // import winston from "winston";
 // import 'winston-daily-rotate-file'
 
@@ -21,30 +86,30 @@
 //     ]
 // })
 
-import pino from "pino";
-import fs from 'fs'
-import path from 'path'
+// import pino from "pino";
+// import fs from 'fs'
+// import path from 'path'
 
-const isProduction = process.env.NODE_ENV === 'production'
+// const isProduction = process.env.NODE_ENV === 'production'
 
-const logDir = path.join(process.cwd(), "logs")
-if(!fs.existsSync(logDir)){
-    fs.mkdirSync(logDir)
-}
+// const logDir = path.join(process.cwd(), "logs")
+// if(!fs.existsSync(logDir)){
+//     fs.mkdirSync(logDir)
+// }
 
-const logFile = path.join(logDir, "app.log")
-const fileStream = fs.createWriteStream(logFile, {flags: "a"})
-export const logger = pino(
-    {
-        level: isProduction ? 'info' : 'debug'
-    },
-    isProduction ? fileStream
-    : pino.transport({
-        target: "pino-pretty",
-        options: {
-            colorize : true,
-            translateTime: "SYS: standard",
-            ignore: 'pid, hostname'
-        },
-    })
-)
+// const logFile = path.join(logDir, "app.log")
+// const fileStream = fs.createWriteStream(logFile, {flags: "a"})
+// export const logger = pino(
+//     {
+//         level: isProduction ? 'info' : 'debug'
+//     },
+//     isProduction ? fileStream
+//     : pino.transport({
+//         target: "pino-pretty",
+//         options: {
+//             colorize : true,
+//             translateTime: "SYS: standard",
+//             ignore: 'pid, hostname'
+//         },
+//     })
+// )

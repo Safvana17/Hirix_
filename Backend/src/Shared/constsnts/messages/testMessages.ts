@@ -24,6 +24,7 @@ export const TestMessages = {
         WRONG_EMAIL: 'Candidate email and requested email does not match',
         CANNOT_RUN_CODE: 'You can run code only after starting the test',
         UNSUPPORTED_LANGUAGE: 'Unsupported language',
+        SAVE_ANSWER_NOT_ALLOWED: 'You cannot save answers',
         SUBMIT_TEST_NOT_ALLOWED: 'You cannot submit your test',
         NOT_PUBLISHED_TEST: 'You can only submit published test',
         AI_EVALUATION_FAILED: 'Ai evaluation failed: empty response',

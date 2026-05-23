@@ -12,6 +12,7 @@ import { ICandidateSubmitTestUsecase } from "../../../../Application/candidate/i
 import { ICandidateTerminateTestUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.terminateTest.usecase";
 import { ICandidateSubmitQuestionUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.submitQuestion.usecase";
 import { ICandidateGetAllCategoriesUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.getAllCategories.usecase";
+import { ICandidateSaveAnswerUsecase } from "../../../../Application/candidate/interfaces/test/ICandidae.saveAnswer.usecase";
 
 export class CandidatetestController {
     constructor (
@@ -23,6 +24,7 @@ export class CandidatetestController {
         private _terminateCandidate: ICandidateTerminateTestUsecase,
         private _submitQuestion: ICandidateSubmitQuestionUsecase,
         private _getAllCategories: ICandidateGetAllCategoriesUsecase,
+        private _saveAnswer: ICandidateSaveAnswerUsecase,
     ) {}
 
     getTestByToken = asyncHandler(async(req: Request, res: Response) => {
@@ -73,5 +75,11 @@ export class CandidatetestController {
         const { token } = req.validatedParams as TestTokenParams
         const categories = await this._getAllCategories.execute({token})
         return sendSuccess(res, statusCode.OK, '', categories.categories)
+    })
+
+    saveAnswers = asyncHandler(async(req: Request, res: Response) => {
+        const { token } = req.validatedParams as TestTokenParams
+        await this._saveAnswer.execute({token, ...req.body})
+        return sendSuccess(res, statusCode.OK, '')
     })
 }

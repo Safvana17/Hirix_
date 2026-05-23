@@ -39,6 +39,7 @@
     "puppeteer": "^24.41.0",
     "razorpay": "^2.9.6",
     "redis": "^5.10.0",
+    "rotating-file-stream": "^3.2.9",
     "uuid": "^13.0.0",
     "winston": "^3.19.0",
     "winston-daily-rotate-file": "^5.0.0",

@@ -121,7 +121,7 @@ import { CandidateGetAllPracticeQuestionsUsecase } from "../../../Application/ca
 import { AdminGetAllTemplatesUsecase } from "../../../Application/admin/usecases/settings/admin.getAllTemplates.usecase";
 import { AdminProcessNotificationEventUsecase } from "../../../Application/admin/usecases/settings/admin.processNotificationEvent.usecase";
 import { UnifiedGetMyNotificationsUsecase } from "../../../Application/common/usecases/unified.getMyNotifications.usecase";
-
+import { CandidateSaveAnswerUsecase } from "../../../Application/candidate/useCases/test/candidate.saveAnswer.usecase";
 
 //repositories
 import { CandidateRepository } from "../../../Infrastructure/repositories/candidate.repository";
@@ -140,7 +140,7 @@ import { TemplateRepository } from "../../../Infrastructure/repositories/templat
 import { NotificationRuleRepository } from "../../../Infrastructure/repositories/notificationRule.repository";
 import { NotificationRepository } from "../../../Infrastructure/repositories/notification.repository";
 import { TestRepository } from "../../../Infrastructure/repositories/test.repository";
-import { TestCandidateRepository } from "../../../Infrastructure/repositories/textCandidate.repository";
+import { TestCandidateRepository } from "../../../Infrastructure/repositories/testCandidate.repository";
 
 //services
 import { HashService } from "../../../Infrastructure/services/HashService";
@@ -409,6 +409,10 @@ const iCandidateSubmitQuestion = new CandidateSubmitQuestionUsecase (
 const iCandidateGetCategories = new CandidateGetAllCategoriesUsecase(
     iTestCandidateRepository,
     iCategoryRepository
+)
+const iCandidateSaveAnswer = new CandidateSaveAnswerUsecase(
+    iTestRepository,
+    iTestCandidateRepository
 )
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -1044,5 +1048,6 @@ export const ICandidateTestController = new CandidatetestController(
     iCandidateSubmitTest,
     iCandidateTerminateTest,
     iCandidateSubmitQuestion,
-    iCandidateGetCategories
+    iCandidateGetCategories,
+    iCandidateSaveAnswer,
 )

@@ -37,6 +37,7 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
         return this.mapToEntity(document)
     }
     
+
     protected mapToEntity(doc: ITestCandidate): TestCandidateEntity {
         return TestCandidateMapper.toEntity(doc)
     }

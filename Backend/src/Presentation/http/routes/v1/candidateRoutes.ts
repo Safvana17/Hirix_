@@ -5,7 +5,7 @@ import { iCandidateSubscriptionController, ICandidateTestController, iPracticeLi
 import { verifyCsrf } from '../../middlewares/csrfVerify'
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
-import { CandidateRunCodeSchema, submitTestSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
+import { candidateAnswerSchema, CandidateRunCodeSchema, submitTestSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
 import { createQuestionSchema, questionParamsSchema, submitPraticeAnswerSchema } from '../../validators/questionValidator'
 
 
@@ -43,5 +43,8 @@ router.post(ROUTES.CANDIDATE.TEST.SUBMIT, validate(TestTokenSchema, 'params'), v
 router.patch(ROUTES.CANDIDATE.TEST.TERMINATE, validate(TestTokenSchema, 'params'),validate(submitTestSchema, 'body'), ICandidateTestController.terminateTest)
 router.post(ROUTES.CANDIDATE.TEST.SUBMIT_QUESTION, validate(TestTokenSchema, 'params'), validate(createQuestionSchema, 'body'), ICandidateTestController.submitQuestion)
 router.get(ROUTES.CANDIDATE.TEST.GET_CATEGORIES, validate(TestTokenSchema, 'params'), ICandidateTestController.getAllCategories)
+router.post(ROUTES.CANDIDATE.TEST.SAVE_ANSWER, validate(TestTokenSchema, 'params'), validate(candidateAnswerSchema, 'body'), ICandidateTestController.saveAnswers)
+
+
 
 export default router

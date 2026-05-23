@@ -103,7 +103,8 @@ export const ROUTES = {
             SUBMIT: '/test/:token/submit',
             TERMINATE: '/test/:token/terminate',
             SUBMIT_QUESTION: '/test/:token/question',
-            GET_CATEGORIES: '/test/:token/categories'
+            GET_CATEGORIES: '/test/:token/categories',
+            SAVE_ANSWER: '/test/:token/save',
         },
     },
 
