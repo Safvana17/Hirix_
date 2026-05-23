@@ -5,17 +5,17 @@ import {Box,TextField,Tabs,Tab,Paper } from "@mui/material";
 export default function SettingsPage() {
   const [tab, setTab] = useState(0);
 
-  const [settings, setSettings] = useState({
-    platformName: "Hirix",
-    supportEmail: "support@hirix.com",
-    sessionTimeout: 30,
-    allowRegistration: true,
-    requireEmailVerification: true,
-    enableCoding: true,
-    enableVideo: false,
-    enablePractice: true,
-    logo: null,
-  });
+  // const [settings, setSettings] = useState({
+  //   platformName: "Hirix",
+  //   supportEmail: "support@hirix.com",
+  //   sessionTimeout: 30,
+  //   allowRegistration: true,
+  //   requireEmailVerification: true,
+  //   enableCoding: true,
+  //   enableVideo: false,
+  //   enablePractice: true,
+  //   logo: null,
+  // });
 
   // const handleChange = (key, value) => {
   //   setSettings((prev) => ({ ...prev, [key]: value }));
@@ -38,7 +38,7 @@ export default function SettingsPage() {
     <Box sx={{backgroundColor: '#fff'}} p={3} mx="auto">
     {/* <Box p={3} maxWidth={800} mx="auto"> */}
 
-      <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mb: 2 }}>
+      <Tabs value={tab} onChange={(e,v) => setTab(v)} sx={{ mb: 2 }}>
         <Tab label="General" />
         {/* <Tab label="Branding" />
         <Tab label="Security" /> */}
@@ -50,7 +50,7 @@ export default function SettingsPage() {
             label="Platform Name"
             margin="normal"
             disabled
-            value={settings.platformName}
+            value="Hirix"
             // onChange={(e) =>
             //   handleChange("platformName", e.target.value)
             // }
@@ -60,7 +60,7 @@ export default function SettingsPage() {
             fullWidth
             label="Support Email"
             margin="normal"
-            value={settings.supportEmail}
+            value="support@hirix.com"
             disabled
             // onChange={(e) =>
             //   handleChange("supportEmail", e.target.value)

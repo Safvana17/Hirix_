@@ -34,6 +34,8 @@ export const API_ROUTES = {
         `/candidate/test/${token}/question`,
       GET_CATEGORIES: (token: string) =>
         `/candidate/test/${token}/categories`,
+      SAVE_ANSWER: (token: string) => 
+        `/candidate/test/${token}/save`
     },
     PRACTICE: {
       GET_BY_ID: (questionId: string) => 

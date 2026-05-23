@@ -28,21 +28,29 @@ const TestSubmittedPage: React.FC = () => {
     // }, [dispatch, token])
 
     const handleAddQuestion = () => {
-        setModalMode('create')
-        if(token && categories.length === 0){
-            dispatch(getAllPublicCategories({token}))
+        try {
+            setModalMode('create')
+            if(!token){
+                toast.error('Token is not available')
+                return
+            }
+            if(categories.length === 0){
+                dispatch(getAllPublicCategories({token})).unwrap()
+            }
+            setIsModalOpen(true)
+        } catch (error) {
+            toast.error(typeof error === 'string' ? error : 'failed to open add question modal')
         }
-        setIsModalOpen(true)
     }
     
     const handleSaveQuestion = async(data: QuestionFormData) => {
         try {
-                    if(!token){
-            toast.error("No token available")
-            return
-        }
+            if(!token){
+               toast.error("No token available")
+               return
+            }
             if(modalMode === 'create' && token){
-            console.log('from create')
+                console.log('from create')
                 await dispatch(submitQuestion({data, token})).unwrap()
                 console.log('reached here')
                 setIsModalOpen(false)

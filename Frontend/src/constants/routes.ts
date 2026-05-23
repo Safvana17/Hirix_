@@ -37,7 +37,7 @@ export const ROUTES = {
     TEST_LOGIN: '/candidate/test/:token/login',
     TEST_INSTRUCTIONS: '/candidate/test/instructions/:token',
     TEST_QUESTIONS: '/candidate/test/questions/:token',
-    TEST_SUBMIT: '/candidate/test/submit',
+    TEST_SUBMIT: '/candidate/test/submit/:token',
     TEST_TERMINATE: '/candidate/test/terminate',
     QUESTION_SUBMITTED: '/candidate/test/quesion-submitted',
     PRACTICE: '/candidate/practice/:questionId'

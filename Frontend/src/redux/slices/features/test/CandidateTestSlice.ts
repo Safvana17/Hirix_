@@ -156,7 +156,6 @@ Category[],
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-console.log('categories: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -164,6 +163,22 @@ console.log('categories: ', response.data.data)
     }
 })
 
+export const saveAnswer = createAsyncThunk<
+void,
+{token: string, answer: TestCandidateAnswer[]},
+{rejectValue: string}
+>('candidate/saveAnswer', async({token, answer}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.CANDIDATE.TEST.SAVE_ANSWER(token), {answer})
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to save answer')
+    }
+})
 const candidateTestSlice = createSlice({
     name: 'CandidateTestSlice',
     initialState,
@@ -256,6 +271,16 @@ const candidateTestSlice = createSlice({
         .addCase(getAllPublicCategories.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get categories'
+        })
+        .addCase(saveAnswer.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(saveAnswer.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(saveAnswer.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to submit test'
         })
     }
 })

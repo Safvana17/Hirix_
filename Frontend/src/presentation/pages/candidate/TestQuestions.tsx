@@ -13,7 +13,7 @@ import TestWarningBanner from '../../components/candidate/test/TestWarningBanner
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
-import { submitTest, terninateTest } from '../../../redux/slices/features/test/CandidateTestSlice'
+import { saveAnswer, submitTest, terninateTest } from '../../../redux/slices/features/test/CandidateTestSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTES } from '../../../constants/routes'
 // import { useFullScreenMonitor } from '../../../hooks/useFullScreenMonitor'
@@ -37,14 +37,22 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
       test,
       rules: test.rules,
       candidate: candidate!,
-      onSaveAnswers: async () => {
-        console.log('saved answers')
+      onSaveAnswers: async (answers) => {
+        try {
+          if(!token){
+            toast.error('Token is missing')
+            return
+          }
+          await dispatch(saveAnswer({token, answer: Object.values(answers)})).unwrap()
+        } catch (error) {
+          toast.error(typeof error === 'string' ? error : 'failed to save answers')
+        }
       },
       onSubmitTest: async (answers) => {
         try {
           if(!token) return
           await dispatch(submitTest({token, answer: Object.values(answers), warningCount: runTime.warningCount})).unwrap()
-          navigate(`/candidate/test/${token}`)
+          navigate(`/candidate/test/submit/${token}`)
         } catch (error) {
           toast.error(typeof error === 'string' ? error : 'Failed to submit test')
         }
@@ -88,24 +96,33 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
 
     if(!test || !candidate) return null
 
-    const handleQuestionClick = (index: number) => {
+    const handleQuestionClick = async (index: number) => {
       runTime.trackQuestionTime(questions[index].id)
+      if(test.rules.autoSave.saveOnEveryAnswer){
+        await runTime.saveAnswers()
+      }
       setCurrentQuestionIndex(index)
     }
 
-    const handleNext = () => {
+    const handleNext = async () => {
         runTime.trackQuestionTime(currentQuestion.id)
+        if(test.rules.autoSave.saveOnEveryAnswer){
+          await runTime.saveAnswers()
+        }
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prev) => prev + 1)
         }
     }
 
-    const handlePrevious = () => {
+    const handlePrevious = async () => {
       if(!test.rules.navigation.allowBackNavigation){
          toast.error("Back navigation is not allowed")
          return
       }else{
         runTime.trackQuestionTime(currentQuestion.id)
+        if(test.rules.autoSave.saveOnEveryAnswer){
+            await runTime.saveAnswers()
+        }
         if (currentQuestionIndex > 0) {
           setCurrentQuestionIndex((prev) => prev - 1)
         }

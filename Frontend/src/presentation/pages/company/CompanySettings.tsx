@@ -7,10 +7,7 @@ import DeleteAccount from '../../components/company/DeleteAccount'
 import NotificationTab from '../../components/company/NotificationTab'
 
 
-
-
 type TabType = 'profile'| 'notifications'| 'change-Password'| 'delete-Account'
-
 
 const CompanyProfile: React.FC = () => {
 

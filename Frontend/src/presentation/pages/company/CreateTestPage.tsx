@@ -74,7 +74,7 @@ const CreateTestPage: React.FC = () => {
                     navigate(ROUTES.COMPANY.CREATE_TEST_SUCCESS)
                 }
                 if(mode === 'reschedule' && id){
-                    await dispatch(scheduleAgainTest({data: formData, id}))
+                    await dispatch(scheduleAgainTest({data: formData, id})).unwrap()
                     toast.success('Test Scheduled again successfully')
                     navigate(ROUTES.COMPANY.TEST)
                 }

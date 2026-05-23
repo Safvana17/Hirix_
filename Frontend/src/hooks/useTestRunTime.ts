@@ -4,6 +4,7 @@ import { useTabSwitchMonitor } from "./useTabSwitchMonitor";
 import { useAutosave } from "./useAutoSave";
 import { useFullScreenMonitor } from "./useFullScreenMonitor";
 import { useBehaviourRules } from "./useBahaviourRules";
+import { useTestTimer } from "./useTestTimer";
 
 
 export type RunTimeAnswers = Record<string, TestCandidateAnswer>
@@ -34,7 +35,7 @@ export function useTestRunTime ({
 }: useTestRunTimeProps) {
     const [answers, setAnswers] = useState<RunTimeAnswers>(() => buildInitialAnswers(candidate))
     const [warningCount, setWarningCount] = useState(candidate.warningCount ?? 0)
-    const [timeLeftInSeconds, setTimeLeftInSeconds] = useState(() => getInitialTimeLeft(test))
+    // const [timeLeftInSeconds, setTimeLeftInSeconds] = useState(() => getInitialTimeLeft(test))
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isTerminating, setIsTerminating] = useState(false)
 
@@ -44,13 +45,23 @@ export function useTestRunTime ({
     const warningCountRef = useRef(candidate.warningCount ?? 0);
     const currentQuestionStartTimeRef = useRef(Date.now())
     const currentQuestionIdRef = useRef<string | null>(null)
+    const isDirtyRef = useRef(false)
+    const isSavingRef = useRef(false)
 
     useEffect(() => {
         answerRef.current = answers
     }, [answers])
 
     const saveAnswers = useCallback( async () => {
-        await onSaveAnswers(answerRef.current)
+        if(!isDirtyRef.current) return
+        if(isSavingRef.current) return
+        try {
+            isSavingRef.current = true
+            await onSaveAnswers(answerRef.current)
+            isDirtyRef.current  = false
+        } finally {
+            isSavingRef.current = false
+        }
     }, [onSaveAnswers])
 
     const updateAnswer = useCallback(({
@@ -64,6 +75,7 @@ export function useTestRunTime ({
         language?: CodingLanguage
         output?: string
     }) => {
+        isDirtyRef.current = true
         setAnswers((prev) => {
             const oldAnswer = prev[question.id]
             const baseAnswer: TestCandidateAnswer = {
@@ -221,20 +233,20 @@ export function useTestRunTime ({
     ]
     )
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const remaining = getInitialTimeLeft(test)
-            setTimeLeftInSeconds(remaining)
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         const remaining = getInitialTimeLeft(test)
+    //         setTimeLeftInSeconds(remaining)
 
-            if(remaining <= 0){
-                clearInterval(interval)
+    //         if(remaining <= 0){
+    //             clearInterval(interval)
 
-                void handleSubmit()
-            }
-        }, 1000)
+    //             void handleSubmit()
+    //         }
+    //     }, 1000)
 
-        return () => clearInterval(interval)
-    }, [test, handleSubmit])
+    //     return () => clearInterval(interval)
+    // }, [test, handleSubmit])
 
     useAutosave({
         enabled: rules.autoSave.enabled,
@@ -262,10 +274,18 @@ export function useTestRunTime ({
         allowKeyboardShortcuts: rules.behavior.allowKeyboardShortcuts
     })
     
+    useTestTimer({
+        endTime: test.endTime,
+        autoSubmitOnTimeEnd: test.rules.timing.autoSubmitOnTimeEnd,
+        warningBeforeEndInMinutes: test.rules.timing.warningBeforeEndInMinutes,
+        onAutoSubmit: () => {
+            handleSubmit()
+        }
+    })
     return {
         answers,
         warningCount,
-        timeLeftInSeconds,
+        // timeLeftInSeconds,
         isSubmitting,
         isTerminating,
         updateAnswer,
@@ -298,7 +318,7 @@ function buildInitialAnswers(candidate: TestCandidate): RunTimeAnswers {
     return result
 }
 
-function getInitialTimeLeft(test: CandidateTest): number {
-    const endTime = new Date(test.endTime).getTime()
-    return Math.max(0, Math.floor((endTime - Date.now())/ 1000))  
-}
+// function getInitialTimeLeft(test: CandidateTest): number {
+//     const endTime = new Date(test.endTime).getTime()
+//     return Math.max(0, Math.floor((endTime - Date.now())/ 1000))  
+// }
