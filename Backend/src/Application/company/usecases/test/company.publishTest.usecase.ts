@@ -4,10 +4,13 @@ import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
+import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
+import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
+import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
@@ -22,7 +25,9 @@ export class CompanyPublishTestUsecase implements ICompanyPublishTestUsecase {
         private _testCandidateRepository: ITestCandidateRepository,
         private _jobRoleRepository: IJobRepository,
         private _tokenService: ITokenService,
-        private _processNotificationUsecase: IAdminProcessNotificationUsecase
+        private _processNotificationUsecase: IAdminProcessNotificationUsecase,
+        private _subscriptionRepository: ISubscriptionRepository,
+        private _subscriptionPlanRepository: ISubscriptionPlanRepository
     ) {}
 
     async execute(request: CompanyPublishTestInputDTO): Promise<CompanyCreateTestOutputDTO> {
@@ -30,6 +35,17 @@ export class CompanyPublishTestUsecase implements ICompanyPublishTestUsecase {
         if(!company){
             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
         }
+
+        const subscription = await this._subscriptionRepository.findCurrentByUserId(company.id)
+        if(!subscription){
+            throw new AppError(subscriptionPlanMessages.error.CANNOT_FIND_SUBCRIPTION_DETAILS, statusCode.NOT_FOUND)
+        }
+
+        const plan = await this._subscriptionPlanRepository.findById(subscription.planId)
+        if(!plan){
+            throw new AppError(subscriptionPlanMessages.error.NOT_FOUND, statusCode.NOT_FOUND)
+        }
+        const candidateLimit = plan.maxCandidates
 
         const test = await this._testRepository.findById(request.testId)
         if(!test){
@@ -59,7 +75,10 @@ export class CompanyPublishTestUsecase implements ICompanyPublishTestUsecase {
         if(!candidates || candidates.length === 0){
             throw new AppError(TestMessages.error.CANDIDATES_REQUIRED, statusCode.BAD_REQUEST)
         }
-
+        if( candidateLimit != null && candidates.length > candidateLimit){
+            throw new AppError(TestMessages.error.TEST_CANDIDATES_COUNT_EXCEEDED, statusCode.BAD_REQUEST)
+        }
+        
         const jobRole = await this._jobRoleRepository.findById(test.jobRoleId)
         if(!jobRole){
             throw new AppError(JobRoleMessages.error.JOBROLE_NOT_FOUND, statusCode.NOT_FOUND)

@@ -1,4 +1,4 @@
-import { IPracticeEvaluationService } from "../../Application/interface/service/IPracticeEvaluationService";
+import { ExplanationInput, IPracticeEvaluationService } from "../../Application/interface/service/IPracticeEvaluationService";
 import Groq from "groq-sdk"
 import { env } from "../config/env";
 import { AppError } from "../../Domain/errors/app.error";
@@ -145,6 +145,50 @@ export class PracticeEvaluationService implements IPracticeEvaluationService {
       return {
         isCorrect,
         feedback: parsed.feedback || `Your answer covers about ${coveragePercentage}% of the expected answer. ${missingText}`
+      }
+    }
+
+    async getExplanation(input: ExplanationInput): Promise<{ explanation: string; }> {
+    const completion = await this._client.chat.completions.create({
+      model: env.GROQ_MODEL || "llama-3.3-70b-versatile",
+      temperature: 0.2,
+      response_format: {
+        type: "json_object"
+      },
+      messages: [
+        {
+          role: "system",
+          content: `
+            You are a learning assistant.
+
+            Return only valid JSON:
+            {
+              "explanation": string
+            }
+            Rules:
+            - Explain the correct answer for the question.
+            - For MCQ: mention the correct option, explain why it is correct, and briefly explain why other options are not best if options are provided.
+            - For descriptive: provide an ideal answer and explain the concept clearly.
+            - For coding: provide an optimized solution using the requested function name if available, explain the logic, time complexity, and space complexity.
+            - If starter code is provided, follow its structure.
+            - If test cases are provided, make the solution satisfy them.
+            - No markdown.
+           `,
+        }, {
+           role: "user",
+           content: JSON.stringify(input)
+        }
+      ]
+    })
+
+      const content = completion.choices[0]?.message.content
+      if(!content){
+        throw new AppError(TestMessages.error.AI_EVALUATION_FAILED, statusCode.SERVER_ERROR)
+      } 
+      const parsed = JSON.parse(content) as {explanation?: string}
+
+      return {
+       explanation: parsed.explanation ?? "No explanation generated"
       }
     }
 }

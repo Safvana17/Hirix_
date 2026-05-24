@@ -6,17 +6,17 @@ import QuestionDifficulty from "../../../Domain/enums/questionDifficulty";
 
 const TestCaseSchema = z.object({
   input: z.array(z.unknown()).min(1, "Test case input is required"),
-    expectedOutput: z.string().min(1, "Expected output is required"),
-});
-const CreateTestQuestionSchema = z
-  .object({
+  expectedOutput: z.string().min(1, "Expected output is required"),
+})
+
+const CreateTestQuestionSchema = z.object({
     source: z.nativeEnum(QuestionSource),
     type: z.nativeEnum(QuestionType),
     title: z.string().min(1, 'Question title is required'),
     order: z.number().min(1),
     questionId: z.string().optional(),
     description: z.string().optional(),
-      functionName: z.string().optional(),
+    functionName: z.string().optional(),
     starterCode: z.string().optional(),
     options: z.array(z.string()).optional(),
     answer: z.array(z.string()).optional(),
@@ -49,6 +49,7 @@ const CreateTestQuestionSchema = z
       }
     }
   })
+
 const CreateTestCandidateSchema = z.object({
   email: z.string().email('Invalid email format'),
 })
@@ -99,46 +100,56 @@ const CreateTestRulesSchema = z.object({
   warning: WarningRuleSchema
 })
 
-export const createTestValidator = z
-  .object({
-    jobRoleId: z.string().min(1, 'Job role is required'),
-    name: z.string().min(1, 'Test name is required'),
-    description: z.string().min(1, 'Description is required'),
-    startTime: z.coerce.date(),
-    endTime: z.coerce.date(),
-    questions: z.array(CreateTestQuestionSchema).min(1),
-    candidates: z.array(CreateTestCandidateSchema).min(1),
-    rules: CreateTestRulesSchema,
-  })
-  .superRefine((data, ctx) => {
-    if (data.startTime >= data.endTime) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Start time must be before end time',
-        path: ['startTime'],
-      })
-    }
-    const emails = data.candidates.map((c) => c.email)
-    const uniqueEmails = new Set(emails)
+export const createTestValidator = z.object({
+  jobRoleId: z.string().min(1, 'Job role is required'),
+  name: z.string().min(1, 'Test name is required'),
+  description: z.string().min(1, 'Test description is required'),
+  startTime: z.coerce.date(),
+  endTime: z.coerce.date(),
+  questions: z.array(CreateTestQuestionSchema).optional(),
+  candidates: z.array(CreateTestCandidateSchema).optional(),
+  rules: CreateTestRulesSchema.optional(),
+})
 
-    if (emails.length !== uniqueEmails.size) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Duplicate candidate emails found',
-        path: ['candidates'],
-      })
-    }
-    const orders = data.questions.map((q) => q.order)
-    const uniqueOrders = new Set(orders)
+export const editTestValidator = z.object({
+  jobRoleId: z.string().min(1, 'Job role is required'),
+  name: z.string().min(1, 'Test name is required'),
+  description: z.string().min(1, 'Description is required'),
+  startTime: z.coerce.date(),
+  endTime: z.coerce.date(),
+  questions: z.array(CreateTestQuestionSchema).min(1, 'Minimum one question is required'),
+  candidates: z.array(CreateTestCandidateSchema).min(1, 'Minimum one candidate is required'),
+  rules: CreateTestRulesSchema,
+})
+  // .superRefine((data, ctx) => {
+  //   if (data.startTime >= data.endTime) {
+  //     ctx.addIssue({
+  //       code: z.ZodIssueCode.custom,
+  //       message: 'Start time must be before end time',
+  //       path: ['startTime'],
+  //     })
+  //   }
+  //   const emails = data.candidates.map((c) => c.email)
+  //   const uniqueEmails = new Set(emails)
 
-    if (orders.length !== uniqueOrders.size) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Question order must be unique',
-        path: ['questions'],
-      })
-    }
-  })
+  //   if (emails.length !== uniqueEmails.size) {
+  //     ctx.addIssue({
+  //       code: z.ZodIssueCode.custom,
+  //       message: 'Duplicate candidate emails found',
+  //       path: ['candidates'],
+  //     })
+  //   }
+  //   const orders = data.questions.map((q) => q.order)
+  //   const uniqueOrders = new Set(orders)
+
+  //   if (orders.length !== uniqueOrders.size) {
+  //     ctx.addIssue({
+  //       code: z.ZodIssueCode.custom,
+  //       message: 'Question order must be unique',
+  //       path: ['questions'],
+  //     })
+  //   }
+  // })
 // export type CreateTestInput = z.infer<typeof createTestValidator>
 
 export const CompanyGetQuestionsForTestSchema = z.object({

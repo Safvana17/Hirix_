@@ -32,9 +32,9 @@ export class CompanyGetTestByIdUsecase implements ICompanyGetTestByIDUsecase {
             throw new AppError(JobRoleMessages.error.JOBROLE_NOT_FOUND, statusCode.NOT_FOUND)
         }
         const candidates = await this._testCandidateRepository.findByTestId(test.id)
-        if(!candidates || candidates.length === 0){
-            throw new AppError(TestMessages.error.CANDIDATES_REQUIRED, statusCode.NOT_FOUND)
-        }
+        // if(!candidates || candidates.length === 0){
+        //     throw new AppError(TestMessages.error.CANDIDATES_REQUIRED, statusCode.NOT_FOUND)
+        // }
 
         return {
             Test: {
@@ -48,7 +48,7 @@ export class CompanyGetTestByIdUsecase implements ICompanyGetTestByIDUsecase {
                 endTime: test.endTime,
                 testStatus: test.testStatus,
                 questions: test.questions,
-                candidates: candidates,
+                candidates: candidates ?? [],
                 rules: test.rules
             }
         }

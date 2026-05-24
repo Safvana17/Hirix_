@@ -74,9 +74,9 @@ export interface CompanyCreateTestInputDTO {
     description: string
     startTime: Date
     endTime: Date
-    questions: CreateTestQuestionInputDTO[]
-    candidates: CreateTestCandiateInputDTO[]
-    rules: CreateTestRulesDTO
+    questions?: CreateTestQuestionInputDTO[]
+    candidates?: CreateTestCandiateInputDTO[]
+    rules?: CreateTestRulesDTO
 }
 
 export interface CompanyPublishTestInputDTO {

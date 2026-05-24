@@ -15,6 +15,7 @@ import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesM
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { createDefaultTestRules } from "../../../../Shared/helpers/createDefaultTestRules";
 import { CompanyCreateTestInputDTO, CompanyCreateTestOutputDTO } from "../../dtos/test/company.createTest.dto";
 import { ICompanyCreateTestDraftUsecase } from "../../interfaces/test/ICompany.createTestDraft.usecase";
 
@@ -78,54 +79,59 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
             throw new AppError(TestMessages.error.INVALID_END_TIME, statusCode.BAD_REQUEST)
         }
 
-        if(!request.questions || request.questions.length === 0){
-            throw new AppError(TestMessages.error.QUESTIONS_REQUIRED, statusCode.BAD_REQUEST)
-        }
+        // if(!request.questions || request.questions.length === 0){
+        //     throw new AppError(TestMessages.error.QUESTIONS_REQUIRED, statusCode.BAD_REQUEST)
+        // }
 
-        if(!request.candidates || request.candidates.length === 0){
-            throw new AppError(TestMessages.error.CANDIDATES_REQUIRED, statusCode.BAD_REQUEST)
-        }
+        // if(!request.candidates || request.candidates.length === 0){
+        //     throw new AppError(TestMessages.error.CANDIDATES_REQUIRED, statusCode.BAD_REQUEST)
+        // }
 
-        if(candidateLimit != null && request.candidates.length > candidateLimit){
+        if( request.candidates && candidateLimit != null && request.candidates.length > candidateLimit){
             throw new AppError(TestMessages.error.TEST_CANDIDATES_COUNT_EXCEEDED, statusCode.BAD_REQUEST)
         }
-        
-        const rules = new TestRules(
-            new TimingRules(
-                request.rules.timing.autoSubmitOnTimeEnd,
-                request.rules.timing.warningBeforeEndInMinutes
-            ),
-            new NavigationRules(
-                request.rules.navigation.allowTabSwitch,
-                request.rules.navigation.shuffleQuestions,
-                request.rules.navigation.shuffleOptions,
-                request.rules.navigation.allowBackNavigation,
-            ),
-            new ProctoringRules(
-                request.rules.proctoring.enableCamera ?? false,
-                request.rules.proctoring.captureSnapshots ?? false,
-                request.rules.proctoring.snapshotIntervalSeconds ?? 60,
-                request.rules.proctoring.detectNoFace ?? false,
-                request.rules.proctoring.detectMultipleFaces ?? false,
-            ),
-            new BehaviorRules(
-                request.rules.behavior.enforceFullScreen ?? true,
-                request.rules.behavior.allowCopyPaste ?? false,
-                request.rules.behavior.allowRightClick ?? false,
-                request.rules.behavior.allowKeyboardShortcuts ?? false,
-            ),
-            new AutoSaveRules(
-                request.rules.autoSave.enabled ?? true,
-                request.rules.autoSave.intervalInSeconds ?? 10,
-                request.rules.autoSave.saveOnEveryAnswer ??true
-            ),
-            new WarningRules(
-                request.rules.warning.maxWarningCount ?? 0,
-                request.rules.warning.autoSubmitOnMaxWarnings ?? true
-            )
-        )
 
-        const questions = request.questions.map((q, idx) => {
+        // let rules
+        // if(request.rules){
+        const rules = request.rules 
+            ? new TestRules(
+                new TimingRules(
+                    request.rules.timing.autoSubmitOnTimeEnd,
+                    request.rules.timing.warningBeforeEndInMinutes
+                ),
+                new NavigationRules(
+                    request.rules.navigation.allowTabSwitch,
+                    request.rules.navigation.shuffleQuestions,
+                    request.rules.navigation.shuffleOptions,
+                    request.rules.navigation.allowBackNavigation,
+                ),
+                new ProctoringRules(
+                    request.rules.proctoring.enableCamera ?? false,
+                    request.rules.proctoring.captureSnapshots ?? false,
+                    request.rules.proctoring.snapshotIntervalSeconds ?? 60,
+                    request.rules.proctoring.detectNoFace ?? false,
+                    request.rules.proctoring.detectMultipleFaces ?? false,
+                ),
+                new BehaviorRules(
+                    request.rules.behavior.enforceFullScreen ?? true,
+                    request.rules.behavior.allowCopyPaste ?? false,
+                    request.rules.behavior.allowRightClick ?? false,
+                    request.rules.behavior.allowKeyboardShortcuts ?? false,
+                ),
+                new AutoSaveRules(
+                    request.rules.autoSave.enabled ?? true,
+                    request.rules.autoSave.intervalInSeconds ?? 10,
+                    request.rules.autoSave.saveOnEveryAnswer ??true
+                ),
+                new WarningRules(
+                    request.rules.warning.maxWarningCount ?? 0,
+                    request.rules.warning.autoSubmitOnMaxWarnings ?? true
+                )
+            )
+            : createDefaultTestRules()
+
+
+        const questions = request.questions?.map((q, idx) => {
             return new TestQuestionEntity(
                 '',
                 q.source,
@@ -141,9 +147,9 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
                 q.answer,
                 q.testCase
             )
-        })
+        })  ?? []
 
-        const totalMarks = questions.reduce((acc, curr) => acc + curr.mark, 0)
+        const totalMarks = questions.reduce((acc, curr) => acc + (curr.mark ?? 0), 0)
         const test = new TestEntity(
             '',
             request.name,
@@ -159,22 +165,24 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
         )
 
         const savedTest = await this._testRepository.create(test)
-        await Promise.all(
-            request.candidates.map((candidate) => {
-                const testCandidate = new TestCandidateEntity(
-                    "",
-                    savedTest.id,
-                    candidate.email,
-                    "",
-                    CandidateTestStatus.DRAFT,
-                    0,
-                    [],
-                    totalMarks,
-                    test.questions.length
-                )
-                return this._testCandidateRepository.create(testCandidate)
-            })
-        )
+        if(request.candidates){
+            await Promise.all(
+                request.candidates.map((candidate) => {
+                    const testCandidate = new TestCandidateEntity(
+                        "",
+                        savedTest.id,
+                        candidate.email,
+                        "",
+                        CandidateTestStatus.DRAFT,
+                        0,
+                        [],
+                        totalMarks,
+                        test.questions.length
+                    )
+                    return this._testCandidateRepository.create(testCandidate)
+                })
+            )
+        }
         return {
             test: savedTest
         }

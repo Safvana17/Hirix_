@@ -181,6 +181,7 @@ import { CandidateGetRelatedQuestionsUsecase } from "../../../Application/candid
 import { CandidateSubmitAnswerUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.submitAnswer.usecase";
 import { PracticeEvaluationService } from "../../../Infrastructure/services/PracticeEvaluationService";
 import { TestCodeRunService } from "../../../Infrastructure/services/TestCodeRunService";
+import { CandidateGetExplanationUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getExplanation.usecase";
 
 
 
@@ -309,6 +310,13 @@ const iCandidateGetRelatedQuestions = new CandidateGetRelatedQuestionsUsecase(
     iSubscriptionPlanRepository
 )
 const iCandidateSubmitAnswer = new CandidateSubmitAnswerUsecase(
+    iCandidateRepository,
+    iQuestionRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository,
+    iPracticeEvaluateService
+)
+const iCandidateGetExplanation = new CandidateGetExplanationUsecase (
     iCandidateRepository,
     iQuestionRepository,
     iSubscriptionRepository,
@@ -632,7 +640,9 @@ const iCompanyPublishTest = new CompanyPublishTestUsecase (
     iTestCandidateRepository,
     iJobRoleRepository,
     iTokenService,
-    iProcessNotification
+    iProcessNotification,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
 )
 const iCompanyGetQuestionsForTest = new CompanyGetAllQuestionsForTest(
     iQuestionRepository,
@@ -675,7 +685,9 @@ const iCompanyEditTest = new CompanyEditTestUsecase(
     iTestCandidateRepository,
     iTokenService,
     iJobRoleRepository,
-    iProcessNotification
+    iProcessNotification,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
 )
 const iCompanyEvaluateTest = new CompanyEvaluateTestUsecase(
     iCompanyRepository,
@@ -970,7 +982,8 @@ export const iPracticeLibraryController = new PracticeLibraryController (
     iCandidateGetAllPracticeQuestions,
     iCandidateGetQuestionById,
     iCandidateGetRelatedQuestions,
-    iCandidateSubmitAnswer
+    iCandidateSubmitAnswer,
+    iCandidateGetExplanation
 )
 
 export const iSubscriptionPlanController = new SubscriptionPlanController (

@@ -81,7 +81,8 @@ export const ROUTES = {
             GET_ALL: '/practice-questions',
             GET_BY_ID: '/practice-question/:questionId',
             SUBMIT: '/practice-question/:questionId/submit',
-            GET_RELATED: '/practice-question/:questionId/related'
+            GET_RELATED: '/practice-question/:questionId/related',
+            GET_EXPLANATION: '/practice-question/:questionId/explanation'
         },
         SUBSCRIPTION: {
             GET_ALL: '/plans',

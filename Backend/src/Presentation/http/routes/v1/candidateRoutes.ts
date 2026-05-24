@@ -15,9 +15,8 @@ const router = Express.Router()
 router.get(ROUTES.CANDIDATE.PRACTICE.GET_ALL, authHandler(iTokenService), iPracticeLibraryController.getAllPracticeQuestions)
 router.get(ROUTES.CANDIDATE.PRACTICE.GET_BY_ID, authHandler(iTokenService), validate(questionParamsSchema, 'params'), iPracticeLibraryController.getQuestionById)
 router.get(ROUTES.CANDIDATE.PRACTICE.GET_RELATED, authHandler(iTokenService), validate(questionParamsSchema, 'params'), iPracticeLibraryController.getRelatedQuestions)
-
 router.post(ROUTES.CANDIDATE.PRACTICE.SUBMIT,authHandler(iTokenService), verifyCsrf, validate(questionParamsSchema, 'params'), validate(submitPraticeAnswerSchema, 'body'), iPracticeLibraryController.submitAnswer)
-
+router.get(ROUTES.CANDIDATE.PRACTICE.GET_EXPLANATION, authHandler(iTokenService), validate(questionParamsSchema, 'params'), iPracticeLibraryController.getExplanation)
 //subscription
 router.get(ROUTES.CANDIDATE.SUBSCRIPTION.GET_ALL, authHandler(iTokenService), iCandidateSubscriptionController.getAllPlan)
 router.get(ROUTES.CANDIDATE.SUBSCRIPTION.GET_CURRENT, authHandler(iTokenService), iCandidateSubscriptionController.getCurrentPlan)

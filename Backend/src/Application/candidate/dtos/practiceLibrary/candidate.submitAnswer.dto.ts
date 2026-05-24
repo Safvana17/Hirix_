@@ -18,4 +18,5 @@ export interface CandidateSubmitAnswerOutputDTO {
     isCorrect: boolean
     correctAnswer?: string | string[]
     feedback?: string | null
+    hasDetailedExplanation: boolean
 }

@@ -50,7 +50,8 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
                    ? isCorrect 
                       ? "Correct Answer, Good job"
                       : "Incorrect Answer. Review the correct option and try again"
-                   : null
+                   : null,
+                hasDetailedExplanation: plan.hasDetailedFeedback ?? false
             }
         }
         if(request.questionType === QuestionType.DESCRIPTIVE){
@@ -58,7 +59,8 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
             logger.info(result, 'from usecase')
             return {
                 isCorrect: result.isCorrect,
-                feedback: canViewFeedback ? result.feedback : null
+                feedback: canViewFeedback ? result.feedback : null,
+                hasDetailedExplanation: plan.hasDetailedFeedback ?? false
             }
         }
         if(request.questionType === QuestionType.CODING){
@@ -69,7 +71,8 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
             logger.info(result, 'from usecase')
             return {
                 isCorrect: result.isCorrect,
-                feedback: canViewFeedback ? result.feedback : null
+                feedback: canViewFeedback ? result.feedback : null,
+                hasDetailedExplanation: plan.hasDetailedFeedback ?? false
             }
         }
         throw new AppError(questionMessages.error.QUESTION_NOT_FOUND, statusCode.BAD_REQUEST)

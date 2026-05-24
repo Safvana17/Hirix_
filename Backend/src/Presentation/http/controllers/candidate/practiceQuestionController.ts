@@ -8,13 +8,15 @@ import { ICandidateGetQuestionByIdUsecase } from "../../../../Application/candid
 import { ICandidateGetRelatedQuestionsUsecase } from "../../../../Application/candidate/interfaces/practiceLibrary/ICandidate.getRelatedQuestions.usecase";
 import { ICandidateSubmitAnswerUsecase } from "../../../../Application/candidate/interfaces/practiceLibrary/ICandidate.submitAnswer.usecase";
 import { logger } from "../../../../utils/logging/loger";
+import { ICandidateGetExplanationUsecase } from "../../../../Application/candidate/interfaces/practiceLibrary/ICandidate.getExplanation.usecase";
 
 export class PracticeLibraryController{
     constructor(
         private _getAllQuestions: ICandidateGetAllPracticeQuestionUsecase,
         private _getQuestionById: ICandidateGetQuestionByIdUsecase,
         private _getRelatedQuestions: ICandidateGetRelatedQuestionsUsecase,
-        private _submitAnswer: ICandidateSubmitAnswerUsecase
+        private _submitAnswer: ICandidateSubmitAnswerUsecase,
+        private _getExplanation: ICandidateGetExplanationUsecase,
     ) {}
 
     getAllPracticeQuestions = asyncHandler( async(req: Request, res: Response) => {
@@ -43,5 +45,12 @@ export class PracticeLibraryController{
         const { questionId } = req.validatedParams as QuestionParams
         const result = await this._submitAnswer.execute({candidateId, questionId, ...req.body})
         return sendSuccess(res, statusCode.OK, '', result)
+    })
+
+    getExplanation = asyncHandler(async(req: Request, res: Response) => {
+        const candidateId = req.user.id
+        const { questionId } = req.validatedParams as QuestionParams
+        const result = await this._getExplanation.execute({candidateId, questionId})
+        return sendSuccess(res, statusCode.OK, '', result.explanation)  
     })
 }
