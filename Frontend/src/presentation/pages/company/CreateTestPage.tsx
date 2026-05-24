@@ -85,6 +85,19 @@ const CreateTestPage: React.FC = () => {
         setCurrentStep((prev) => prev + 1)
     }
 
+    const handleCreateDraft = async() => {
+        try {
+            if(!validate()){
+                toast.error('Validation failed')
+                return
+            }
+            await dispatch(createTest(formData)).unwrap()
+            toast.success('Test draft created successfully')
+            navigate(ROUTES.COMPANY.TEST)
+        } catch (error) {
+            toast.error(typeof error === 'string' ? error : 'Failed to create draft')
+        }
+    }
     const handleBack = () => {
         setCurrentStep((prev) => prev - 1)
     }
@@ -148,6 +161,18 @@ const CreateTestPage: React.FC = () => {
                     >
                         Back
                     </Button>
+                    {currentStep < steps.length - 1 &&
+                        <Button 
+                            disabled={loading} 
+                            onClick={handleCreateDraft} 
+                            variant="contained" 
+                            sx={{
+                                backgroundColor: "#0B3861",
+                            }}
+                        >
+                            {loading ? 'Saving...' :  'Save Draft' }
+                        </Button>
+                    }
                     <Button 
                         disabled={loading} 
                         onClick={handleNext} 

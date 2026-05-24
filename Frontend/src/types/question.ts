@@ -52,8 +52,12 @@ export interface PracticeQuestion {
 export interface PracticeResultResponse {
   isCorrect: boolean
   feedback?: string
+  hasDetailedExplanation: boolean
 }
 
+export interface GetExplanationResponse {
+  explanation: string
+}
 export interface PracticeSubmitAnswerData {
   questionType: QuestionType
   selectedOption?: string[]

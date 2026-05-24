@@ -106,54 +106,46 @@ const CreateTestRulesSchema = z.object({
   warning: WarningRuleSchema
 })
 
-export const createTestValidator = z
-  .object({
+export const createTestValidator = z.object({
     jobRoleId: z.string().min(1, 'Job role is required'),
     name: z.string().min(1, 'Test name is required'),
     description: z.string().min(1, 'Description is required'),
-
-    startTime: z.coerce.date({
-      message: 'Start time is required',
-    }),
-    endTime: z.coerce.date({
-      message: 'End time is required',
-    }),
-
-    questions: z.array(CreateTestQuestionSchema).min(1, 'Select at least one question'),
-    candidates: z.array(CreateTestCandidateSchema).min(1, 'Add at least one candidate'),
-
-    rules: CreateTestRulesSchema,
+    startTime: z.coerce.date({message: 'Start time is required'}),
+    endTime: z.coerce.date({message: 'End time is required' }),
+    questions: z.array(CreateTestQuestionSchema).optional(),
+    candidates: z.array(CreateTestCandidateSchema).optional(),
+    rules: CreateTestRulesSchema.optional(),
   })
-  .superRefine((data, ctx) => {
-    if (data.startTime >= data.endTime) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Start time must be before end time',
-        path: ['startTime'],
-      })
-    }
+  // .superRefine((data, ctx) => {
+  //   // if (data.startTime >= data.endTime) {
+  //   //   ctx.addIssue({
+  //   //     code: z.ZodIssueCode.custom,
+  //   //     message: 'Start time must be before end time',
+  //   //     path: ['startTime'],
+  //   //   })
+  //   // }
 
-    const emails = data.candidates.map((c) => c.email.toLowerCase())
-    const uniqueEmails = new Set(emails)
+  //   const emails = data.candidates.map((c) => c.email.toLowerCase())
+  //   const uniqueEmails = new Set(emails)
 
-    if (emails.length !== uniqueEmails.size) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Duplicate candidate emails found',
-        path: ['candidates'],
-      })
-    }
+  //   if (emails.length !== uniqueEmails.size) {
+  //     ctx.addIssue({
+  //       code: z.ZodIssueCode.custom,
+  //       message: 'Duplicate candidate emails found',
+  //       path: ['candidates'],
+  //     })
+  //   }
 
-    const orders = data.questions.map((q) => q.order)
-    const uniqueOrders = new Set(orders)
+  //   const orders = data.questions.map((q) => q.order)
+  //   const uniqueOrders = new Set(orders)
 
-    if (orders.length !== uniqueOrders.size) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Question order must be unique',
-        path: ['questions'],
-      })
-    }
-  })
+  //   if (orders.length !== uniqueOrders.size) {
+  //     ctx.addIssue({
+  //       code: z.ZodIssueCode.custom,
+  //       message: 'Question order must be unique',
+  //       path: ['questions'],
+  //     })
+  //   }
+  // })
 
 export type CreateTestFormInput = z.infer<typeof createTestValidator>

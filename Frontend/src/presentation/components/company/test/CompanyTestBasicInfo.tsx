@@ -16,7 +16,7 @@ import { getAllJobRoles } from '../../../../redux/slices/features/jobRoles/jobRo
 
 
 interface CompanyTestBasicInfoProps {
-  data: CreateTestPayload
+  data: CreateTestPayload 
   mode: ModalMode
   updateData: (data: Partial<CreateTestPayload>) => void
 }

@@ -156,11 +156,22 @@ export interface CreateTestPayload {
     description: string
     startTime: string
     endTime: string
-    questions: TestQuestions[]
-    candidates: CreateTestCandidatePayload[]
-    rules: TestRules
+    questions?: TestQuestions[]
+    candidates?: CreateTestCandidatePayload[]
+    rules?: TestRules
 }
 
+// export interface editTestPayload {
+//     jobRoleId: string
+//     name: string
+//     description: string
+//     startTime: string
+//     endTime: string
+//     questions: TestQuestions[]
+//     candidates: CreateTestCandidatePayload[]
+//     rules: TestRules
+//     status: TestStatus
+// }
 export interface GetAllTestParams {
     search?: string
     status?: TestStatus
