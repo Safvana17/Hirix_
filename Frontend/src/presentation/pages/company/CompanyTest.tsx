@@ -279,11 +279,7 @@ const CompanyTest: React.FC = () => {
   ]
 
   return (
-    <InternalLayout
-      title="Test"
-      subTitle="Manage your tests and candidate assessments"
-      sidebarItems={companySidebarItems}
-    >
+    <InternalLayout title="Test" subTitle="Manage your tests and candidate assessments" sidebarItems={companySidebarItems}>
       <Box>
         <Box display="flex" justifyContent="flex-end" mb={3}>
           <Button

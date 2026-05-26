@@ -40,3 +40,16 @@ export interface ScheduleInterviewPayload {
     startTime: Date
     endTime: Date
 }
+
+export interface GetAllInterviewsParams {
+    search?: string
+    status?: InterviewStatus
+    page: number
+    limit: number
+}
+
+export interface GetAllInterviewsResponse {
+    interviews: Interview[]
+    totalPages: number
+    totalCount: number
+}
