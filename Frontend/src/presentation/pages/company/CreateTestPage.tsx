@@ -38,7 +38,7 @@ const CreateTestPage: React.FC = () => {
 
     const [formData, setFormData] = useState<CreateTestPayload>({
         jobRoleId: selectedTest?.jobRoleId || '',
-        name: isRescheduleMode ? `${selectedTest?.name} - Resheduled` : selectedTest?.name || '',
+        name: isRescheduleMode ? `${selectedTest?.name} - Rescheduled` : selectedTest?.name || '',
         description: selectedTest?.description || '',
         startTime: '',
         endTime: '',
@@ -78,8 +78,10 @@ const CreateTestPage: React.FC = () => {
                     toast.success('Test Scheduled again successfully')
                     navigate(ROUTES.COMPANY.TEST)
                 }
+                return
             } catch (error) {
                 toast.error(typeof error === 'string' ? error : 'Failed to create Test')
+                return
             }
         }
         setCurrentStep((prev) => prev + 1)

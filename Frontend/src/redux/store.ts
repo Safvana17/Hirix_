@@ -11,6 +11,7 @@ import SubscriptionSlice from './slices/features/subscription/subscriptionSlice'
 import AdminSettingsSlice from './slices/features/settingsSlice/adminSettings'
 import CompanyTestSlice from './slices/features/test/companyTestSlice'
 import CandidateTestSlice from './slices/features/test/CandidateTestSlice'
+import CompanyInterviewSlice from './slices/features/interview/CompanyInterviewSlice'
 
 
 export const store = configureStore({
@@ -26,7 +27,8 @@ export const store = configureStore({
         subscription: SubscriptionSlice,
         AdminSettings: AdminSettingsSlice,
         companyTest: CompanyTestSlice,
-        candidateTest: CandidateTestSlice
+        candidateTest: CandidateTestSlice,
+        companyInterview: CompanyInterviewSlice
     }
 })
 

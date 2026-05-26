@@ -49,7 +49,7 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
       source: q.createdBy === 'Admin' ? 'ADMIN_LIBRARY' : 'COMPANY_LIBRARY',
       type: q.type,
       title: q.title,
-      order: data.questions.length + 1,
+      order: data.questions ? data.questions.length + 1 : 0 ,
       questionId: q.id,
       description: q.description,
       options: q.options,
@@ -69,7 +69,7 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
       source: 'TEST_ONLY',
       type: q.type,
       title: q.title,
-      order: data.questions.length + 1,
+      order: data.questions ? data.questions.length + 1 : 0,
       description: q.description,
       options: q.options,
       answer: q.answer,
@@ -83,18 +83,18 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
   }
 
   const isSelected = (questionId: string) => {
-    return data.questions.some((q) => q.questionId === questionId)
+    return data.questions?.some((q) => q.questionId === questionId)
   }
 
   const toggleQuestion = (question: Question) => {
     const mapped = mapQuestionToTestQuestion(question)
 
-    const exists = data.questions.find(
+    const exists = data.questions?.find(
       (q) => q.questionId === mapped.questionId
     )
 
     const updated = exists
-      ? data.questions.filter((q) => q.questionId !== mapped.questionId)
+      ? data.questions?.filter((q) => q.questionId !== mapped.questionId)
       : [...data.questions, mapped]
 
     updateData({ questions: updated })
@@ -142,7 +142,7 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
               </Typography>
 
               <Typography variant="body2" color="text.secondary">
-                {data.questions.length} selected
+                {data.questions?.length} selected
               </Typography>
             </Box>
 
@@ -246,7 +246,7 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
               </Typography>
 
               <Stack spacing={1.5}>
-                {data.questions.map((q, index) => (
+                {data.questions?.map((q, index) => (
                   <Box
                     key={q.id || q.questionId || `${q.title}-${index}`}
                     sx={{
@@ -270,7 +270,7 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
                       color="error"
                       onClick={() =>
                         updateData({
-                          questions: data.questions.filter((_, i) => i !== index),
+                          questions: data.questions?.filter((_, i) => i !== index),
                         })
                       }
                     >

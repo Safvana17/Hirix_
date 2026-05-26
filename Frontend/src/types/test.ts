@@ -3,7 +3,7 @@ import type { QuestionType, TestCase } from "./question"
 export type TestStatus = 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'CANCELLED' | 'DELETED'
 export type QuestionSource = 'ADMIN_LIBRARY' | 'COMPANY_LIBRARY' | 'TEST_ONLY'
 export type CandidateStatus = 'DRAFT' | 'VERIFIED' | 'INVITED' | 'IN_PROGRESS'| 'SUBMITTED'| 'EXPIRED'| 'DISQUALIFIED' | 'TERMINATED'
-export type CandidateSelectionStatus = 'PENDING' | 'SHORTLISTED' | 'REJECTED'
+export type CandidateSelectionStatus = 'PENDING' | 'SHORTLISTED' | 'TEST_REJECTED' | 'INTERVIEW_SELECTED' | 'INTERVIEW_REJECTED' | 'INTERVIEW_SCHEDULED' | 'OFFER_SENT'
 export type ModalMode = 'create' | 'edit' | 'reschedule'
 export type CandidateTestGateStep = 'LOADING' | 'NOT_STARTED' | 'DETAILS' | 'INSTRUCTIONS' | 'EXPIRED' | 'READY' | 'LOGIN' | 'QUESTIONS' | 'SUBMITTED' | 'TERMINATED' | 'DISQUALIFIED' | 'EXPIRED'
 export type CodingLanguage = 'javascript' | 'python'
@@ -71,6 +71,8 @@ export interface TestCandidate {
     startedAt: string
     submittedAt: string
     evaluatedAt?: string | Date
+    currentInterviewRound?: number
+    lastInterviewId?: string
 }
 
 export interface TestRules {
@@ -156,8 +158,8 @@ export interface CreateTestPayload {
     description: string
     startTime: string
     endTime: string
-    questions?: TestQuestions[]
-    candidates?: CreateTestCandidatePayload[]
+    questions: TestQuestions[]
+    candidates: CreateTestCandidatePayload[]
     rules?: TestRules
 }
 

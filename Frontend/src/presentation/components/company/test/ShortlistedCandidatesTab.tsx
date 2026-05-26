@@ -104,25 +104,23 @@ const ShortlistedCandidatesTab: React.FC <ShortlistedCandidatesTabProps>= ({cand
                           {candidate.email}
                         </Typography>
                       </TableCell>
-
-<TableCell>
-  <Box
-    sx={{
-      display: "inline-flex",
-      alignItems: "center",
-      px: 1.5,
-      py: 0.5,
-      borderRadius: 10,
-      bgcolor: "#E8F5E9",
-      color: "#2E7D32",
-      fontSize: 12,
-      fontWeight: 700,
-    }}
-  >
-    {candidate.selectionStatus}
-  </Box>
-</TableCell>
-
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            px: 1.5,
+                            py: 0.5,
+                            borderRadius: 10,
+                            bgcolor: "#E8F5E9",
+                            color: "#2E7D32",
+                            fontSize: 12,
+                            fontWeight: 700,
+                          }}
+                        >
+                          {candidate.selectionStatus}
+                        </Box>
+                      </TableCell>
                       <TableCell>
                         <Typography variant="body2" fontWeight={600}>
                           {candidate.aiRank ?? "-"}
@@ -213,24 +211,23 @@ const CandidateMobileCard = ({candidate, onScheduleInterview}: {
             {candidate.selectionStatus}
             </Box>
         </Stack>
-
-                <Divider />
+        <Divider />
         <Box pt={0.5}>
-                        <Button
-                            size="small"
-                            variant="contained"
-                            onClick={() => onScheduleInterview?.(candidate.id)}
-                            sx={{
-                            textTransform: "none",
-                            fontWeight: 600,
-                            bgcolor: "#6B4705",
-                            "&:hover": {
-                                bgcolor: "#5A3B04"
-                            }
-                            }}
-                        >
-                            Schedule Interview
-                        </Button>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={() => onScheduleInterview?.(candidate.id)}
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              bgcolor: "#6B4705",
+              "&:hover": {
+                bgcolor: "#5A3B04"
+              }
+            }}
+          >
+            Schedule Interview
+          </Button>
         </Box>
       </Stack>
     </Paper>

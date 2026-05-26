@@ -19,7 +19,7 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
     const emails = emailText.split(/[\n,]+/).map((email) => email.trim().toLowerCase()).filter((email) => isValidEmail(email))
-    const uniqueEmails = Array.from(new Set([...data.candidates.map((c) => c.email), ...emails]))
+    const uniqueEmails = Array.from(new Set([...data.candidates.map((c) => c.email), ...emails])) 
     updateData({
       candidates: uniqueEmails.map((email) => ({ email }))
     })
@@ -29,7 +29,7 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
 
   const handleRemoveEmail = (email: string) => {
     updateData({
-      candidates: data.candidates.filter((candidate) => candidate.email !== email)
+      candidates: data.candidates?.filter((candidate) => candidate.email !== email)
     })
   }
 
@@ -88,7 +88,7 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
           </Grid>
           <Grid size={{ xs: 12 }}>
             <Typography variant='subtitle2' sx={{ mb: 1}}>
-              Email List ({data.candidates.length})
+              Email List ({data.candidates?.length})
             </Typography>
 
             <Paper
@@ -99,7 +99,7 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
                 borderRadius: 1
               }}
             >
-              {data.candidates.length === 0 ? (
+              {data.candidates?.length === 0 ? (
                 <Typography
                   variant='body2'
                   sx={{ textAlign: 'center', color: 'secondary', mt: 4}}
@@ -108,7 +108,7 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
                 </Typography>
               ) : (
                 <Stack spacing={1}>
-                  {data.candidates.map((candidate) => (
+                  {data.candidates?.map((candidate) => (
                     <Box
                       key={candidate.email}
                       sx={{

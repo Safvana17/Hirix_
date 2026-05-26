@@ -97,6 +97,14 @@ export const API_ROUTES = {
         `/company/test/${id}/reject`,
       SCHEDULE_AGAIN: (id: string) => 
         `/company/test/${id}/schedule-again`
+    },
+    INTERVIEW :{
+      SCHEDULE: '/company/interview/schedule',
+      RESCHEDULE: (id: string) =>
+         `/company/interview/${id}/reschedule`,
+      CANCEL: (id: string) => 
+        `/company/interview/${id}/cancel`,
+      GET_ALL: '/company/interviews',
     }
   },
 

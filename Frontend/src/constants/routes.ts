@@ -25,6 +25,7 @@ export const ROUTES = {
     CANCEL_TEST: '/company/test/:id/cancel',
     RESHEDULE_TEST: '/company/test/reschedule',
     TEST_DETAILS: '/company/test/:testId',
+    INTERVIEWS: '/company/interviews',
   },
 
   CANDIDATE: {

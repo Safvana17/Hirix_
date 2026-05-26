@@ -22,6 +22,9 @@ import { ROUTES } from "../../../constants/routes";
 import CandidateAnswersPage from "../../components/company/test/CandidateAnswerPage";
 import toast from "react-hot-toast";
 import ShortlistedCandidatesTab from "../../components/company/test/ShortlistedCandidatesTab";
+import type { ModalMode, ScheduleInterviewPayload } from "../../../types/interview";
+import InterviewModal from "../../components/modal/InterviewModal";
+import { scheduleInterview } from "../../../redux/slices/features/interview/CompanyInterviewSlice";
 
 type TabValue = "info" | "questions" | "candidates" | "shortlisted";
 
@@ -32,6 +35,10 @@ const TestDetailsPage = () => {
   const [activeTab, setActiveTab] = useState<TabValue>("info")
   const { selectedTest, loading } = useSelector((state: RootState) => state.companyTest) 
   const [selectedCandidateId, setSelectedCandidateId] = useState('')
+  const [selectedInterviewCandidateId, setSelectedInterviewCandidateId] = useState('')
+  const [interviewModalMode, setInterviewModalMode] = useState<ModalMode>('create')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+ 
   
   useEffect(() => {
     if(!testId) {
@@ -105,6 +112,22 @@ const TestDetailsPage = () => {
     if(testId)
       navigate(`/company/test/reschedule/${testId}`)
   }
+
+  const handleScheduleInterview = (candidateId: string) => {
+    setSelectedInterviewCandidateId(candidateId)
+    setInterviewModalMode('create')
+    setIsModalOpen(true)
+  }
+  const selectedInterviewCandidate = shortlistedCandidates.find(candidate => candidate.id === selectedInterviewCandidateId)
+
+  const handleInterviewSubmit = async(data: ScheduleInterviewPayload) => {
+    try {
+      await dispatch(scheduleInterview({data})).unwrap()
+      toast.success('Interview scheduled successfully')
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to schedule interview')
+    }
+  }
   return (
     <InternalLayout title={selectedTest.name} subTitle={selectedTest.jobrole} sidebarItems={companySidebarItems}>
       <Button
@@ -145,11 +168,25 @@ const TestDetailsPage = () => {
                 <TestCandidatesTab candidates={selectedTest.candidates} onViewAnswers={handleViewAnswer} onEvaluateSubmitted={handleEvaluation} onShortlist={handleShortlist} onReject={handleRejectCandidate} onScheduleAgain={handleScheduleAgain}/>
             )}
             {activeTab === "shortlisted" && (
-                <ShortlistedCandidatesTab candidates={shortlistedCandidates} />
+                <ShortlistedCandidatesTab candidates={shortlistedCandidates} onScheduleInterview={handleScheduleInterview} />
             )}
             </Box>
         </Card>
         </Container>
+        <InterviewModal
+          isOpen={isModalOpen}
+          mode={interviewModalMode}
+          onClose={() => setIsModalOpen(false)}
+          defaultData={{
+            testCandidateId: selectedInterviewCandidate?.id,
+            candidateName: selectedInterviewCandidate?.name,
+            candidateEmail: selectedInterviewCandidate?.email,
+            testId: selectedTest.id,
+            jobRoleId: selectedTest.jobRoleId,
+            round: 1,
+          }}
+          onSave={handleInterviewSubmit}
+        />
     </InternalLayout>
   );
 };
