@@ -11,7 +11,7 @@ import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updat
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from "../../validators/subscriptionValidators";
 import { certificateUpload } from "../../middlewares/certificateUpload";
 import { CancelTestSchema, CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator, editTestValidator, ResheduleTestSchema, ShortlistCandidateSchema, TestParamsSchema } from "../../validators/companyTest.validator";
-import { ScheduleInterviewSchema } from "../../validators/interviewValidator";
+import { CompanyGetAllInterviewSchema, ScheduleInterviewSchema } from "../../validators/interviewValidator";
 
 const router = Express.Router()
 
@@ -71,5 +71,5 @@ router.post(ROUTES.COMPANY.TEST.SCHEDULE_AGAIN, authHandler(iTokenService), veri
 
 //interview
 router.post(ROUTES.COMPANY.INTERVIEW.SCHEDULE, authHandler(iTokenService), verifyCsrf, validate(ScheduleInterviewSchema, 'body'), ICompanyInterviewController.scheduleInterview)
-
+router.get(ROUTES.COMPANY.INTERVIEW.GET_ALL, authHandler(iTokenService), validate(CompanyGetAllInterviewSchema, 'query'), ICompanyInterviewController.getAllInterviews)
 export default router;

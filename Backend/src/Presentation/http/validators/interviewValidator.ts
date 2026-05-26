@@ -1,4 +1,5 @@
 import z from "zod";
+import { InterviewStatus } from "../../../Domain/enums/interview";
 
 export const ScheduleInterviewSchema = z.object({
     testId: z.string().regex(/^[0-9a-fA-F]{24}$/),
@@ -14,3 +15,11 @@ export const ScheduleInterviewSchema = z.object({
     description: z.string().min(1, 'description is required'),
     round: z.coerce.number()
 })
+
+export const CompanyGetAllInterviewSchema = z.object({
+  search: z.string().optional(),
+  status: z.enum(InterviewStatus).optional(),
+  page: z.coerce.number().default(1),
+  limit: z.coerce.number().default(10)
+})
+export type GetAllInterviewQuery = z.infer<typeof CompanyGetAllInterviewSchema>
