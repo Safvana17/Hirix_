@@ -40,9 +40,7 @@ export class InterviewEntity {
         interviewerToken: string,
         candidateToken: string,
         roomId: string,
-        result: InterviewResult,
         testCandidateId?: string,
-        feedback?: string
     ) {
         this.id = id;
         this.name = name;
@@ -59,10 +57,8 @@ export class InterviewEntity {
         this.scheduledStartTime = scheduledStartTime;
         this.scheduledEndTime = scheduledEndTime;
         this.interviewStatus = interviewStatus;
-        this.result = result;
         this.candidateToken = candidateToken;
         this.roomId = roomId;
         this.testCandidateId = testCandidateId;
-        this.feedback = feedback
     }
 }

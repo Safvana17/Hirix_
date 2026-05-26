@@ -182,6 +182,9 @@ import { CandidateSubmitAnswerUsecase } from "../../../Application/candidate/use
 import { PracticeEvaluationService } from "../../../Infrastructure/services/PracticeEvaluationService";
 import { TestCodeRunService } from "../../../Infrastructure/services/TestCodeRunService";
 import { CandidateGetExplanationUsecase } from "../../../Application/candidate/useCases/practiceLibrary/candidate.getExplanation.usecase";
+import { CompanyScheduleInterviewUsecase } from "../../../Application/company/usecases/interview/company.scheduleInterview";
+import { InterviewRepository } from "../../../Infrastructure/repositories/interview.repository";
+import { CompanyInterviewController } from "./company/interviewController";
 
 
 
@@ -201,6 +204,7 @@ const iNotificationRuleRepository = new NotificationRuleRepository()
 const iNotificationRepository = new NotificationRepository()
 const iTestRepository = new TestRepository()
 const iTestCandidateRepository = new TestCandidateRepository()
+const iInterviewRepository = new InterviewRepository()
 
 
 const iHashService = new HashService()
@@ -721,6 +725,18 @@ const iCompanyScheduleTestAgain = new CompanyScheduleTestAgainUsecase(
     iJobRoleRepository,
     iProcessNotification
 )
+
+//interview
+const iCompanyScheduleInterview = new CompanyScheduleInterviewUsecase (
+    iCompanyRepository,
+    iTestRepository,
+    iTestCandidateRepository,
+    iJobRoleRepository,
+    iInterviewRepository,
+    iTokenService,
+    iProcessNotification
+
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -1063,4 +1079,8 @@ export const ICandidateTestController = new CandidatetestController(
     iCandidateSubmitQuestion,
     iCandidateGetCategories,
     iCandidateSaveAnswer,
+)
+
+export const ICompanyInterviewController = new CompanyInterviewController (
+    iCompanyScheduleInterview
 )

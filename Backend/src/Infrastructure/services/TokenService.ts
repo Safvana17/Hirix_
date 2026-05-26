@@ -104,4 +104,11 @@ export class TokenService implements ITokenService {
     generateTestToken(): string {
         return crypto.randomBytes(32).toString("hex")
     }
+
+    generateInterviewToken(): string {
+        return crypto.randomBytes(32).toString("hex")
+    }
+    generateRoomId(): string {
+        return `room_${crypto.randomUUID()}`
+    }
 }

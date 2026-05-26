@@ -36,4 +36,6 @@ export interface ITokenService {
     blackListToken(token: string, expiresInSeconds: number): Promise<void>
     isTokenBlackListed(token: string): Promise<boolean>
     generateTestToken(): string
+    generateInterviewToken(): string
+    generateRoomId(): string
 }

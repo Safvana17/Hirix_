@@ -1,7 +1,7 @@
 import  Express  from "express";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { authHandler } from "../../middlewares/authMiddleware";
-import { iCompanyQuestionController, iCompanySettingsController, iCompanySubscriptionController, iCompanyTestController, iJobRoleController, iTokenService, iUnifiedSettingsController } from "../../controllers/factory";
+import { ICompanyInterviewController, iCompanyQuestionController, iCompanySettingsController, iCompanySubscriptionController, iCompanyTestController, iJobRoleController, iTokenService, iUnifiedSettingsController } from "../../controllers/factory";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { imageUpload } from "../../middlewares/profilePicUpload";
 import { validate } from "../../middlewares/validate";
@@ -11,6 +11,7 @@ import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updat
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from "../../validators/subscriptionValidators";
 import { certificateUpload } from "../../middlewares/certificateUpload";
 import { CancelTestSchema, CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator, editTestValidator, ResheduleTestSchema, ShortlistCandidateSchema, TestParamsSchema } from "../../validators/companyTest.validator";
+import { ScheduleInterviewSchema } from "../../validators/interviewValidator";
 
 const router = Express.Router()
 
@@ -68,6 +69,7 @@ router.patch(ROUTES.COMPANY.TEST.SHORTLIST, authHandler(iTokenService), verifyCs
 router.patch(ROUTES.COMPANY.TEST.REJECT, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(ShortlistCandidateSchema, 'body'), iCompanyTestController.rejectCandidate)
 router.post(ROUTES.COMPANY.TEST.SCHEDULE_AGAIN, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(createTestValidator, 'body'), iCompanyTestController.scheduleTestAgain)
 
-
+//interview
+router.post(ROUTES.COMPANY.INTERVIEW.SCHEDULE, authHandler(iTokenService), verifyCsrf, validate(ScheduleInterviewSchema, 'body'), ICompanyInterviewController.scheduleInterview)
 
 export default router;

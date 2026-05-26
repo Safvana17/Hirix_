@@ -1,5 +1,5 @@
 import { CandidateAnswerEntity } from "../../../../Domain/entities/CandidateAnswer.entity";
-import { CandidateSelectionStatus, CandidateTestStatus, TestStatus } from "../../../../Domain/enums/Test";
+import { CandidateTestStatus, TestStatus } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";

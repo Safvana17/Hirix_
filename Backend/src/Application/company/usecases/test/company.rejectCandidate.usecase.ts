@@ -1,5 +1,5 @@
 import { NotificationEvents } from "../../../../Domain/enums/notification";
-import { CandidateSelectionStatus, ValuationStatus } from "../../../../Domain/enums/Test";
+import { CandidatePipelineStatus, ValuationStatus } from "../../../../Domain/enums/Test";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
@@ -47,10 +47,10 @@ export class CompanyRejectCandidateUsecase implements ICompanyRejectCandidateUse
         if(candidate.evaluationStatus !== ValuationStatus.EVALUATED){
             throw new AppError(TestMessages.error.NOT_EVALUATED_CANDIDATE, statusCode.BAD_REQUEST)
         }
-        if(candidate.selectionStatus === CandidateSelectionStatus.SHORTLISTED){
+        if(candidate.selectionStatus === CandidatePipelineStatus.SHORTLISTED){
             throw new AppError(TestMessages.error.ALREADY_SHORTLISTED, statusCode.BAD_REQUEST)
         }
-        candidate.selectionStatus = CandidateSelectionStatus.REJECTED
+        candidate.selectionStatus = CandidatePipelineStatus.TEST_REJECTED
         await this._testCandidateRepository.update(candidate.id, candidate)
 
         await this._processNotification.execute({

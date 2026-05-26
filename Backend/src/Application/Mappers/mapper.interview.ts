@@ -22,10 +22,11 @@ export class InterviewMapper {
             doc.interviewerToken,
             doc.candidateToken,
             doc.roomId,
-            doc.result,
             doc.testCandidateId.toString(),
-            doc.feedback
         )
+
+        Interview.result = doc.result
+        Interview.feedback = doc.feedback
         return Interview
     }
 

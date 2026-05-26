@@ -99,6 +99,8 @@ const interviewSchema: Schema<IInterview> = new Schema({
     feedback: {
         type: String
     }
+}, {
+    timestamps: true
 })
 
 export const InterviewModel: Model<IInterview> = mongoose.model('Interview', interviewSchema)

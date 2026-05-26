@@ -1,5 +1,5 @@
 import QuestionType from "../../../../Domain/enums/questionType";
-import { CandidateSelectionStatus, CandidateTestStatus, CodingLanguage, TestStatus, ValuationStatus } from "../../../../Domain/enums/Test";
+import { CandidatePipelineStatus, CandidateTestStatus, CodingLanguage, TestStatus, ValuationStatus } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
@@ -94,7 +94,7 @@ export class CompanyEvaluateTestUsecase implements ICompanyEvaluateTestUsecase {
             candidate.marksObtained = marksObtained
             candidate.evaluatedAt = new Date()
             candidate.correctAnswerCount = correctAnswerCount
-            candidate.selectionStatus = CandidateSelectionStatus.PENDING
+            candidate.selectionStatus = CandidatePipelineStatus.PENDING
             candidate.evaluationStatus = ValuationStatus.EVALUATED
 
             await this._testCandidateRepository.update(candidate.id, candidate)

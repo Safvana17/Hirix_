@@ -41,6 +41,8 @@ export class TestCandidateMapper {
             doc.evaluatedAt
         )
         testCandidate.name = doc.name
+        testCandidate.currentInterviewRound = doc.currentInterviewRound
+        testCandidate.lastInterviewId = doc.lastInterviewId ?  doc.lastInterviewId.toString() : undefined
 
         return testCandidate
     }
@@ -79,7 +81,9 @@ export class TestCandidateMapper {
             totalTimeTakenInSeconds: entity.totalTimeTakenInSeconds,
             startedAt: entity.startedAt,
             submittedAt: entity.submittedAt,
-            evaluatedAt: entity.evaluatedAt
+            evaluatedAt: entity.evaluatedAt,
+            currentInterviewRound: entity.currentInterviewRound,
+            lastInterviewId: entity.lastInterviewId ? new Types.ObjectId(entity.lastInterviewId) : undefined
 
         }
     }

@@ -1,4 +1,4 @@
-import { CandidateSelectionStatus, CandidateTestStatus, ValuationStatus } from "../enums/Test"
+import { CandidatePipelineStatus, CandidateTestStatus, ValuationStatus } from "../enums/Test"
 import { CandidateAnswerEntity } from "./CandidateAnswer.entity"
 
 export class TestCandidateEntity {
@@ -7,10 +7,10 @@ export class TestCandidateEntity {
     name?: string
     email: string
     testToken: string
+    selectionStatus?: CandidatePipelineStatus
     candidateTestStatus: CandidateTestStatus
     warningCount: number
     candidateAnswers: CandidateAnswerEntity[]
-    selectionStatus?: CandidateSelectionStatus
     evaluationStatus?: ValuationStatus
     totalMarks?: number
     totalQuestionsCount?: number
@@ -21,6 +21,8 @@ export class TestCandidateEntity {
     startedAt?: Date
     submittedAt?: Date
     evaluatedAt?: Date
+    currentInterviewRound?: number
+    lastInterviewId?: string
 
     constructor(
         id: string,
@@ -35,7 +37,7 @@ export class TestCandidateEntity {
         aiRank?: number,
         marksObtained?: number,
         correctAnswerCount?: number,
-        selectionStatus?: CandidateSelectionStatus,
+        selectionStatus?: CandidatePipelineStatus,
         evaluationStatus?: ValuationStatus,
         totalTimeTakenInSeconds?: number,
         startedAt?: Date,

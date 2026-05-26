@@ -1,5 +1,5 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
-import { CandidateSelectionStatus, CandidateTestStatus, CodingLanguage, ValuationStatus } from "../../../Domain/enums/Test";
+import { CandidatePipelineStatus, CandidateTestStatus, CodingLanguage, ValuationStatus } from "../../../Domain/enums/Test";
 import QuestionType from "../../../Domain/enums/questionType";
 
 
@@ -31,7 +31,7 @@ export interface ITestCandidate extends Document {
     name: string
     email: string
     candidateTestStatus: CandidateTestStatus
-    selectionStatus: CandidateSelectionStatus
+    selectionStatus: CandidatePipelineStatus
     evaluationStatus: ValuationStatus
     warningCount: number
     candidateAnswers: ICandidateAnswer[]
@@ -44,6 +44,8 @@ export interface ITestCandidate extends Document {
     startedAt: Date
     submittedAt: Date
     evaluatedAt: Date
+    currentInterviewRound: number
+    lastInterviewId: Types.ObjectId
 }
 
 const CodingAnswerSchema: Schema<ICodingAnswer> = new Schema({
@@ -148,8 +150,8 @@ const TestCandidateSchema: Schema<ITestCandidate> = new Schema({
     },
     selectionStatus: {
         type: String,
-        enum: Object.values(CandidateSelectionStatus),
-        default: CandidateSelectionStatus.PENDING
+        enum: Object.values(CandidatePipelineStatus),
+        default: CandidatePipelineStatus.PENDING
     },
     evaluationStatus: {
         type: String,
@@ -177,6 +179,13 @@ const TestCandidateSchema: Schema<ITestCandidate> = new Schema({
     },
     totalTimeTakenInSeconds: {
         type: Number
+    },
+    currentInterviewRound: {
+        type: Number
+    },
+    lastInterviewId:{
+        type: Types.ObjectId,
+        ref: "Interview"
     }
 }, {
     timestamps: true
