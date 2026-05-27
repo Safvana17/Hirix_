@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { GetAllInterviewsParams, GetAllInterviewsResponse, Interview, ScheduleInterviewPayload } from "../../../../types/interview"
+import type { GetAllInterviewsParams, GetAllInterviewsResponse, Interview, RescheduleInterviewArgs, ScheduleInterviewPayload } from "../../../../types/interview"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -82,6 +82,23 @@ void,
     }
 })
 
+export const rescheduleInterview = createAsyncThunk<
+void,
+RescheduleInterviewArgs,
+{rejectValue: string}
+>('interview/reschedule', async(RescheduleInterviewArgs, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMPANY.INTERVIEW.RESCHEDULE(RescheduleInterviewArgs.id), {startTime: RescheduleInterviewArgs.startTime, endTime: RescheduleInterviewArgs.endTime})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to reschedule interview')
+    }
+})
+
 const CompanyInterviewSlice = createSlice({
     name: 'companyInterview',
     initialState,
@@ -121,6 +138,16 @@ const CompanyInterviewSlice = createSlice({
          .addCase(cancelInterview.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to cancel interview'
+         })
+         .addCase(rescheduleInterview.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(rescheduleInterview.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(rescheduleInterview.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to reschedule interview'
          })
     }
 })

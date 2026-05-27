@@ -38,6 +38,7 @@ import QuestionSubmittedPage from '../presentation/components/candidate/test/Can
 import CandidatePractice from '../presentation/pages/candidate/CandidatePractice'
 import CompanyInterviews from '../presentation/pages/company/CompanyInterviews'
 import CancelInterviewPage from '../presentation/components/company/interview/CancelInterviewPage'
+import RescheduleInterviewPage from '../presentation/components/company/interview/RescheduleInterviewPages'
 
 
 
@@ -170,6 +171,12 @@ const App = () => {
           <Route path={ROUTES.COMPANY.CANCEL_INTERVIEW} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <CancelInterviewPage />
+            </RoleRoute>
+          } />
+          
+          <Route path={ROUTES.COMPANY.RESCHEDULE_INTERVIEW} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <RescheduleInterviewPage />
             </RoleRoute>
           } />
           

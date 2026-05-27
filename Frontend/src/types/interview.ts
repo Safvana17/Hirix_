@@ -53,3 +53,9 @@ export interface GetAllInterviewsResponse {
     totalPages: number
     totalCount: number
 }
+
+export interface RescheduleInterviewArgs {
+    startTime: string
+    endTime: string
+    id: string
+}

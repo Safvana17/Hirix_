@@ -31,6 +31,10 @@ const CompanyInterviews: React.FC = () => {
     const handleCancelInterview = (interviewId: string) => {
         navigate(`/company/interview/${interviewId}/cancel`)
     }
+
+    const handleRescheduleInterview = (interviewId: string) => {
+        navigate(`/company/interview/${interviewId}/reschedule`)
+    }
   return (
     <InternalLayout title='Interviews' subTitle='Manage multi-round interview process' sidebarItems={companySidebarItems}>
         <div>
@@ -135,7 +139,7 @@ const CompanyInterviews: React.FC = () => {
                     interview={interview}
                     onJoin={() => console.log('joining...')}
                     onCancel={handleCancelInterview}
-                    onReschedule={() => console.log('rescheduling...')}
+                    onReschedule={handleRescheduleInterview}
                     onViewDetails={() => console.log('view details...')}
                 />
             ))}
