@@ -32,3 +32,8 @@ export type InterviewParams = z.infer<typeof InterviewParamsSchema>
 export const CancelInterviewSchema = z.object({
   reason: z.string()
 })
+
+export const RescheduleInterviewSchema = z.object({
+    startTime: z.coerce.date(),
+    endTime: z.coerce.date(),
+})

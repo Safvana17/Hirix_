@@ -6,12 +6,14 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { ICompanyGetAllInterviewsUsecase } from "../../../../Application/company/interfaces/interview/ICompany.getAllInterview.usecase";
 import { GetAllInterviewQuery, InterviewParams } from "../../validators/interviewValidator";
 import { ICompanyCancelInterviewUsecase } from "../../../../Application/company/interfaces/interview/ICompany.cancelInterview.usecase";
+import { ICompanyRescheduleInterviewUsecase } from "../../../../Application/company/interfaces/interview/ICompany.rescheduleInterview.usecase";
 
 export class CompanyInterviewController {
     constructor(
         private _scheduleInterview: ICompanyScheduleInterviewUsecase,
         private _getAllInterviews: ICompanyGetAllInterviewsUsecase,
         private _cancelInterview: ICompanyCancelInterviewUsecase,
+        private _rescheduleInterview: ICompanyRescheduleInterviewUsecase,
     ) {}
 
     scheduleInterview = asyncHandler(async(req: Request, res: Response) => {
@@ -31,6 +33,13 @@ export class CompanyInterviewController {
         const companyId = req.user.id
         const { interviewId } = req.validatedParams as InterviewParams
         await this._cancelInterview.execute({companyId, interviewId, reason: req.body.reason})
+        return sendSuccess(res, statusCode.OK, '')
+    })
+
+    rescheduleInterview = asyncHandler( async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        const { interviewId } = req.validatedParams as InterviewParams
+        await this._rescheduleInterview.execute({companyId, interviewId, ...req.body})
         return sendSuccess(res, statusCode.OK, '')
     })
 }

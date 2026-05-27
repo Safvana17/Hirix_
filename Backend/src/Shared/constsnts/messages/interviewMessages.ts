@@ -11,5 +11,6 @@ export const InterviewMessages = {
         NOT_OWN_INTERVIEW: 'Interview is not scheduled by this company',
         CANNOT_CANCEL_COMPLETED_INERVIEW: 'You cannot cancel completed interview',
         CANNOT_CANCEL_STARTED_INTERVIEW: 'You cannot cancel started interview',
+        CANNOT_RESCHEDULE_INTERVIEW_FOR_COMPLETED: 'You cannot reschedule interview for complated interview',
     }
 }
