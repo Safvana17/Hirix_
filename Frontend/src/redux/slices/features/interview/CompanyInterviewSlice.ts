@@ -65,6 +65,23 @@ GetAllInterviewsResponse,
     }
 })
 
+export const cancelInterview = createAsyncThunk<
+void,
+{id: string, reason: string},
+{rejectValue: string}
+>('interview/cancel', async({id, reason}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMPANY.INTERVIEW.CANCEL(id), {reason})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to cancel interview')
+    }
+})
+
 const CompanyInterviewSlice = createSlice({
     name: 'companyInterview',
     initialState,
@@ -94,6 +111,16 @@ const CompanyInterviewSlice = createSlice({
          .addCase(getAllInterview.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get all interviews'
+         })
+         .addCase(cancelInterview.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(cancelInterview.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(cancelInterview.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to cancel interview'
          })
     }
 })

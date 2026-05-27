@@ -1,14 +1,14 @@
 import React from 'react'
 import { Box, Button, Chip, Paper, Stack, Typography } from '@mui/material'
 import { CalendarDays, Clock3, User } from 'lucide-react'
-import type { Interview, InterviewStatus } from '../../../types/interview'
+import type { Interview, InterviewStatus } from '../../../../types/interview'
 
 interface InterviewCardProps {
   interview: Interview
-  onJoin?: () => void
-  onReschedule?: () => void
-  onCancel?: () => void
-  onViewDetails?: () => void
+  onJoin: () => void
+  onReschedule: (id: string) => void
+  onCancel: (id: string) => void
+  onViewDetails: (id: string) => void
 }
 
 const getStatusColor = (status: InterviewStatus) => {
@@ -66,59 +66,50 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
           >
             {interview.candidateName}
           </Typography>
-
-          <Typography
+          {/* <Typography
             variant="body2"
             color="text.secondary"
             mb={2}
           >
             {interview.jobRoleId}
-          </Typography>
-
-<Stack spacing={1.2}>
-  <Box display="flex" alignItems="center" gap={1}>
-    <Typography
-      variant="body2"
-      sx={{
-        fontWeight: 600,
-        color: '#795003'
-      }}
-    >
-      {interview.name}
-    </Typography>
-  </Box>
-
-  <Box display="flex" alignItems="center" gap={1}>
-    <CalendarDays size={16} />
-
-    <Typography variant="body2">
-      {new Date(interview.scheduledStartTime).toLocaleDateString()}
-    </Typography>
-  </Box>
-
-  <Box display="flex" alignItems="center" gap={1}>
-    <Clock3 size={16} />
-
-    <Typography variant="body2">
-      {new Date(interview.scheduledStartTime).toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      })}
-    </Typography>
-  </Box>
-
-  <Box display="flex" alignItems="center" gap={1}>
-    <User size={16} />
-
-    <Typography variant="body2">
-      {interview.interviewerName}
-    </Typography>
-  </Box>
-</Stack>
-
+          </Typography> */}
+          <Stack spacing={1.2}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontWeight: 600,
+                  color: '#795003'
+                }}
+              >
+                {interview.name}
+              </Typography>
+            </Box>
+            <Box display="flex" alignItems="center" gap={1}>
+              <CalendarDays size={16} />
+              <Typography variant="body2">
+                {new Date(interview.scheduledStartTime).toLocaleDateString()}
+              </Typography>
+            </Box>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Clock3 size={16} />
+              <Typography variant="body2">
+                {new Date(interview.scheduledStartTime).toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </Typography>
+            </Box>
+            <Box display="flex" alignItems="center" gap={1}>
+              <User size={16} />
+              <Typography variant="body2">
+                {interview.interviewerName}
+              </Typography>
+            </Box>
+          </Stack>
           <Stack direction="row" spacing={1} mt={3}>
-            {status !== 'COMPLETED' &&
-              status !== 'CANCELLED' && (
+            {interview.interviewStatus !== 'COMPLETED' &&
+              interview.interviewStatus !== 'CANCELLED' && (
                 <>
                   <Button
                     variant="contained"
@@ -132,11 +123,22 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                   >
                     Join
                   </Button>
-
                   <Button
                     variant="contained"
                     size="small"
-                    onClick={onReschedule}
+                    onClick={onJoin}
+                    sx={{
+                      backgroundColor: '#61390b',
+                      textTransform: 'none',
+                      borderRadius: 2
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => onReschedule(interview.id)}
                     sx={{
                       backgroundColor: '#D4A017',
                       textTransform: 'none',
@@ -145,13 +147,12 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                   >
                     Reschedule
                   </Button>
-
                   <Button
                     variant="contained"
                     size="small"
-                    color="error"
-                    onClick={onCancel}
+                    onClick={() => onCancel(interview.id)}
                     sx={{
+                      backgroundColor: "#800909",
                       textTransform: 'none',
                       borderRadius: 2
                     }}
@@ -162,7 +163,6 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
               )}
           </Stack>
         </Box>
-
         <Box
           display="flex"
           flexDirection="column"
@@ -177,10 +177,9 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
               fontWeight: 700
             }}
           />
-
           <Button
             variant="outlined"
-            onClick={onViewDetails}
+            onClick={() => onViewDetails(interview.id)}
             sx={{
               borderColor: '#795003',
               color: '#795003',

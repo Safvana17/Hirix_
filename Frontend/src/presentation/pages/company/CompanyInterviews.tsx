@@ -9,7 +9,8 @@ import { useDebounce } from '../../../hooks/useDebounce'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import { getAllInterview } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
-import InterviewCard from '../../components/company/CompanyInterviewCard'
+import InterviewCard from '../../components/company/interview/CompanyInterviewCard'
+import { useNavigate } from 'react-router-dom'
 
 const interviewStatus: InterviewStatus[] = ['SCHEDULED', 'RESCHEDULED', 'CANCELLED', 'COMPLETED']
 
@@ -19,6 +20,7 @@ const CompanyInterviews: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const searchTerm = useDebounce(search, 500)
     const dispatch = useDispatch<AppDispatch>()
+    const navigate = useNavigate()
     const {interviews, pagination} = useSelector((state: RootState) => state.companyInterview)
 
     useEffect(() => {
@@ -26,6 +28,9 @@ const CompanyInterviews: React.FC = () => {
     }, [dispatch, searchTerm, statusfilter, currentPage])
 
 
+    const handleCancelInterview = (interviewId: string) => {
+        navigate(`/company/interview/${interviewId}/cancel`)
+    }
   return (
     <InternalLayout title='Interviews' subTitle='Manage multi-round interview process' sidebarItems={companySidebarItems}>
         <div>
@@ -126,11 +131,12 @@ const CompanyInterviews: React.FC = () => {
             <Stack spacing={3}>
             {interviews.map((interview) => (
                 <InterviewCard
-                key={interview.id}
-                interview={interview}
-                onJoin={() => console.log('joining...')}
-                onCancel={() => console.log('canceling...')}
-                onReschedule={() => console.log('rescheduling...')}
+                    key={interview.id}
+                    interview={interview}
+                    onJoin={() => console.log('joining...')}
+                    onCancel={handleCancelInterview}
+                    onReschedule={() => console.log('rescheduling...')}
+                    onViewDetails={() => console.log('view details...')}
                 />
             ))}
             </Stack>

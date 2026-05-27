@@ -102,8 +102,8 @@ export const API_ROUTES = {
       SCHEDULE: '/company/interview/schedule',
       RESCHEDULE: (id: string) =>
          `/company/interview/${id}/reschedule`,
-      CANCEL: (id: string) => 
-        `/company/interview/${id}/cancel`,
+      CANCEL: (interviewId: string) => 
+        `/company/interview/${interviewId}/cancel`,
       GET_ALL: '/company/interviews',
     }
   },
