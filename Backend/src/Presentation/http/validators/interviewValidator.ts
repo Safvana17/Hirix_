@@ -23,3 +23,12 @@ export const CompanyGetAllInterviewSchema = z.object({
   limit: z.coerce.number().default(10)
 })
 export type GetAllInterviewQuery = z.infer<typeof CompanyGetAllInterviewSchema>
+
+export const InterviewParamsSchema = z.object({
+  interviewId: z.string().regex(/^[0-9a-fA-F]{24}$/),
+})
+export type InterviewParams = z.infer<typeof InterviewParamsSchema>
+
+export const CancelInterviewSchema = z.object({
+  reason: z.string()
+})

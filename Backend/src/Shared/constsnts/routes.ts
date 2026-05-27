@@ -69,9 +69,9 @@ export const ROUTES = {
       INTERVIEW: {
         SCHEDULE: '/interview/schedule',
         GET_ALL: '/interviews',
-        RESCHEDULE: '/interview/reschedule',
-        CANCEL: '/interview/cancel',
-        EDIT: '/interview',
+        RESCHEDULE: '/interview/:interviewId/reschedule',
+        CANCEL: '/interview/:interviewId/cancel',
+        EDIT: '/interview/:interviewd',
       }
     },
 
