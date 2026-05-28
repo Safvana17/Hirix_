@@ -11,9 +11,10 @@ import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updat
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from "../../validators/subscriptionValidators";
 import { certificateUpload } from "../../middlewares/certificateUpload";
 import { CancelTestSchema, CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator, editTestValidator, ResheduleTestSchema, ShortlistCandidateSchema, TestParamsSchema } from "../../validators/companyTest.validator";
-import { CancelInterviewSchema, CompanyGetAllInterviewSchema, InterviewParamsSchema, RescheduleInterviewSchema, ScheduleInterviewSchema } from "../../validators/interviewValidator";
+import { CancelInterviewSchema, CompanyGetAllInterviewSchema, EditInterviewSchema, InterviewParamsSchema, RescheduleInterviewSchema, ScheduleInterviewSchema } from "../../validators/interviewValidator";
 
 const router = Express.Router()
+
 
 //settings
 router.get(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), iCompanySettingsController.getCompanyProfile)
@@ -25,6 +26,7 @@ router.post(ROUTES.COMPANY.SETTINGS.RESTORE_LINK, validate(sendRestoreLinkSchema
 router.get(ROUTES.COMPANY.SETTINGS.DETAILS, iCompanySettingsController.getDeletedAccountDetails)
 router.put(ROUTES.COMPANY.SETTINGS.RESTORE, iCompanySettingsController.confirmRestoreAccount)
 
+
 //job role
 router.post(ROUTES.COMPANY.JOBROLE.CREATE, authHandler(iTokenService), verifyCsrf, validate(createJobRoleSchema, 'body'), iJobRoleController.createJobRole)
 router.get(ROUTES.COMPANY.JOBROLE.BASE, authHandler(iTokenService), iJobRoleController.getAllJobRoles)
@@ -32,11 +34,13 @@ router.put(ROUTES.COMPANY.JOBROLE.EDIT, authHandler(iTokenService), verifyCsrf, 
 router.put(ROUTES.COMPANY.JOBROLE.STATUS, authHandler(iTokenService), verifyCsrf, validate(updateJobRoleSchema, 'body'), iJobRoleController.updateStatus)
 router.delete(ROUTES.COMPANY.JOBROLE.DELETE, authHandler(iTokenService), verifyCsrf, iJobRoleController.deleteJobRole)
 
+
 //questions
 router.post(ROUTES.COMPANY.QUESTION.CREATE, authHandler(iTokenService), verifyCsrf, validate(createQuestionSchema, 'body'), iCompanyQuestionController.createQuestion)
 router.get(ROUTES.COMPANY.QUESTION.BASE, authHandler(iTokenService), iCompanyQuestionController.getAllQuestions)
 router.put(ROUTES.COMPANY.QUESTION.EDIT, authHandler(iTokenService), verifyCsrf, validate(editQuestionSchema, 'body'), iCompanyQuestionController.editQuestion)
 router.delete(ROUTES.COMPANY.QUESTION.DELETE, authHandler(iTokenService), verifyCsrf, iCompanyQuestionController.deleteQuestion)
+
 
 //subscription
 router.get(ROUTES.COMPANY.SUBSCRIPTION.GET_ALL, authHandler(iTokenService), iCompanySubscriptionController.getAllPlan)
@@ -50,9 +54,11 @@ router.patch(ROUTES.COMPANY.SUBSCRIPTION.CANCEL, authHandler(iTokenService),veri
 router.get(ROUTES.COMPANY.SUBSCRIPTION.INVOICE, authHandler(iTokenService), validate(GetInvoiceSchema, 'params'), iCompanySubscriptionController.getInvoice)
 router.post(ROUTES.COMPANY.SUBSCRIPTION.START_TRIAL, authHandler(iTokenService), verifyCsrf, validate(startTrialSchema, 'params'), iCompanySubscriptionController.startTrial)
 
+
 //notifications
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
 router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iUnifiedSettingsController.markAllAsRead)
+
 
 //test
 router.post(ROUTES.COMPANY.TEST.CREATE, authHandler(iTokenService), verifyCsrf, validate(createTestValidator, 'body'), iCompanyTestController.createTestDraft)
@@ -69,12 +75,14 @@ router.patch(ROUTES.COMPANY.TEST.SHORTLIST, authHandler(iTokenService), verifyCs
 router.patch(ROUTES.COMPANY.TEST.REJECT, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(ShortlistCandidateSchema, 'body'), iCompanyTestController.rejectCandidate)
 router.post(ROUTES.COMPANY.TEST.SCHEDULE_AGAIN, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(createTestValidator, 'body'), iCompanyTestController.scheduleTestAgain)
 
+
 //interview
 router.post(ROUTES.COMPANY.INTERVIEW.SCHEDULE, authHandler(iTokenService), verifyCsrf, validate(ScheduleInterviewSchema, 'body'), ICompanyInterviewController.scheduleInterview)
-router.get(ROUTES.COMPANY.INTERVIEW.GET_ALL, authHandler(iTokenService), validate(CompanyGetAllInterviewSchema, 'query'), ICompanyInterviewController.getAllInterviews)
-router.patch(ROUTES.COMPANY.INTERVIEW.CANCEL, authHandler(iTokenService), validate(InterviewParamsSchema, 'params'), validate(CancelInterviewSchema, 'body'), ICompanyInterviewController.cancelInterview)
-router.patch(ROUTES.COMPANY.INTERVIEW.RESCHEDULE, authHandler(iTokenService), validate(InterviewParamsSchema, 'params'), validate(RescheduleInterviewSchema, 'body'), ICompanyInterviewController.rescheduleInterview)
-router.get(ROUTES.COMPANY.INTERVIEW.BY_ID, authHandler(iTokenService), validate(InterviewParamsSchema, 'params'), ICompanyInterviewController.getInterviewById)
+router.get(ROUTES.COMPANY.INTERVIEW.GET_ALL, authHandler(iTokenService), verifyCsrf, validate(CompanyGetAllInterviewSchema, 'query'), ICompanyInterviewController.getAllInterviews)
+router.patch(ROUTES.COMPANY.INTERVIEW.CANCEL, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), validate(CancelInterviewSchema, 'body'), ICompanyInterviewController.cancelInterview)
+router.patch(ROUTES.COMPANY.INTERVIEW.RESCHEDULE, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), validate(RescheduleInterviewSchema, 'body'), ICompanyInterviewController.rescheduleInterview)
+router.get(ROUTES.COMPANY.INTERVIEW.BY_ID, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), ICompanyInterviewController.getInterviewById)
+router.put(ROUTES.COMPANY.INTERVIEW.EDIT, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), validate(EditInterviewSchema, 'body'), ICompanyInterviewController.editInterview)
 
 
 

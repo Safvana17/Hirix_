@@ -8,6 +8,7 @@ import { GetAllInterviewQuery, InterviewParams } from "../../validators/intervie
 import { ICompanyCancelInterviewUsecase } from "../../../../Application/company/interfaces/interview/ICompany.cancelInterview.usecase";
 import { ICompanyRescheduleInterviewUsecase } from "../../../../Application/company/interfaces/interview/ICompany.rescheduleInterview.usecase";
 import { ICompanyGetInterviewByIdUsecase } from "../../../../Application/company/interfaces/interview/ICompany.getInterviewById.usecase";
+import { ICompanyEditInterviewUsecase } from "../../../../Application/company/interfaces/interview/ICompany.editInterview.usecase";
 
 export class CompanyInterviewController {
     constructor(
@@ -16,6 +17,7 @@ export class CompanyInterviewController {
         private _cancelInterview: ICompanyCancelInterviewUsecase,
         private _rescheduleInterview: ICompanyRescheduleInterviewUsecase,
         private _getInterviewById: ICompanyGetInterviewByIdUsecase,
+        private _editInterview: ICompanyEditInterviewUsecase,
     ) {}
 
     scheduleInterview = asyncHandler(async(req: Request, res: Response) => {
@@ -50,5 +52,12 @@ export class CompanyInterviewController {
         const { interviewId } = req.validatedParams as InterviewParams
         const { interview } = await this._getInterviewById.execute({companyId, interviewId})
         return sendSuccess(res, statusCode.OK, '', interview)
+    })
+
+    editInterview = asyncHandler(async(req: Request, res: Response) => {
+        const companyId = req.user.id
+        const { interviewId } = req.validatedParams as InterviewParams
+        await this._editInterview.execute({companyId, interviewId, ...req.body})
+        return sendSuccess(res, statusCode.OK, '')
     })
 }

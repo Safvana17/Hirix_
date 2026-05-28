@@ -71,7 +71,7 @@ export const ROUTES = {
         GET_ALL: '/interviews',
         RESCHEDULE: '/interview/:interviewId/reschedule',
         CANCEL: '/interview/:interviewId/cancel',
-        EDIT: '/interview/:interviewd',
+        EDIT: '/interview/:interviewId',
         BY_ID: '/interview/:interviewId',
       }
     },

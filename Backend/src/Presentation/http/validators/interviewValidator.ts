@@ -37,3 +37,12 @@ export const RescheduleInterviewSchema = z.object({
     startTime: z.coerce.date(),
     endTime: z.coerce.date(),
 })
+
+export const EditInterviewSchema = z.object({
+    interviewerName: z.string().min(1, 'Interviwer name is required'),
+    interviewerEmail: z.string().email().min(1, 'Interviewer email is required'),
+    candidateName: z.string().min(1, 'Candidate name is required'),
+    candidateEmail: z.string().email().min(1, 'Candidate email is required'),
+    name: z.string().min(1, 'Name is required'),
+    description: z.string().min(1, 'description is required'),
+})
