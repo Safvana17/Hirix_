@@ -119,6 +119,24 @@ Interview,
     }
 })
 
+export const editInterview = createAsyncThunk<
+void,
+{data: ScheduleInterviewPayload, id: string},
+{rejectValue: string}
+>('interview/edit', async({data, id}, {rejectWithValue}) => {
+    try {
+        const response = await api.put(API_ROUTES.COMPANY.INTERVIEW.EDIT(id), data)
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to edit interview')
+    }
+})
+
 const CompanyInterviewSlice = createSlice({
     name: 'companyInterview',
     initialState,
@@ -179,6 +197,16 @@ const CompanyInterviewSlice = createSlice({
          .addCase(getInterviewById.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to get interview'
+         })
+         .addCase(editInterview.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(editInterview.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(editInterview.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to edit interview'
          })
     }
 })

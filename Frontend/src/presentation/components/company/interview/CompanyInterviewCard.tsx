@@ -6,7 +6,7 @@ import type { Interview, InterviewResult, InterviewStatus } from '../../../../ty
 interface InterviewCardProps {
   interview: Interview
   onJoin: () => void
-  onEdit: (id: string) => void
+  onEdit: (interview: Interview) => void
   onReschedule: (id: string) => void
   onCancel: (id: string) => void
   onViewDetails: (id: string) => void
@@ -207,7 +207,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={() => onEdit(interview.id)}
+                  onClick={() => onEdit(interview)}
                   sx={{
                     backgroundColor: '#61390b',
                     textTransform: 'none',

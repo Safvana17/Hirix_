@@ -8,7 +8,7 @@ import type { Interview, InterviewStatus, ModalMode, ScheduleInterviewPayload } 
 import { useDebounce } from '../../../hooks/useDebounce'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { getAllInterview, scheduleInterview } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
+import { editInterview, getAllInterview, scheduleInterview } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
 import InterviewCard from '../../components/company/interview/CompanyInterviewCard'
 import { useNavigate } from 'react-router-dom'
 import InterviewModal from '../../components/modal/InterviewModal'
@@ -49,8 +49,16 @@ const CompanyInterviews: React.FC = () => {
 
   const handleInterviewSubmit = async(data: ScheduleInterviewPayload) => {
     try {
-      await dispatch(scheduleInterview({data})).unwrap()
-      toast.success('Interview scheduled successfully')
+        if(interviewModalMode === 'create'){ 
+            await dispatch(scheduleInterview({data})).unwrap()
+            toast.success('Interview scheduled successfully')
+            dispatch(getAllInterview({params: { search: searchTerm || undefined, status: statusfilter || undefined, page: currentPage, limit: 10}}))
+        }
+        if(interviewModalMode === 'edit' && interview){
+            await dispatch(editInterview({data, id: interview.id})).unwrap()
+            toast.success('Interview updated successfully')
+            dispatch(getAllInterview({params: { search: searchTerm || undefined, status: statusfilter || undefined, page: currentPage, limit: 10}}))
+        }
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'Failed to schedule interview')
     }
@@ -59,6 +67,14 @@ const CompanyInterviews: React.FC = () => {
   const handleViewDetails = (interviewId: string) => {
     navigate(`/company/interview/${interviewId}`)
   } 
+
+  const handleEditInterview = (interview: Interview) => {
+    setInterview(interview)
+    setInterviewModalMode('edit')
+    setIsModalOpen(true)
+  }
+
+
   return (
     <InternalLayout title='Interviews' subTitle='Manage multi-round interview process' sidebarItems={companySidebarItems}>
         <div>
@@ -165,7 +181,7 @@ const CompanyInterviews: React.FC = () => {
                     onCancel={handleCancelInterview}
                     onReschedule={handleRescheduleInterview}
                     onViewDetails={handleViewDetails}
-                    onEdit={() => console.log('Editing...')}
+                    onEdit={handleEditInterview}
                     onScheduleNextRound={handleScheduleNextRound}
                     onSendOfferLetter={() => console.log('sending...')}
                     onUpdateResult={() => console.log('updating...')}
@@ -233,6 +249,7 @@ const CompanyInterviews: React.FC = () => {
                 round: interview ? interview.round + 1 : 1, 
                 jobRoleId: interview?.jobRoleId
             }}
+            initialData={interview}
             onSave={handleInterviewSubmit}
         />
     </InternalLayout>
