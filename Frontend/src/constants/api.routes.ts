@@ -105,6 +105,8 @@ export const API_ROUTES = {
       CANCEL: (interviewId: string) => 
         `/company/interview/${interviewId}/cancel`,
       GET_ALL: '/company/interviews',
+      GET_BY_ID: (interviewId: string) => 
+        `/company/interview/${interviewId}`
     }
   },
 

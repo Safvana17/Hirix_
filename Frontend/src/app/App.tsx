@@ -39,6 +39,7 @@ import CandidatePractice from '../presentation/pages/candidate/CandidatePractice
 import CompanyInterviews from '../presentation/pages/company/CompanyInterviews'
 import CancelInterviewPage from '../presentation/components/company/interview/CancelInterviewPage'
 import RescheduleInterviewPage from '../presentation/components/company/interview/RescheduleInterviewPages'
+import InterviewDetailsPage from '../presentation/components/company/interview/InterviewDetailsPages'
 
 
 
@@ -179,7 +180,13 @@ const App = () => {
               <RescheduleInterviewPage />
             </RoleRoute>
           } />
-          
+
+          <Route path={ROUTES.COMPANY.VIEW_INTERVIEW_DETAILS} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <InterviewDetailsPage />
+            </RoleRoute>
+          } />
+
           <Route path={ROUTES.COMPANY.SUBSCRIPTION} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <CompanySubscription />

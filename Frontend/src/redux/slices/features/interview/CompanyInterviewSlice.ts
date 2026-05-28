@@ -8,6 +8,7 @@ import { API_ROUTES } from "../../../../constants/api.routes"
 interface CompanyInterviewState {
     loading: boolean
     interviews: Interview[] 
+    selectedInterview: Interview | null
     error: string | null
     pagination: {
         interview: {
@@ -20,6 +21,7 @@ interface CompanyInterviewState {
 const initialState: CompanyInterviewState = {
     loading: false,
     interviews: [],
+    selectedInterview: null,
     error: null,
     pagination: {
         interview: {
@@ -99,6 +101,24 @@ RescheduleInterviewArgs,
     }
 })
 
+export const getInterviewById = createAsyncThunk<
+Interview,
+{id: string},
+{rejectValue: string}
+>('interview/getById', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.INTERVIEW.GET_BY_ID(id))
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get interview')
+    }
+})
+
 const CompanyInterviewSlice = createSlice({
     name: 'companyInterview',
     initialState,
@@ -148,6 +168,17 @@ const CompanyInterviewSlice = createSlice({
          .addCase(rescheduleInterview.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to reschedule interview'
+         })
+         .addCase(getInterviewById.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getInterviewById.fulfilled, (state, action) => {
+            state.loading = false
+            state.selectedInterview = action.payload
+         })
+         .addCase(getInterviewById.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to get interview'
          })
     }
 })

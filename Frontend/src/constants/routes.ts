@@ -28,6 +28,7 @@ export const ROUTES = {
     INTERVIEWS: '/company/interviews',
     CANCEL_INTERVIEW: '/company/interview/:interviewId/cancel',
     RESCHEDULE_INTERVIEW: '/company/interview/:interviewId/reschedule',
+    VIEW_INTERVIEW_DETAILS: '/company/interview/:interviewId',
   },
 
   CANDIDATE: {

@@ -4,13 +4,15 @@ import { companySidebarItems } from '../../../constants/sidebarItems'
 import { Plus, Search } from 'lucide-react'
 import { Box, FormControl, InputAdornment, InputLabel, MenuItem, Pagination, Paper, Select, Stack, TextField, Typography } from '@mui/material'
 import { Filter } from '@mui/icons-material'
-import type { InterviewStatus } from '../../../types/interview'
+import type { Interview, InterviewStatus, ModalMode, ScheduleInterviewPayload } from '../../../types/interview'
 import { useDebounce } from '../../../hooks/useDebounce'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { getAllInterview } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
+import { getAllInterview, scheduleInterview } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
 import InterviewCard from '../../components/company/interview/CompanyInterviewCard'
 import { useNavigate } from 'react-router-dom'
+import InterviewModal from '../../components/modal/InterviewModal'
+import toast from 'react-hot-toast'
 
 const interviewStatus: InterviewStatus[] = ['SCHEDULED', 'RESCHEDULED', 'CANCELLED', 'COMPLETED']
 
@@ -18,6 +20,9 @@ const CompanyInterviews: React.FC = () => {
     const [statusfilter, setstatusFilter] = useState<InterviewStatus | "">("")
     const [search, setSearch] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
+    const [interviewModalMode, setInterviewModalMode] = useState<ModalMode>('create')
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [interview, setInterview] = useState<Interview | null>(null)
     const searchTerm = useDebounce(search, 500)
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
@@ -35,13 +40,32 @@ const CompanyInterviews: React.FC = () => {
     const handleRescheduleInterview = (interviewId: string) => {
         navigate(`/company/interview/${interviewId}/reschedule`)
     }
+
+    const handleScheduleNextRound = (interview: Interview) => {
+        setInterview(interview)
+        setInterviewModalMode('create')
+        setIsModalOpen(true)
+    }
+
+  const handleInterviewSubmit = async(data: ScheduleInterviewPayload) => {
+    try {
+      await dispatch(scheduleInterview({data})).unwrap()
+      toast.success('Interview scheduled successfully')
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to schedule interview')
+    }
+  }
+
+  const handleViewDetails = (interviewId: string) => {
+    navigate(`/company/interview/${interviewId}`)
+  } 
   return (
     <InternalLayout title='Interviews' subTitle='Manage multi-round interview process' sidebarItems={companySidebarItems}>
         <div>
             <div className='flex justify-end mb-5'>
                 <button className='bg-[#795003] rounded-xl font-bold text-white p-3 flex items-center gap-2'>
                     <Plus className='w-4 h-4' />
-                    Add Question
+                    Schedule Interview
                 </button>
             </div>
         </div>
@@ -140,7 +164,11 @@ const CompanyInterviews: React.FC = () => {
                     onJoin={() => console.log('joining...')}
                     onCancel={handleCancelInterview}
                     onReschedule={handleRescheduleInterview}
-                    onViewDetails={() => console.log('view details...')}
+                    onViewDetails={handleViewDetails}
+                    onEdit={() => console.log('Editing...')}
+                    onScheduleNextRound={handleScheduleNextRound}
+                    onSendOfferLetter={() => console.log('sending...')}
+                    onUpdateResult={() => console.log('updating...')}
                 />
             ))}
             </Stack>
@@ -193,6 +221,20 @@ const CompanyInterviews: React.FC = () => {
             </Typography>
         </Paper>
         )}
+        <InterviewModal 
+            isOpen={isModalOpen}
+            mode={interviewModalMode}
+            onClose={() => setIsModalOpen(false)}
+            defaultData={{
+                testCandidateId: interview?.testCandidateId,
+                candidateName: interview?.candidateName,
+                candidateEmail: interview?.candidateEmail,
+                testId: interview?.testId,
+                round: interview ? interview.round + 1 : 1, 
+                jobRoleId: interview?.jobRoleId
+            }}
+            onSave={handleInterviewSubmit}
+        />
     </InternalLayout>
   )
 }
