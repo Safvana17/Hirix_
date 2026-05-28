@@ -72,6 +72,7 @@ export const ROUTES = {
         RESCHEDULE: '/interview/:interviewId/reschedule',
         CANCEL: '/interview/:interviewId/cancel',
         EDIT: '/interview/:interviewd',
+        BY_ID: '/interview/:interviewId',
       }
     },
 

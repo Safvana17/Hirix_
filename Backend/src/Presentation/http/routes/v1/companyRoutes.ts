@@ -74,5 +74,8 @@ router.post(ROUTES.COMPANY.INTERVIEW.SCHEDULE, authHandler(iTokenService), verif
 router.get(ROUTES.COMPANY.INTERVIEW.GET_ALL, authHandler(iTokenService), validate(CompanyGetAllInterviewSchema, 'query'), ICompanyInterviewController.getAllInterviews)
 router.patch(ROUTES.COMPANY.INTERVIEW.CANCEL, authHandler(iTokenService), validate(InterviewParamsSchema, 'params'), validate(CancelInterviewSchema, 'body'), ICompanyInterviewController.cancelInterview)
 router.patch(ROUTES.COMPANY.INTERVIEW.RESCHEDULE, authHandler(iTokenService), validate(InterviewParamsSchema, 'params'), validate(RescheduleInterviewSchema, 'body'), ICompanyInterviewController.rescheduleInterview)
+router.get(ROUTES.COMPANY.INTERVIEW.BY_ID, authHandler(iTokenService), validate(InterviewParamsSchema, 'params'), ICompanyInterviewController.getInterviewById)
+
+
 
 export default router;

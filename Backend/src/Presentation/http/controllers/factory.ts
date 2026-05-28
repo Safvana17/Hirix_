@@ -188,6 +188,7 @@ import { CompanyInterviewController } from "./company/interviewController";
 import { CompanyGetAllInterviewsUsecase } from "../../../Application/company/usecases/interview/company.getAllInterviews.usecase";
 import { CompanyCancelInterviewUsecase } from "../../../Application/company/usecases/interview/company.cancelTest.usecase";
 import { CompanyRescheduleInterviewUsecase } from "../../../Application/company/usecases/interview/company.rescheduleInterview.usecase";
+import { CompanyGetInterviewByIdUsecase } from "../../../Application/company/usecases/interview/company.getInterviewById.usecase";
 
 
 
@@ -755,6 +756,10 @@ const iCompanyRescheduleInterview = new CompanyRescheduleInterviewUsecase (
     iJobRoleRepository,
     iProcessNotification
 )
+const iCompanyGetInterviewById = new CompanyGetInterviewByIdUsecase (
+    iInterviewRepository,
+    iCompanyRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -1103,5 +1108,6 @@ export const ICompanyInterviewController = new CompanyInterviewController (
     iCompanyScheduleInterview,
     iCompanyGetAllInterviews,
     iCompanyCancelInterview,
-    iCompanyRescheduleInterview
+    iCompanyRescheduleInterview,
+    iCompanyGetInterviewById,
 )
