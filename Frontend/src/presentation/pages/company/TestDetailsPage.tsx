@@ -124,6 +124,7 @@ const TestDetailsPage = () => {
     try {
       await dispatch(scheduleInterview({data})).unwrap()
       toast.success('Interview scheduled successfully')
+      navigate(ROUTES.COMPANY.INTERVIEWS)
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'Failed to schedule interview')
     }

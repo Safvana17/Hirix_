@@ -215,6 +215,10 @@ export const API_ROUTES = {
       `/${role}/my-notifications`,
     MARK_READ: (role: UserRole) => 
       `/${role}/mark-read`
+    },
+    INTERVIEW: {
+      GET_ACCESS:(roomId: string, token: string) =>
+        `/interview/${roomId}/${token}/access`
     }
   }
 }

@@ -1,6 +1,9 @@
+import type { UserRole } from "../constants/role"
+
 export type InterviewStatus = 'SCHEDULED' | 'RESCHEDULED' | 'CANCELLED' | 'COMPLETED'
 export type InterviewResult = 'PENDING' | 'SELECTED' | 'REJECTED' | 'HOLD'
 export type ModalMode = 'create' | 'edit' | 'view'
+export type InterviewJoinStatus = 'WAITING' | 'LIVE' | 'COMPLETED' | 'CANCELLD' | 'EXPIRED'
 
 export interface Interview {
     id: string
@@ -58,4 +61,19 @@ export interface RescheduleInterviewArgs {
     startTime: string
     endTime: string
     id: string
+}
+
+export interface GetInterviewAccessResponse {
+    id: string
+    name: string
+    description: string
+    jobRole: string
+    interviewerName: string
+    candidateName: string
+    round: number
+    role: UserRole
+    startTime: string
+    endTime: string
+    companyName: string
+    status: InterviewJoinStatus
 }

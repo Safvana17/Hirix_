@@ -29,6 +29,7 @@ export const ROUTES = {
     CANCEL_INTERVIEW: '/company/interview/:interviewId/cancel',
     RESCHEDULE_INTERVIEW: '/company/interview/:interviewId/reschedule',
     VIEW_INTERVIEW_DETAILS: '/company/interview/:interviewId',
+    // COMPANY_INTERVIEW_READY: '/company/interview/:roomId/:token'
   },
 
   CANDIDATE: {
@@ -44,12 +45,13 @@ export const ROUTES = {
     TEST_SUBMIT: '/candidate/test/submit/:token',
     TEST_TERMINATE: '/candidate/test/terminate',
     QUESTION_SUBMITTED: '/candidate/test/quesion-submitted',
-    PRACTICE: '/candidate/practice/:questionId'
+    PRACTICE: '/candidate/practice/:questionId',
   },
 
   COMMON: {
     PAYMENT_STATUS: '/payment-status',
-    PAYMENT: '/payment'
+    PAYMENT: '/payment',
+    INTERVIEW_READY: '/interview/:roomId/:token',
   },
 
   ADMIN: {

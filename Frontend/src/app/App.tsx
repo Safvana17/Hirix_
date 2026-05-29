@@ -40,6 +40,7 @@ import CompanyInterviews from '../presentation/pages/company/CompanyInterviews'
 import CancelInterviewPage from '../presentation/components/company/interview/CancelInterviewPage'
 import RescheduleInterviewPage from '../presentation/components/company/interview/RescheduleInterviewPages'
 import InterviewDetailsPage from '../presentation/components/company/interview/InterviewDetailsPages'
+import InterviewGateWayPage from '../presentation/pages/common/InterviewGatewayPage'
 
 
 
@@ -199,6 +200,10 @@ const App = () => {
             </RoleRoute>
           } />
 
+          <Route path={ROUTES.COMMON.INTERVIEW_READY} element={
+            <InterviewGateWayPage />
+          } />
+
           <Route path={ROUTES.CANDIDATE.VERIFY_OTP} element={<VerifyOtp />} />
           <Route path={ROUTES.CANDIDATE.FORGOT_PASSWORD} element={<ForgotPassword />} />
           <Route path={ROUTES.CANDIDATE.RESET_PASSWORD} element={<ResetPassword /> } />
@@ -237,6 +242,9 @@ const App = () => {
             <QuestionSubmittedPage />
           } />
           
+          {/* <Route path={ROUTES.CANDIDATE.CANDIDATE_INTERVIEW_READY} element={
+            <InterviewReadyPage />
+          } /> */}
           <Route path={ROUTES.CANDIDATE.PRACTICE} element={
             <RoleRoute allowedRoles={[ROLES.CANDIDATE]}>
               <CandidatePractice />

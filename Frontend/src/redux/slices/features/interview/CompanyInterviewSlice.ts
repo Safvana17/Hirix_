@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { GetAllInterviewsParams, GetAllInterviewsResponse, Interview, RescheduleInterviewArgs, ScheduleInterviewPayload } from "../../../../types/interview"
+import type { GetAllInterviewsParams, GetAllInterviewsResponse, GetInterviewAccessResponse, Interview, RescheduleInterviewArgs, ScheduleInterviewPayload } from "../../../../types/interview"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -10,6 +10,7 @@ interface CompanyInterviewState {
     interviews: Interview[] 
     selectedInterview: Interview | null
     error: string | null
+    accessInterview: GetInterviewAccessResponse | null
     pagination: {
         interview: {
             totalPages: number
@@ -23,6 +24,7 @@ const initialState: CompanyInterviewState = {
     interviews: [],
     selectedInterview: null,
     error: null,
+    accessInterview: null,
     pagination: {
         interview: {
             totalPages: 0,
@@ -137,6 +139,25 @@ void,
     }
 })
 
+export const getInterviewAccess = createAsyncThunk<
+GetInterviewAccessResponse,
+{token: string, roomId: string},
+{rejectValue: string}
+>('interview/getAccess', async({token, roomId}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMMON.INTERVIEW.GET_ACCESS(roomId, token))
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get interview access')
+    }
+})
+
+
 const CompanyInterviewSlice = createSlice({
     name: 'companyInterview',
     initialState,
@@ -207,6 +228,17 @@ const CompanyInterviewSlice = createSlice({
          .addCase(editInterview.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to edit interview'
+         })
+         .addCase(getInterviewAccess.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getInterviewAccess.fulfilled, (state, action) => {
+            state.loading = false
+            state.accessInterview = action.payload
+         })
+         .addCase(getInterviewAccess.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to get interview access'
          })
     }
 })
