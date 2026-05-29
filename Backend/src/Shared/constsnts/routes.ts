@@ -119,7 +119,10 @@ export const ROUTES = {
 
     COMMON: {
         GET_NOTIFICATIONS: '/my-notifications',
-        MARK_READ: '/mark-read'
+        MARK_READ: '/mark-read',
+        INTERVIEW: {
+            GET_ACCESS: '/:roomId/:token/access'
+        }
     },
 
     ADMIN: {

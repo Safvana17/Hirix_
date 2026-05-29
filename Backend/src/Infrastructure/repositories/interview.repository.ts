@@ -58,6 +58,13 @@ export class InterviewRepository extends BaseRepository<InterviewEntity, IInterv
             totalPages
         }
     }
+
+    async findByRoomId(roomId: string): Promise<InterviewEntity | null> {
+        const document = await this._model.findOne({roomId})
+        if(!document) return null
+        return this.mapToEntity(document)
+    }
+    
     protected mapToEntity(doc: IInterview): InterviewEntity {
         return InterviewMapper.mapToEntity(doc)
     }

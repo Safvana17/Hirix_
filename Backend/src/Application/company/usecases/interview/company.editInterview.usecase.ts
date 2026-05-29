@@ -71,7 +71,7 @@ export class CompanyEditInterviewUsecase implements ICompanyEditInterviewUsecase
                     startTime: interview.scheduledStartTime.toLocaleDateString(),
                     endTime: interview.scheduledEndTime.toLocaleDateString(),
                     interviewerName: interview.interviewerName,
-                    joinLink: `${env.FRONTEND_URL}/interview/candidate/${interview.candidateToken}`
+                    joinLink: `${env.FRONTEND_URL}/interview/${interview.roomId}/${interview.candidateToken}`
                 }
             })
         }
@@ -91,7 +91,7 @@ export class CompanyEditInterviewUsecase implements ICompanyEditInterviewUsecase
                     startTime: interview.scheduledStartTime.toLocaleDateString(),
                     endTime: interview.scheduledEndTime.toLocaleDateString(),
                     interviewerName: interview.interviewerName,
-                    joinLink: `${env.FRONTEND_URL}/interview/candidate/${interview.interviewerToken}`
+                    joinLink: `${env.FRONTEND_URL}/interview/${interview.roomId}/${interview.interviewerToken}`
                 }
             })
         }

@@ -11,3 +11,11 @@ export enum InterviewResult {
     REJECTED = "REJECTED",
     HOLD = "HOLD"
 }
+
+export enum InterviewJoinStatus {
+    WAITING = 'WAITING',
+    LIVE = 'LIVE',
+    COMPLETED = 'COMPLETED',
+    EXPIRED = 'EXPIRED',
+    CANCELLED = 'CANCELLED',
+}

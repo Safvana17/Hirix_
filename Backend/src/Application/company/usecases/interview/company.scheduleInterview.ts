@@ -113,7 +113,7 @@ export class CompanyScheduleInterviewUsecase implements ICompanyScheduleIntervie
                 endTime: savedInterview.scheduledEndTime.toLocaleString(),
                 companyName: company.getName(),
                 interviewerName: savedInterview.interviewerName,
-                joinLink: `${env.FRONTEND_URL}/interview/candidate/${savedInterview.candidateToken}`
+                joinLink: `${env.FRONTEND_URL}/interview/${savedInterview.roomId}/${savedInterview.candidateToken}`
             }
         })
         await this._processNotificationUsecase.execute({
@@ -129,7 +129,7 @@ export class CompanyScheduleInterviewUsecase implements ICompanyScheduleIntervie
                 startTime: savedInterview.scheduledStartTime.toLocaleString(),
                 endTime: savedInterview.scheduledEndTime.toLocaleString(),
                 companyName: company.getName(),
-                joinLink: `${env.FRONTEND_URL}/interview/company/${savedInterview.interviewerToken}`
+                joinLink: `${env.FRONTEND_URL}/interview/${savedInterview.roomId}/${savedInterview.interviewerToken}`
             }
         })
         return {
