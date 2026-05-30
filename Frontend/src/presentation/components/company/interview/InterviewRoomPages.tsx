@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Avatar,
   Box,
@@ -12,11 +12,58 @@ import {
   Typography,
 } from '@mui/material'
 import { Mic, MicOff, PhoneOff, Send, Video, VideoOff } from 'lucide-react'
+import type { GetInterviewAccessResponse } from '../../../../types/interview'
+import toast from 'react-hot-toast'
 
-const InterviewRoomPage: React.FC = () => {
+interface InterviewRoomPageProps {
+  interview: GetInterviewAccessResponse
+}
+
+const InterviewRoomPage: React.FC <InterviewRoomPageProps> = ({interview}) => {
   const [tab, setTab] = useState(0)
   const [micEnabled, setMicEnabled] = useState(true)
   const [cameraEnabled, setCameraEnabled] = useState(true)
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null)
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null)
+  const localVideoRef = useRef<HTMLVideoElement | null>(null)
+  const remoteVideoRef = useRef<HTMLVideoElement | null>(null)
+
+  useEffect(() => {
+    let stream: MediaStream
+
+    const initializeMedia = async() => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        })
+        setLocalStream(stream)
+
+        if(localVideoRef.current){
+          localVideoRef.current.srcObject = stream
+        }
+
+      } catch (error) {
+        toast.error(typeof error === 'string' ? error : 'Failed to on Camera')
+      }
+    }
+
+    initializeMedia()
+
+    return () => {
+       stream?.getTracks().forEach(track => track.stop())
+    }
+  }, [])
+
+  useEffect(() => {
+    if(remoteVideoRef.current && remoteStream){
+      remoteVideoRef.current.srcObject = remoteStream
+    }
+  }, [remoteStream])
+
+  const isCandidate = interview.role === 'Candidate'
+  const loaclParticipantName = isCandidate ? interview.candidateName : interview.interviewerName
+  const remoteParticipantName = isCandidate ? interview.interviewerName : interview.candidateName
 
   return (
     <Box
@@ -40,22 +87,26 @@ const InterviewRoomPage: React.FC = () => {
       >
         <Box>
           <Typography fontWeight={700}>
-            Interview with TechCorp
+            Interview with {interview.companyName}
           </Typography>
 
           <Typography
             variant="body2"
             color="#D6D6D6"
           >
-            Frontend Developer Position
+            {interview.jobRole} role
           </Typography>
         </Box>
 
         <Stack direction="row" spacing={1.5}>
           <Button
-            onClick={() =>
-              setCameraEnabled(!cameraEnabled)
-            }
+            onClick={() =>{
+              if(!localStream) return
+              localStream.getVideoTracks().forEach(track => {
+                track.enabled = !track.enabled
+                setCameraEnabled(track.enabled)
+              })
+            }}
             sx={controlButtonStyle}
           >
             {cameraEnabled ? (
@@ -66,9 +117,13 @@ const InterviewRoomPage: React.FC = () => {
           </Button>
 
           <Button
-            onClick={() =>
-              setMicEnabled(!micEnabled)
-            }
+            onClick={() =>{
+              if(!localStream) return
+              localStream.getAudioTracks().forEach(track => {
+                track.enabled = !track.enabled
+                setMicEnabled(track.enabled)
+              })
+            }}
             sx={controlButtonStyle}
           >
             {micEnabled ? <Mic /> : <MicOff />}
@@ -103,13 +158,19 @@ const InterviewRoomPage: React.FC = () => {
           }}
         >
           <ParticipantCard
-            name="John Doe"
-            avatar="JD"
+            name={loaclParticipantName}
+            avatar={loaclParticipantName.charAt(0)}
+            videoRef={localVideoRef}
+            cameraEnabled={cameraEnabled}
+            muted
           />
 
           <ParticipantCard
-            name="You"
-            avatar="Y"
+            name={remoteParticipantName}
+            avatar={remoteParticipantName.charAt(0)}
+            videoRef={remoteVideoRef}
+            cameraEnabled={true}
+            muted={false}
           />
         </Box>
         <Paper
@@ -145,36 +206,94 @@ const InterviewRoomPage: React.FC = () => {
   )
 }
 
-const ParticipantCard = ({ name, avatar }: { name: string; avatar: string }) => (
+interface ParticipantCardProps {
+  name: string
+  avatar: string
+  videoRef?: React.RefObject<HTMLVideoElement | null>
+  cameraEnabled?: boolean
+  muted?: boolean
+}
+
+const ParticipantCard: React.FC<ParticipantCardProps> = ({
+  name,
+  avatar,
+  videoRef,
+  cameraEnabled = false,
+  muted = false,
+}) => (
   <Paper
     elevation={0}
     sx={{
       flex: 1,
       borderRadius: 4,
-      background: 'rgba(255,255,255,0.06)',
-      backdropFilter: 'blur(10px)',
+      overflow: 'hidden',
+      position: 'relative',
+      background: '#0F172A',
       border: '1px solid rgba(255,255,255,0.08)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+      minHeight: 500,
     }}
   >
-    <Stack alignItems="center" spacing={2}>
-      <Avatar
+    {cameraEnabled ? (
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted={muted}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+        }}
+      />
+    ) : (
+      <Stack
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+        spacing={2}
+      >
+        <Avatar
+          sx={{
+            width: 100,
+            height: 100,
+            bgcolor: '#795003',
+            fontSize: 36,
+          }}
+        >
+          {avatar}
+        </Avatar>
+
+        <Typography
+          sx={{
+            color: '#fff',
+            fontWeight: 600,
+          }}
+        >
+          {name}
+        </Typography>
+      </Stack>
+    )}
+
+    <Box
+      sx={{
+        position: 'absolute',
+        bottom: 16,
+        left: 16,
+        bgcolor: 'rgba(0,0,0,0.6)',
+        px: 2,
+        py: 0.8,
+        borderRadius: 2,
+      }}
+    >
+      <Typography
         sx={{
-          width: 90,
-          height: 90,
-          bgcolor: '#795003',
-          fontSize: 32,
+          color: '#fff',
+          fontWeight: 600,
         }}
       >
-        {avatar}
-      </Avatar>
-
-      <Typography color="#fff">
         {name}
       </Typography>
-    </Stack>
+    </Box>
   </Paper>
 )
 

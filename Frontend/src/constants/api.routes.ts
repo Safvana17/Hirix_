@@ -218,7 +218,9 @@ export const API_ROUTES = {
     },
     INTERVIEW: {
       GET_ACCESS:(roomId: string, token: string) =>
-        `/interview/${roomId}/${token}/access`
+        `/interview/${roomId}/${token}/access`,
+      JOIN: (roomId: string, token: string) => 
+        `/interview/${roomId}/${token}/join`,
     }
   }
 }

@@ -11,6 +11,10 @@ import {
 import { Mic, MicOff, Video, VideoOff } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import type { GetInterviewAccessResponse } from '../../../../types/interview'
+import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import type { AppDispatch } from '../../../../redux/store'
+import { joinInterview } from '../../../../redux/slices/features/interview/CompanyInterviewSlice'
 
 interface InterviewReadyPageProps {
   interview: GetInterviewAccessResponse
@@ -18,12 +22,13 @@ interface InterviewReadyPageProps {
 
 const InterviewReadyPage: React.FC <InterviewReadyPageProps> = ({interview}) => {
   const navigate = useNavigate()
+  const { token } = useParams()
   const { roomId } = useParams()
   const [cameraEnabled, setCameraEnabled] = useState(true)
   const [micEnabled, setMicEnabled] = useState(true)
   const [loading, setLoading] = useState(false)
   const [localStream, setLocalStream] = useState<MediaStream | null>(null)
-
+  const dispatch =useDispatch<AppDispatch>()
   const videoRef = useRef<HTMLVideoElement | null>(null)
 
   useEffect(() => {
@@ -73,11 +78,16 @@ const InterviewReadyPage: React.FC <InterviewReadyPageProps> = ({interview}) => 
   }
 
   const handleJoinInterview = async () => {
-    setLoading(true)
-
-    setTimeout(() => {
-      navigate(`/interview/${roomId}/live`)
-    }, 1000)
+    try {
+      setLoading(true)
+      if(token && roomId) {
+        await dispatch(joinInterview({token, roomId})).unwrap()
+        navigate(`/interview/${roomId}/${token}`)
+      }
+    } catch (error) {
+      setLoading(false)
+      toast.error(typeof error === 'string' ? error : 'Failed to join interview')
+    }
   }
 
   return (

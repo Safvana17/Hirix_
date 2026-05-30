@@ -10,6 +10,7 @@ interface CompanyInterviewState {
     interviews: Interview[] 
     selectedInterview: Interview | null
     error: string | null
+    canJoin: boolean
     accessInterview: GetInterviewAccessResponse | null
     pagination: {
         interview: {
@@ -24,6 +25,7 @@ const initialState: CompanyInterviewState = {
     interviews: [],
     selectedInterview: null,
     error: null,
+    canJoin: false,
     accessInterview: null,
     pagination: {
         interview: {
@@ -157,6 +159,24 @@ GetInterviewAccessResponse,
     }
 })
 
+export const joinInterview = createAsyncThunk<
+boolean,
+{token: string, roomId: string},
+{rejectValue: string}
+>('interview/join', async({token, roomId}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMMON.INTERVIEW.JOIN(roomId, token))
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to join interview')
+    }
+})
+
 
 const CompanyInterviewSlice = createSlice({
     name: 'companyInterview',
@@ -239,6 +259,18 @@ const CompanyInterviewSlice = createSlice({
          .addCase(getInterviewAccess.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to get interview access'
+         })
+         .addCase(joinInterview.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(joinInterview.fulfilled, (state, action) => {
+            state.loading = false
+            state.canJoin = action.payload
+            // state.accessInterview = action.payload
+         })
+         .addCase(joinInterview.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to join interview'
          })
     }
 })

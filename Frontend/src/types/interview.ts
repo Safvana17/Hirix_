@@ -3,7 +3,7 @@ import type { UserRole } from "../constants/role"
 export type InterviewStatus = 'SCHEDULED' | 'RESCHEDULED' | 'CANCELLED' | 'COMPLETED'
 export type InterviewResult = 'PENDING' | 'SELECTED' | 'REJECTED' | 'HOLD'
 export type ModalMode = 'create' | 'edit' | 'view'
-export type InterviewJoinStatus = 'WAITING' | 'LIVE' | 'COMPLETED' | 'CANCELLD' | 'EXPIRED'
+export type InterviewJoinStatus = 'WAITING' | 'LIVE' | 'COMPLETED' | 'CANCELLED' | 'EXPIRED'
 
 export interface Interview {
     id: string
