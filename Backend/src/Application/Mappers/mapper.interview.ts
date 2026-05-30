@@ -27,6 +27,13 @@ export class InterviewMapper {
 
         Interview.result = doc.result
         Interview.feedback = doc.feedback
+        Interview.candidateJoinedAt = doc.candidateJoinedAt
+        Interview.interviewerJoinedAt = doc.interviewerJoinedAt
+        Interview.isCandidateInRoom = doc.isCandidateInRoom
+        Interview.isInterviewerInRoom = doc.isInterviewerInRoom
+        Interview.startedAt = doc.startedAt
+        Interview.endedAt = doc.endedAt
+
         return Interview
     }
 
@@ -50,7 +57,13 @@ export class InterviewMapper {
             candidateToken: entity.candidateToken,
             roomId: entity.roomId,
             testCandidateId: new Types.ObjectId(entity.testCandidateId),
-            feedback: entity.feedback
+            feedback: entity.feedback,
+            candidateJoinedAt: entity.candidateJoinedAt,
+            interviewerJoinedAt: entity.interviewerJoinedAt,
+            isCandidateInRoom: entity.isCandidateInRoom,
+            isInterviewerInRoom: entity.isInterviewerInRoom,
+            startedAt: entity.startedAt,
+            endedAt: entity.endedAt
         }
     }
 }

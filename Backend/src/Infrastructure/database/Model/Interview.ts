@@ -22,6 +22,12 @@ export interface IInterview extends Document {
     interviewerToken: string
     candidateToken: string
     feedback: string
+    candidateJoinedAt: Date
+    interviewerJoinedAt: Date
+    isCandidateInRoom: boolean
+    isInterviewerInRoom: boolean
+    startedAt: Date
+    endedAt: Date
 }
 
 const interviewSchema: Schema<IInterview> = new Schema({
@@ -98,6 +104,26 @@ const interviewSchema: Schema<IInterview> = new Schema({
     },
     feedback: {
         type: String
+    },
+    candidateJoinedAt: {
+        type: Date
+    },
+    interviewerJoinedAt: {
+        type: Date
+    },
+    isCandidateInRoom: {
+        type: Boolean,
+        default: false
+    },
+    isInterviewerInRoom: {
+         type: Boolean,
+         default: false
+    },
+    startedAt: {
+        type: Date
+    },
+    endedAt: {
+        type: Date
     }
 }, {
     timestamps: true

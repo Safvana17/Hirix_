@@ -21,6 +21,12 @@ export class InterviewEntity {
     candidateToken: string
     interviewerToken: string
     roomId: string
+    candidateJoinedAt?: Date
+    interviewerJoinedAt?: Date
+    isCandidateInRoom?: boolean
+    isInterviewerInRoom?: boolean
+    startedAt?: Date
+    endedAt?: Date
 
     constructor (
         id: string,

@@ -121,7 +121,8 @@ export const ROUTES = {
         GET_NOTIFICATIONS: '/my-notifications',
         MARK_READ: '/mark-read',
         INTERVIEW: {
-            GET_ACCESS: '/:roomId/:token/access'
+            GET_ACCESS: '/:roomId/:token/access',
+            JOIN: '/:roomId/:token/join',
         }
     },
 

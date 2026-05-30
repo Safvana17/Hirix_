@@ -7,5 +7,5 @@ import { IUnifiedInterviewController } from '../../controllers/factory';
 const router = Express.Router()
 
 router.get(ROUTES.COMMON.INTERVIEW.GET_ACCESS, validate(GetInterviewAccessParamsSchema, 'params'), IUnifiedInterviewController.getInterviewAccess)
-
+router.patch(ROUTES.COMMON.INTERVIEW.JOIN, validate(GetInterviewAccessParamsSchema, 'params'), IUnifiedInterviewController.joinInterview)
 export default router;

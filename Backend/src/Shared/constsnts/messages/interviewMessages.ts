@@ -14,5 +14,6 @@ export const InterviewMessages = {
         CANNOT_RESCHEDULE_INTERVIEW_FOR_COMPLETED: 'You cannot reschedule interview for complated interview',
         CANNOT_EDIT_INTERVIEW: 'You cannot edit completed or cancelled interview',
         INVALID_TOKEN: 'Invalid token',
+        CANNOT_JOIN_INTERVIEW: 'You cannot join in not started or ended interview'
     }
 }

@@ -80,9 +80,8 @@ export class CompanyEditInterviewUsecase implements ICompanyEditInterviewUsecase
             await this._processNotification.execute({
                 event: NotificationEvents.INVITE_INTERVIWER,
                 recipients: [{
-                    recipientType: userRole.Candidate,
-                    recipientId: interview.testCandidateId,
-                    email: interview.candidateEmail
+                    recipientType: userRole.Company,
+                    email: interview.interviewerEmail
                 }],
                 variables: {
                     companyName: company.getName(),

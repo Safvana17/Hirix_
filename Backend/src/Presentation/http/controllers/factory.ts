@@ -192,6 +192,7 @@ import { CompanyGetInterviewByIdUsecase } from "../../../Application/company/use
 import { CompanyEditInterviewUsecase } from "../../../Application/company/usecases/interview/company.editInterview.usecase";
 import { UnifiedGetInterviewAccessUsecase } from "../../../Application/common/usecases/unified.getInterviewAccess.usecase";
 import { UnifiedInterviewController } from "./common/unifiedInterviewController";
+import { UnifiedJoinInterviewUsecase } from "../../../Application/common/usecases/unified.joinInterview.usecase";
 
 
 
@@ -776,6 +777,11 @@ const iGetInterviewAccess = new UnifiedGetInterviewAccessUsecase (
     iJobRoleRepository,
     iCompanyRepository
 )
+const iJoinInterview = new UnifiedJoinInterviewUsecase (
+    iInterviewRepository,
+    iCompanyRepository,
+    iJobRoleRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -1130,5 +1136,6 @@ export const ICompanyInterviewController = new CompanyInterviewController (
 )
 
 export const IUnifiedInterviewController = new UnifiedInterviewController (
-    iGetInterviewAccess
+    iGetInterviewAccess,
+    iJoinInterview
 )
