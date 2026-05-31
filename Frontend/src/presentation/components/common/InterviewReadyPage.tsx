@@ -10,11 +10,11 @@ import {
 } from '@mui/material'
 import { Mic, MicOff, Video, VideoOff } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
-import type { GetInterviewAccessResponse } from '../../../../types/interview'
+import type { GetInterviewAccessResponse } from '../../../types/interview'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
-import type { AppDispatch } from '../../../../redux/store'
-import { joinInterview } from '../../../../redux/slices/features/interview/CompanyInterviewSlice'
+import type { AppDispatch } from '../../../redux/store'
+import { joinInterview } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
 
 interface InterviewReadyPageProps {
   interview: GetInterviewAccessResponse

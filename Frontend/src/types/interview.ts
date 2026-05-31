@@ -5,6 +5,14 @@ export type InterviewResult = 'PENDING' | 'SELECTED' | 'REJECTED' | 'HOLD'
 export type ModalMode = 'create' | 'edit' | 'view'
 export type InterviewJoinStatus = 'WAITING' | 'LIVE' | 'COMPLETED' | 'CANCELLED' | 'EXPIRED'
 
+export interface Message {
+    id: string
+    senderId: string
+    senderName: string
+    text: string
+    timeStamp: number
+    isMe: boolean
+}
 export interface Interview {
     id: string
     name: string

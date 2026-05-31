@@ -111,6 +111,7 @@ export default [
       // Optional but useful for backend
       'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
       'no-process-env': 'off',
+      'no-undef': 'off',
     },
   },
 ]

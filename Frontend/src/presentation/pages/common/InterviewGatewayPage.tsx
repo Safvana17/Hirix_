@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import type { AppDispatch, RootState } from '../../../redux/store'
 import { getInterviewAccess } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
-import InterviewReadyPage from '../../components/company/interview/InterviewReadyPage'
-import InterviewErrorPage from '../../components/company/interview/InterviewErrorPage'
-import InterviewRoomPage from '../../components/company/interview/InterviewRoomPages'
-import InterviewCompletedPage from '../../components/company/interview/interviewCompletedPage'
+import InterviewReadyPage from '../../components/common/InterviewReadyPage'
+import InterviewErrorPage from '../../components/common/InterviewErrorPage'
+import InterviewRoomPage from '../../components/common/InterviewRoomPages'
+import InterviewCompletedPage from '../../components/common/interviewCompletedPage'
 
 const InterviewGateWayPage: React.FC = () => {
     const { token } = useParams()
