@@ -195,6 +195,7 @@ import { UnifiedInterviewController } from "./common/unifiedInterviewController"
 import { UnifiedJoinInterviewUsecase } from "../../../Application/common/usecases/unified.joinInterview.usecase";
 import { UnifiedEndInterviewCallUsecase } from "../../../Application/common/usecases/unified.endInterviewCall.usecase";
 import { CompanyUpdateInterviewResultUsecase } from "../../../Application/company/usecases/interview/company.updateInterviewResult.usecase";
+import { CompanySendOfferLetterUsecase } from "../../../Application/company/usecases/interview/company.sendOfferLetter.usecase";
 
 
 
@@ -778,6 +779,13 @@ const iCompanyUpdateInterviewResult = new CompanyUpdateInterviewResultUsecase (
     iProcessNotification,
     iJobRoleRepository
 )
+const iCompanySendOfferLetter = new CompanySendOfferLetterUsecase (
+    iInterviewRepository,
+    iCompanyRepository,
+    iJobRoleRepository,
+    iProcessNotification,
+    iTestCandidateRepository
+)
 //common interview
 const iGetInterviewAccess = new UnifiedGetInterviewAccessUsecase (
     iInterviewRepository,
@@ -1144,6 +1152,7 @@ export const ICompanyInterviewController = new CompanyInterviewController (
     iCompanyGetInterviewById,
     iCompanyEditInterview,
     iCompanyUpdateInterviewResult,
+    iCompanySendOfferLetter
 )
 
 export const IUnifiedInterviewController = new UnifiedInterviewController (

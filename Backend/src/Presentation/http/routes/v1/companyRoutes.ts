@@ -84,7 +84,7 @@ router.patch(ROUTES.COMPANY.INTERVIEW.RESCHEDULE, authHandler(iTokenService), ve
 router.get(ROUTES.COMPANY.INTERVIEW.BY_ID, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), ICompanyInterviewController.getInterviewById)
 router.put(ROUTES.COMPANY.INTERVIEW.EDIT, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), validate(EditInterviewSchema, 'body'), ICompanyInterviewController.editInterview)
 router.patch(ROUTES.COMPANY.INTERVIEW.UPDATE_RESULT, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), validate(UpdateInterviewResultSchema, 'body'), ICompanyInterviewController.updateInterviewResult)
-
+router.patch(ROUTES.COMPANY.INTERVIEW.SEND_OFFER, authHandler(iTokenService), validate(InterviewParamsSchema, 'params'), ICompanyInterviewController.sendOffer)
 
 
 export default router;

@@ -8,7 +8,7 @@ import type { Interview, InterviewStatus, ModalMode, ScheduleInterviewPayload } 
 import { useDebounce } from '../../../hooks/useDebounce'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { editInterview, getAllInterview, scheduleInterview } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
+import { editInterview, getAllInterview, scheduleInterview, sendOfferLetter } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
 import InterviewCard from '../../components/company/interview/CompanyInterviewCard'
 import { useNavigate } from 'react-router-dom'
 import InterviewModal from '../../components/modal/InterviewModal'
@@ -76,6 +76,16 @@ const CompanyInterviews: React.FC = () => {
 
   const handleUpdateResult = (interviewId: string) => {
     navigate(`/company/interview/${interviewId}/update-result`)
+  }
+
+  const handleSendOfferLetter = async(interviewId: string) => {
+    try {
+        await dispatch(sendOfferLetter({interviewId})).unwrap()
+        toast.success('Offer letter send successfully')
+        dispatch(getAllInterview({params: { search: searchTerm || undefined, status: statusfilter || undefined, page: currentPage, limit: 10}}))
+    } catch (error) {
+        toast.error(typeof error === 'string' ? error : 'Failed to send offer letter')
+    }
   }
   return (
     <InternalLayout title='Interviews' subTitle='Manage multi-round interview process' sidebarItems={companySidebarItems}>
@@ -185,7 +195,7 @@ const CompanyInterviews: React.FC = () => {
                     onViewDetails={handleViewDetails}
                     onEdit={handleEditInterview}
                     onScheduleNextRound={handleScheduleNextRound}
-                    onSendOfferLetter={() => console.log('sending...')}
+                    onSendOfferLetter={handleSendOfferLetter}
                     onUpdateResult={handleUpdateResult}
                 />
             ))}

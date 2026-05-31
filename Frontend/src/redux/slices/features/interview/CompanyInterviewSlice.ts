@@ -213,6 +213,24 @@ void,
     }
 })
 
+export const sendOfferLetter = createAsyncThunk<
+void,
+{interviewId: string},
+{rejectValue: string}
+>('interview/offer', async({interviewId}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMPANY.INTERVIEW.SEND_OFFER_LETTER(interviewId))
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to send offer letter')
+    }
+})
+
 
 const CompanyInterviewSlice = createSlice({
     name: 'companyInterview',
@@ -328,6 +346,16 @@ const CompanyInterviewSlice = createSlice({
          .addCase(updateInterviewResult.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to update interview result'
+         })
+         .addCase(sendOfferLetter.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(sendOfferLetter.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(sendOfferLetter.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to send offer letter'
          })
     }
 })
