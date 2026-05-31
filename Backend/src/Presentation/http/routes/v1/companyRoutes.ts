@@ -11,7 +11,7 @@ import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updat
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from "../../validators/subscriptionValidators";
 import { certificateUpload } from "../../middlewares/certificateUpload";
 import { CancelTestSchema, CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator, editTestValidator, ResheduleTestSchema, ShortlistCandidateSchema, TestParamsSchema } from "../../validators/companyTest.validator";
-import { CancelInterviewSchema, CompanyGetAllInterviewSchema, EditInterviewSchema, InterviewParamsSchema, RescheduleInterviewSchema, ScheduleInterviewSchema } from "../../validators/interviewValidator";
+import { CancelInterviewSchema, CompanyGetAllInterviewSchema, EditInterviewSchema, InterviewParamsSchema, RescheduleInterviewSchema, ScheduleInterviewSchema, UpdateInterviewResultSchema } from "../../validators/interviewValidator";
 
 const router = Express.Router()
 
@@ -83,6 +83,7 @@ router.patch(ROUTES.COMPANY.INTERVIEW.CANCEL, authHandler(iTokenService), verify
 router.patch(ROUTES.COMPANY.INTERVIEW.RESCHEDULE, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), validate(RescheduleInterviewSchema, 'body'), ICompanyInterviewController.rescheduleInterview)
 router.get(ROUTES.COMPANY.INTERVIEW.BY_ID, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), ICompanyInterviewController.getInterviewById)
 router.put(ROUTES.COMPANY.INTERVIEW.EDIT, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), validate(EditInterviewSchema, 'body'), ICompanyInterviewController.editInterview)
+router.patch(ROUTES.COMPANY.INTERVIEW.UPDATE_RESULT, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), validate(UpdateInterviewResultSchema, 'body'), ICompanyInterviewController.updateInterviewResult)
 
 
 

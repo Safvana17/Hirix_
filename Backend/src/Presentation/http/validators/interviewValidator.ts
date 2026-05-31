@@ -1,5 +1,5 @@
 import z from "zod";
-import { InterviewStatus } from "../../../Domain/enums/interview";
+import { InterviewResult, InterviewStatus } from "../../../Domain/enums/interview";
 
 export const ScheduleInterviewSchema = z.object({
     testId: z.string().regex(/^[0-9a-fA-F]{24}$/),
@@ -51,5 +51,9 @@ export const GetInterviewAccessParamsSchema = z.object({
   token: z.string(),
   roomId: z.string()
 })
-
 export type InterviewAccessParams = z.infer<typeof GetInterviewAccessParamsSchema>
+
+export const UpdateInterviewResultSchema = z.object({
+  result: z.nativeEnum(InterviewResult),
+  feedback: z.string().min(1, 'Feedback required')
+})

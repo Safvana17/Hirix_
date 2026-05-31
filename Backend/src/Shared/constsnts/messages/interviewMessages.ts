@@ -17,5 +17,6 @@ export const InterviewMessages = {
         CANNOT_JOIN_INTERVIEW: 'You cannot join in not started or ended interview',
         CANNOT_END_CALL: 'Only interviewer can end interview',
         ALREADY_ENDED_INTERVIEW: 'This interview is already ended',
+        CANNOT_UPDATE_RESULT: 'You can only update completed interview result',
     }
 }

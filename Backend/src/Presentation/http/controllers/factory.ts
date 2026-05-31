@@ -186,7 +186,7 @@ import { CompanyScheduleInterviewUsecase } from "../../../Application/company/us
 import { InterviewRepository } from "../../../Infrastructure/repositories/interview.repository";
 import { CompanyInterviewController } from "./company/interviewController";
 import { CompanyGetAllInterviewsUsecase } from "../../../Application/company/usecases/interview/company.getAllInterviews.usecase";
-import { CompanyCancelInterviewUsecase } from "../../../Application/company/usecases/interview/company.cancelTest.usecase";
+import { CompanyCancelInterviewUsecase } from "../../../Application/company/usecases/interview/company.cancelInterview.usecase";
 import { CompanyRescheduleInterviewUsecase } from "../../../Application/company/usecases/interview/company.rescheduleInterview.usecase";
 import { CompanyGetInterviewByIdUsecase } from "../../../Application/company/usecases/interview/company.getInterviewById.usecase";
 import { CompanyEditInterviewUsecase } from "../../../Application/company/usecases/interview/company.editInterview.usecase";
@@ -194,6 +194,7 @@ import { UnifiedGetInterviewAccessUsecase } from "../../../Application/common/us
 import { UnifiedInterviewController } from "./common/unifiedInterviewController";
 import { UnifiedJoinInterviewUsecase } from "../../../Application/common/usecases/unified.joinInterview.usecase";
 import { UnifiedEndInterviewCallUsecase } from "../../../Application/common/usecases/unified.endInterviewCall.usecase";
+import { CompanyUpdateInterviewResultUsecase } from "../../../Application/company/usecases/interview/company.updateInterviewResult.usecase";
 
 
 
@@ -771,7 +772,12 @@ const iCompanyEditInterview = new CompanyEditInterviewUsecase (
     iProcessNotification,
     iJobRoleRepository
 )
-
+const iCompanyUpdateInterviewResult = new CompanyUpdateInterviewResultUsecase (
+    iInterviewRepository,
+    iCompanyRepository,
+    iProcessNotification,
+    iJobRoleRepository
+)
 //common interview
 const iGetInterviewAccess = new UnifiedGetInterviewAccessUsecase (
     iInterviewRepository,
@@ -1137,6 +1143,7 @@ export const ICompanyInterviewController = new CompanyInterviewController (
     iCompanyRescheduleInterview,
     iCompanyGetInterviewById,
     iCompanyEditInterview,
+    iCompanyUpdateInterviewResult,
 )
 
 export const IUnifiedInterviewController = new UnifiedInterviewController (
