@@ -5,11 +5,13 @@ import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { InterviewAccessParams } from "../../validators/interviewValidator";
 import { IUnifiedJoinInterviewUsecase } from "../../../../Application/common/interfaces/IUnified.joinUnterview.usecase";
+import { IUnifiedEndInterviewCallUsecase } from "../../../../Application/common/interfaces/IUnified.endInterviewCall.usecase";
 
 export class UnifiedInterviewController {
     constructor (
         private _getInterviewAccess: IUnifiedGetInterviewAccessUsecase,
         private _joinInterview: IUnifiedJoinInterviewUsecase,
+        private _endInterview: IUnifiedEndInterviewCallUsecase,
     ) {}
 
     getInterviewAccess = asyncHandler( async(req: Request, res: Response ) => {
@@ -22,5 +24,11 @@ export class UnifiedInterviewController {
         const { token, roomId } = req.validatedParams as InterviewAccessParams
         const { canJoin } = await this._joinInterview.execute({ token, roomId })
         return sendSuccess(res, statusCode.OK, '', canJoin )
+    })
+
+    endInterview = asyncHandler(async(req: Request, res: Response) => {
+        const { token, roomId } = req.validatedParams as InterviewAccessParams
+        const interview = await this._endInterview.execute({ token, roomId })
+        return sendSuccess(res, statusCode.OK, '', interview )
     })
 }

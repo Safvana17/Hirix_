@@ -177,6 +177,24 @@ boolean,
     }
 })
 
+export const endInterview = createAsyncThunk<
+Interview,
+{token: string, roomId: string},
+{rejectValue: string}
+>('interview/end', async({token, roomId}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMMON.INTERVIEW.END(roomId, token))
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to end interview')
+    }
+})
+
 
 const CompanyInterviewSlice = createSlice({
     name: 'companyInterview',
@@ -271,6 +289,17 @@ const CompanyInterviewSlice = createSlice({
          .addCase(joinInterview.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to join interview'
+         })
+         .addCase(endInterview.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(endInterview.fulfilled, (state, action) => {
+            state.loading = false
+            state.selectedInterview = action.payload
+         })
+         .addCase(endInterview.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to end interview'
          })
     }
 })

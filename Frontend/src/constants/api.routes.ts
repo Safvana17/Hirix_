@@ -108,7 +108,11 @@ export const API_ROUTES = {
       GET_BY_ID: (interviewId: string) => 
         `/company/interview/${interviewId}`,
       EDIT: (interviewId: string) => 
-        `/company/interview/${interviewId}`
+        `/company/interview/${interviewId}`,
+      UPDATE_RESULT: (interviewId: string) =>
+        `/company/interview/${interviewId}/result`,
+      SEND_OFFER_LETTER: (interviewId: string) => 
+        `/company/interview/${interviewId}/offer`
     }
   },
 
@@ -221,6 +225,9 @@ export const API_ROUTES = {
         `/interview/${roomId}/${token}/access`,
       JOIN: (roomId: string, token: string) => 
         `/interview/${roomId}/${token}/join`,
+      END: (roomId: string, token: string) => 
+        `/interview/${roomId}/${token}/end`,
+      
     }
   }
 }

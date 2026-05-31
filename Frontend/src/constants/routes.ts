@@ -52,6 +52,8 @@ export const ROUTES = {
     PAYMENT_STATUS: '/payment-status',
     PAYMENT: '/payment',
     INTERVIEW_READY: '/interview/:roomId/:token',
+    INTERVIEW_COMPLETED: '/interview/:roomId/:token/completed',
+    INTERVIEW_EXPIRED: '/interview/:roomId/:token/expired'
   },
 
   ADMIN: {

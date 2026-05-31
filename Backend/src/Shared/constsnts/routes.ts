@@ -73,6 +73,8 @@ export const ROUTES = {
         CANCEL: '/interview/:interviewId/cancel',
         EDIT: '/interview/:interviewId',
         BY_ID: '/interview/:interviewId',
+        UPDATE_RESULT: '/interview/:interviewId/result',
+        SEND_OFFER: '/interview/:interviewId/offer',
       }
     },
 
@@ -123,6 +125,7 @@ export const ROUTES = {
         INTERVIEW: {
             GET_ACCESS: '/:roomId/:token/access',
             JOIN: '/:roomId/:token/join',
+            END: '/:roomId/:token/end',
         }
     },
 

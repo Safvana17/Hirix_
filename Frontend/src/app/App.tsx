@@ -41,6 +41,8 @@ import CancelInterviewPage from '../presentation/components/company/interview/Ca
 import RescheduleInterviewPage from '../presentation/components/company/interview/RescheduleInterviewPages'
 import InterviewDetailsPage from '../presentation/components/company/interview/InterviewDetailsPages'
 import InterviewGateWayPage from '../presentation/pages/common/InterviewGatewayPage'
+import InterviewCompletedPage from '../presentation/components/common/interviewCompletedPage'
+import InterviewErrorPage from '../presentation/components/common/InterviewErrorPage'
 
 
 
@@ -203,6 +205,14 @@ const App = () => {
           <Route path={ROUTES.COMMON.INTERVIEW_READY} element={
             <InterviewGateWayPage />
           } />
+
+          <Route path={ROUTES.COMMON.INTERVIEW_COMPLETED} element={
+            <InterviewCompletedPage />
+          } />
+
+          <Route path={ROUTES.COMMON.INTERVIEW_EXPIRED} element={
+            <InterviewErrorPage />
+          } />         
 
           <Route path={ROUTES.CANDIDATE.VERIFY_OTP} element={<VerifyOtp />} />
           <Route path={ROUTES.CANDIDATE.FORGOT_PASSWORD} element={<ForgotPassword />} />

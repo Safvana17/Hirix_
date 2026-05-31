@@ -12,6 +12,9 @@ import InterviewHeader from './InterviewHeader'
 import ParticipantSection from './ParticipantSection'
 import InterviewSidebar from './InterviewSidebar'
 import InterviewToolbar from './InterviewToolbar'
+import { useDispatch } from 'react-redux'
+import type { AppDispatch } from '../../../redux/store'
+import { endInterview } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
 
 interface InterviewRoomPageProps {
   interview: GetInterviewAccessResponse
@@ -21,17 +24,23 @@ const InterviewRoomPage: React.FC <InterviewRoomPageProps> = ({interview}) => {
   const { roomId } = useParams()
   const { token } = useParams()
   const navigate = useNavigate()
-  // const [tab, setTab] = useState(0)
+  const dispatch = useDispatch<AppDispatch>()
 
   const isCandidate = interview.role === 'Candidate'
   const role = isCandidate ? 'Candidate' : 'Company'
   const loaclParticipantName = isCandidate ? interview.candidateName : interview.interviewerName
-  // const remoteParticipantName = isCandidate ? interview.interviewerName : interview.candidateName
   const userId = `${role}-${roomId}`
 
   const handleInterviewEnded = async () => {
     try {
-      console.log('interview ended')
+      if(token && roomId){
+        const result = await dispatch(endInterview({roomId, token})).unwrap()
+        if(role === 'Company'){
+          navigate(`/company/interview/${result.id}`)
+        }else{
+          navigate(`/interview/${roomId}/${token}/completed`)
+        }
+      }
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'Failed to end interview')
     }
@@ -47,7 +56,7 @@ const InterviewRoomPage: React.FC <InterviewRoomPageProps> = ({interview}) => {
       endCall()
     }else{
       leaveRoom()
-      navigate(`/interview/completed`)
+      navigate(`/interview/${roomId}/${token}`)
     }
   }
   return (
