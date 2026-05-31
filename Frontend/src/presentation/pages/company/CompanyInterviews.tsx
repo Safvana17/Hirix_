@@ -74,7 +74,9 @@ const CompanyInterviews: React.FC = () => {
     setIsModalOpen(true)
   }
 
-
+  const handleUpdateResult = (interviewId: string) => {
+    navigate(`/company/interview/${interviewId}/update-result`)
+  }
   return (
     <InternalLayout title='Interviews' subTitle='Manage multi-round interview process' sidebarItems={companySidebarItems}>
         <div>
@@ -184,7 +186,7 @@ const CompanyInterviews: React.FC = () => {
                     onEdit={handleEditInterview}
                     onScheduleNextRound={handleScheduleNextRound}
                     onSendOfferLetter={() => console.log('sending...')}
-                    onUpdateResult={() => console.log('updating...')}
+                    onUpdateResult={handleUpdateResult}
                 />
             ))}
             </Stack>

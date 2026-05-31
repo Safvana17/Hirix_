@@ -247,7 +247,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
               </>
             )}
 
-            {isCompleted && !interview.result && (
+            {isCompleted && interview.result === 'PENDING' && (
               <Button
                 variant="contained"
                 size="small"

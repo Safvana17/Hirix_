@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { GetAllInterviewsParams, GetAllInterviewsResponse, GetInterviewAccessResponse, Interview, RescheduleInterviewArgs, ScheduleInterviewPayload } from "../../../../types/interview"
+import type { GetAllInterviewsParams, GetAllInterviewsResponse, GetInterviewAccessResponse, Interview, RescheduleInterviewArgs, ScheduleInterviewPayload, UpdateInterviewResultArgs } from "../../../../types/interview"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -195,6 +195,24 @@ Interview,
     }
 })
 
+export const updateInterviewResult = createAsyncThunk<
+void,
+{interviewId: string, data: UpdateInterviewResultArgs},
+{rejectValue: string}
+>('interview/result', async({interviewId, data}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMPANY.INTERVIEW.UPDATE_RESULT(interviewId), data)
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to update interview result')
+    }
+})
+
 
 const CompanyInterviewSlice = createSlice({
     name: 'companyInterview',
@@ -300,6 +318,16 @@ const CompanyInterviewSlice = createSlice({
          .addCase(endInterview.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to end interview'
+         })
+         .addCase(updateInterviewResult.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(updateInterviewResult.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(updateInterviewResult.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to update interview result'
          })
     }
 })

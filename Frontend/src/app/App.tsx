@@ -43,6 +43,7 @@ import InterviewDetailsPage from '../presentation/components/company/interview/I
 import InterviewGateWayPage from '../presentation/pages/common/InterviewGatewayPage'
 import InterviewCompletedPage from '../presentation/components/common/interviewCompletedPage'
 import InterviewErrorPage from '../presentation/components/common/InterviewErrorPage'
+import UpdateInterviewResultPage from '../presentation/components/company/interview/UpdateInterviewResultPage'
 
 
 
@@ -187,6 +188,12 @@ const App = () => {
           <Route path={ROUTES.COMPANY.VIEW_INTERVIEW_DETAILS} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <InterviewDetailsPage />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.COMPANY.UPDATE_INTERVIEW_RESULT} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <UpdateInterviewResultPage />
             </RoleRoute>
           } />
 

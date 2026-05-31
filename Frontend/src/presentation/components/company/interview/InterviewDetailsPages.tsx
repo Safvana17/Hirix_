@@ -85,7 +85,7 @@ const InterviewDetailsPage: React.FC = () => {
     }
 
     const handleUpdateResult = () => {
-        console.log('updating....')
+       navigate(`/company/interview/${interviewId}/update-result`)
     }
 
     const handleSendOfferLetter = () => {
@@ -235,8 +235,8 @@ const InterviewDetailsPage: React.FC = () => {
           flexWrap="wrap"
           useFlexGap
         >
-          {selectedInterview?.interviewStatus === 'COMPLETED' &&
-            !selectedInterview?.result && (
+          {selectedInterview?.interviewStatus === 'COMPLETED' && 
+             selectedInterview.result === 'PENDING' &&(
               <Button
                 variant="contained"
                 onClick={handleUpdateResult}

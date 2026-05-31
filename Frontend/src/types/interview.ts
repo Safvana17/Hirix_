@@ -85,3 +85,8 @@ export interface GetInterviewAccessResponse {
     companyName: string
     status: InterviewJoinStatus
 }
+
+export interface UpdateInterviewResultArgs {
+    result: InterviewResult
+    feedback: string
+}
