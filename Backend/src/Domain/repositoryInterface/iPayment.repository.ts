@@ -6,4 +6,6 @@ export interface IPaymentRepository extends IBaseRepository<PaymentEntity>{
     findByOrderId(orderId: string): Promise<PaymentEntity | null>
     findOrderByOwner(ownerId: string): Promise<PaymentEntity[] | null>
     findAllFiltered(query: {userId: string, status?: PaymentStatus, page: number, limit: number}): Promise<{data: PaymentEntity[], totalPages: number, totalCount: number}>
+    getTotalRevenue(): Promise<number>
+    getMonthlyRevenue(): Promise<number>
 }

@@ -48,6 +48,44 @@ export class PaymentRepository extends BaseRepository<PaymentEntity, IPayment> i
         }
     }
 
+    async getTotalRevenue(): Promise<number> {
+        const totalRevenue = await this._model.aggregate([
+            {
+                $match: {
+                    status: 'success'
+                }, 
+            }, {
+                $group: {
+                    _id: null,
+                    sum: { $sum: '$amount'}
+                }
+            }
+        ])
+        return totalRevenue[0]?.sum ?? 0
+    }
+
+    async getMonthlyRevenue(): Promise<number> {
+        const monthlyRevenue = await this._model.aggregate([
+            {
+                $match: {
+                    status: 'success',
+                    createdAt: {
+                        $gt: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                        $lt: new Date(new Date().getFullYear(), new Date().getMonth()+1, 1)
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    revenue: { $sum: "$amount"}
+                }
+            }
+        ])
+
+        return monthlyRevenue[0]?.revenue ?? 0
+    }
+
     protected mapToEntity(doc: IPayment): PaymentEntity {
         return PaymentMapper.toEntity(doc)
     }

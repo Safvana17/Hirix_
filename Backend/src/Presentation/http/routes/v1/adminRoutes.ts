@@ -1,5 +1,5 @@
 import  Express  from "express";
-import { iAdminQuestionController, iAdminSettingsController, iCategoryController, iSubscriptionPlanController, iTokenService, iUnifiedSettingsController, IUserManagementController } from "../../controllers/factory";
+import { iAdminAnalyticsController, iAdminQuestionController, iAdminSettingsController, iCategoryController, iSubscriptionPlanController, iTokenService, iUnifiedSettingsController, IUserManagementController } from "../../controllers/factory";
 import { authHandler } from "../../middlewares/authMiddleware";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
@@ -60,6 +60,9 @@ router.put(ROUTES.ADMIN.NOTIFICATION_RULE.EDIT, authHandler(iTokenService), veri
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
 router.patch(ROUTES.COMMON.MARK_READ, authHandler(iTokenService), verifyCsrf, iUnifiedSettingsController.markAllAsRead)
 router.delete(ROUTES.ADMIN.NOTIFICATION_RULE.DELETE, authHandler(iTokenService), validate(settingsParamsShema, 'params'), iAdminSettingsController.deleteNotificationRule)
+
+//analytics
+router.get(ROUTES.ADMIN.ANALYTICS.REVENUE_SUMMERY, authHandler(iTokenService), iAdminAnalyticsController.getRevenueSummery)
 
 
 

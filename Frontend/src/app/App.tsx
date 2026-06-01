@@ -44,7 +44,7 @@ import InterviewGateWayPage from '../presentation/pages/common/InterviewGatewayP
 import InterviewCompletedPage from '../presentation/components/common/interviewCompletedPage'
 import InterviewErrorPage from '../presentation/components/common/InterviewErrorPage'
 import UpdateInterviewResultPage from '../presentation/components/company/interview/UpdateInterviewResultPage'
-// import AdminRevenue from '../presentation/pages/admin/AdminRevenue'
+import AdminRevenue from '../presentation/pages/admin/AdminRevenue'
 
 
 
@@ -323,11 +323,11 @@ const App = () => {
             </RoleRoute>
           } />
           
-          {/* <Route path={ROUTES.ADMIN.REVENUE} element={
+          <Route path={ROUTES.ADMIN.REVENUE} element={
             <RoleRoute allowedRoles={[ROLES.ADMIN]}>
               <AdminRevenue />
             </RoleRoute>
-          } /> */}
+          } />
 
           <Route path={ROUTES.COMMON.PAYMENT_STATUS} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY, ROLES.CANDIDATE]}>

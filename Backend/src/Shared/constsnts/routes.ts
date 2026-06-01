@@ -182,6 +182,9 @@ export const ROUTES = {
             EDIT: '/notification-rule/:id',
             GET_ALL: '/notification-rules',
             DELETE: '/notification-rule/:id'
+        },
+        ANALYTICS: {
+            REVENUE_SUMMERY: '/revenue-summery',
         }
     }
 }

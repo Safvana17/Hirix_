@@ -180,6 +180,9 @@ export const API_ROUTES = {
       DELETE: (id: string) =>
         `/admin/notification-rule/${id}`,
     },
+    ANALYTICS: {
+      REVENUE_SUMMERY: '/admin/revenue-summery',
+    }
   },
   COMMON: {
     QUESTION: {

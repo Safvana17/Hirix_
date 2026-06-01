@@ -196,6 +196,8 @@ import { UnifiedJoinInterviewUsecase } from "../../../Application/common/usecase
 import { UnifiedEndInterviewCallUsecase } from "../../../Application/common/usecases/unified.endInterviewCall.usecase";
 import { CompanyUpdateInterviewResultUsecase } from "../../../Application/company/usecases/interview/company.updateInterviewResult.usecase";
 import { CompanySendOfferLetterUsecase } from "../../../Application/company/usecases/interview/company.sendOfferLetter.usecase";
+import { AdminAnalyticsController } from "./admin/analyticsController";
+import { AdminRevenueSummeryUsecase } from "../../../Application/admin/usecases/analytics/admin.revenueSummery.usecase";
 
 
 
@@ -972,6 +974,13 @@ export const sendTrialEndReminder = new SendTrialEndReminderUsecase(
     iSubscriptionPlanRepository,
     iProcessNotification
 )
+
+//analytics
+
+export const iAdminGetRevenueSummery = new AdminRevenueSummeryUsecase(
+    iPaymentRepository,
+    iSubscriptionRepository
+)
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,
@@ -1159,4 +1168,8 @@ export const IUnifiedInterviewController = new UnifiedInterviewController (
     iGetInterviewAccess,
     iJoinInterview,
     iEndInterview
+)
+
+export const iAdminAnalyticsController = new AdminAnalyticsController (
+    iAdminGetRevenueSummery
 )

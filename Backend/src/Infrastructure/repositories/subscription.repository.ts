@@ -71,6 +71,15 @@ export class SubscriptionRepository extends BaseRepository<SubscriptionEntity, I
         if(!documents) return null
         return documents.map(d => this.mapToEntity(d))
     }
+
+    async getActiveSubscribers(): Promise<number> {
+        return this._model.countDocuments({status: subscriptionStatus.ACTIVE})
+    }
+
+    async getTotalSubscribers(): Promise<number> {
+        return await this._model.countDocuments()
+    }
+
     protected mapToEntity(doc: ISubscription): SubscriptionEntity {
         return SubscriptionMapper.toEntity(doc)
     }
