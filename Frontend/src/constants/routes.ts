@@ -69,5 +69,7 @@ export const ROUTES = {
     PRACTICE_LIBRARY: '/admin/practicelibrary',
     SUBSCRIPTIONS: '/admin/subscriptions',
     SETTINGS: '/admin/settings',
+    // REVENUE: '/admin/revenue',
+    // REPORT: '/admin/report',
   },
 }
