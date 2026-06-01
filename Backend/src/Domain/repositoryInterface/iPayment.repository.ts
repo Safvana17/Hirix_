@@ -8,4 +8,5 @@ export interface IPaymentRepository extends IBaseRepository<PaymentEntity>{
     findAllFiltered(query: {userId: string, status?: PaymentStatus, page: number, limit: number}): Promise<{data: PaymentEntity[], totalPages: number, totalCount: number}>
     getTotalRevenue(): Promise<number>
     getMonthlyRevenue(): Promise<number>
+    getRevenueTrendByMonth(startDate: Date): Promise<{month: string; revenue: number}[]>
 }

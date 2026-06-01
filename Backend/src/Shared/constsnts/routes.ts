@@ -185,6 +185,9 @@ export const ROUTES = {
         },
         ANALYTICS: {
             REVENUE_SUMMERY: '/revenue-summery',
+            REVENUE_TREND_BY_MONTH: '/revenue-month',
+            REVENUE_TREND_BY_PLAN: '/revenue-plan',
+            PAYMENT_HISTORY: '/payment-history',
         }
     }
 }

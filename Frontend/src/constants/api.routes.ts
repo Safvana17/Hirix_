@@ -182,6 +182,9 @@ export const API_ROUTES = {
     },
     ANALYTICS: {
       REVENUE_SUMMERY: '/admin/revenue-summery',
+      REVENUE_TREND_BY_MONTH: '/admin/revenue-month',
+      REVENUE_TREND_BY_PLAN: '/admin/revenue-plan',
+      PAYMENT_HISTORY: '/admin/payment-history',
     }
   },
   COMMON: {

@@ -86,6 +86,48 @@ export class PaymentRepository extends BaseRepository<PaymentEntity, IPayment> i
         return monthlyRevenue[0]?.revenue ?? 0
     }
 
+    async getRevenueTrendByMonth(startDate: Date): Promise<{ month: string; revenue: number; }[]> {
+        return await this._model.aggregate([
+            {
+                $match: {
+                    createdAt: { $gt: startDate },
+                    status: 'success'
+                }
+            }, 
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt"},
+                        month: { $month: "$createdAt"}
+                    },
+                    revenue: { $sum: "$amount"}
+                }
+            }, 
+            {
+                $sort: {
+                    "_id.year": 1,
+                    "_id.month": 1
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    month: {
+                        $dateToString: {
+                            format: "%b",
+                            date: {
+                                $dateFromParts: {
+                                    year: "$_id.year",
+                                    month: "$_id.month"
+                                }
+                            }
+                        }
+                    },
+                    revenue: 1
+                }
+            }
+        ])
+    }
     protected mapToEntity(doc: IPayment): PaymentEntity {
         return PaymentMapper.toEntity(doc)
     }

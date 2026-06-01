@@ -9,6 +9,7 @@ import { addCategorySchema, editCategorySchema } from "../../validators/category
 import { rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
 import { createSubscriptionPlanSchema, updatePlanSchema } from "../../validators/subscriptionPlanValidator";
 import { CreateNotificationRuleSchema, TemplateSchema, UpdateNotificationRuleSchema, UpdatetEmplateStatusSchema, getAllRulesSchema, getAllTemplateQSchema, settingsParamsShema } from "../../validators/adminSettingsValidator";
+import { GetRevenueTRendByMonthSchema } from "../../validators/analyticsValidator";
 
 const router = Express.Router()
 
@@ -63,7 +64,7 @@ router.delete(ROUTES.ADMIN.NOTIFICATION_RULE.DELETE, authHandler(iTokenService),
 
 //analytics
 router.get(ROUTES.ADMIN.ANALYTICS.REVENUE_SUMMERY, authHandler(iTokenService), iAdminAnalyticsController.getRevenueSummery)
-
+router.get(ROUTES.ADMIN.ANALYTICS.REVENUE_TREND_BY_MONTH, authHandler(iTokenService), validate(GetRevenueTRendByMonthSchema, 'query'), iAdminAnalyticsController.getReveneueTrendByMonth)
 
 
 export default router;               

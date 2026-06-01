@@ -198,6 +198,7 @@ import { CompanyUpdateInterviewResultUsecase } from "../../../Application/compan
 import { CompanySendOfferLetterUsecase } from "../../../Application/company/usecases/interview/company.sendOfferLetter.usecase";
 import { AdminAnalyticsController } from "./admin/analyticsController";
 import { AdminRevenueSummeryUsecase } from "../../../Application/admin/usecases/analytics/admin.revenueSummery.usecase";
+import { AdminGetRevenueTrendByMonthUsecase } from "../../../Application/admin/usecases/analytics/admin.getREvenueTrendByMonth.usecase";
 
 
 
@@ -981,6 +982,9 @@ export const iAdminGetRevenueSummery = new AdminRevenueSummeryUsecase(
     iPaymentRepository,
     iSubscriptionRepository
 )
+export const iAdminGetRevenueTrendByMonth = new AdminGetRevenueTrendByMonthUsecase (
+    iPaymentRepository
+)
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,
@@ -1171,5 +1175,6 @@ export const IUnifiedInterviewController = new UnifiedInterviewController (
 )
 
 export const iAdminAnalyticsController = new AdminAnalyticsController (
-    iAdminGetRevenueSummery
+    iAdminGetRevenueSummery,
+    iAdminGetRevenueTrendByMonth
 )
