@@ -45,3 +45,10 @@ export interface PaymentHistoryArgs{
     page: number
     limit: number
 }
+
+export interface TestActivityTrend {
+    month: string
+    testCount: number
+    notAttendedCandidates: number
+    attendedCandidates: number
+}

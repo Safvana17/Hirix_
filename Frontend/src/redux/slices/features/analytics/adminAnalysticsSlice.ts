@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -11,6 +11,7 @@ interface AdminAnalyticsState {
     revenueSummary: RevenueSummary | null
     adminSummery: AdminSummary | null
     monthlyRevenueTrend: RevenueTrendMonth[]
+    testActivityTrend: TestActivityTrend[]
     planRevenueTrend: RevenueTrendPlan[]
     paymentHistory: PaymentHistory[]
     pagination: {
@@ -26,6 +27,7 @@ const initialState: AdminAnalyticsState = {
     revenueSummary: null,
     adminSummery: null,
     monthlyRevenueTrend: [],
+    testActivityTrend: [],
     planRevenueTrend: [],
     paymentHistory: [],
     pagination: {
@@ -54,8 +56,6 @@ void,
         return rejectWithValue(err.response?.data.message || 'Failed to get revenue summery')
     }
 })
-
-
 
 export const getRevenueTrendByMonth = createAsyncThunk<
 RevenueTrendMonth[],
@@ -129,6 +129,23 @@ void,
     }
 })
 
+export const getTestActivty = createAsyncThunk<
+TestActivityTrend[],
+{month: number},
+{rejectValue: string}
+>('admin/testActivity', async ({month}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.ADMIN.ANALYTICS.TEST_ACTIVITY, {params: {month}})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        console.log('test: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get test activity')
+    }
+})
 
 const adminAnalyticsSlice = createSlice({
     name: 'adminAnalytics',
@@ -192,6 +209,17 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getAdminDashboardSummary.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get admin dashboard summery'
+         })
+         .addCase(getTestActivty.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getTestActivty.fulfilled, (state, action) => {
+            state.loading = false
+            state.testActivityTrend = action.payload
+         })
+         .addCase(getTestActivty.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get test activity'
          })
     }
 })

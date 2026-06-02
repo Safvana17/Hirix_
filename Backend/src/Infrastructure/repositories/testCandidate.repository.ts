@@ -1,5 +1,6 @@
 import { TestCandidateMapper } from "../../Application/Mappers/mapper.testCandidate";
 import { TestCandidateEntity } from "../../Domain/entities/TestCandidate.entity";
+import { CandidateTestStatus } from "../../Domain/enums/Test";
 import { ITestCandidateRepository } from "../../Domain/repositoryInterface/iTestCandidate.repository";
 import { ITestCandidate, TestCandidateModel } from "../database/Model/TestCandidate";
 import { BaseRepository } from "./base.repository";
@@ -37,6 +38,51 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
         return this.mapToEntity(document)
     }
     
+    async getCandidateActivity(startDate: Date): Promise<{ attendedCandidates: number; notAttendedCandidates: number; month: string; }[]> {
+        return await this._model.aggregate([
+            {
+                $match: {
+                    createdAt: { $gt: startDate}
+                }
+            }, 
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt"},
+                        month: { $month: "$createdAt"}
+                    },
+                    attendedCandidates: {
+                        $sum: {
+                            $cond: [{ $eq: ["$candidateTestStatus", CandidateTestStatus.SUBMITTED]}, 1, 0]
+                        }
+                    },
+                    notAttendedCandidates: {
+                        $sum: {
+                            $cond: [{ $ne: ["$candidateTestStatus", CandidateTestStatus.SUBMITTED]},1, 0]
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    month: {
+                        $dateToString: {
+                            format: "%b",
+                            date: {
+                                $dateFromParts: {
+                                    year: "$_id.year",
+                                    month: "$_id.month"
+                                }
+                            }
+                        }
+                    },
+                    attendedCandidates: 1,
+                    notAttendedCandidates: 1
+                }
+            }
+        ])
+    }
 
     protected mapToEntity(doc: ITestCandidate): TestCandidateEntity {
         return TestCandidateMapper.toEntity(doc)

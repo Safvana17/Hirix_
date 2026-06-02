@@ -7,4 +7,5 @@ export interface ITestCandidateRepository extends IBaseRepository<TestCandidateE
     findByTestLink(testLink: string): Promise<TestCandidateEntity | null>
     countByTestIds(testId: string): Promise<number>
     findByEmail(email: string): Promise<TestCandidateEntity | null>
+    getCandidateActivity(startDate: Date): Promise<{attendedCandidates: number; notAttendedCandidates: number; month: string}[]>
 }

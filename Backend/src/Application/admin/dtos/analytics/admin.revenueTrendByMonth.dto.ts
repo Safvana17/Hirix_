@@ -1,7 +1,7 @@
-import { RevenuePeriod } from "../../../../Domain/enums/analytics";
+import { MonthPeriod } from "../../../../Domain/enums/analytics";
 
 export interface AdminGetRevenueTrendByMonthInputDTO {
-    month: RevenuePeriod
+    month: MonthPeriod
 }
 
 
@@ -10,5 +10,5 @@ export interface RevenueTrendItemDTO {
     revenue: number
 }
 export interface AdminGetRevenueTrendByMonthOutputDTO {
-     trend: RevenueTrendItemDTO[]
+    trend: RevenueTrendItemDTO[]
 }

@@ -22,4 +22,5 @@ export interface ITestRepository extends IBaseRepository<TestEntity>{
     findAllFiltered(query: {companyId: string, search?: string, status?: TestStatus, page: number, limit: number}): Promise<{data: CompanyTestList[], totalPages: number, totalCount: number}>
     CountTestInMonth(companyId: string, startOfMonth: Date, endOfMonth: Date): Promise<number>
     getTotalTests(): Promise<number>
+    getTestActivity(startDate: Date): Promise<{month: string; testTrend: number}[]>
 }

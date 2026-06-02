@@ -105,6 +105,49 @@ export class TestRepository extends BaseRepository<TestEntity, ITest> implements
         ])
         return totalTests[0].count ?? 0
     }
+
+    async getTestActivity(startDate: Date): Promise<{ month: string; testTrend: number; }[]> {
+        return await this._model.aggregate([
+            {
+                $match: {
+                    isDeleted: false,
+                    createdAt: { $gt: startDate}
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt"},
+                        month: {$month: "$createdAt"}
+                    },
+                    testTrend: { $sum: 1}
+                }
+            },
+            {
+                $sort: {
+                    "_id.year": -1,
+                    "_id.month": -1
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    month: {
+                       $dateToString: {
+                          format: "%b",
+                          date: {
+                             $dateFromParts: {
+                                year: "$_id.year",
+                                month: "$_id.month"
+                             }
+                          }
+                       }
+                    },
+                    testTrend: 1
+                }
+            }
+        ])
+    }
     protected mapToEntity(doc: ITest): TestEntity {
         return TestMapper.toEntity(doc)
     }

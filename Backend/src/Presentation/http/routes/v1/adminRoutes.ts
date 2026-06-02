@@ -68,6 +68,6 @@ router.get(ROUTES.ADMIN.ANALYTICS.REVENUE_TREND_BY_MONTH, authHandler(iTokenServ
 router.get(ROUTES.ADMIN.ANALYTICS.REVENUE_TREND_BY_PLAN, authHandler(iTokenService), validate(GetRevenueTrendByPlanSchema, 'query'), iAdminAnalyticsController.getReveneueTrendByPlan)
 router.get(ROUTES.ADMIN.ANALYTICS.PAYMENT_HISTORY, authHandler(iTokenService), validate(GetPaymentHistorySchema, 'query'), iAdminAnalyticsController.getPaymentHistory)
 router.get(ROUTES.ADMIN.ANALYTICS.ADMIN_DASHBOARD_SUMMERY, authHandler(iTokenService), iAdminAnalyticsController.adminDashboardSummery)
-
+router.get(ROUTES.ADMIN.ANALYTICS.TEST_ACTIVITY, authHandler(iTokenService), validate(GetRevenueTrendByMonthSchema, 'query'), iAdminAnalyticsController.getTestActivity)
 
 export default router;               

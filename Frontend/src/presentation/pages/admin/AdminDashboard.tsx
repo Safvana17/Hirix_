@@ -1,20 +1,24 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { adminSidebarItems } from '../../../constants/sidebarItems'
 import InternalLayout from '../../layouts/InternalLayout'
-import { Box, Grid } from '@mui/material'
+import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select } from '@mui/material'
 import SummeryCard from '../../components/layout/SummeryCard'
 import { BookCheck, Building2Icon, DollarSign, FileQuestionIcon, User2 } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAdminDashboardSummary } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
+import { getAdminDashboardSummary, getTestActivty } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
 import type { AppDispatch, RootState } from '../../../redux/store'
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 
 const AdminDashboard: React.FC= () => {
+  const [month, setMonth] = useState(6)
   const dispatch = useDispatch<AppDispatch>()
-  const { adminSummery } = useSelector((state: RootState) => state.adminAnalytics)
+  const { adminSummery, testActivityTrend } = useSelector((state: RootState) => state.adminAnalytics)
+
   useEffect(() => {
       dispatch(getAdminDashboardSummary())
-  }, [dispatch])
+      dispatch(getTestActivty({month}))
+  }, [dispatch, month])
 
   return (
      <InternalLayout title="Dashboard" subTitle='Overview of your platform performance' sidebarItems={adminSidebarItems}>
@@ -36,7 +40,7 @@ const AdminDashboard: React.FC= () => {
                    <SummeryCard label='Total Revenue' value={adminSummery?.totalRevenue ?? 0} icon={DollarSign} color='black' bg='white'/>
                 </Grid>
             </Grid>
-            {/* <Grid container spacing={3} sx={{ mt: 2}}>
+            <Grid container spacing={3} sx={{ mt: 2}}>
                <Grid size={{ xs: 12, md: 6}}>
                   <Paper sx={{ p: 2 }}>
                      <Box
@@ -60,21 +64,31 @@ const AdminDashboard: React.FC= () => {
                         </FormControl>
                      </Box>
                      <ResponsiveContainer width="100%" height={350}>
-                        <LineChart data={monthlyRevenueTrend}>
+                        <LineChart data={testActivityTrend}>
                            <CartesianGrid strokeDasharray="3 3" />
                            <XAxis dataKey="month" />
                            <YAxis />
                            <Tooltip />
                            <Line 
                               type="monotone"
-                              dataKey="revenue"
+                              dataKey="attendedCandidates"
+                              stroke='#5b3c06'                     
+                           />
+                           <Line 
+                              type="monotone"
+                              dataKey="notAttendedCandidates"
+                              stroke='#5b3c06'                     
+                           />
+                           <Line 
+                              type="monotone"
+                              dataKey="testCount"
                               stroke='#5b3c06'                     
                            />
                         </LineChart>
                      </ResponsiveContainer>
                   </Paper>
                </Grid>
-               <Grid size={{ xs: 12, md: 6}}>
+               {/* <Grid size={{ xs: 12, md: 6}}>
                   <Paper sx={{ p: 2 }}>
                      <Box
                         display="flex"
@@ -111,7 +125,7 @@ const AdminDashboard: React.FC= () => {
                      </ResponsiveContainer>
                   </Paper>
                </Grid> */}
-            {/* </Grid> */}
+            </Grid>
         </Box>
      </InternalLayout>
   )
