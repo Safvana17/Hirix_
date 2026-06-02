@@ -1,20 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { RevenueSummary, RevenueTrendMonth } from "../../../../types/analytics"
+import type { RevenueSummary, RevenueTrendMonth, RevenueTrendPlan } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
+import type { TargetType } from "../../../../types/subscription"
 
 interface AdminAnalyticsState {
     loading: boolean
     error: string | null
     revenueSummary: RevenueSummary | null
     monthlyRevenueTrend: RevenueTrendMonth[]
+    planRevenueTrend: RevenueTrendPlan[]
 }
 
 const initialState: AdminAnalyticsState = {
     loading: false,
     revenueSummary: null,
     monthlyRevenueTrend: [],
+    planRevenueTrend: [],
     error: null
 }
 
@@ -46,11 +49,29 @@ RevenueTrendMonth[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('response: ', response.data.data)
+        // console.log('response: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get revenue trend by month')
+    }
+})
+
+export const getRevenueTrendByPlan = createAsyncThunk<
+RevenueTrendPlan[],
+{type: TargetType | undefined},
+{rejectValue: string}
+>('revenue/trendPlan', async ({type}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.ADMIN.ANALYTICS.REVENUE_TREND_BY_PLAN, {params: {type}})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        console.log('response: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get revenue trend by plan')
     }
 })
 
@@ -81,6 +102,17 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getRevenueTrendByMonth.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get revenue trend by month'
+         })
+         .addCase(getRevenueTrendByPlan.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getRevenueTrendByPlan.fulfilled, (state, action) => {
+            state.loading = false
+            state.planRevenueTrend = action.payload
+         })
+         .addCase(getRevenueTrendByPlan.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get revenue trend by plan'
          })
     }
 })

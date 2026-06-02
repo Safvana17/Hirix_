@@ -1,3 +1,5 @@
+import type { TargetType } from "./subscription"
+
 export interface RevenueSummary {
     totalRevenue: number
     monthlyRevenue: number
@@ -7,5 +9,11 @@ export interface RevenueSummary {
 
 export interface RevenueTrendMonth {
     month: string
+    revenue: number
+}
+
+export interface RevenueTrendPlan {
+    plan: string
+    type: TargetType
     revenue: number
 }

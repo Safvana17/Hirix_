@@ -5,6 +5,8 @@ import { PaymentStatus } from "../../Domain/enums/payment";
 import { IPaymentRepository } from "../../Domain/repositoryInterface/iPayment.repository";
 import { IPayment, PaymentModel } from "../database/Model/Payment";
 import { BaseRepository } from "./base.repository";
+import { TargetType } from "../../Domain/enums/subscription";
+import { logger } from "../../utils/logging/loger";
 
 export class PaymentRepository extends BaseRepository<PaymentEntity, IPayment> implements IPaymentRepository {
     constructor(){
@@ -127,6 +129,52 @@ export class PaymentRepository extends BaseRepository<PaymentEntity, IPayment> i
                 }
             }
         ])
+    }
+
+    async getRevenueTrendByPlan(type?: TargetType): Promise<{ plan: string; type: TargetType; revenue: number; }[]> {
+        const filter: QueryFilter<IPayment> = {
+            status: PaymentStatus.SUCCESS
+        }
+        if(type){
+            filter.ownerType = type
+        } 
+
+        const trend = await this._model.aggregate([
+            {
+                $match: filter
+            },
+            {
+                $group: {
+                    _id: {
+                        plan: "$planId",
+                        type: "$ownerType"
+                    },
+                    revenue: { $sum: "$amount"}
+                }
+            },
+            {
+                $lookup: {
+                    from: 'subscriptionplans',
+                    foreignField: "_id",
+                    localField: "_id.plan",
+                    as: 'Plan'
+                }
+            }, 
+            {
+                $unwind: "$Plan"
+            },
+            {
+                $project: {
+                    _id: 0,
+                    plan: "$Plan.planName",
+                    type: "$_id.type",
+                    revenue: 1
+                }
+            }
+        ])
+
+        logger.info({result: trend}, 'from repo')
+        return trend
     }
     protected mapToEntity(doc: IPayment): PaymentEntity {
         return PaymentMapper.toEntity(doc)

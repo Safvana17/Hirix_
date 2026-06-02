@@ -1,25 +1,33 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import InternalLayout from '../../layouts/InternalLayout'
 import { adminSidebarItems } from '../../../constants/sidebarItems'
 import SummeryCard from '../../components/layout/SummeryCard'
 import { IndianRupee, TrendingUp, User, Wallet } from 'lucide-react'
-import { Box, Grid } from '@mui/material'
+import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { getRevenueSummary, getRevenueTrendByMonth } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { getRevenueSummary, getRevenueTrendByMonth, getRevenueTrendByPlan } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
+import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import type { TargetType } from '../../../types/subscription'
 
 
 const AdminRevenue: React.FC = () => {
+    const [type, setType] = useState<TargetType | null>(null)
+    const [month, setMonth] = useState(6)
     const dispatch = useDispatch<AppDispatch>()
-    const { revenueSummary, monthlyRevenueTrend } = useSelector((state: RootState) => state.adminAnalytics)
+    const { revenueSummary, monthlyRevenueTrend, planRevenueTrend } = useSelector((state: RootState) => state.adminAnalytics)
 
 
     useEffect(() => {
         dispatch(getRevenueSummary())
-        dispatch(getRevenueTrendByMonth({month: 6}))
-    }, [dispatch])
+        dispatch(getRevenueTrendByMonth({month}))
+        dispatch(getRevenueTrendByPlan({type: type || undefined}))
+    }, [dispatch, type, month])
 
+    const barChartData = planRevenueTrend.map((data) => ({
+      ...data,
+      label: `${data.plan} (${data.type})`
+    }))
   return (
     <InternalLayout title='Revenue' subTitle='Overview of your platform performance' sidebarItems={adminSidebarItems}>
         <Box>
@@ -37,24 +45,82 @@ const AdminRevenue: React.FC = () => {
                    <SummeryCard label='Avg Revenue Per User' value={revenueSummary?.averageRevenuePerUser ?? 0} icon={Wallet} color='black' bg='white'/>
                 </Grid>
             </Grid>
-            <Box>
-               <ResponsiveContainer width="100%" height={350}>
-                  <LineChart data={monthlyRevenueTrend}>
-                     <CartesianGrid strokeDasharray="3 3" />
-                     <XAxis dataKey="month" />
-                     <YAxis />
-                     <Tooltip />
-                     <Line 
-                        type="monotone"
-                        dataKey="revenue"
-                        stroke='#5b3c06'                     
-                     />
-                  </LineChart>
-               </ResponsiveContainer>
-            </Box>
-            <Box>
-                
-            </Box>
+            <Grid container spacing={3} sx={{ mt: 2}}>
+               <Grid size={{ xs: 12, md: 6}}>
+                  <Paper sx={{ p: 2 }}>
+                     <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mb={2}
+                     >
+                        <h3>Revenue Trend</h3>
+                        <FormControl size="small" sx={{ minWidth: 120 }}>
+                           <InputLabel>Period</InputLabel>
+                           <Select
+                              value={month}
+                              label="Period"
+                              onChange={(e) => setMonth(Number(e.target.value))}
+                           >
+                              <MenuItem value={3}>3 Months</MenuItem>
+                              <MenuItem value={6}>6 Months</MenuItem>
+                              <MenuItem value={12}>12 Months</MenuItem>
+                           </Select>
+                        </FormControl>
+                     </Box>
+                     <ResponsiveContainer width="100%" height={350}>
+                        <LineChart data={monthlyRevenueTrend}>
+                           <CartesianGrid strokeDasharray="3 3" />
+                           <XAxis dataKey="month" />
+                           <YAxis />
+                           <Tooltip />
+                           <Line 
+                              type="monotone"
+                              dataKey="revenue"
+                              stroke='#5b3c06'                     
+                           />
+                        </LineChart>
+                     </ResponsiveContainer>
+                  </Paper>
+               </Grid>
+               <Grid size={{ xs: 12, md: 6}}>
+                  <Paper sx={{ p: 2 }}>
+                     <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mb={2}
+                     >
+                        <h3>Revenue by Plan</h3>
+                        <FormControl size="small" sx={{ minWidth: 120 }}>
+                           <InputLabel>Type</InputLabel>
+                           <Select
+                              value={type}
+                              label="Period"
+                              onChange={(e) => setType(e.target.value as TargetType)}
+                           >
+                              <MenuItem value=''>All</MenuItem>
+                              <MenuItem value='candidate'>Candidate</MenuItem>
+                              <MenuItem value='company'>Company</MenuItem>
+                           </Select>
+                        </FormControl>
+                     </Box>
+                     <ResponsiveContainer width="100%" height={350}>
+                        <BarChart data={barChartData}>
+                           <CartesianGrid strokeDasharray="2 2" />
+                           <XAxis dataKey="label" />
+                           <YAxis />
+                           <Tooltip />
+                           <Bar 
+                              dataKey="revenue"
+                              fill='#5b3c06'  
+                              radius={[3, 3, 0, 0]}                   
+                           />
+                        </BarChart>
+                     </ResponsiveContainer>
+                  </Paper>
+               </Grid>
+            </Grid>
         </Box>
     </InternalLayout>
   )

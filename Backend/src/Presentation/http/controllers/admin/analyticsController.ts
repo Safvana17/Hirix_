@@ -4,12 +4,15 @@ import { asyncHandler } from "../../../../utils/asyncHandler";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IAdminGetRevenueTrendByMonthUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.getRevenueTrendByMonth.usecase";
-import { RevenueTrendByMonthQuery } from "../../validators/analyticsValidator";
+import { RevenueTrendByMonthQuery, RevenueTrendByPlanQuery } from "../../validators/analyticsValidator";
+import { IAdminGetRevenueTrendByPlanUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.getRevenueTrendByPlan.usecase";
+import { logger } from "../../../../utils/logging/loger";
 
 export class AdminAnalyticsController {
     constructor (
         private _getRevenueSummery: IAdminRevenueSummeryUsecase,
         private _getRevenueTrendByMonth: IAdminGetRevenueTrendByMonthUsecase,
+        private _getRevenueTrendByPlan: IAdminGetRevenueTrendByPlanUsecase,
     ) {}
 
     getRevenueSummery = asyncHandler(async(req: Request, res: Response) => {
@@ -20,6 +23,13 @@ export class AdminAnalyticsController {
     getReveneueTrendByMonth = asyncHandler(async(req: Request, res: Response) => {
         const { month } = req.validatedQuery as RevenueTrendByMonthQuery
         const trend = await this._getRevenueTrendByMonth.execute({month})
+        return sendSuccess(res, statusCode.OK, '', trend.trend)
+    })
+
+    getReveneueTrendByPlan = asyncHandler(async(req: Request, res: Response) => {
+        const { type } = req.validatedQuery as RevenueTrendByPlanQuery
+        const trend = await this._getRevenueTrendByPlan.execute({type})
+        logger.info({trend: trend}, 'from controller')
         return sendSuccess(res, statusCode.OK, '', trend.trend)
     })
 }

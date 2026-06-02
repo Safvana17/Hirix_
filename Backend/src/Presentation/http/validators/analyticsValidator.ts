@@ -1,7 +1,13 @@
 import z from "zod";
 import { RevenuePeriod } from "../../../Domain/enums/analytics";
+import { TargetType } from "../../../Domain/enums/subscription";
 
-export const GetRevenueTRendByMonthSchema = z.object({
+export const GetRevenueTrendByMonthSchema = z.object({
     month: z.coerce.number().pipe(z.nativeEnum(RevenuePeriod))
 })
-export type RevenueTrendByMonthQuery = z.infer<typeof GetRevenueTRendByMonthSchema>
+export type RevenueTrendByMonthQuery = z.infer<typeof GetRevenueTrendByMonthSchema>
+
+export const GetRevenueTrendByPlanSchema = z.object({
+    type: z.nativeEnum(TargetType).optional()
+})
+export type RevenueTrendByPlanQuery = z.infer<typeof GetRevenueTrendByPlanSchema>
