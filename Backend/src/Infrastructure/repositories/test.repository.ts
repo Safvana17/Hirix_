@@ -148,6 +148,11 @@ export class TestRepository extends BaseRepository<TestEntity, ITest> implements
             }
         ])
     }
+
+    async getTotalTestByCompany(companyId: string): Promise<number> {
+        return this._model.countDocuments({companyId, testStatus: { $nin: [TestStatus.CANCELLED, TestStatus.DELETED]}})
+    }
+    
     protected mapToEntity(doc: ITest): TestEntity {
         return TestMapper.toEntity(doc)
     }

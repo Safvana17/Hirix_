@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummery } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -10,6 +10,7 @@ interface AdminAnalyticsState {
     error: string | null
     revenueSummary: RevenueSummary | null
     adminSummery: AdminSummary | null
+    companySummery: CompanySummery | null
     monthlyRevenueTrend: RevenueTrendMonth[]
     testActivityTrend: TestActivityTrend[]
     planRevenueTrend: RevenueTrendPlan[]
@@ -27,6 +28,7 @@ const initialState: AdminAnalyticsState = {
     loading: false,
     revenueSummary: null,
     adminSummery: null,
+    companySummery: null,
     monthlyRevenueTrend: [],
     testActivityTrend: [],
     planRevenueTrend: [],
@@ -166,6 +168,24 @@ SubscriptionDistribution[],
         return rejectWithValue(err.response?.data.message || 'Failed to get subscription distribution')
     }
 })
+
+export const getCompanyDashboardSummary = createAsyncThunk<
+CompanySummery,
+void,
+{rejectValue: string}
+>('company/dashboardSummery', async (_, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.ANALYTICS.DASHBOARD_SUMMERY)
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        console.log('company: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get dashboard summery')
+    }
+})
 const adminAnalyticsSlice = createSlice({
     name: 'adminAnalytics',
     initialState,
@@ -250,6 +270,17 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getSubscriptionDistribution.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get subscription distribution'
+         })
+         .addCase(getCompanyDashboardSummary.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getCompanyDashboardSummary.fulfilled, (state, action) => {
+            state.loading = false
+            state.companySummery= action.payload
+         })
+         .addCase(getCompanyDashboardSummary.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get dashboard summery'
          })
     }
 })

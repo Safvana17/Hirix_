@@ -75,6 +75,12 @@ export const ROUTES = {
         BY_ID: '/interview/:interviewId',
         UPDATE_RESULT: '/interview/:interviewId/result',
         SEND_OFFER: '/interview/:interviewId/offer',
+      },
+      ANALYTICS: {
+        DASHBOARD_SUMMERY: '/dashboard-summery',
+        RECENT_ACTIVITIES: '/recent-activity',
+        TEST_TREND: '/test-trend',
+        PASS_RATIO: '/pass-ratio',
       }
     },
 

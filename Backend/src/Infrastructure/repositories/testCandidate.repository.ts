@@ -1,7 +1,8 @@
 import { TestCandidateMapper } from "../../Application/Mappers/mapper.testCandidate";
 import { TestCandidateEntity } from "../../Domain/entities/TestCandidate.entity";
-import { CandidateTestStatus } from "../../Domain/enums/Test";
+import { CandidatePipelineStatus, CandidateTestStatus } from "../../Domain/enums/Test";
 import { ITestCandidateRepository } from "../../Domain/repositoryInterface/iTestCandidate.repository";
+import { logger } from "../../utils/logging/loger";
 import { ITestCandidate, TestCandidateModel } from "../database/Model/TestCandidate";
 import { BaseRepository } from "./base.repository";
 
@@ -82,6 +83,36 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
                 }
             }
         ])
+    }
+
+    async getHiredCandidatesByCompany(companyId: string): Promise<number> {
+        const totalHiredCandidates = await this._model.aggregate([
+            {
+                $lookup: {
+                    from: 'tests',
+                    localField: 'testId',
+                    foreignField: '_id',
+                    as: 'test'
+                }
+            },
+            {
+                $unwind: '$test'
+            },
+            {
+                $match: {
+                    'test.companyId': companyId,
+                    selectionStatus: CandidatePipelineStatus.OFFER_SENT
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    count: { $sum: 1}
+                }
+            }
+        ])
+        logger.info(totalHiredCandidates, 'from repo')
+        return totalHiredCandidates[0]?.count ?? 0
     }
 
     protected mapToEntity(doc: ITestCandidate): TestCandidateEntity {

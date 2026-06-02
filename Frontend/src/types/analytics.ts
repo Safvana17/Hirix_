@@ -57,3 +57,10 @@ export interface SubscriptionDistribution {
     type: TargetType
     count: number
 }
+
+export interface CompanySummery {
+    totalTests: number
+    totalInterviews: number
+    hiredCandidates: number
+    currentPlan: string
+}

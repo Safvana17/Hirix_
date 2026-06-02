@@ -1,7 +1,7 @@
 import  Express  from "express";
 import { ROUTES } from "../../../../Shared/constsnts/routes";
 import { authHandler } from "../../middlewares/authMiddleware";
-import { ICompanyInterviewController, iCompanyQuestionController, iCompanySettingsController, iCompanySubscriptionController, iCompanyTestController, iJobRoleController, iTokenService, iUnifiedSettingsController } from "../../controllers/factory";
+import { iCompanyAnalyticsController, ICompanyInterviewController, iCompanyQuestionController, iCompanySettingsController, iCompanySubscriptionController, iCompanyTestController, iJobRoleController, iTokenService, iUnifiedSettingsController } from "../../controllers/factory";
 import { verifyCsrf } from "../../middlewares/csrfVerify";
 import { imageUpload } from "../../middlewares/profilePicUpload";
 import { validate } from "../../middlewares/validate";
@@ -86,5 +86,8 @@ router.put(ROUTES.COMPANY.INTERVIEW.EDIT, authHandler(iTokenService), verifyCsrf
 router.patch(ROUTES.COMPANY.INTERVIEW.UPDATE_RESULT, authHandler(iTokenService), verifyCsrf, validate(InterviewParamsSchema, 'params'), validate(UpdateInterviewResultSchema, 'body'), ICompanyInterviewController.updateInterviewResult)
 router.patch(ROUTES.COMPANY.INTERVIEW.SEND_OFFER, authHandler(iTokenService), validate(InterviewParamsSchema, 'params'), ICompanyInterviewController.sendOffer)
 
+
+//dashboard
+router.get(ROUTES.COMPANY.ANALYTICS.DASHBOARD_SUMMERY, authHandler(iTokenService), iCompanyAnalyticsController.dashboardSummery)
 
 export default router;

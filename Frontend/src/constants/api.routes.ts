@@ -113,6 +113,12 @@ export const API_ROUTES = {
         `/company/interview/${interviewId}/result`,
       SEND_OFFER_LETTER: (interviewId: string) => 
         `/company/interview/${interviewId}/offer`
+    },
+    ANALYTICS: {
+      DASHBOARD_SUMMERY: '/company/dashboard-summery',
+      RECENT_ACTIVITIES: '/company/recent-activity',
+      TEST_TREND: '/company/test-trend',
+      PASS_RATIO: '/company/pass-ratio',
     }
   },
 

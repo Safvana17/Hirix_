@@ -64,6 +64,10 @@ export class InterviewRepository extends BaseRepository<InterviewEntity, IInterv
         if(!document) return null
         return this.mapToEntity(document)
     }
+
+    async getTotalInterviewsByCompany(companyId: string): Promise<number> {
+        return this._model.countDocuments({companyId, interviewStatus: { $ne: InterviewStatus.CANCELLED}})
+    }
     
     protected mapToEntity(doc: IInterview): InterviewEntity {
         return InterviewMapper.mapToEntity(doc)

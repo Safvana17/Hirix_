@@ -204,6 +204,8 @@ import { AdminGetPaymentHistoryUsecase } from "../../../Application/admin/usecas
 import { AdminGetDashboardSummeryUsecase } from "../../../Application/admin/usecases/analytics/admin.getDashboardSummery.usecase";
 import { AdminGetTestActivityUsecase } from "../../../Application/admin/usecases/analytics/admin.testActivity.usecase";
 import { AdminGetSubscriptionDistributionUsecase } from "../../../Application/admin/usecases/analytics/admin.subscriptionDistribution.usecase";
+import { CompanyGetDashboardSummeryUsecase } from "../../../Application/company/usecases/analytics/company.getDashboardSummery.usecase";
+import { CompanyAnalyticsController } from "./company/companyAnalyticsController";
 
 
 
@@ -1010,6 +1012,14 @@ export const iAdminGetTestActivity = new AdminGetTestActivityUsecase (
 export const iAdminSubscriptionDistribution = new AdminGetSubscriptionDistributionUsecase(
     iSubscriptionRepository
 )
+export const iCompanyGetDashboardSummery = new CompanyGetDashboardSummeryUsecase (
+    iCompanyRepository,
+    iTestRepository,
+    iInterviewRepository,
+    iTestCandidateRepository,
+    iSubscriptionRepository,
+    iSubscriptionPlanRepository
+)
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,
@@ -1207,4 +1217,8 @@ export const iAdminAnalyticsController = new AdminAnalyticsController (
     iAdminGetdashboardSummery,
     iAdminGetTestActivity,
     iAdminSubscriptionDistribution
+)
+
+export const iCompanyAnalyticsController = new CompanyAnalyticsController(
+    iCompanyGetDashboardSummery,
 )

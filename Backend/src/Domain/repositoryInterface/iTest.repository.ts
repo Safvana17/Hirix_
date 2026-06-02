@@ -23,4 +23,5 @@ export interface ITestRepository extends IBaseRepository<TestEntity>{
     CountTestInMonth(companyId: string, startOfMonth: Date, endOfMonth: Date): Promise<number>
     getTotalTests(): Promise<number>
     getTestActivity(startDate: Date): Promise<{month: string; testTrend: number}[]>
+    getTotalTestByCompany(companyId: string): Promise<number>
 }
