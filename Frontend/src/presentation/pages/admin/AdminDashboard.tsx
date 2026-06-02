@@ -5,21 +5,28 @@ import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select } from '@mu
 import SummeryCard from '../../components/layout/SummeryCard'
 import { BookCheck, Building2Icon, DollarSign, FileQuestionIcon, User2 } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAdminDashboardSummary, getTestActivty } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
+import { getAdminDashboardSummary, getSubscriptionDistribution, getTestActivty } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import type { TargetType } from '../../../types/subscription'
 
 
 const AdminDashboard: React.FC= () => {
   const [month, setMonth] = useState(6)
+  const [target, setTarget] = useState<TargetType|null>(null)
   const dispatch = useDispatch<AppDispatch>()
-  const { adminSummery, testActivityTrend } = useSelector((state: RootState) => state.adminAnalytics)
+  const { adminSummery, testActivityTrend, subscriptionDistribution } = useSelector((state: RootState) => state.adminAnalytics)
 
   useEffect(() => {
       dispatch(getAdminDashboardSummary())
       dispatch(getTestActivty({month}))
-  }, [dispatch, month])
+      dispatch(getSubscriptionDistribution({type: target || undefined}))
+  }, [dispatch, month, target])
 
+    const barChartData = subscriptionDistribution.map((data) => ({
+      ...data,
+      label: `${data.plan} (${data.type})`
+    }))
   return (
      <InternalLayout title="Dashboard" subTitle='Overview of your platform performance' sidebarItems={adminSidebarItems}>
         <Box>
@@ -88,7 +95,7 @@ const AdminDashboard: React.FC= () => {
                      </ResponsiveContainer>
                   </Paper>
                </Grid>
-               {/* <Grid size={{ xs: 12, md: 6}}>
+               <Grid size={{ xs: 12, md: 6}}>
                   <Paper sx={{ p: 2 }}>
                      <Box
                         display="flex"
@@ -100,9 +107,9 @@ const AdminDashboard: React.FC= () => {
                         <FormControl size="small" sx={{ minWidth: 120 }}>
                            <InputLabel>Type</InputLabel>
                            <Select
-                              value={type}
+                              value={target}
                               label="Period"
-                              onChange={(e) => setType(e.target.value as TargetType)}
+                              onChange={(e) => setTarget(e.target.value as TargetType)}
                            >
                               <MenuItem value=''>All</MenuItem>
                               <MenuItem value='candidate'>Candidate</MenuItem>
@@ -116,15 +123,15 @@ const AdminDashboard: React.FC= () => {
                            <XAxis dataKey="label" />
                            <YAxis />
                            <Tooltip />
-                           <Bar 
-                              dataKey="revenue"
+                           <Bar
+                              dataKey="count"
                               fill='#5b3c06'  
                               radius={[3, 3, 0, 0]}                   
                            />
                         </BarChart>
                      </ResponsiveContainer>
                   </Paper>
-               </Grid> */}
+               </Grid>
             </Grid>
         </Box>
      </InternalLayout>

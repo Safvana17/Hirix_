@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -13,6 +13,7 @@ interface AdminAnalyticsState {
     monthlyRevenueTrend: RevenueTrendMonth[]
     testActivityTrend: TestActivityTrend[]
     planRevenueTrend: RevenueTrendPlan[]
+    subscriptionDistribution: SubscriptionDistribution[]
     paymentHistory: PaymentHistory[]
     pagination: {
         payment: {
@@ -29,6 +30,7 @@ const initialState: AdminAnalyticsState = {
     monthlyRevenueTrend: [],
     testActivityTrend: [],
     planRevenueTrend: [],
+    subscriptionDistribution: [],
     paymentHistory: [],
     pagination: {
         payment: {
@@ -103,7 +105,7 @@ PaymentHistoryResponse,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('response: ', response.data.data)
+        // console.log('response: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -139,7 +141,7 @@ TestActivityTrend[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('test: ', response.data.data)
+        // console.log('test: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -147,6 +149,23 @@ TestActivityTrend[],
     }
 })
 
+export const getSubscriptionDistribution = createAsyncThunk<
+SubscriptionDistribution[],
+{type: TargetType | undefined},
+{rejectValue: string}
+>('admin/subscriptionDistribution', async ({type}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.ADMIN.ANALYTICS.SUBSCRIPTION_DISTRIBUTION, {params: {type}})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        console.log('response distribution: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get subscription distribution')
+    }
+})
 const adminAnalyticsSlice = createSlice({
     name: 'adminAnalytics',
     initialState,
@@ -220,6 +239,17 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getTestActivty.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get test activity'
+         })
+         .addCase(getSubscriptionDistribution.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getSubscriptionDistribution.fulfilled, (state, action) => {
+            state.loading = false
+            state.subscriptionDistribution = action.payload
+         })
+         .addCase(getSubscriptionDistribution.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get subscription distribution'
          })
     }
 })

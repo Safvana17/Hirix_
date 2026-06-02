@@ -1,4 +1,5 @@
 import { SubscriptionEntity } from "../entities/Subscription.entity";
+import { TargetType } from "../enums/subscription";
 import { IBaseRepository } from "./iBase.repository";
 
 export interface ISubscriptionRepository extends IBaseRepository<SubscriptionEntity> {
@@ -9,4 +10,5 @@ export interface ISubscriptionRepository extends IBaseRepository<SubscriptionEnt
      findTrialEndSoon(expiringDate: Date): Promise<SubscriptionEntity[] | null>
      getActiveSubscribers(): Promise<number>
      getTotalSubscribers(): Promise<number>
+     getSubscriptionDistribution(type?: TargetType): Promise<{plan: string; type: TargetType; count: number}[]>
 }

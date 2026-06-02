@@ -10,6 +10,7 @@ import { logger } from "../../../../utils/logging/loger";
 import { IAdminGetPaymentHistoryUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.getPaymentHistory.usecse";
 import { IAdminGetDashboardSummeryUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.dashboardSummery.usecase";
 import { IAdminGetTestActivityUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.testActivity.usecase";
+import { IAdminSubscriptionDistributionUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.subscriptionDistribution.usecase";
 
 export class AdminAnalyticsController {
     constructor (
@@ -19,6 +20,7 @@ export class AdminAnalyticsController {
         private _getPaymentHistory: IAdminGetPaymentHistoryUsecase,
         private _getAdminDashboardSummery: IAdminGetDashboardSummeryUsecase,
         private _testActivity: IAdminGetTestActivityUsecase,
+        private _subscriptionDistribution: IAdminSubscriptionDistributionUsecase,
     ) {}
 
     getRevenueSummery = asyncHandler(async(req: Request, res: Response) => {
@@ -53,5 +55,11 @@ export class AdminAnalyticsController {
         const { month } = req.validatedQuery as RevenueTrendByMonthQuery
         const activity = await this._testActivity.execute({month})
         return sendSuccess(res, statusCode.OK, '', activity.activity)
+    })
+
+    getSubscriptionDistribution = asyncHandler(async(req: Request, res: Response) => {
+        const { type } = req.validatedQuery as RevenueTrendByPlanQuery
+        const distribution = await this._subscriptionDistribution.execute({type})
+        return sendSuccess(res, statusCode.OK, '', distribution.distribution)
     })
 }

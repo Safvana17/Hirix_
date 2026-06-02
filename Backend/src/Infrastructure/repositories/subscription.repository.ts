@@ -1,6 +1,7 @@
+import { QueryFilter } from "mongoose";
 import { SubscriptionMapper } from "../../Application/Mappers/mapper.subscription";
 import { SubscriptionEntity } from "../../Domain/entities/Subscription.entity";
-import { subscriptionStatus } from "../../Domain/enums/subscription";
+import { subscriptionStatus, TargetType } from "../../Domain/enums/subscription";
 import { ISubscriptionRepository } from "../../Domain/repositoryInterface/iSubscription.repository";
 import { logger } from "../../utils/logging/loger";
 import { ISubscription, SubscriptionModel } from "../database/Model/Subscription";
@@ -78,6 +79,48 @@ export class SubscriptionRepository extends BaseRepository<SubscriptionEntity, I
 
     async getTotalSubscribers(): Promise<number> {
         return await this._model.countDocuments()
+    }
+
+    async getSubscriptionDistribution(type?: TargetType): Promise<{ plan: string; type: TargetType; count: number; }[]> {
+        const filter: QueryFilter<ISubscription> = {
+            status: { $ne: subscriptionStatus.PENDING}
+        }
+        if(type){
+            filter.ownerType = type
+        }
+        return this._model.aggregate([
+            {
+                $match: filter
+            }, 
+            {
+                $group: {
+                    _id: {
+                        plan: "$planId",
+                        type: "$ownerType"
+                    },
+                    count: { $sum: 1}
+                }
+            },
+            {
+                $lookup: {
+                    from: "subscriptionplans",
+                    localField: "_id.plan",
+                    foreignField: "_id",
+                    as: 'plan'
+                }
+            },
+            {
+                $unwind: "$plan"
+            },
+            {
+                $project: {
+                    _id: 0,
+                    plan: "$plan.planName",
+                    type: "$_id.type",
+                    count: 1
+                }
+            }
+        ])
     }
 
     protected mapToEntity(doc: ISubscription): SubscriptionEntity {

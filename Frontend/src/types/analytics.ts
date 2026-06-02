@@ -52,3 +52,8 @@ export interface TestActivityTrend {
     notAttendedCandidates: number
     attendedCandidates: number
 }
+export interface SubscriptionDistribution {
+    plan: string
+    type: TargetType
+    count: number
+}
