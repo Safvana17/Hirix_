@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse, RevenueSummary, RevenueTrendMonth, RevenueTrendPlan } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -9,6 +9,7 @@ interface AdminAnalyticsState {
     loading: boolean
     error: string | null
     revenueSummary: RevenueSummary | null
+    adminSummery: AdminSummary | null
     monthlyRevenueTrend: RevenueTrendMonth[]
     planRevenueTrend: RevenueTrendPlan[]
     paymentHistory: PaymentHistory[]
@@ -23,6 +24,7 @@ interface AdminAnalyticsState {
 const initialState: AdminAnalyticsState = {
     loading: false,
     revenueSummary: null,
+    adminSummery: null,
     monthlyRevenueTrend: [],
     planRevenueTrend: [],
     paymentHistory: [],
@@ -52,6 +54,8 @@ void,
         return rejectWithValue(err.response?.data.message || 'Failed to get revenue summery')
     }
 })
+
+
 
 export const getRevenueTrendByMonth = createAsyncThunk<
 RevenueTrendMonth[],
@@ -107,6 +111,25 @@ PaymentHistoryResponse,
     }
 })
 
+export const getAdminDashboardSummary = createAsyncThunk<
+AdminSummary,
+void,
+{rejectValue: string}
+>('admin/dashboardSummery', async (_, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.ADMIN.ANALYTICS.ADMIN_DASHBOARD_SUMMERY)
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get admin dashboard summery')
+    }
+})
+
+
 const adminAnalyticsSlice = createSlice({
     name: 'adminAnalytics',
     initialState,
@@ -158,6 +181,17 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getPaymentHistory.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get payment history'
+         })
+         .addCase(getAdminDashboardSummary.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getAdminDashboardSummary.fulfilled, (state, action) => {
+            state.loading = false
+            state.adminSummery= action.payload
+         })
+         .addCase(getAdminDashboardSummary.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get admin dashboard summery'
          })
     }
 })

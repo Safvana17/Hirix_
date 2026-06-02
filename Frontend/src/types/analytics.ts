@@ -6,6 +6,13 @@ export interface RevenueSummary {
     activeSubscribers: number
     averageRevenuePerUser: number
 }
+export interface AdminSummary {
+    totalRevenue: number
+    totalCompanies: number
+    totalCandidates: number
+    totalTests: number
+    totalQuestions: number
+}
 
 export interface RevenueTrendMonth {
     month: string

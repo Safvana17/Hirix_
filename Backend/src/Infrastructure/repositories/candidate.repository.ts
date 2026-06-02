@@ -77,6 +77,22 @@ export class CandidateRepository extends BaseRepository <CandidateEntity, ICandi
         }
     }
     
+    async getTotalCandidates(): Promise<number> {
+        const totalCandidates = await this._model.aggregate([
+            {
+                $match: {
+                    isBlocked: false
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    count: { $sum: 1}
+                }
+            }
+        ])
+        return totalCandidates[0]?.count ?? 0
+    }
     protected mapToEntity(doc: ICandidate): CandidateEntity {
         return candidateMapper.toEntity(doc)
     }

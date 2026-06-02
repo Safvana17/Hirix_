@@ -88,6 +88,23 @@ export class TestRepository extends BaseRepository<TestEntity, ITest> implements
         })
     }
     
+    async getTotalTests(): Promise<number> {
+        const totalTests = await this._model.aggregate([
+            {
+                $match: {
+                    isDeleted: false,
+                    testStatus: { $ne: TestStatus.CANCELLED}
+                }
+            }, 
+            {
+                $group: {
+                    _id: null,
+                    count: { $sum: 1}
+                }
+            }
+        ])
+        return totalTests[0].count ?? 0
+    }
     protected mapToEntity(doc: ITest): TestEntity {
         return TestMapper.toEntity(doc)
     }

@@ -7,4 +7,5 @@ export default interface ICompanyRepository extends IAuthRepository <CompanyEnti
     updatePassword(id: string, hashedPassword: string): Promise<void>;
     updateGoogleId(email: string, googleId: string): Promise<CompanyEntity | null>
     findAllFiltered(query: {search?: string, status?: string, page: number, limit: number}): Promise<{data: CompanyEntity[], totalPages: number, totalCount: number}>
+    getTotalCompany(): Promise<number>
 }

@@ -116,6 +116,26 @@ export class CompanyRepository extends BaseRepository<CompanyEntity, ICompany> i
     //     return documentCount<= 5
     // }
     
+    async getTotalCompany(): Promise<number> {
+        const totalCount =  await this._model.aggregate([
+            {
+                $match: {
+                    isAdminVerified: true,
+                    isBlocked: false,
+                    isDeleted: false
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    count: { $sum: 1}
+                }
+            }
+        ])
+
+        return totalCount[0]?.count ?? 0
+    }
+    
     protected mapToEntity(doc: ICompany): CompanyEntity {
         return CompanyMapper.toEntity(doc)
     }

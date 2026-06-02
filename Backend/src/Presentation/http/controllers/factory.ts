@@ -201,6 +201,7 @@ import { AdminRevenueSummeryUsecase } from "../../../Application/admin/usecases/
 import { AdminGetRevenueTrendByMonthUsecase } from "../../../Application/admin/usecases/analytics/admin.getREvenueTrendByMonth.usecase";
 import { AdminGetRevenueTrendByPlanUsecase } from "../../../Application/admin/usecases/analytics/admin.getRevenueTrendByPlan.usecase";
 import { AdminGetPaymentHistoryUsecase } from "../../../Application/admin/usecases/analytics/admin.getPaymentHistory.usecase";
+import { AdminGetDashboardSummeryUsecase } from "../../../Application/admin/usecases/analytics/admin.getDashboardSummery.usecase";
 
 
 
@@ -993,6 +994,13 @@ export const iAdminGetRevenueTrendByPlan = new AdminGetRevenueTrendByPlanUsecase
 export const iAdminGetPaymentHistory = new AdminGetPaymentHistoryUsecase (
     iPaymentRepository
 )
+export const iAdminGetdashboardSummery = new AdminGetDashboardSummeryUsecase (
+    iCompanyRepository,
+    iCandidateRepository,
+    iTestRepository,
+    iQuestionRepository,
+    iPaymentRepository
+)
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,
@@ -1187,4 +1195,5 @@ export const iAdminAnalyticsController = new AdminAnalyticsController (
     iAdminGetRevenueTrendByMonth,
     iAdminGetRevenueTrendByPlan,
     iAdminGetPaymentHistory,
+    iAdminGetdashboardSummery,
 )

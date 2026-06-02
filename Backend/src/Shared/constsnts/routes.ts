@@ -188,6 +188,10 @@ export const ROUTES = {
             REVENUE_TREND_BY_MONTH: '/revenue-month',
             REVENUE_TREND_BY_PLAN: '/revenue-plan',
             PAYMENT_HISTORY: '/payment-history',
+            ADMIN_DASHBOARD_SUMMERY: '/dashboard-summery',
+            TEST_ACTIVITY: '/test-activity',
+            SUBSCRIPTION_DISTRIBUTION: '/subscription-distribution',
+            RECENT_ACTIVITY: '/recent-activity',
         }
     }
 }

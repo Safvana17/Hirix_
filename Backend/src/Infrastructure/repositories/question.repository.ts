@@ -156,6 +156,22 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
         return documents.map((q) => this.mapToEntity(q))
     }
     
+    async getTotalQuestions(): Promise<number> {
+        const totalQuestions = await this._model.aggregate([
+            {
+                $match: {
+                    isDeleted: false
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    count: { $sum: 1}
+                }
+            }
+        ])
+        return totalQuestions[0]?.count ?? 0
+    }
     protected mapToEntity(doc: IQuestion): QuestionEntity {
         return QuestionMapper.toEntity(doc)
     }

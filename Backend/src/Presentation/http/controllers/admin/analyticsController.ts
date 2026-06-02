@@ -8,6 +8,7 @@ import { PaymentHistoryQuery, RevenueTrendByMonthQuery, RevenueTrendByPlanQuery 
 import { IAdminGetRevenueTrendByPlanUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.getRevenueTrendByPlan.usecase";
 import { logger } from "../../../../utils/logging/loger";
 import { IAdminGetPaymentHistoryUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.getPaymentHistory.usecse";
+import { IAdminGetDashboardSummeryUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.dashboardSummery.usecase";
 
 export class AdminAnalyticsController {
     constructor (
@@ -15,6 +16,7 @@ export class AdminAnalyticsController {
         private _getRevenueTrendByMonth: IAdminGetRevenueTrendByMonthUsecase,
         private _getRevenueTrendByPlan: IAdminGetRevenueTrendByPlanUsecase,
         private _getPaymentHistory: IAdminGetPaymentHistoryUsecase,
+        private _getAdminDashboardSummery: IAdminGetDashboardSummeryUsecase,
     ) {}
 
     getRevenueSummery = asyncHandler(async(req: Request, res: Response) => {
@@ -39,5 +41,10 @@ export class AdminAnalyticsController {
         const query = req.validatedQuery as PaymentHistoryQuery
         const { history, totalCount, totalPages} = await this._getPaymentHistory.execute({...query})
         return sendSuccess(res, statusCode.OK, '', {history, totalCount, totalPages})
+    })
+
+    adminDashboardSummery = asyncHandler(async(req: Request, res: Response) => {
+        const { totalRevenue, totalCandidates, totalCompanies, totalQuestions, totalTests } = await this._getAdminDashboardSummery.execute()
+        return sendSuccess(res, statusCode.OK, '', {totalCompanies, totalCandidates, totalQuestions, totalTests, totalRevenue})
     })
 }
