@@ -2,11 +2,13 @@ import { QueryFilter } from "mongoose";
 import { PaymentMapper } from "../../Application/Mappers/mapper.payment";
 import { PaymentEntity } from "../../Domain/entities/Payment.entity";
 import { PaymentStatus } from "../../Domain/enums/payment";
-import { IPaymentRepository } from "../../Domain/repositoryInterface/iPayment.repository";
+import { IPaymentRepository,  } from "../../Domain/repositoryInterface/iPayment.repository";
 import { IPayment, PaymentModel } from "../database/Model/Payment";
 import { BaseRepository } from "./base.repository";
 import { TargetType } from "../../Domain/enums/subscription";
 import { logger } from "../../utils/logging/loger";
+import { PaymentHistoryDTO } from "../../Application/admin/dtos/analytics/admin.getPaymentHistory.dto";
+
 
 export class PaymentRepository extends BaseRepository<PaymentEntity, IPayment> implements IPaymentRepository {
     constructor(){
@@ -176,6 +178,91 @@ export class PaymentRepository extends BaseRepository<PaymentEntity, IPayment> i
         logger.info({result: trend}, 'from repo')
         return trend
     }
+
+    async getHistory(query: { page: number; limit: number; }): Promise<{ data: PaymentHistoryDTO[]; totalPages: number; totalCount: number; }> {
+        const skip = query.limit * (query.page - 1)
+        const totalCount = await this._model.countDocuments()
+        const totalPages = Math.ceil(totalCount / query.limit)
+
+        const documents = await this._model.aggregate([
+            {
+                $sort: {
+                    createdAt: -1
+                }
+            },
+            {
+                $lookup: {
+                    from: 'subscriptionplans',
+                    localField: "planId",
+                    foreignField: "_id",
+                    as: 'plan'
+                }
+            },
+            {
+                $unwind: {
+                    path: "$plan",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: 'candidates',
+                    localField: "ownerId",
+                    foreignField: "_id",
+                    as: 'candidate'
+                }
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "ownerId",
+                    foreignField: "_id",
+                    as: "company"
+                }
+            },
+            {
+                $addFields: {
+                    ownerName: {
+                        $cond: [
+                            {$eq: ["$ownerType", "candidate"]},
+                            { $arrayElemAt: ["$candidate.name", 0]},
+                            { $arrayElemAt: ["$company.name", 0]}
+                        ]
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    amount: 1,
+                    ownerType: 1,
+                    paymentDate: 1,
+                    status: 1,
+                    ownerName: 1,
+                    planName: "$plan.planName"
+                }
+            },{
+                $skip: skip
+            },
+            {
+                $limit: query.limit
+            }
+        ])
+        return {
+            data: documents.map(d => ({
+                id: d._id.toString(),
+                name: d.ownerName,
+                plan: d.planName,
+                amount: d.amount,
+                target: d.ownerType,
+                date: d.paymentDate,
+                status: d.status
+            })),
+            totalPages,
+            totalCount
+        }
+    }
+    
     protected mapToEntity(doc: IPayment): PaymentEntity {
         return PaymentMapper.toEntity(doc)
     }

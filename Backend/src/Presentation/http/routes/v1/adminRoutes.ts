@@ -9,7 +9,7 @@ import { addCategorySchema, editCategorySchema } from "../../validators/category
 import { rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
 import { createSubscriptionPlanSchema, updatePlanSchema } from "../../validators/subscriptionPlanValidator";
 import { CreateNotificationRuleSchema, TemplateSchema, UpdateNotificationRuleSchema, UpdatetEmplateStatusSchema, getAllRulesSchema, getAllTemplateQSchema, settingsParamsShema } from "../../validators/adminSettingsValidator";
-import { GetRevenueTrendByMonthSchema, GetRevenueTrendByPlanSchema } from "../../validators/analyticsValidator";
+import { GetPaymentHistorySchema, GetRevenueTrendByMonthSchema, GetRevenueTrendByPlanSchema } from "../../validators/analyticsValidator";
 
 const router = Express.Router()
 
@@ -66,5 +66,5 @@ router.delete(ROUTES.ADMIN.NOTIFICATION_RULE.DELETE, authHandler(iTokenService),
 router.get(ROUTES.ADMIN.ANALYTICS.REVENUE_SUMMERY, authHandler(iTokenService), iAdminAnalyticsController.getRevenueSummery)
 router.get(ROUTES.ADMIN.ANALYTICS.REVENUE_TREND_BY_MONTH, authHandler(iTokenService), validate(GetRevenueTrendByMonthSchema, 'query'), iAdminAnalyticsController.getReveneueTrendByMonth)
 router.get(ROUTES.ADMIN.ANALYTICS.REVENUE_TREND_BY_PLAN, authHandler(iTokenService), validate(GetRevenueTrendByPlanSchema, 'query'), iAdminAnalyticsController.getReveneueTrendByPlan)
-
+router.get(ROUTES.ADMIN.ANALYTICS.PAYMENT_HISTORY, authHandler(iTokenService), validate(GetPaymentHistorySchema, 'query'), iAdminAnalyticsController.getPaymentHistory)
 export default router;               

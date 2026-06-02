@@ -6,28 +6,47 @@ import { IndianRupee, TrendingUp, User, Wallet } from 'lucide-react'
 import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { getRevenueSummary, getRevenueTrendByMonth, getRevenueTrendByPlan } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
+import { getPaymentHistory, getRevenueSummary, getRevenueTrendByMonth, getRevenueTrendByPlan } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { TargetType } from '../../../types/subscription'
+import type { Column } from '../../../types/table'
+import type { PaymentHistory } from '../../../types/analytics'
+import DataTable from '../../components/ui/DataTable'
 
 
 const AdminRevenue: React.FC = () => {
     const [type, setType] = useState<TargetType | null>(null)
     const [month, setMonth] = useState(6)
+    const [page, setPage] = useState(1)
     const dispatch = useDispatch<AppDispatch>()
-    const { revenueSummary, monthlyRevenueTrend, planRevenueTrend } = useSelector((state: RootState) => state.adminAnalytics)
+    const { revenueSummary, loading, monthlyRevenueTrend, planRevenueTrend, paymentHistory, pagination } = useSelector((state: RootState) => state.adminAnalytics)
 
 
     useEffect(() => {
         dispatch(getRevenueSummary())
         dispatch(getRevenueTrendByMonth({month}))
         dispatch(getRevenueTrendByPlan({type: type || undefined}))
-    }, [dispatch, type, month])
+        dispatch(getPaymentHistory({params: {page, limit: 10}}))
+    }, [dispatch, type, month, page])
 
     const barChartData = planRevenueTrend.map((data) => ({
       ...data,
       label: `${data.plan} (${data.type})`
     }))
+
+    const columns: Column<PaymentHistory>[] =  [
+      {header: 'Type', key: 'target', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+      {header: 'Name', key: 'name', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+      {header: 'Plan', key: 'plan', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+      {header: 'Date', key: 'date', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+      {header: 'Amount', key: 'amount', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+      {header: 'Status', key: 'status', render: (val) => (
+         <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${val === 'success' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
+            {val}
+         </span>
+      )},
+    ]
+
   return (
     <InternalLayout title='Revenue' subTitle='Overview of your platform performance' sidebarItems={adminSidebarItems}>
         <Box>
@@ -122,6 +141,19 @@ const AdminRevenue: React.FC = () => {
                </Grid>
             </Grid>
         </Box>
+            <DataTable
+               columns={columns}
+               isLoading={loading}
+               data={paymentHistory}
+               emptyMessage='No payment history available'
+               pagination={{
+                currentPage: page ,
+                totalPages: pagination.payment.totalPages,
+                totalCount: pagination.payment.totalCount,
+                onPageChange: (page) => setPage(page)
+               }}
+            >
+            </DataTable>
     </InternalLayout>
   )
 }

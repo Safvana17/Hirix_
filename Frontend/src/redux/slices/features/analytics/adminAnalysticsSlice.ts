@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { RevenueSummary, RevenueTrendMonth, RevenueTrendPlan } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse, RevenueSummary, RevenueTrendMonth, RevenueTrendPlan } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -11,6 +11,13 @@ interface AdminAnalyticsState {
     revenueSummary: RevenueSummary | null
     monthlyRevenueTrend: RevenueTrendMonth[]
     planRevenueTrend: RevenueTrendPlan[]
+    paymentHistory: PaymentHistory[]
+    pagination: {
+        payment: {
+            totalPages: number
+            totalCount: number
+        }
+    }
 }
 
 const initialState: AdminAnalyticsState = {
@@ -18,6 +25,13 @@ const initialState: AdminAnalyticsState = {
     revenueSummary: null,
     monthlyRevenueTrend: [],
     planRevenueTrend: [],
+    paymentHistory: [],
+    pagination: {
+        payment: {
+            totalCount: 0,
+            totalPages: 0
+        }
+    },
     error: null
 }
 
@@ -67,11 +81,29 @@ RevenueTrendPlan[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('response: ', response.data.data)
+        //console.log('response: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get revenue trend by plan')
+    }
+})
+
+export const getPaymentHistory = createAsyncThunk<
+PaymentHistoryResponse,
+{params: PaymentHistoryArgs},
+{rejectValue: string}
+>('payment/history', async ({params}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.ADMIN.ANALYTICS.PAYMENT_HISTORY, {params})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        console.log('response: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get payment history')
     }
 })
 
@@ -113,6 +145,19 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getRevenueTrendByPlan.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get revenue trend by plan'
+         })
+         .addCase(getPaymentHistory.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getPaymentHistory.fulfilled, (state, action) => {
+            state.loading = false
+            state.paymentHistory = action.payload.history
+            state.pagination.payment.totalCount = action.payload.totalCount
+            state.pagination.payment.totalPages = action.payload.totalPages
+         })
+         .addCase(getPaymentHistory.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get payment history'
          })
     }
 })

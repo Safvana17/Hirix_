@@ -1,4 +1,4 @@
-import type { TargetType } from "./subscription"
+import type { PaymentStatus, TargetType } from "./subscription"
 
 export interface RevenueSummary {
     totalRevenue: number
@@ -16,4 +16,25 @@ export interface RevenueTrendPlan {
     plan: string
     type: TargetType
     revenue: number
+}
+
+export interface PaymentHistory {
+    id: string
+    name: string
+    plan: string
+    target: TargetType
+    amount: number
+    date: string
+    status: PaymentStatus
+}
+
+export interface PaymentHistoryResponse {
+    history: PaymentHistory[]
+    totalCount: number
+    totalPages: number
+}
+
+export interface PaymentHistoryArgs{
+    page: number
+    limit: number
 }

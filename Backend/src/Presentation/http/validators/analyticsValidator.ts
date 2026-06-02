@@ -11,3 +11,9 @@ export const GetRevenueTrendByPlanSchema = z.object({
     type: z.nativeEnum(TargetType).optional()
 })
 export type RevenueTrendByPlanQuery = z.infer<typeof GetRevenueTrendByPlanSchema>
+
+export const GetPaymentHistorySchema = z.object({
+    page: z.coerce.number(),
+    limit: z.coerce.number()
+})
+export type PaymentHistoryQuery = z.infer<typeof GetPaymentHistorySchema>
