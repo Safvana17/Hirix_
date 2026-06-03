@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummary, CandidateStatusDistribution, CandidateSummary } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummary, CandidateStatusDistribution, CandidateSummary, TestHistory, TestHistoryResponse, TestHistoryArgs } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -18,8 +18,13 @@ interface AdminAnalyticsState {
     subscriptionDistribution: SubscriptionDistribution[]
     statusDistribution: CandidateStatusDistribution[]
     paymentHistory: PaymentHistory[]
+    testHistory: TestHistory[]
     pagination: {
         payment: {
+            totalPages: number
+            totalCount: number
+        },
+        test: {
             totalPages: number
             totalCount: number
         }
@@ -38,8 +43,13 @@ const initialState: AdminAnalyticsState = {
     subscriptionDistribution: [],
     paymentHistory: [],
     statusDistribution: [],
+    testHistory: [],
     pagination: {
         payment: {
+            totalCount: 0,
+            totalPages: 0
+        },
+        test: {
             totalCount: 0,
             totalPages: 0
         }
@@ -219,7 +229,7 @@ CandidateStatusDistribution[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('status: ', response.data.data)
+        // console.log('status: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -244,6 +254,26 @@ void,
         return rejectWithValue(err.response?.data.message || 'Failed to get candidate dashboard summery')
     }
 })
+
+export const getTestHistory = createAsyncThunk<
+TestHistoryResponse,
+{params: TestHistoryArgs},
+{rejectValue: string}
+>('test/history', async ({params}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.CANDIDATE.ANALYTICS.TEST_HISTORY, {params})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        console.log('response: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get test history')
+    }
+})
+
+
 const adminAnalyticsSlice = createSlice({
     name: 'adminAnalytics',
     initialState,
@@ -372,6 +402,19 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getCandidateDashboardSummary.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get candidate dashboard summery'
+         })
+         .addCase(getTestHistory.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getTestHistory.fulfilled, (state, action) => {
+            state.loading = false
+            state.testHistory = action.payload.history
+            state.pagination.test.totalCount = action.payload.totalCount
+            state.pagination.test.totalPages = action.payload.totalPages
+         })
+         .addCase(getTestHistory.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get test history'
          })
     }
 })

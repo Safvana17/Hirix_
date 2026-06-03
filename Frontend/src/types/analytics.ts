@@ -79,9 +79,21 @@ export interface CandidateSummary {
 }
 
 export interface TestHistory {
+    id: string
     company: string
     testName: string
     jobRole: string
     status: CandidateSelectionStatus
-    date: Date
+    date: string
+}
+
+export interface TestHistoryResponse {
+    history: TestHistory[]
+    totalCount: number
+    totalPages: number
+}
+
+export interface TestHistoryArgs {
+    page?: number
+    limit?: number
 }

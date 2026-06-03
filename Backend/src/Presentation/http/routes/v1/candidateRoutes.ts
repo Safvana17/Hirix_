@@ -7,6 +7,7 @@ import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchem
 import { validate } from '../../middlewares/validate'
 import { candidateAnswerSchema, CandidateRunCodeSchema, submitTestSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
 import { createQuestionSchema, questionParamsSchema, submitPraticeAnswerSchema } from '../../validators/questionValidator'
+import { GetPaymentHistorySchema } from '../../validators/analyticsValidator'
 
 
 const router = Express.Router()
@@ -46,5 +47,5 @@ router.post(ROUTES.CANDIDATE.TEST.SAVE_ANSWER, validate(TestTokenSchema, 'params
 
 //dashboard
 router.get(ROUTES.CANDIDATE.ANALYTICS.SUMMERY, authHandler(iTokenService), iCandidateAnalyticsController.getSummery)
-
+router.get(ROUTES.CANDIDATE.ANALYTICS.TEST_HISTORY, authHandler(iTokenService), validate(GetPaymentHistorySchema, 'query'), iCandidateAnalyticsController.testHistory)
 export default router

@@ -210,6 +210,7 @@ import { CompanyTestParticipationTRendUsecase } from "../../../Application/compa
 import { CompanyCandidateStatusDistributionUsecase } from "../../../Application/company/usecases/analytics/company.candidateStatusDistribution.usecase";
 import { CandidateDashboardSummeryUsecase } from "../../../Application/candidate/useCases/analytics/candidate.dashboardSummery.usecase";
 import { CandidateAnalyticsController } from "./candidate/candidateAnalyticsController";
+import { CandidateTestHistoryUsecase } from "../../../Application/candidate/useCases/analytics/candidate.testHistory.usecase";
 
 
 
@@ -1038,6 +1039,10 @@ export const iCandidateDashboardSummery = new CandidateDashboardSummeryUsecase (
     iSubscriptionPlanRepository,
     iTestCandidateRepository
 )
+export const iCandidateTestHistory = new CandidateTestHistoryUsecase (
+    iCandidateRepository,
+    iTestCandidateRepository
+)
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,
@@ -1245,4 +1250,5 @@ export const iCompanyAnalyticsController = new CompanyAnalyticsController(
 
 export const iCandidateAnalyticsController = new CandidateAnalyticsController (
     iCandidateDashboardSummery,
+    iCandidateTestHistory
 )

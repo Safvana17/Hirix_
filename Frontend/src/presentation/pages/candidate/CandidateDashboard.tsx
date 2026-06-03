@@ -13,13 +13,17 @@ import { getAllPlans } from '../../../redux/slices/features/subscription/subscri
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
 import SummeryCard from '../../components/layout/SummeryCard';
-import { getCandidateDashboardSummary } from '../../../redux/slices/features/analytics/adminAnalysticsSlice';
+import { getCandidateDashboardSummary, getTestHistory } from '../../../redux/slices/features/analytics/adminAnalysticsSlice';
+import type { Column } from '../../../types/table';
+import type { TestHistory } from '../../../types/analytics';
+import DataTable from '../../components/ui/DataTable';
 
 
 
 const CandidateDashboard: React.FC = () => {
   const [type, setType] = useState<QuestionType | ''>('')
   const [page, setPage] = useState(1)
+  const [hitoryPage, setHistoryPage] = useState(1)
   const [difficulty, setDifficulty] = useState<QuestionDifficulty | ''>('');
   const [searchTerm, setSearchTerm] = useState('');
   const { currentPlan, plans } = useSelector((state: RootState) => state.subscription)
@@ -27,15 +31,16 @@ const CandidateDashboard: React.FC = () => {
   const navigate = useNavigate()
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const { PracticeQuestions } = useSelector( (state: RootState) => state.practiceQuestion)
-  const { candidateSummary } = useSelector((state: RootState) => state.adminAnalytics)
+  const { candidateSummary, testHistory, pagination, loading } = useSelector((state: RootState) => state.adminAnalytics)
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if(user){
       dispatch(getAllPlans({params: {target: 'candidate'}, role: user?.role}))
+      dispatch(getTestHistory({params: {page: hitoryPage || undefined, limit: 5}}))
       dispatch(getCandidateDashboardSummary())
     }
-  }, [dispatch, user])
+  }, [dispatch, user, hitoryPage])
 
   useEffect(() => {
     if(user){
@@ -56,6 +61,18 @@ const CandidateDashboard: React.FC = () => {
 
   const proPlan = plans.find(p => p.price > 0)
 
+    const columns: Column<TestHistory>[] =  [
+      {header: 'Type', key: 'company', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+      {header: 'Name', key: 'testName', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+      {header: 'Plan', key: 'jobRole', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+      {header: 'Date', key: 'date', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+      {header: 'Status', key: 'status', render: (val) => (
+         <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${val === 'success' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
+            {val}
+         </span>
+      )},
+    ]
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#021A30] to-[#0B0707]">
       <CandidateHeader />
@@ -72,6 +89,21 @@ const CandidateDashboard: React.FC = () => {
         <Grid size={{xs: 10, md: 3}}>
           <SummeryCard label='Current Plan' value={candidateSummary?.currentPlan ?? 'Free'} icon={StarsIcon} color='black' bg='white'/>
         </Grid>
+      </Grid>
+      <Grid sx={{ mt: 3, mx: 3}}>
+        <DataTable
+          columns={columns}
+          isLoading={loading}
+          data={testHistory}
+          emptyMessage='No payment history available'
+          pagination={{
+            currentPage: page ,
+            totalPages: pagination.test.totalPages,
+            totalCount: pagination.test.totalCount,
+            onPageChange: (page) => setHistoryPage(page)
+          }}
+        >
+        </DataTable>
       </Grid>
       <CandidatePracticeQuestions
         questions={PracticeQuestions}

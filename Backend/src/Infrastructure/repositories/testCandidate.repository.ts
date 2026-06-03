@@ -6,6 +6,7 @@ import { ITestCandidateRepository } from "../../Domain/repositoryInterface/iTest
 import { logger } from "../../utils/logging/loger";
 import { ITestCandidate, TestCandidateModel } from "../database/Model/TestCandidate";
 import { BaseRepository } from "./base.repository";
+import { TestHistoryDTO } from "../../Application/candidate/dtos/analytics/candidate.testHistory.dto";
 
 export class TestCandidateRepository extends BaseRepository<TestCandidateEntity, ITestCandidate> implements ITestCandidateRepository{
     constructor() {
@@ -206,6 +207,124 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
                 }
             }
         ])
+    }
+
+    async getCandidateHistory(query: { email: string, page: number, limit: number}): Promise<{history: TestHistoryDTO[]; totalCount: number; totalPages: number}> {
+        const skip = query.limit * (query.page - 1)
+        const totalCount = await this._model.countDocuments({email: query.email})
+        const totalPages = Math.ceil(totalCount/query.limit)
+        const stage1 = await this._model.aggregate([
+  {
+    $match: { email: query.email }
+  }
+]);
+
+console.log("After match:", stage1.length);
+const stage2 = await this._model.aggregate([
+  {
+    $match: { email: query.email }
+  },
+  {
+    $lookup: {
+      from: 'tests',
+      localField: 'testId',
+      foreignField: '_id',
+      as: 'test'
+    }
+  }
+]);
+
+console.log("After lookup test:", stage2.length);
+const stage3 = await this._model.aggregate([
+  {
+    $match: { email: query.email }
+  },
+  {
+    $lookup: {
+      from: 'tests',
+      localField: 'testId',
+      foreignField: '_id',
+      as: 'test'
+    }
+  },
+  {
+    $unwind: '$test'
+  }
+]);
+
+console.log("After unwind test:", stage3.length);
+        const documents =  await this._model.aggregate([
+            {
+                $match: {
+                    email: query.email
+                }
+            },
+            {
+                $sort: {createdAt: -1}
+            },
+            {
+                $lookup: {
+                    from: 'tests',
+                    localField: 'testId',
+                    foreignField: '_id',
+                    as: 'test'
+                }
+            },
+            {
+                $unwind: '$test'
+            },
+            {
+                $lookup: {
+                    from: 'companies',
+                    localField: 'test.companyId',
+                    foreignField: '_id',
+                    as: 'company'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'jobroles',
+                    localField: 'test.jobRoleId',
+                    foreignField: '_id',
+                    as: 'jobRole'
+                }
+            },
+            {
+                $unwind: {
+                    path: "$jobRole",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $unwind: {
+                    path: "$company",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    company: '$company.name',
+                    testName: '$test.name',
+                    jobRole: '$jobRole.name',
+                    status: '$selectionStatus',
+                    date: '$createdAt'
+                }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: query.limit
+            }
+        ])
+
+        logger.info(documents, 'from repo')
+        return {
+            history: documents,
+            totalCount,
+            totalPages
+        }
     }
 
     async getTotalTestAttended(email: string): Promise<number> {

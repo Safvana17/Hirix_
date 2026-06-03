@@ -1,3 +1,4 @@
+import { TestHistoryDTO } from "../../Application/candidate/dtos/analytics/candidate.testHistory.dto";
 import { TestCandidateEntity } from "../entities/TestCandidate.entity";
 import { CandidatePipelineStatus } from "../enums/Test";
 import { IBaseRepository } from "./iBase.repository";
@@ -13,4 +14,5 @@ export interface ITestCandidateRepository extends IBaseRepository<TestCandidateE
     getTestTrendByCompany(companyId: string, startDate: Date): Promise<{month: string; attendedCandidates: number}[]>
     getCandidateStatusDistribution(companyId: string, startDate: Date): Promise<{status: CandidatePipelineStatus; count: number}[]>
     getTotalTestAttended(email: string): Promise<number>
+    getCandidateHistory(query: {email: string, page: number, limit: number}): Promise<{history: TestHistoryDTO[]; totalPages: number; totalCount: number}>
 }
