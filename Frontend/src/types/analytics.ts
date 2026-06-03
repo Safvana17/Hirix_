@@ -127,9 +127,7 @@ export interface CandidateParticipationTrend {
 }
 
 export interface CompanyUsage {
-    month: string
     company: string
-    candidates: number
-    tests: number
-    interviews: number
+    totalTests: number
+    totalInterviews: number
 }

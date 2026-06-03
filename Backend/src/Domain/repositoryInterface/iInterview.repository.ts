@@ -8,4 +8,5 @@ export interface IInterviewRepository extends IBaseRepository<InterviewEntity> {
     findAllFiltered(query: { companyId: string, search?: string, status?: InterviewStatus, page: number, limit: number}): Promise<{data: InterviewEntity[], totalCount: number, totalPages: number}>  
     findByRoomId(roomId: string): Promise<InterviewEntity | null>
     getTotalInterviewsByCompany(companyId: string): Promise<number>
+    getInterviewUsage(): Promise<{company: string, count: number}[]>
 }

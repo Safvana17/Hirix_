@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummary, CandidateStatusDistribution, CandidateSummary, TestHistory, TestHistoryResponse, TestHistoryArgs, TestLog, TestLogResponse, TestLogArgs, CandidateParticipationTrend } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummary, CandidateStatusDistribution, CandidateSummary, TestHistory, TestHistoryResponse, TestHistoryArgs, TestLog, TestLogResponse, TestLogArgs, CandidateParticipationTrend, CompanyUsage } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -21,6 +21,7 @@ interface AdminAnalyticsState {
     paymentHistory: PaymentHistory[]
     testHistory: TestHistory[]
     testLog: TestLog[]
+    companyUsage: CompanyUsage[]
     pagination: {
         payment: {
             totalPages: number
@@ -48,6 +49,7 @@ const initialState: AdminAnalyticsState = {
     candidateParticipation: [],
     testHistory: [],
     testLog: [],
+    companyUsage: [],
     pagination: {
         payment: {
             totalCount: 0,
@@ -305,13 +307,32 @@ CandidateParticipationTrend[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('response: ', response.data.data)
+        // console.log('response: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get candidate participation trend')
     }
 })
+
+export const getCompanyUsage = createAsyncThunk<
+CompanyUsage[],
+void,
+{rejectValue: string}
+>('admin/companyUsage', async (_, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.ADMIN.ANALYTICS.COMPANY_USAGE)
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        console.log('response: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get company usage')
+    }
+})
+
 
 const adminAnalyticsSlice = createSlice({
     name: 'adminAnalytics',
@@ -477,7 +498,18 @@ const adminAnalyticsSlice = createSlice({
          })
          .addCase(getCandidateParticipationTrend.rejected, (state, action) => {
             state.loading = false
-            state.error = action.payload || 'Failed to get test log'
+            state.error = action.payload || 'Failed to get candidate participation trend'
+         })
+         .addCase(getCompanyUsage.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getCompanyUsage.fulfilled, (state, action) => {
+            state.loading = false
+            state.companyUsage = action.payload
+         })
+         .addCase(getCompanyUsage.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get company usage'
          })
     }
 })

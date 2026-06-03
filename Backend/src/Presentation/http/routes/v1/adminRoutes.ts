@@ -72,7 +72,7 @@ router.get(ROUTES.ADMIN.ANALYTICS.TEST_ACTIVITY, authHandler(iTokenService), val
 router.get(ROUTES.ADMIN.ANALYTICS.SUBSCRIPTION_DISTRIBUTION, authHandler(iTokenService), validate(GetRevenueTrendByPlanSchema, 'query'), iAdminAnalyticsController.getSubscriptionDistribution)
 router.get(ROUTES.ADMIN.ANALYTICS.TEST_ACTIVITY_LOG, authHandler(iTokenService), validate(GetPaymentHistorySchema, 'query'), iAdminAnalyticsController.getTestLog)
 router.get(ROUTES.ADMIN.ANALYTICS.CANDIDATE_PARTICIPATION, authHandler(iTokenService), validate(GetRevenueTrendByMonthSchema, 'query'), iAdminAnalyticsController.getCandidateParticipationTrend)
-
+router.get(ROUTES.ADMIN.ANALYTICS.COMPANY_USAGE, authHandler(iTokenService), iAdminAnalyticsController.getCompanyUsage)
 
 
 export default router;               

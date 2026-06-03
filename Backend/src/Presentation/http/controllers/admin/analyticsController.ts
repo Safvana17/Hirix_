@@ -13,6 +13,7 @@ import { IAdminGetTestActivityUsecase } from "../../../../Application/admin/inte
 import { IAdminSubscriptionDistributionUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.subscriptionDistribution.usecase";
 import { IAdminTestLogUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.testLog.usecase";
 import { IAdminCandidateParticipationTrendUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.candidateParticipationTrend.usecase";
+import { IAdminCompanyUsageUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.companyUsage.usecase";
 
 export class AdminAnalyticsController {
     constructor (
@@ -25,6 +26,7 @@ export class AdminAnalyticsController {
         private _subscriptionDistribution: IAdminSubscriptionDistributionUsecase,
         private _testLog: IAdminTestLogUsecase,
         private _candidateParticipationTrend: IAdminCandidateParticipationTrendUsecase,
+        private _companyUsage: IAdminCompanyUsageUsecase,
     ) {}
 
     getRevenueSummery = asyncHandler(async(req: Request, res: Response) => {
@@ -77,6 +79,11 @@ export class AdminAnalyticsController {
         const { month } = req.validatedQuery as RevenueTrendByMonthQuery
         const trend = await this._candidateParticipationTrend.execute({month})
         return sendSuccess(res, statusCode.OK, '', trend.trend)
+    })
+
+    getCompanyUsage = asyncHandler(async(req: Request, res: Response) => {
+        const usage = await this._companyUsage.execute()
+        return sendSuccess(res, statusCode.OK, '', usage.usage)
     })
 
 }

@@ -5,20 +5,22 @@ import type { Column } from '../../../types/table'
 import type { TestLog } from '../../../types/analytics'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { getCandidateParticipationTrend, getTestLog } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
+import { getCandidateParticipationTrend, getCompanyUsage, getTestLog } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
 import DataTable from '../../components/ui/DataTable'
 import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select } from '@mui/material'
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+
 
 const AdminReport: React.FC = () => {
    const [page, setPage] = useState(1)
    const [month, setMonth] = useState(6)
    const dispatch = useDispatch<AppDispatch>()
-   const { testLog, loading, pagination, candidateParticipation } = useSelector((state: RootState) => state.adminAnalytics)
+   const { testLog, loading, pagination, candidateParticipation, companyUsage } = useSelector((state: RootState) => state.adminAnalytics)
 
    useEffect(() => {
       dispatch(getTestLog({params: {page: page, limit: 5}}))
       dispatch(getCandidateParticipationTrend({month}))
+      dispatch(getCompanyUsage())
    }, [dispatch, page, month])
 
     const columns: Column<TestLog>[] =  [
@@ -62,19 +64,49 @@ const AdminReport: React.FC = () => {
                            <Line 
                               type="monotone"
                               dataKey="passedCount"
-                              stroke='#5b3c06'                     
+                              stroke='#493a07'                     
                            />
                            <Line 
                               type="monotone"
                               dataKey="rejectedCount"
-                              stroke='#5b3c06'                     
+                              stroke='#20024a'                     
                            />
                            <Line 
                               type="monotone"
                               dataKey="totalCandidates"
-                              stroke='#5b3c06'                     
+                              stroke='#01560a'                     
                            />
                         </LineChart>
+                     </ResponsiveContainer>
+                  </Paper>
+               </Grid>
+ <Grid size={{ xs: 12, md: 6}}>
+                  <Paper sx={{ p: 2 }}>
+                     <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mb={2}
+                     >
+                        <h3>Revenue by Plan</h3>
+                     </Box>
+                     <ResponsiveContainer width="100%" height={350}>
+                        <BarChart data={companyUsage}>
+                           <CartesianGrid strokeDasharray="2 2" />
+                           <XAxis dataKey="company" />
+                           <YAxis />
+                           <Tooltip />
+                           <Bar 
+                              dataKey="totalTests"
+                              fill='#5a0d33'  
+                              radius={[3, 3, 0, 0]}                   
+                           />
+                           <Bar 
+                              dataKey="totalInterviews"
+                              fill='#31065b'  
+                              radius={[3, 3, 0, 0]}                   
+                           />
+                        </BarChart>
                      </ResponsiveContainer>
                   </Paper>
                </Grid>

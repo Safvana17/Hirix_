@@ -153,6 +153,37 @@ export class TestRepository extends BaseRepository<TestEntity, ITest> implements
         return this._model.countDocuments({companyId, testStatus: { $nin: [TestStatus.CANCELLED, TestStatus.DELETED]}})
     }
     
+    async getTestUsage(): Promise<{ company: string; count: number; }[]> {
+        return await this._model.aggregate([
+            {
+                $group: {
+                    _id: "$companyId",
+                    count: { $sum: 1}
+                }
+            },
+            {
+                $lookup: {
+                    from: 'companies',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'company'
+                }
+            },
+            {
+                $unwind:{
+                    path: "$company",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project:{
+                    _id: 0,
+                    count: 1,
+                    company: '$company.name'
+                }
+            }
+        ])
+    }
     protected mapToEntity(doc: ITest): TestEntity {
         return TestMapper.toEntity(doc)
     }
