@@ -71,6 +71,8 @@ router.get(ROUTES.ADMIN.ANALYTICS.ADMIN_DASHBOARD_SUMMERY, authHandler(iTokenSer
 router.get(ROUTES.ADMIN.ANALYTICS.TEST_ACTIVITY, authHandler(iTokenService), validate(GetRevenueTrendByMonthSchema, 'query'), iAdminAnalyticsController.getTestActivity)
 router.get(ROUTES.ADMIN.ANALYTICS.SUBSCRIPTION_DISTRIBUTION, authHandler(iTokenService), validate(GetRevenueTrendByPlanSchema, 'query'), iAdminAnalyticsController.getSubscriptionDistribution)
 router.get(ROUTES.ADMIN.ANALYTICS.TEST_ACTIVITY_LOG, authHandler(iTokenService), validate(GetPaymentHistorySchema, 'query'), iAdminAnalyticsController.getTestLog)
+router.get(ROUTES.ADMIN.ANALYTICS.CANDIDATE_PARTICIPATION, authHandler(iTokenService), validate(GetRevenueTrendByMonthSchema, 'query'), iAdminAnalyticsController.getCandidateParticipationTrend)
+
 
 
 export default router;               

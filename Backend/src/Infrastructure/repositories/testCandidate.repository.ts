@@ -403,6 +403,68 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
     async getTotalTestAttended(email: string): Promise<number> {
         return this._model.countDocuments({email})
     }
+
+    async getCandidateParticipationTrend(startDate: Date): Promise<{ month: string; totalCandidates: number; passedCount: number; rejectedCount: number; }[]> {
+        return await this._model.aggregate([
+            {
+                $match: {
+                    createdAt: { $gt: startDate }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        year: {$year: "$createdAt"},
+                        month: { $month: "$createdAt"}
+                    },
+                    totalCandidates: { $sum: 1},
+                    passedCount: {
+                        $sum: {
+                            $cond: [
+                                {$in: ["$selectionStatus", [CandidatePipelineStatus.INTERVIEW_SCHEDULED, CandidatePipelineStatus.INTERVIEW_SELECTED, CandidatePipelineStatus.SHORTLISTED, CandidatePipelineStatus.OFFER_SENT]]},
+                                1,
+                                0
+                            ]
+                        }
+                    },
+                    rejectedCount: {
+                        $sum: {
+                            $cond: [
+                                {$in: ["$selectionStatus", [CandidatePipelineStatus.TEST_REJECTED, CandidatePipelineStatus.INTERVIEW_REJECTED]]},
+                                1, 
+                                0
+                            ]
+                        }
+                    }
+                }
+            },
+            {
+                $sort: {
+                    "_id.year": -1,
+                    "_id.month": -1
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    month: {
+                        $dateToString: {
+                            format: "%b",
+                            date: {
+                                $dateFromParts: {
+                                    year: "$_id.year",
+                                    month: "$_id.month"
+                                }
+                            }
+                        }
+                    },
+                    passedCount: 1,
+                    rejectedCount: 1,
+                    totalCandidates: 1
+                }
+            }
+        ])
+    }
     
     protected mapToEntity(doc: ITestCandidate): TestCandidateEntity {
         return TestCandidateMapper.toEntity(doc)

@@ -12,6 +12,7 @@ import { IAdminGetDashboardSummeryUsecase } from "../../../../Application/admin/
 import { IAdminGetTestActivityUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.testActivity.usecase";
 import { IAdminSubscriptionDistributionUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.subscriptionDistribution.usecase";
 import { IAdminTestLogUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.testLog.usecase";
+import { IAdminCandidateParticipationTrendUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.candidateParticipationTrend.usecase";
 
 export class AdminAnalyticsController {
     constructor (
@@ -23,6 +24,7 @@ export class AdminAnalyticsController {
         private _testActivity: IAdminGetTestActivityUsecase,
         private _subscriptionDistribution: IAdminSubscriptionDistributionUsecase,
         private _testLog: IAdminTestLogUsecase,
+        private _candidateParticipationTrend: IAdminCandidateParticipationTrendUsecase,
     ) {}
 
     getRevenueSummery = asyncHandler(async(req: Request, res: Response) => {
@@ -70,4 +72,11 @@ export class AdminAnalyticsController {
         const { test, totalCount, totalPages} = await this._testLog.execute({...query})
         return sendSuccess(res, statusCode.OK, '', {test, totalCount, totalPages})
     })
+
+    getCandidateParticipationTrend = asyncHandler(async(req: Request, res: Response) => {
+        const { month } = req.validatedQuery as RevenueTrendByMonthQuery
+        const trend = await this._candidateParticipationTrend.execute({month})
+        return sendSuccess(res, statusCode.OK, '', trend.trend)
+    })
+
 }

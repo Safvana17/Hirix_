@@ -17,4 +17,5 @@ export interface ITestCandidateRepository extends IBaseRepository<TestCandidateE
     getTotalTestAttended(email: string): Promise<number>
     getCandidateHistory(query: {email: string, page: number, limit: number}): Promise<{history: TestHistoryDTO[]; totalPages: number; totalCount: number}>
     getTestLog(query: { page: number, limit: number}): Promise<{test: TestLogDTO[]; totalCount: number; totalPages: number}>
+    getCandidateParticipationTrend(startDate: Date): Promise<{month: string, totalCandidates: number, passedCount: number, rejectedCount: number}[]>
 }
