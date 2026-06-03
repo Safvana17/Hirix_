@@ -1,20 +1,24 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import InternalLayout from '../../layouts/InternalLayout'
 import { companySidebarItems } from '../../../constants/sidebarItems'
-import { Box, Grid } from '@mui/material'
+import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select } from '@mui/material'
 import SummeryCard from '../../components/layout/SummeryCard'
 import { BadgeQuestionMark, BookCheckIcon, Sparkles, UserCheck2 } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { getCompanyDashboardSummary } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
+import { getCompanyDashboardSummary, getTestParticipationTrend } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 const CompanyDashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
+  const [month, setMonth] = useState(6)
+  const { companySummery, testActivityTrend} = useSelector((state: RootState) => state.adminAnalytics)
 
-  const { companySummery} = useSelector((state: RootState) => state.adminAnalytics)
+  
   useEffect(() => {
      dispatch(getCompanyDashboardSummary())
-  }, [dispatch])
+     dispatch(getTestParticipationTrend({month}))
+  }, [dispatch, month])
 
   return (
     <InternalLayout title='dashboard' subTitle="Welcome! Here's what's happening with your hiring process." sidebarItems={companySidebarItems}>
@@ -27,13 +31,13 @@ const CompanyDashboard: React.FC = () => {
                    <SummeryCard label='Total Interview' value={companySummery?.totalInterviews ?? 0} icon={BadgeQuestionMark} color='#53601d' bg='#000'/>
                 </Grid>
                 <Grid size={{xs: 10, md: 3}}>
-                   <SummeryCard label='Shortlisted Candidates' value={companySummery?.hiredCandidates ?? 0} icon={UserCheck2} color='black' bg='black'/>
+                   <SummeryCard label='Total Hired Candidates' value={companySummery?.hiredCandidates ?? 0} icon={UserCheck2} color='black' bg='black'/>
                 </Grid>
                 <Grid size={{xs: 10, md: 3}}>
                    <SummeryCard label='Current plan' value={companySummery?.currentPlan ?? 'Free'} icon={Sparkles} color='black' bg='white'/>
                 </Grid>
             </Grid>
-            {/* <Grid container spacing={3} sx={{ mt: 2}}>
+            <Grid container spacing={3} sx={{ mt: 2}}>
                <Grid size={{ xs: 12, md: 6}}>
                   <Paper sx={{ p: 2 }}>
                      <Box
@@ -62,7 +66,7 @@ const CompanyDashboard: React.FC = () => {
                            <XAxis dataKey="month" />
                            <YAxis />
                            <Tooltip />
-                           <Line 
+                           <Line
                               type="monotone"
                               dataKey="attendedCandidates"
                               stroke='#5b3c06'                     
@@ -81,7 +85,7 @@ const CompanyDashboard: React.FC = () => {
                      </ResponsiveContainer>
                   </Paper>
                </Grid>
-               <Grid size={{ xs: 12, md: 6}}>
+               {/* <Grid size={{ xs: 12, md: 6}}>
                   <Paper sx={{ p: 2 }}>
                      <Box
                         display="flex"
@@ -117,8 +121,8 @@ const CompanyDashboard: React.FC = () => {
                         </BarChart>
                      </ResponsiveContainer>
                   </Paper>
-               </Grid>
-            </Grid> */}
+               </Grid> */}
+            </Grid>
         </Box>
     </InternalLayout>
   )

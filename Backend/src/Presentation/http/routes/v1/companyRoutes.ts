@@ -12,6 +12,7 @@ import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchem
 import { certificateUpload } from "../../middlewares/certificateUpload";
 import { CancelTestSchema, CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator, editTestValidator, ResheduleTestSchema, ShortlistCandidateSchema, TestParamsSchema } from "../../validators/companyTest.validator";
 import { CancelInterviewSchema, CompanyGetAllInterviewSchema, EditInterviewSchema, InterviewParamsSchema, RescheduleInterviewSchema, ScheduleInterviewSchema, UpdateInterviewResultSchema } from "../../validators/interviewValidator";
+import { GetRevenueTrendByMonthSchema } from "../../validators/analyticsValidator";
 
 const router = Express.Router()
 
@@ -89,5 +90,5 @@ router.patch(ROUTES.COMPANY.INTERVIEW.SEND_OFFER, authHandler(iTokenService), va
 
 //dashboard
 router.get(ROUTES.COMPANY.ANALYTICS.DASHBOARD_SUMMERY, authHandler(iTokenService), iCompanyAnalyticsController.dashboardSummery)
-
+router.get(ROUTES.COMPANY.ANALYTICS.TEST_TREND, authHandler(iTokenService), validate(GetRevenueTrendByMonthSchema, 'query'), iCompanyAnalyticsController.testParticipationTrend)
 export default router;

@@ -48,8 +48,8 @@ export interface PaymentHistoryArgs{
 
 export interface TestActivityTrend {
     month: string
-    testCount: number
-    notAttendedCandidates: number
+    testCount?: number
+    notAttendedCandidates?: number
     attendedCandidates: number
 }
 export interface SubscriptionDistribution {

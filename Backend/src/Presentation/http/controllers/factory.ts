@@ -206,6 +206,7 @@ import { AdminGetTestActivityUsecase } from "../../../Application/admin/usecases
 import { AdminGetSubscriptionDistributionUsecase } from "../../../Application/admin/usecases/analytics/admin.subscriptionDistribution.usecase";
 import { CompanyGetDashboardSummeryUsecase } from "../../../Application/company/usecases/analytics/company.getDashboardSummery.usecase";
 import { CompanyAnalyticsController } from "./company/companyAnalyticsController";
+import { CompanyTestParticipationTRendUsecase } from "../../../Application/company/usecases/analytics/compant.testParticipationTrend.usecase";
 
 
 
@@ -1020,6 +1021,10 @@ export const iCompanyGetDashboardSummery = new CompanyGetDashboardSummeryUsecase
     iSubscriptionRepository,
     iSubscriptionPlanRepository
 )
+export const iCompanyTestParticipationTRend = new CompanyTestParticipationTRendUsecase (
+    iCompanyRepository,
+    iTestCandidateRepository
+)
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,
@@ -1221,4 +1226,5 @@ export const iAdminAnalyticsController = new AdminAnalyticsController (
 
 export const iCompanyAnalyticsController = new CompanyAnalyticsController(
     iCompanyGetDashboardSummery,
+    iCompanyTestParticipationTRend
 )

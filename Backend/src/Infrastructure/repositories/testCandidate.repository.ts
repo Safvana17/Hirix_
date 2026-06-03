@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { TestCandidateMapper } from "../../Application/Mappers/mapper.testCandidate";
 import { TestCandidateEntity } from "../../Domain/entities/TestCandidate.entity";
 import { CandidatePipelineStatus, CandidateTestStatus } from "../../Domain/enums/Test";
@@ -100,7 +101,7 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
             },
             {
                 $match: {
-                    'test.companyId': companyId,
+                    'test.companyId': new Types.ObjectId(companyId),
                     selectionStatus: CandidatePipelineStatus.OFFER_SENT
                 }
             },
@@ -113,6 +114,63 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
         ])
         logger.info(totalHiredCandidates, 'from repo')
         return totalHiredCandidates[0]?.count ?? 0
+    }
+
+    async getTestTrendByCompany(companyId: string, startDate: Date): Promise<{ month: string; attendedCandidates: number; }[]> {
+        const trend = await this._model.aggregate([
+            {
+                $lookup: {
+                    from: 'tests',
+                    localField: 'testId',
+                    foreignField: '_id',
+                    as: 'test'
+                }
+            },
+            {
+                $unwind: '$test'
+            },
+            {
+                $match: {
+                    'test.companyId': new Types.ObjectId(companyId),
+                    createdAt: { $gt: startDate},
+                    candidateTestStatus: { $in: [CandidateTestStatus.IN_PROGRESS, CandidateTestStatus.SUBMITTED]}
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt"},
+                        month: {$month: "$createdAt"},
+                    },
+                    attendedCandidates: { $sum: 1}
+                }
+            },
+            {
+                $sort: {
+                    "_id.year": -1,
+                    "_id.month": -1
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    month: {
+                        $dateToString: {
+                            format: "%b",
+                            date: {
+                                $dateFromParts: {
+                                    year: "$_id.year",
+                                    month: "$_id.month"
+                                }
+                            }
+                        }
+                    },
+                    attendedCandidates: 1
+                }
+            }
+        ])
+
+        return trend
     }
 
     protected mapToEntity(doc: ITestCandidate): TestCandidateEntity {
