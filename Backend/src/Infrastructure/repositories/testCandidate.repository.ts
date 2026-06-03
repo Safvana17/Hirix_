@@ -173,6 +173,40 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
         return trend
     }
 
+    async getCandidateStatusDistribution(companyId: string, startDate: Date): Promise<{ status: CandidatePipelineStatus; count: number; }[]> {
+        return await this._model.aggregate([
+            {
+                $lookup: {
+                    from: 'tests',
+                    localField: 'testId',
+                    foreignField: '_id',
+                    as: 'test'
+                }
+            },
+            {
+                $unwind: '$test'
+            },
+            {
+                $match: {
+                    'test.companyId': new Types.ObjectId(companyId),
+                    createdAt: { $gt: startDate}
+                }
+            },
+            {
+                $group: {
+                    _id: "$selectionStatus",
+                    count: { $sum: 1}
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    status: '$_id',
+                    count: 1
+                }
+            }
+        ])
+    }
     protected mapToEntity(doc: ITestCandidate): TestCandidateEntity {
         return TestCandidateMapper.toEntity(doc)
     }

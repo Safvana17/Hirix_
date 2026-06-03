@@ -6,18 +6,20 @@ import SummeryCard from '../../components/layout/SummeryCard'
 import { BadgeQuestionMark, BookCheckIcon, Sparkles, UserCheck2 } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
-import { getCompanyDashboardSummary, getTestParticipationTrend } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { getCandidateStatusDistribution, getCompanyDashboardSummary, getTestParticipationTrend } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
+import { CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
+const COLORS = [  "#063a67", "#087a65", "#865f0c", "#a43b06", "#53047e",]
 const CompanyDashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [month, setMonth] = useState(6)
-  const { companySummery, testActivityTrend} = useSelector((state: RootState) => state.adminAnalytics)
+  const { companySummery, testActivityTrend, statusDistribution } = useSelector((state: RootState) => state.adminAnalytics)
 
   
   useEffect(() => {
      dispatch(getCompanyDashboardSummary())
      dispatch(getTestParticipationTrend({month}))
+     dispatch(getCandidateStatusDistribution({month}))
   }, [dispatch, month])
 
   return (
@@ -85,7 +87,7 @@ const CompanyDashboard: React.FC = () => {
                      </ResponsiveContainer>
                   </Paper>
                </Grid>
-               {/* <Grid size={{ xs: 12, md: 6}}>
+               <Grid size={{ xs: 12, md: 6}}>
                   <Paper sx={{ p: 2 }}>
                      <Box
                         display="flex"
@@ -93,35 +95,44 @@ const CompanyDashboard: React.FC = () => {
                         alignItems="center"
                         mb={2}
                      >
-                        <h3>Revenue by Plan</h3>
+                        <h3>Revenue Trend</h3>
                         <FormControl size="small" sx={{ minWidth: 120 }}>
-                           <InputLabel>Type</InputLabel>
+                           <InputLabel>Period</InputLabel>
                            <Select
-                              value={target}
+                              value={month}
                               label="Period"
-                              onChange={(e) => setTarget(e.target.value as TargetType)}
+                              onChange={(e) => setMonth(Number(e.target.value))}
                            >
-                              <MenuItem value=''>All</MenuItem>
-                              <MenuItem value='candidate'>Candidate</MenuItem>
-                              <MenuItem value='company'>Company</MenuItem>
+                              <MenuItem value={3}>3 Months</MenuItem>
+                              <MenuItem value={6}>6 Months</MenuItem>
+                              <MenuItem value={12}>12 Months</MenuItem>
                            </Select>
                         </FormControl>
                      </Box>
                      <ResponsiveContainer width="100%" height={350}>
-                        <BarChart data={barChartData}>
-                           <CartesianGrid strokeDasharray="2 2" />
-                           <XAxis dataKey="label" />
-                           <YAxis />
-                           <Tooltip />
-                           <Bar
+                        <PieChart>
+                           <Pie 
+                              data={statusDistribution}
                               dataKey="count"
-                              fill='#5b3c06'  
-                              radius={[3, 3, 0, 0]}                   
-                           />
-                        </BarChart>
+                              nameKey="status"
+                              cx="50%"
+                              cy="50%"
+                              outerRadius={100}
+                              label={(props) => {
+                                const { name, percent } = props
+                                return `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
+                              }}
+                           >
+                              {statusDistribution.map((_, index) => (
+                                 <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                              ))}
+                           </Pie>
+                           <Tooltip formatter={(value, name) => [value, name]} />
+                           <Legend />
+                        </PieChart>
                      </ResponsiveContainer>
                   </Paper>
-               </Grid> */}
+               </Grid>
             </Grid>
         </Box>
     </InternalLayout>

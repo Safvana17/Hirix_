@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummery } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummery, CandidateStatusDistribution } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -15,6 +15,7 @@ interface AdminAnalyticsState {
     testActivityTrend: TestActivityTrend[]
     planRevenueTrend: RevenueTrendPlan[]
     subscriptionDistribution: SubscriptionDistribution[]
+    statusDistribution: CandidateStatusDistribution[]
     paymentHistory: PaymentHistory[]
     pagination: {
         payment: {
@@ -34,6 +35,7 @@ const initialState: AdminAnalyticsState = {
     planRevenueTrend: [],
     subscriptionDistribution: [],
     paymentHistory: [],
+    statusDistribution: [],
     pagination: {
         payment: {
             totalCount: 0,
@@ -197,11 +199,29 @@ TestActivityTrend[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('test: ', response.data.data)
+        // console.log('test: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get test activity')
+    }
+})
+
+export const getCandidateStatusDistribution = createAsyncThunk<
+CandidateStatusDistribution[],
+{month: number},
+{rejectValue: string}
+>('company/candidateStatus', async ({month}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.ANALYTICS.STATUS_DISTRIBUTION, {params: {month}})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        console.log('status: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get candidate status distribution')
     }
 })
 const adminAnalyticsSlice = createSlice({
@@ -310,6 +330,17 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getTestParticipationTrend.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get test activity'
+         })
+         .addCase(getCandidateStatusDistribution.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getCandidateStatusDistribution.fulfilled, (state, action) => {
+            state.loading = false
+            state.statusDistribution= action.payload
+         })
+         .addCase(getCandidateStatusDistribution.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get candidate status distribution'
          })
     }
 })

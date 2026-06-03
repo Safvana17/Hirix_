@@ -1,4 +1,5 @@
 import { TestCandidateEntity } from "../entities/TestCandidate.entity";
+import { CandidatePipelineStatus } from "../enums/Test";
 import { IBaseRepository } from "./iBase.repository";
 
 export interface ITestCandidateRepository extends IBaseRepository<TestCandidateEntity>{
@@ -10,4 +11,5 @@ export interface ITestCandidateRepository extends IBaseRepository<TestCandidateE
     getCandidateActivity(startDate: Date): Promise<{attendedCandidates: number; notAttendedCandidates: number; month: string}[]>
     getHiredCandidatesByCompany(companyId: string): Promise<number>
     getTestTrendByCompany(companyId: string, startDate: Date): Promise<{month: string; attendedCandidates: number}[]>
+    getCandidateStatusDistribution(companyId: string, startDate: Date): Promise<{status: CandidatePipelineStatus; count: number}[]>
 }

@@ -91,4 +91,8 @@ router.patch(ROUTES.COMPANY.INTERVIEW.SEND_OFFER, authHandler(iTokenService), va
 //dashboard
 router.get(ROUTES.COMPANY.ANALYTICS.DASHBOARD_SUMMERY, authHandler(iTokenService), iCompanyAnalyticsController.dashboardSummery)
 router.get(ROUTES.COMPANY.ANALYTICS.TEST_TREND, authHandler(iTokenService), validate(GetRevenueTrendByMonthSchema, 'query'), iCompanyAnalyticsController.testParticipationTrend)
+router.get(ROUTES.COMPANY.ANALYTICS.STATUS_DISTRIBUTION, authHandler(iTokenService), validate(GetRevenueTrendByMonthSchema, 'query'), iCompanyAnalyticsController.candidateStatusDistribution)
+
+
+
 export default router;

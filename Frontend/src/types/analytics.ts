@@ -1,4 +1,5 @@
 import type { PaymentStatus, TargetType } from "./subscription"
+import type { CandidateSelectionStatus } from "./test"
 
 export interface RevenueSummary {
     totalRevenue: number
@@ -63,4 +64,9 @@ export interface CompanySummery {
     totalInterviews: number
     hiredCandidates: number
     currentPlan: string
+}
+
+export interface CandidateStatusDistribution {
+    status: CandidateSelectionStatus
+    count: number
 }

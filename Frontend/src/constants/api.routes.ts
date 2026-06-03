@@ -118,7 +118,7 @@ export const API_ROUTES = {
       DASHBOARD_SUMMERY: '/company/dashboard-summery',
       RECENT_ACTIVITIES: '/company/recent-activity',
       TEST_TREND: '/company/test-trend',
-      PASS_RATIO: '/company/pass-ratio',
+      STATUS_DISTRIBUTION: '/company/status-distribution',
     }
   },
 

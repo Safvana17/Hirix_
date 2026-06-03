@@ -80,7 +80,7 @@ export const ROUTES = {
         DASHBOARD_SUMMERY: '/dashboard-summery',
         RECENT_ACTIVITIES: '/recent-activity',
         TEST_TREND: '/test-trend',
-        PASS_RATIO: '/pass-ratio',
+        STATUS_DISTRIBUTION: '/status-distribution',
       }
     },
 
