@@ -1,8 +1,8 @@
 import { CompanyMapper } from "../../Application/Mappers/mapper.company";
-import CompanyEntity from "../../Domain/entities/company.entity";
+import CompanyEntity from "../../Domain/entities/Company.entity";
 import { UserStatus } from "../../Domain/enums/userStatus.enum";
 import ICompanyRepository from "../../Domain/repositoryInterface/iCompany.repository";
-import { companyModel, ICompany } from "../database/Model/company";
+import { companyModel, ICompany } from "../database/Model/Company";
 import { BaseRepository } from "./base.repository";
 import type { QueryFilter } from "mongoose";
 

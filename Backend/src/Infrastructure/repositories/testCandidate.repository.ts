@@ -207,6 +207,11 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
             }
         ])
     }
+
+    async getTotalTestAttended(email: string): Promise<number> {
+        return this._model.countDocuments({email})
+    }
+    
     protected mapToEntity(doc: ITestCandidate): TestCandidateEntity {
         return TestCandidateMapper.toEntity(doc)
     }

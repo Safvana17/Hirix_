@@ -15,7 +15,7 @@ const AdminDashboard: React.FC= () => {
   const [month, setMonth] = useState(6)
   const [target, setTarget] = useState<TargetType|null>(null)
   const dispatch = useDispatch<AppDispatch>()
-  const { adminSummery, testActivityTrend, subscriptionDistribution } = useSelector((state: RootState) => state.adminAnalytics)
+  const { adminSummary, testActivityTrend, subscriptionDistribution } = useSelector((state: RootState) => state.adminAnalytics)
 
   useEffect(() => {
       dispatch(getAdminDashboardSummary())
@@ -32,19 +32,19 @@ const AdminDashboard: React.FC= () => {
         <Box>
             <Grid container spacing={2}>
                 <Grid size={{xs: 10, md: 3}}>
-                   <SummeryCard label='Total Companies' value={adminSummery?.totalCompanies ?? 0} icon={Building2Icon} color='#53601d' bg='#000'/>
+                   <SummeryCard label='Total Companies' value={adminSummary?.totalCompanies ?? 0} icon={Building2Icon} color='#53601d' bg='#000'/>
                 </Grid>
                 <Grid size={{xs: 10, md: 3}}>
-                   <SummeryCard label='Total Candidates' value={adminSummery?.totalCandidates ?? 0} icon={User2} color='#53601d' bg='#000'/>
+                   <SummeryCard label='Total Candidates' value={adminSummary?.totalCandidates ?? 0} icon={User2} color='#53601d' bg='#000'/>
                 </Grid>
                 <Grid size={{xs: 10, md: 3}}>
-                   <SummeryCard label='Total Tests' value={adminSummery?.totalTests ?? 0} icon={BookCheck} color='black' bg='black'/>
+                   <SummeryCard label='Total Tests' value={adminSummary?.totalTests ?? 0} icon={BookCheck} color='black' bg='black'/>
                 </Grid>
                 <Grid size={{xs: 10, md: 3}}>
-                   <SummeryCard label='Total Questions' value={adminSummery?.totalQuestions ?? 0} icon={FileQuestionIcon} color='black' bg='white'/>
+                   <SummeryCard label='Total Questions' value={adminSummary?.totalQuestions ?? 0} icon={FileQuestionIcon} color='black' bg='white'/>
                 </Grid>
                 <Grid size={{xs: 10, md: 3}}>
-                   <SummeryCard label='Total Revenue' value={adminSummery?.totalRevenue ?? 0} icon={DollarSign} color='black' bg='white'/>
+                   <SummeryCard label='Total Revenue' value={adminSummary?.totalRevenue ?? 0} icon={DollarSign} color='black' bg='white'/>
                 </Grid>
             </Grid>
             <Grid container spacing={3} sx={{ mt: 2}}>

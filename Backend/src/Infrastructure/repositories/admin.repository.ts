@@ -1,7 +1,7 @@
 import { AdminMapper } from "../../Application/Mappers/mapper.admin";
-import AdminEntity from "../../Domain/entities/admin.entity";
+import AdminEntity from "../../Domain/entities/Admin.entity";
 import IAdminRepository from "../../Domain/repositoryInterface/iAdmin.repository";
-import { adminModel, IAdmin } from "../database/Model/admin";
+import { adminModel, IAdmin } from "../database/Model/Admin";
 import { BaseRepository } from "./base.repository";
 
 export class AdminRepository extends BaseRepository <AdminEntity, IAdmin> implements IAdminRepository {

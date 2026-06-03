@@ -1,4 +1,4 @@
-import CompanyEntity from "../../../../Domain/entities/company.entity";
+import CompanyEntity from "../../../../Domain/entities/Company.entity";
 import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";

@@ -1,7 +1,6 @@
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
-import { env } from "../../../../Infrastructure/config/env";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";

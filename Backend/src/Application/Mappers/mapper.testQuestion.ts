@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { TestQuestionEntity } from "../../Domain/entities/TestQuestion.entity";
-import { ITestQuestion } from "../../Infrastructure/database/Model/TestQuestion";
+import { ITestQuestion } from "../../Infrastructure/database/Model/Test";
+
 
 export class TestQuestionMapper {
     static toEntity(doc: ITestQuestion): TestQuestionEntity{
@@ -11,9 +12,11 @@ export class TestQuestionMapper {
             doc.title,
             doc.order,
             doc.mark,
-            doc.questionId.toString(),
+            doc.questionId?.toString(),
             doc.description,
             doc.options,
+            doc.starterCode,
+            doc.functionName,
             doc.answer,
             doc.testCase?.map(tc => ({
                 input: tc.input,
@@ -34,6 +37,8 @@ export class TestQuestionMapper {
             questionId: new Types.ObjectId(entity.questionId),
             description: entity.description,
             options: entity.options,
+            starterCode: entity.starterCode,
+            functionName: entity.functionName,
             answer: entity.answer,
             testCase: entity.testCase?.map((tc)=> ({
                 input: tc.input,

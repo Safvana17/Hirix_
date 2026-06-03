@@ -15,6 +15,8 @@ export interface ICandidate extends Document {
     refreshToken: string[];
     isBlocked: boolean;
     isVerified: boolean;
+    practiceQuestionCount: number
+    correctPracticeAnswers: number
 }
 
 const candidateSchema: Schema<ICandidate> = new Schema ({
@@ -55,6 +57,12 @@ const candidateSchema: Schema<ICandidate> = new Schema ({
     isVerified: {
         type: Boolean,
         default: false
+    },
+    correctPracticeAnswers: {
+        type: Number,
+    },
+    practiceQuestionCount: {
+        type: Number
     }
 },{
     timestamps: true

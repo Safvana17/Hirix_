@@ -13,7 +13,7 @@ const COLORS = [  "#063a67", "#087a65", "#865f0c", "#a43b06", "#53047e",]
 const CompanyDashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [month, setMonth] = useState(6)
-  const { companySummery, testActivityTrend, statusDistribution } = useSelector((state: RootState) => state.adminAnalytics)
+  const { companySummary, testActivityTrend, statusDistribution } = useSelector((state: RootState) => state.adminAnalytics)
 
   
   useEffect(() => {
@@ -27,16 +27,16 @@ const CompanyDashboard: React.FC = () => {
         <Box>
             <Grid container spacing={2}>
                 <Grid size={{xs: 10, md: 3}}>
-                   <SummeryCard label='Total Tests' value={companySummery?.totalTests ?? 0} icon={BookCheckIcon} color='#53601d' bg='#000'/>
+                   <SummeryCard label='Total Tests' value={companySummary?.totalTests ?? 0} icon={BookCheckIcon} color='#53601d' bg='#000'/>
                 </Grid>
                 <Grid size={{xs: 10, md: 3}}>
-                   <SummeryCard label='Total Interview' value={companySummery?.totalInterviews ?? 0} icon={BadgeQuestionMark} color='#53601d' bg='#000'/>
+                   <SummeryCard label='Total Interview' value={companySummary?.totalInterviews ?? 0} icon={BadgeQuestionMark} color='#53601d' bg='#000'/>
                 </Grid>
                 <Grid size={{xs: 10, md: 3}}>
-                   <SummeryCard label='Total Hired Candidates' value={companySummery?.hiredCandidates ?? 0} icon={UserCheck2} color='black' bg='black'/>
+                   <SummeryCard label='Total Hired Candidates' value={companySummary?.hiredCandidates ?? 0} icon={UserCheck2} color='black' bg='black'/>
                 </Grid>
                 <Grid size={{xs: 10, md: 3}}>
-                   <SummeryCard label='Current plan' value={companySummery?.currentPlan ?? 'Free'} icon={Sparkles} color='black' bg='white'/>
+                   <SummeryCard label='Current plan' value={companySummary?.currentPlan ?? 'Free'} icon={Sparkles} color='black' bg='white'/>
                 </Grid>
             </Grid>
             <Grid container spacing={3} sx={{ mt: 2}}>

@@ -6,6 +6,8 @@ export default class CandidateEntity extends UserEntity{
 
     subscriptionId?: string
     status: UserStatus
+    practiceQuestionCount?: number
+    correctPracticeAnswers?: number
 
     constructor(id: string, name: string, email: string, password: string, isVerified: boolean,isBlocked: boolean,status: UserStatus, googleId?: string, refreshToken?: string[]){
         super(id, name, email, password, isVerified, isBlocked, userRole.Candidate, googleId, refreshToken)

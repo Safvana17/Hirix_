@@ -12,4 +12,5 @@ export interface ITestCandidateRepository extends IBaseRepository<TestCandidateE
     getHiredCandidatesByCompany(companyId: string): Promise<number>
     getTestTrendByCompany(companyId: string, startDate: Date): Promise<{month: string; attendedCandidates: number}[]>
     getCandidateStatusDistribution(companyId: string, startDate: Date): Promise<{status: CandidatePipelineStatus; count: number}[]>
+    getTotalTestAttended(email: string): Promise<number>
 }

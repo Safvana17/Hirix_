@@ -59,7 +59,7 @@ export interface SubscriptionDistribution {
     count: number
 }
 
-export interface CompanySummery {
+export interface CompanySummary {
     totalTests: number
     totalInterviews: number
     hiredCandidates: number
@@ -69,4 +69,19 @@ export interface CompanySummery {
 export interface CandidateStatusDistribution {
     status: CandidateSelectionStatus
     count: number
+}
+
+export interface CandidateSummary {
+    totalQuestionsAttempted: number
+    accuracy: number
+    totalTestAttended: number
+    currentPlan: string
+}
+
+export interface TestHistory {
+    company: string
+    testName: string
+    jobRole: string
+    status: CandidateSelectionStatus
+    date: Date
 }

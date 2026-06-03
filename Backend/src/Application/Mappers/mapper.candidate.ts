@@ -1,5 +1,5 @@
-import CandidateEntity from "../../Domain/entities/candidate.entity";
-import { ICandidate } from "../../Infrastructure/database/Model/candidate";
+import CandidateEntity from "../../Domain/entities/Candidate.entity";
+import { ICandidate } from "../../Infrastructure/database/Model/Candidate";
 
 export class candidateMapper {
     static toEntity(doc: ICandidate): CandidateEntity {
@@ -14,6 +14,8 @@ export class candidateMapper {
             doc.googleId,
             doc.refreshToken ?? []
         )
+        candidate.correctPracticeAnswers = doc.correctPracticeAnswers
+        candidate.practiceQuestionCount = doc.practiceQuestionCount
         return candidate
     }
 
@@ -27,7 +29,9 @@ export class candidateMapper {
             googleId: entity.getGoogleId?.(),
             isVerified: entity.isUserVerified(),
             refreshTokens: entity.getRefreshToken(),
-            isBlocked: entity.getIsBlocked()
+            isBlocked: entity.getIsBlocked(),
+            correctPracticeAnswers: entity.correctPracticeAnswers,
+            practiceQuestionCount: entity.practiceQuestionCount
         }
     }
 }

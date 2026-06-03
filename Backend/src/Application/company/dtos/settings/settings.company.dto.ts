@@ -1,4 +1,4 @@
-import CompanyEntity from "../../../../Domain/entities/company.entity"
+import CompanyEntity from "../../../../Domain/entities/Company.entity"
 import { FileUpload } from '../../../../Shared/types/fileUpload.type'
 
 export interface UpdateCompanyProfileInputDTO {

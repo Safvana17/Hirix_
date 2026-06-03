@@ -46,6 +46,10 @@ export const API_ROUTES = {
         `/candidate/practice-question/${questionId}/submit`,
       GET_EXPLANATION: (questionId: string) => 
         `/candidate/practice-question/${questionId}/explanation`,
+    },
+    ANALYTICS: {
+      SUMMERY: '/candidate/dashboard-summery',
+      TEST_HISTORY: '/candidate/test-history',
     } 
   },
 

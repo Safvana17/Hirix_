@@ -1,5 +1,5 @@
-import CompanyEntity from "../../Domain/entities/company.entity";
-import { ICompany } from "../../Infrastructure/database/Model/company";
+import CompanyEntity from "../../Domain/entities/Company.entity";
+import { ICompany } from "../../Infrastructure/database/Model/Company";
 
 export class CompanyMapper {
     static toEntity(doc: ICompany): CompanyEntity {

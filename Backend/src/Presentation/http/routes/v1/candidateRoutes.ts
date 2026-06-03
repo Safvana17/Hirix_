@@ -1,7 +1,7 @@
 import Express from 'express'
 import { ROUTES } from '../../../../Shared/constsnts/routes'
 import { authHandler } from '../../middlewares/authMiddleware'
-import { iCandidateSubscriptionController, ICandidateTestController, iPracticeLibraryController, iTokenService, iUnifiedSettingsController } from '../../controllers/factory'
+import { iCandidateAnalyticsController, iCandidateSubscriptionController, ICandidateTestController, iPracticeLibraryController, iTokenService, iUnifiedSettingsController } from '../../controllers/factory'
 import { verifyCsrf } from '../../middlewares/csrfVerify'
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
@@ -44,6 +44,7 @@ router.post(ROUTES.CANDIDATE.TEST.SUBMIT_QUESTION, validate(TestTokenSchema, 'pa
 router.get(ROUTES.CANDIDATE.TEST.GET_CATEGORIES, validate(TestTokenSchema, 'params'), ICandidateTestController.getAllCategories)
 router.post(ROUTES.CANDIDATE.TEST.SAVE_ANSWER, validate(TestTokenSchema, 'params'), validate(candidateAnswerSchema, 'body'), ICandidateTestController.saveAnswers)
 
-
+//dashboard
+router.get(ROUTES.CANDIDATE.ANALYTICS.SUMMERY, authHandler(iTokenService), iCandidateAnalyticsController.getSummery)
 
 export default router

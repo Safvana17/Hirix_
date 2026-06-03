@@ -1,4 +1,4 @@
-import candidateEntity from "../../../../Domain/entities/candidate.entity";
+import candidateEntity from "../../../../Domain/entities/Candidate.entity";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
 import { RegisterCandidateInputDTO, RegisterCandidateOutputDTO } from "../../dtos/auth/register.candidate.dto";
 import { IOtpService } from "../../../interface/service/IOtpService"

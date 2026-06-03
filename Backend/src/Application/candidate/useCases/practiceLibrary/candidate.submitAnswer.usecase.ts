@@ -1,3 +1,4 @@
+import CandidateEntity from "../../../../Domain/entities/Candidate.entity";
 import QuestionType from "../../../../Domain/enums/questionType";
 import { CodingLanguage } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
@@ -43,6 +44,7 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
         const canViewFeedback = plan.hasDetailedFeedback
         if(request.questionType === QuestionType.MCQ){
             const isCorrect = await this._evaluationService.evaluateMcq({questionAnswer: question.answer ?? [], candidateAnswer:request.selectedOption ?? []})
+            await this.updatePracticeState(candidate, isCorrect)
             return {
                 isCorrect,
                 correctAnswer: question.answer ?? [],
@@ -57,6 +59,7 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
         if(request.questionType === QuestionType.DESCRIPTIVE){
             const result = await this._evaluationService.evaluateDescriptive({question: question.description, candidateAnswer: request.descriptiveAnswer ?? ''})
             logger.info(result, 'from usecase')
+            await this.updatePracticeState(candidate, result.isCorrect)
             return {
                 isCorrect: result.isCorrect,
                 feedback: canViewFeedback ? result.feedback : null,
@@ -69,6 +72,7 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
                 expectedOutput: tc.expectedOutput ?? ""
             })),})
             logger.info(result, 'from usecase')
+            await this.updatePracticeState(candidate, result.isCorrect)
             return {
                 isCorrect: result.isCorrect,
                 feedback: canViewFeedback ? result.feedback : null,
@@ -76,5 +80,13 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
             }
         }
         throw new AppError(questionMessages.error.QUESTION_NOT_FOUND, statusCode.BAD_REQUEST)
+    }
+
+    private async updatePracticeState(candidate: CandidateEntity, isCorrect: boolean): Promise<void> {
+        candidate.practiceQuestionCount = ( candidate.practiceQuestionCount?? 0 )+ 1
+        if(isCorrect){
+            candidate.correctPracticeAnswers = (candidate.correctPracticeAnswers ?? 0 ) + 1
+        }
+        await this._candidateRepository.update(candidate.id, candidate)
     }
 }

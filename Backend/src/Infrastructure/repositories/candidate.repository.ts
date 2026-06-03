@@ -1,7 +1,7 @@
-import CandidateEntity from "../../Domain/entities/candidate.entity";
+import CandidateEntity from "../../Domain/entities/Candidate.entity";
 import ICandidateRepository from "../../Domain/repositoryInterface/iCandidate.repository";
 import { candidateMapper } from "../../Application/Mappers/mapper.candidate";
-import { candidateModel, ICandidate } from "../database/Model/candidate";
+import { candidateModel, ICandidate } from "../database/Model/Candidate";
 import { BaseRepository } from "./base.repository";
 import { logger } from "../../utils/logging/loger";
 import mongoose, { QueryFilter } from "mongoose";

@@ -123,6 +123,10 @@ export const ROUTES = {
             GET_CATEGORIES: '/test/:token/categories',
             SAVE_ANSWER: '/test/:token/save',
         },
+        ANALYTICS: {
+            SUMMERY: '/dashboard-summery',
+            TEST_HISTORY: '/test-history',
+        }
     },
 
     COMMON: {

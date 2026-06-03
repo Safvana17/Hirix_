@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummery, CandidateStatusDistribution } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummary, CandidateStatusDistribution, CandidateSummary } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -9,8 +9,9 @@ interface AdminAnalyticsState {
     loading: boolean
     error: string | null
     revenueSummary: RevenueSummary | null
-    adminSummery: AdminSummary | null
-    companySummery: CompanySummery | null
+    adminSummary: AdminSummary | null
+    companySummary: CompanySummary | null
+    candidateSummary: CandidateSummary | null
     monthlyRevenueTrend: RevenueTrendMonth[]
     testActivityTrend: TestActivityTrend[]
     planRevenueTrend: RevenueTrendPlan[]
@@ -28,8 +29,9 @@ interface AdminAnalyticsState {
 const initialState: AdminAnalyticsState = {
     loading: false,
     revenueSummary: null,
-    adminSummery: null,
-    companySummery: null,
+    adminSummary: null,
+    companySummary: null,
+    candidateSummary: null,
     monthlyRevenueTrend: [],
     testActivityTrend: [],
     planRevenueTrend: [],
@@ -172,7 +174,7 @@ SubscriptionDistribution[],
 })
 
 export const getCompanyDashboardSummary = createAsyncThunk<
-CompanySummery,
+CompanySummary,
 void,
 {rejectValue: string}
 >('company/dashboardSummery', async (_, {rejectWithValue}) => {
@@ -222,6 +224,24 @@ CandidateStatusDistribution[],
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to get candidate status distribution')
+    }
+})
+
+export const getCandidateDashboardSummary = createAsyncThunk<
+CandidateSummary,
+void,
+{rejectValue: string}
+>('candidate/dashboardSummery', async (_, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.CANDIDATE.ANALYTICS.SUMMERY)
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get candidate dashboard summery')
     }
 })
 const adminAnalyticsSlice = createSlice({
@@ -281,7 +301,7 @@ const adminAnalyticsSlice = createSlice({
          })
          .addCase(getAdminDashboardSummary.fulfilled, (state, action) => {
             state.loading = false
-            state.adminSummery= action.payload
+            state.adminSummary= action.payload
          })
          .addCase(getAdminDashboardSummary.rejected, (state, action) => {
             state.loading = false
@@ -314,7 +334,7 @@ const adminAnalyticsSlice = createSlice({
          })
          .addCase(getCompanyDashboardSummary.fulfilled, (state, action) => {
             state.loading = false
-            state.companySummery= action.payload
+            state.companySummary= action.payload
          })
          .addCase(getCompanyDashboardSummary.rejected, (state, action) => {
             state.loading = false
@@ -341,6 +361,17 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getCandidateStatusDistribution.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get candidate status distribution'
+         })
+         .addCase(getCandidateDashboardSummary.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getCandidateDashboardSummary.fulfilled, (state, action) => {
+            state.loading = false
+            state.candidateSummary= action.payload
+         })
+         .addCase(getCandidateDashboardSummary.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get candidate dashboard summery'
          })
     }
 })

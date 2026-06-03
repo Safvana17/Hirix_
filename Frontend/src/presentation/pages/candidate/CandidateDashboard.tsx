@@ -6,12 +6,14 @@ import type { AppDispatch, RootState } from '../../../redux/store';
 import { getAllPracticeQuestions } from '../../../redux/slices/features/question/practiceQuestionSlice';
 import { useDebounce } from '../../../hooks/useDebounce';
 import type { QuestionType, QuestionDifficulty } from '../../../types/question';
-import { Box, Button, Divider, Typography } from '@mui/material';
-import { Star } from 'lucide-react';
+import { Box, Button, Divider, Grid, Typography } from '@mui/material';
+import { CheckCircle2, ClipboardCheck, Star, StarsIcon, Target } from 'lucide-react';
 import { Lock } from '@mui/icons-material';
 import { getAllPlans } from '../../../redux/slices/features/subscription/subscriptionSlice';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
+import SummeryCard from '../../components/layout/SummeryCard';
+import { getCandidateDashboardSummary } from '../../../redux/slices/features/analytics/adminAnalysticsSlice';
 
 
 
@@ -24,10 +26,16 @@ const CandidateDashboard: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth)
   const navigate = useNavigate()
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
-  const { PracticeQuestions } = useSelector(
-    (state: RootState) => state.practiceQuestion
-  )
+  const { PracticeQuestions } = useSelector( (state: RootState) => state.practiceQuestion)
+  const { candidateSummary } = useSelector((state: RootState) => state.adminAnalytics)
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if(user){
+      dispatch(getAllPlans({params: {target: 'candidate'}, role: user?.role}))
+      dispatch(getCandidateDashboardSummary())
+    }
+  }, [dispatch, user])
 
   useEffect(() => {
     if(user){
@@ -43,8 +51,7 @@ const CandidateDashboard: React.FC = () => {
           role: 'candidate',
         })
       )
-      dispatch(getAllPlans({params: {target: 'candidate'}, role: user?.role}))
-  }
+    }
   }, [debouncedSearchTerm, type, difficulty, user, page, dispatch]);
 
   const proPlan = plans.find(p => p.price > 0)
@@ -52,6 +59,20 @@ const CandidateDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#021A30] to-[#0B0707]">
       <CandidateHeader />
+      <Grid container spacing={2} sx={{ mt: 5, mx: 3}}>
+        <Grid size={{xs: 10, md: 3}} >
+          <SummeryCard label='Total Questions Attempted' value={candidateSummary?.totalQuestionsAttempted ?? 0} icon={CheckCircle2} color='#53601d' bg='#000'/>
+        </Grid>
+        <Grid size={{xs: 10, md: 3}}>
+          <SummeryCard label='Accuracy' value={`${candidateSummary?.accuracy ?? 0}%`} icon={Target} color='#53601d' bg='#000'/>
+        </Grid>
+        <Grid size={{xs: 10, md: 3}}>
+          <SummeryCard label='Total Tests Attended' value={candidateSummary?.totalTestAttended ?? 0} icon={ClipboardCheck} color='black' bg='black'/>
+        </Grid>
+        <Grid size={{xs: 10, md: 3}}>
+          <SummeryCard label='Current Plan' value={candidateSummary?.currentPlan ?? 'Free'} icon={StarsIcon} color='black' bg='white'/>
+        </Grid>
+      </Grid>
       <CandidatePracticeQuestions
         questions={PracticeQuestions}
         type={type}

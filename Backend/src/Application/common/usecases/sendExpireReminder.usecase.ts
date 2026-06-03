@@ -1,5 +1,5 @@
-import CandidateEntity from "../../../Domain/entities/candidate.entity";
-import CompanyEntity from "../../../Domain/entities/company.entity";
+import CandidateEntity from "../../../Domain/entities/Candidate.entity";
+import CompanyEntity from "../../../Domain/entities/Company.entity";
 import { NotificationEvents } from "../../../Domain/enums/notification";
 import { TargetType } from "../../../Domain/enums/subscription";
 import userRole from "../../../Domain/enums/userRole.enum";

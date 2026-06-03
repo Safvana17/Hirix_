@@ -1,5 +1,3 @@
-import { InterviewJoinStatus } from "../../../Domain/enums/interview";
-import userRole from "../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../Domain/repositoryInterface/iCompany.repository";
 import { IInterviewRepository } from "../../../Domain/repositoryInterface/iInterview.repository";

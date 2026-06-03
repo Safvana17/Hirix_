@@ -1,4 +1,5 @@
-import userRole from '../../../Domain/enums/userRole.enum'
+import userRole from "../../../../Domain/enums/userRole.enum"
+
 
 export interface VerifyCompanyInputDTO {
     token: string

@@ -1,6 +1,6 @@
-import AdminEntity from "../../../Domain/entities/admin.entity";
-import CandidateEntity from "../../../Domain/entities/candidate.entity";
-import CompanyEntity from "../../../Domain/entities/company.entity";
+import AdminEntity from "../../../Domain/entities/Admin.entity";
+import CandidateEntity from "../../../Domain/entities/Candidate.entity";
+import CompanyEntity from "../../../Domain/entities/Company.entity";
 import userRole from "../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../Domain/errors/app.error";
 import { IAuthRepository } from "../../../Domain/repositoryInterface/iAuth.repository";

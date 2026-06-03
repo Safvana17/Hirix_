@@ -1,4 +1,4 @@
-import CandidateEntity from "../../../../Domain/entities/candidate.entity";
+import CandidateEntity from "../../../../Domain/entities/Candidate.entity";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";

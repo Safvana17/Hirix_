@@ -1,5 +1,5 @@
-import AdminEntity from "../../Domain/entities/admin.entity";
-import { IAdmin } from "../../Infrastructure/database/Model/admin";
+import AdminEntity from "../../Domain/entities/Admin.entity";
+import { IAdmin } from "../../Infrastructure/database/Model/Admin";
 
 export class AdminMapper {
     static toEntity(doc: IAdmin): AdminEntity {
