@@ -7,6 +7,7 @@ import { logger } from "../../utils/logging/loger";
 import { ITestCandidate, TestCandidateModel } from "../database/Model/TestCandidate";
 import { BaseRepository } from "./base.repository";
 import { TestHistoryDTO } from "../../Application/candidate/dtos/analytics/candidate.testHistory.dto";
+import { TestLogDTO } from "../../Application/admin/dtos/analytics/admin.testLog.dto";
 
 export class TestCandidateRepository extends BaseRepository<TestCandidateEntity, ITestCandidate> implements ITestCandidateRepository{
     constructor() {
@@ -213,46 +214,6 @@ export class TestCandidateRepository extends BaseRepository<TestCandidateEntity,
         const skip = query.limit * (query.page - 1)
         const totalCount = await this._model.countDocuments({email: query.email})
         const totalPages = Math.ceil(totalCount/query.limit)
-        const stage1 = await this._model.aggregate([
-  {
-    $match: { email: query.email }
-  }
-]);
-
-console.log("After match:", stage1.length);
-const stage2 = await this._model.aggregate([
-  {
-    $match: { email: query.email }
-  },
-  {
-    $lookup: {
-      from: 'tests',
-      localField: 'testId',
-      foreignField: '_id',
-      as: 'test'
-    }
-  }
-]);
-
-console.log("After lookup test:", stage2.length);
-const stage3 = await this._model.aggregate([
-  {
-    $match: { email: query.email }
-  },
-  {
-    $lookup: {
-      from: 'tests',
-      localField: 'testId',
-      foreignField: '_id',
-      as: 'test'
-    }
-  },
-  {
-    $unwind: '$test'
-  }
-]);
-
-console.log("After unwind test:", stage3.length);
         const documents =  await this._model.aggregate([
             {
                 $match: {
@@ -327,6 +288,118 @@ console.log("After unwind test:", stage3.length);
         }
     }
 
+    async getTestLog(query: { page: number; limit: number; }): Promise<{ test: TestLogDTO[]; totalCount: number; totalPages: number; }> {
+        const skip = query.limit * (query.page - 1)
+        const documents = await this._model.aggregate ([
+            {
+                $match: {
+                    candidateTestStatus: CandidateTestStatus.SUBMITTED
+                }
+            },
+            {
+                $group: {
+                    _id: "$testId",
+                    candidates: {$sum: 1},
+                    passCount: { 
+                        $sum: {
+                            $cond: [
+                                {$eq: ["$selectionStatus",CandidatePipelineStatus.SHORTLISTED]},
+                                1,
+                                0
+                            ]
+                        }
+                    },
+                    averageScore: { $avg: "$marksObtained"}
+                }
+            },
+            {
+                $lookup: {
+                    from: "tests",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: 'test'
+                }
+            },
+            {
+                $unwind: "$test"
+            },
+            {
+                $lookup: {
+                    from: "companies",
+                    localField: "test.companyId",
+                    foreignField: "_id",
+                    as: 'company'
+                }
+            },
+            {
+                $unwind: "$company"
+            },
+            {
+                $project: {
+                    _id: 0,
+                    company: '$company.name',
+                    testName: '$test.name',
+                    date: {
+                        $dateToString: {
+                            format: "%d-%m-%Y",
+                            date: '$test.createdAt'
+                        }
+                    },
+                    candidates: 1,
+                    averageScore: {
+                        $round: ["$averageScore", 2]
+                    },
+                    passRate: {
+                        $round: [
+                            {
+                                $multiply: [
+                                    {
+                                        $divide: ["$passCount", "$candidates"]
+                                    },
+                                    100
+                                ]
+                            },
+                            2
+                        ]
+                    }
+                }
+            },
+            {
+                $sort: {
+                    date: -1
+                }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: query.limit
+            }
+        ])
+        const totalTest = await this._model.aggregate([
+            {
+                $match: {
+                    candidateTestStatus: CandidateTestStatus.SUBMITTED 
+                }
+            },
+            {
+                $group: {
+                    _id: "$testId"
+                }
+            },
+            {
+                $count: "count"
+            }
+        ])
+        const totalCount = totalTest[0]?.count ?? 0
+        const totalPages = Math.ceil(totalCount / query.limit)
+        return {
+            test: documents,
+            totalCount,
+            totalPages
+        }
+
+    }
     async getTotalTestAttended(email: string): Promise<number> {
         return this._model.countDocuments({email})
     }

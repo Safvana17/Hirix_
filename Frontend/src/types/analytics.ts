@@ -97,3 +97,39 @@ export interface TestHistoryArgs {
     page?: number
     limit?: number
 }
+
+export interface TestLog {
+    id: string
+    company: string
+    testName: string
+    date: string
+    candidates: number
+    passRate: number
+    averageScore: number
+}
+
+export interface TestLogResponse {
+    test: TestLog[]
+    totalCount: number
+    totalPages: number
+}
+
+export interface TestLogArgs {
+    page: number
+    limit?: number
+}
+
+export interface CandidateParticipationTrend {
+    month: string
+    totalCandidates: number
+    passedCount: number
+    rejectedCount: number
+}
+
+export interface CompanyUsage {
+    month: string
+    company: string
+    candidates: number
+    tests: number
+    interviews: number
+}

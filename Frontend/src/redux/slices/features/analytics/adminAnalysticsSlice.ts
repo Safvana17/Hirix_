@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummary, CandidateStatusDistribution, CandidateSummary, TestHistory, TestHistoryResponse, TestHistoryArgs } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummary, CandidateStatusDistribution, CandidateSummary, TestHistory, TestHistoryResponse, TestHistoryArgs, TestLog, TestLogResponse, TestLogArgs } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -19,6 +19,7 @@ interface AdminAnalyticsState {
     statusDistribution: CandidateStatusDistribution[]
     paymentHistory: PaymentHistory[]
     testHistory: TestHistory[]
+    testLog: TestLog[]
     pagination: {
         payment: {
             totalPages: number
@@ -44,6 +45,7 @@ const initialState: AdminAnalyticsState = {
     paymentHistory: [],
     statusDistribution: [],
     testHistory: [],
+    testLog: [],
     pagination: {
         payment: {
             totalCount: 0,
@@ -273,6 +275,24 @@ TestHistoryResponse,
     }
 })
 
+export const getTestLog = createAsyncThunk<
+TestLogResponse,
+{params: TestLogArgs},
+{rejectValue: string}
+>('test/log', async ({params}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.ADMIN.ANALYTICS.TEST_ACTIVITY_LOG, {params})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        console.log('response: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get test log')
+    }
+})
+
 
 const adminAnalyticsSlice = createSlice({
     name: 'adminAnalytics',
@@ -415,6 +435,19 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getTestHistory.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get test history'
+         })
+         .addCase(getTestLog.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getTestLog.fulfilled, (state, action) => {
+            state.loading = false
+            state.testLog = action.payload.test
+            state.pagination.test.totalCount = action.payload.totalCount
+            state.pagination.test.totalPages = action.payload.totalPages
+         })
+         .addCase(getTestLog.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get test log'
          })
     }
 })

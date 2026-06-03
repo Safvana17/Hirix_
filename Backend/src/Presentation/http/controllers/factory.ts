@@ -211,6 +211,7 @@ import { CompanyCandidateStatusDistributionUsecase } from "../../../Application/
 import { CandidateDashboardSummeryUsecase } from "../../../Application/candidate/useCases/analytics/candidate.dashboardSummery.usecase";
 import { CandidateAnalyticsController } from "./candidate/candidateAnalyticsController";
 import { CandidateTestHistoryUsecase } from "../../../Application/candidate/useCases/analytics/candidate.testHistory.usecase";
+import { AdminTestLogUsecase } from "../../../Application/admin/usecases/analytics/admin.testLog.usecase";
 
 
 
@@ -1043,6 +1044,9 @@ export const iCandidateTestHistory = new CandidateTestHistoryUsecase (
     iCandidateRepository,
     iTestCandidateRepository
 )
+export const iAdminTestLog = new AdminTestLogUsecase (
+    iTestCandidateRepository
+)
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,
@@ -1239,7 +1243,8 @@ export const iAdminAnalyticsController = new AdminAnalyticsController (
     iAdminGetPaymentHistory,
     iAdminGetdashboardSummery,
     iAdminGetTestActivity,
-    iAdminSubscriptionDistribution
+    iAdminSubscriptionDistribution,
+    iAdminTestLog,
 )
 
 export const iCompanyAnalyticsController = new CompanyAnalyticsController(

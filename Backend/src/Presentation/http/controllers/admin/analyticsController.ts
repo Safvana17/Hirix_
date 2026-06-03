@@ -11,6 +11,7 @@ import { IAdminGetPaymentHistoryUsecase } from "../../../../Application/admin/in
 import { IAdminGetDashboardSummeryUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.dashboardSummery.usecase";
 import { IAdminGetTestActivityUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.testActivity.usecase";
 import { IAdminSubscriptionDistributionUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.subscriptionDistribution.usecase";
+import { IAdminTestLogUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.testLog.usecase";
 
 export class AdminAnalyticsController {
     constructor (
@@ -21,6 +22,7 @@ export class AdminAnalyticsController {
         private _getAdminDashboardSummery: IAdminGetDashboardSummeryUsecase,
         private _testActivity: IAdminGetTestActivityUsecase,
         private _subscriptionDistribution: IAdminSubscriptionDistributionUsecase,
+        private _testLog: IAdminTestLogUsecase,
     ) {}
 
     getRevenueSummery = asyncHandler(async(req: Request, res: Response) => {
@@ -61,5 +63,11 @@ export class AdminAnalyticsController {
         const { type } = req.validatedQuery as RevenueTrendByPlanQuery
         const distribution = await this._subscriptionDistribution.execute({type})
         return sendSuccess(res, statusCode.OK, '', distribution.distribution)
+    })
+
+    getTestLog = asyncHandler(async(req: Request, res: Response) => {
+        const query = req.validatedQuery as PaymentHistoryQuery
+        const { test, totalCount, totalPages} = await this._testLog.execute({...query})
+        return sendSuccess(res, statusCode.OK, '', {test, totalCount, totalPages})
     })
 }

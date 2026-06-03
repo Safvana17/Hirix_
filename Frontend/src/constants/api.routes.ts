@@ -199,6 +199,9 @@ export const API_ROUTES = {
       TEST_ACTIVITY: '/admin/test-activity',
       SUBSCRIPTION_DISTRIBUTION: '/admin/subscription-distribution',
       RECENT_ACTIVITY: '/admin/recent-activity',
+      TEST_ACTIVITY_LOG:'/admin/test-log',
+      CANDIDATE_PARTICIPATION: '/admin/candidate-participation',
+      COMPANY_USAGE: '/admin/company-usage',
     }
   },
   COMMON: {

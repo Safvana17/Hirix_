@@ -202,6 +202,9 @@ export const ROUTES = {
             TEST_ACTIVITY: '/test-activity',
             SUBSCRIPTION_DISTRIBUTION: '/subscription-distribution',
             RECENT_ACTIVITY: '/recent-activity',
+            TEST_ACTIVITY_LOG:'/test-log',
+            CANDIDATE_PARTICIPATION: '/candidate-participation',
+            COMPANY_USAGE: '/company-usage',
         }
     }
 }
