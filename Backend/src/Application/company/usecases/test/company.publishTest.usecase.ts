@@ -1,7 +1,9 @@
+import { ActivityAction } from "../../../../Domain/enums/activityLog";
 import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { CandidateTestStatus, TestStatus } from "../../../../Domain/enums/Test";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
+import { IActivityLogRepository } from "../../../../Domain/repositoryInterface/IActivityLog.repository";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
@@ -27,7 +29,8 @@ export class CompanyPublishTestUsecase implements ICompanyPublishTestUsecase {
         private _tokenService: ITokenService,
         private _processNotificationUsecase: IAdminProcessNotificationUsecase,
         private _subscriptionRepository: ISubscriptionRepository,
-        private _subscriptionPlanRepository: ISubscriptionPlanRepository
+        private _subscriptionPlanRepository: ISubscriptionPlanRepository,
+        private _activityLogRepository: IActivityLogRepository,
     ) {}
 
     async execute(request: CompanyPublishTestInputDTO): Promise<CompanyCreateTestOutputDTO> {
@@ -109,10 +112,19 @@ export class CompanyPublishTestUsecase implements ICompanyPublishTestUsecase {
         )
         test.testStatus = TestStatus.PUBLISHED
         const savedTest = await this._testRepository.update(test.id, test)
-
         if(!savedTest){
             throw new AppError(TestMessages.error.TEST_NOT_FOUND, statusCode.NOT_FOUND)
         }
+
+        await this._activityLogRepository.create({
+            id: '',
+            actorId: company.id,
+            actorType: userRole.Company,
+            action: ActivityAction.TEST_PUBLISHED,
+            targetId: savedTest.id,
+            targetType: 'Test',
+            title: `${savedTest.name} was published by ${company.getName()} `
+        })
 
         await Promise.all(
             savedCandidatesWithLinks.map(({candidate, testLink}) => {

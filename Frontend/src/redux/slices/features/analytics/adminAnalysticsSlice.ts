@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummary, CandidateStatusDistribution, CandidateSummary, TestHistory, TestHistoryResponse, TestHistoryArgs, TestLog, TestLogResponse, TestLogArgs, CandidateParticipationTrend, CompanyUsage } from "../../../../types/analytics"
+import type { PaymentHistory, PaymentHistoryArgs, PaymentHistoryResponse,RevenueSummary, AdminSummary, RevenueTrendMonth, RevenueTrendPlan, TestActivityTrend, SubscriptionDistribution, CompanySummary, CandidateStatusDistribution, CandidateSummary, TestHistory, TestHistoryResponse, TestHistoryArgs, TestLog, TestLogResponse, TestLogArgs, CandidateParticipationTrend, CompanyUsage, RecentActivity, RecentActivityArgs, RecentActivityResponse } from "../../../../types/analytics"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -21,6 +21,7 @@ interface AdminAnalyticsState {
     paymentHistory: PaymentHistory[]
     testHistory: TestHistory[]
     testLog: TestLog[]
+    recentActivity: RecentActivity[]
     companyUsage: CompanyUsage[]
     pagination: {
         payment: {
@@ -29,6 +30,10 @@ interface AdminAnalyticsState {
         },
         test: {
             totalPages: number
+            totalCount: number
+        },
+        activity: {
+            totalPages: number,
             totalCount: number
         }
     }
@@ -50,12 +55,17 @@ const initialState: AdminAnalyticsState = {
     testHistory: [],
     testLog: [],
     companyUsage: [],
+    recentActivity: [],
     pagination: {
         payment: {
             totalCount: 0,
             totalPages: 0
         },
         test: {
+            totalCount: 0,
+            totalPages: 0
+        }, 
+        activity: {
             totalCount: 0,
             totalPages: 0
         }
@@ -325,7 +335,7 @@ void,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('response: ', response.data.data)
+        // console.log('response: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -333,6 +343,23 @@ void,
     }
 })
 
+export const getAdminRecentActivity = createAsyncThunk<
+RecentActivityResponse,
+{params: RecentActivityArgs},
+{rejectValue: string}
+>('admin/recentActivity', async ({params}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.ADMIN.ANALYTICS.RECENT_ACTIVITY, {params})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+        console.log('response: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get recent activity')
+    }
+})
 
 const adminAnalyticsSlice = createSlice({
     name: 'adminAnalytics',
@@ -510,6 +537,19 @@ const adminAnalyticsSlice = createSlice({
          .addCase(getCompanyUsage.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get company usage'
+         })
+         .addCase(getAdminRecentActivity.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getAdminRecentActivity.fulfilled, (state, action) => {
+            state.loading = false
+            state.recentActivity = action.payload.activities
+            state.pagination.activity.totalCount = action.payload.totalCount
+            state.pagination.activity.totalPages = action.payload.totalPages
+         })
+         .addCase(getAdminRecentActivity.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get recent activity'
          })
     }
 })

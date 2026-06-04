@@ -11,8 +11,11 @@ export class ActivityLogMapper {
             doc.action,
             doc.targetId.toString(),
             doc.targetType,
-            doc.title
+            doc.title,
         )
+
+        log.createdAt = doc.createdAt
+        
         return log
     }
 
@@ -22,7 +25,7 @@ export class ActivityLogMapper {
             actorType: entity.actorType,
             action: entity.action,
             targetId: new Types.ObjectId(entity.targetId),
-            target: entity.targetType ,
+            targetType: entity.targetType ,
             title: entity.title
         }
     }

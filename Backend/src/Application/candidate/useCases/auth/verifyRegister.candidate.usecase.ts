@@ -8,13 +8,17 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
+import { IActivityLogRepository } from "../../../../Domain/repositoryInterface/IActivityLog.repository";
+import userRole from "../../../../Domain/enums/userRole.enum";
+import { ActivityAction } from "../../../../Domain/enums/activityLog";
 
 export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandidate{
     constructor(
         private candidateRepository: ICandidateRepository,
         private otpStore: IOtpStore,
         private otpService: IOtpService,
-        private tokenService: ITokenService
+        private tokenService: ITokenService,
+        private _activityLogRepository: IActivityLogRepository
     ) {}
 
     /**
@@ -52,7 +56,15 @@ export class VerifyRegisterCandidateOtpUsecase implements IVerifyRegisterCandida
         await this.candidateRepository.update(candidateId, candidate)
         await this.otpStore.deleteOtp(candidateId)
 
-
+        await this._activityLogRepository.create({
+            id: '',
+            actorId: candidate.id,
+            actorType: userRole.Candidate,
+            action: ActivityAction.CANDIDATE_REGISTERED,
+            targetId: candidate.id,
+            targetType: 'Candidate',
+            title: `${candidate.getName()} was joined Hirix `
+        })
         // const refreshToken = this.tokenService.generateRefreshToken({candidateId})
         // const accessToken = this.tokenService.generateAccessToken({candidateId, email: candidate.getEmail(), role: candidate.getRole()})
 

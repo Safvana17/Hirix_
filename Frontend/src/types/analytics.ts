@@ -1,3 +1,4 @@
+import type { UserRole } from "../constants/role"
 import type { PaymentStatus, TargetType } from "./subscription"
 import type { CandidateSelectionStatus } from "./test"
 
@@ -130,4 +131,24 @@ export interface CompanyUsage {
     company: string
     totalTests: number
     totalInterviews: number
+}
+
+export interface RecentActivity{
+    date: string
+    title: string
+    targetType: string
+    role: UserRole
+    action: string
+}
+
+export interface RecentActivityResponse {
+    activities: RecentActivity[]
+    totalPages: number
+    totalCount: number
+}
+
+export interface RecentActivityArgs {
+    page: number
+    limit: number
+    month: number
 }

@@ -1,6 +1,9 @@
+import { ActivityAction } from "../../../../Domain/enums/activityLog";
 import { NotificationEvents } from "../../../../Domain/enums/notification";
+import userRole from "../../../../Domain/enums/userRole.enum";
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
+import { IActivityLogRepository } from "../../../../Domain/repositoryInterface/IActivityLog.repository";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
@@ -14,7 +17,8 @@ export class AdminApproveCompanyUsecase implements IAdminApproveCompanyUsecase {
     constructor(
          private _companyRepository: ICompanyRepository,
          private _mailService: IMailService,
-         private _processNotification: IAdminProcessNotificationUsecase
+         private _processNotification: IAdminProcessNotificationUsecase,
+         private _activityLogRepository: IActivityLogRepository,
     ) {}
 
     /**
@@ -30,6 +34,15 @@ export class AdminApproveCompanyUsecase implements IAdminApproveCompanyUsecase {
         company.setStatus(UserStatus.ACTIVE)
         company.setIsAdminVerified(true)
         await this._companyRepository.update(request.id, company)
+        await this._activityLogRepository.create({
+            id: '',
+            actorId: '',
+            actorType: userRole.Admin,
+            action: ActivityAction.COMPANY_APPROVED,
+            targetId: company.id,
+            targetType: 'Company',
+            title: `${company.getName()} was approved by admin`
+        })
         await this._processNotification.execute({
             event: NotificationEvents.COMPANY_APPROVED,
             recipients: [{

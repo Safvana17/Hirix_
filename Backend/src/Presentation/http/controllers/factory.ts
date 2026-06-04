@@ -214,6 +214,8 @@ import { CandidateTestHistoryUsecase } from "../../../Application/candidate/useC
 import { AdminTestLogUsecase } from "../../../Application/admin/usecases/analytics/admin.testLog.usecase";
 import { AdminCandidateParticipationTrendUsecase } from "../../../Application/admin/usecases/analytics/admin.candidateParticipationTrend.usecase";
 import { AdminCompanyUsageUsecase } from "../../../Application/admin/usecases/analytics/admin.companyUsage.usecase";
+import { ActivityRepository } from "../../../Infrastructure/repositories/activityLog.repository";
+import { AdminGetRecentActivityUsecase } from "../../../Application/admin/usecases/analytics/admin.recentActivity.usecase";
 
 
 
@@ -234,6 +236,7 @@ const iNotificationRepository = new NotificationRepository()
 const iTestRepository = new TestRepository()
 const iTestCandidateRepository = new TestCandidateRepository()
 const iInterviewRepository = new InterviewRepository()
+const iActivityLogRepository = new ActivityRepository()
 
 
 const iHashService = new HashService()
@@ -266,7 +269,8 @@ const iVerifyRegisterCandidate = new VerifyRegisterCandidateOtpUsecase(
     iCandidateRepository,
     iOtpRepository,
     iOtpService,
-    iTokenService
+    iTokenService,
+    iActivityLogRepository
 )
 const iRegisterCandidate = new RegisterCandidateUsecase(
     iCandidateRepository,
@@ -484,7 +488,8 @@ const iLoginCompany = new LoginCompanyUsecase(
 const iCompanyVerifyRegisterOtp = new CompanyVerifyRegisterOtpUsecase(
     iCompanyRepository,
     iOtpRepository,
-    iOtpService
+    iOtpService,
+    iActivityLogRepository
 )
 const iCompanyForgotPassword = new CompanyForgotPasswordUsecase(
     iCompanyRepository,
@@ -675,7 +680,8 @@ const iCompanyPublishTest = new CompanyPublishTestUsecase (
     iTokenService,
     iProcessNotification,
     iSubscriptionRepository,
-    iSubscriptionPlanRepository
+    iSubscriptionPlanRepository,
+    iActivityLogRepository
 )
 const iCompanyGetQuestionsForTest = new CompanyGetAllQuestionsForTest(
     iQuestionRepository,
@@ -752,7 +758,8 @@ const iCompanyScheduleTestAgain = new CompanyScheduleTestAgainUsecase(
     iSubscriptionRepository,
     iSubscriptionPlanRepository,
     iJobRoleRepository,
-    iProcessNotification
+    iProcessNotification,
+    iActivityLogRepository
 )
 
 //interview
@@ -763,7 +770,8 @@ const iCompanyScheduleInterview = new CompanyScheduleInterviewUsecase (
     iJobRoleRepository,
     iInterviewRepository,
     iTokenService,
-    iProcessNotification
+    iProcessNotification,
+    iActivityLogRepository
 
 )
 const iCompanyGetAllInterviews = new CompanyGetAllInterviewsUsecase(
@@ -957,7 +965,8 @@ const iUpdateCandidateStatus = new AdminUpdateCandidateStatus(
 const iApproveCompany = new AdminApproveCompanyUsecase(
     iCompanyRepository,
     iMailService,
-    iProcessNotification
+    iProcessNotification,
+    iActivityLogRepository
 )
 
 const iRejectCompany = new AdminRejectCompanyUsecase(
@@ -1055,6 +1064,9 @@ export const iAdminCandidateParticipationTrend = new AdminCandidateParticipation
 export const iAdminCompanyUsage = new AdminCompanyUsageUsecase (
     iTestRepository,
     iInterviewRepository
+)
+export const iAdminGetRecentActivity = new AdminGetRecentActivityUsecase (
+    iActivityLogRepository
 )
 //controller
 export const iUnifiedController = new UnifiedAuthController(
@@ -1256,6 +1268,7 @@ export const iAdminAnalyticsController = new AdminAnalyticsController (
     iAdminTestLog,
     iAdminCandidateParticipationTrend,
     iAdminCompanyUsage,
+    iAdminGetRecentActivity,
 )
 
 export const iCompanyAnalyticsController = new CompanyAnalyticsController(

@@ -9,7 +9,7 @@ import { addCategorySchema, editCategorySchema } from "../../validators/category
 import { rejectCompanySchema, updateStatusSchema } from "../../validators/adminValidator";
 import { createSubscriptionPlanSchema, updatePlanSchema } from "../../validators/subscriptionPlanValidator";
 import { CreateNotificationRuleSchema, TemplateSchema, UpdateNotificationRuleSchema, UpdatetEmplateStatusSchema, getAllRulesSchema, getAllTemplateQSchema, settingsParamsShema } from "../../validators/adminSettingsValidator";
-import { GetPaymentHistorySchema, GetRevenueTrendByMonthSchema, GetRevenueTrendByPlanSchema } from "../../validators/analyticsValidator";
+import { GetPaymentHistorySchema, GetRecentActivitySchema, GetRevenueTrendByMonthSchema, GetRevenueTrendByPlanSchema } from "../../validators/analyticsValidator";
 
 const router = Express.Router()
 
@@ -73,6 +73,6 @@ router.get(ROUTES.ADMIN.ANALYTICS.SUBSCRIPTION_DISTRIBUTION, authHandler(iTokenS
 router.get(ROUTES.ADMIN.ANALYTICS.TEST_ACTIVITY_LOG, authHandler(iTokenService), validate(GetPaymentHistorySchema, 'query'), iAdminAnalyticsController.getTestLog)
 router.get(ROUTES.ADMIN.ANALYTICS.CANDIDATE_PARTICIPATION, authHandler(iTokenService), validate(GetRevenueTrendByMonthSchema, 'query'), iAdminAnalyticsController.getCandidateParticipationTrend)
 router.get(ROUTES.ADMIN.ANALYTICS.COMPANY_USAGE, authHandler(iTokenService), iAdminAnalyticsController.getCompanyUsage)
-
+router.get(ROUTES.ADMIN.ANALYTICS.RECENT_ACTIVITY, authHandler(iTokenService), validate(GetRecentActivitySchema, 'query'), iAdminAnalyticsController.getRecentActivity)
 
 export default router;               

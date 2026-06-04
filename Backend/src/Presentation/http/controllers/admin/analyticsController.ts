@@ -4,7 +4,7 @@ import { asyncHandler } from "../../../../utils/asyncHandler";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IAdminGetRevenueTrendByMonthUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.getRevenueTrendByMonth.usecase";
-import { PaymentHistoryQuery, RevenueTrendByMonthQuery, RevenueTrendByPlanQuery } from "../../validators/analyticsValidator";
+import { PaymentHistoryQuery, RecentActivityQuery, RevenueTrendByMonthQuery, RevenueTrendByPlanQuery } from "../../validators/analyticsValidator";
 import { IAdminGetRevenueTrendByPlanUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.getRevenueTrendByPlan.usecase";
 import { logger } from "../../../../utils/logging/loger";
 import { IAdminGetPaymentHistoryUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.getPaymentHistory.usecse";
@@ -14,6 +14,7 @@ import { IAdminSubscriptionDistributionUsecase } from "../../../../Application/a
 import { IAdminTestLogUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.testLog.usecase";
 import { IAdminCandidateParticipationTrendUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.candidateParticipationTrend.usecase";
 import { IAdminCompanyUsageUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.companyUsage.usecase";
+import { IAdminRecentActivityUsecase } from "../../../../Application/admin/interfaces/analytics/IAdmin.recentActivity.usecase";
 
 export class AdminAnalyticsController {
     constructor (
@@ -27,6 +28,7 @@ export class AdminAnalyticsController {
         private _testLog: IAdminTestLogUsecase,
         private _candidateParticipationTrend: IAdminCandidateParticipationTrendUsecase,
         private _companyUsage: IAdminCompanyUsageUsecase,
+        private _getRecentActivity: IAdminRecentActivityUsecase,
     ) {}
 
     getRevenueSummery = asyncHandler(async(req: Request, res: Response) => {
@@ -84,6 +86,12 @@ export class AdminAnalyticsController {
     getCompanyUsage = asyncHandler(async(req: Request, res: Response) => {
         const usage = await this._companyUsage.execute()
         return sendSuccess(res, statusCode.OK, '', usage.usage)
+    })
+
+    getRecentActivity = asyncHandler(async(req: Request, res: Response) => {
+        const { month, page, limit } = req.validatedQuery as RecentActivityQuery
+        const { activities, totalCount, totalPages } = await this._getRecentActivity.execute({month, page, limit})
+        return sendSuccess(res, statusCode.OK, '', { activities, totalCount, totalPages})
     })
 
 }

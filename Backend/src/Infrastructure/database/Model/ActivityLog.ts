@@ -10,6 +10,7 @@ export interface IActivityLog extends Document {
     targetId: Types.ObjectId
     targetType: string
     title: string
+    createdAt: Date
 }
 
 const activityLogSchema: Schema<IActivityLog> = new Schema({

@@ -1,5 +1,8 @@
+import { ActivityAction } from "../../../../Domain/enums/activityLog";
+import userRole from "../../../../Domain/enums/userRole.enum";
 import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
+import { IActivityLogRepository } from "../../../../Domain/repositoryInterface/IActivityLog.repository";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
@@ -12,7 +15,8 @@ export class CompanyVerifyRegisterOtpUsecase implements IVerifyRegisterCompanyOt
     constructor(
         private _companyRepository: ICompanyRepository,
         private _otpStore: IOtpStore,
-        private _otpService: IOtpService
+        private _otpService: IOtpService,
+        private _activityLogRepository: IActivityLogRepository,
     ) {}
 
     async execute(request: verifyRegisterCompanyOtpInputDTO): Promise<verifyRegisterCompanyOtpOutputDTO> {
@@ -45,7 +49,15 @@ export class CompanyVerifyRegisterOtpUsecase implements IVerifyRegisterCompanyOt
         await this._companyRepository.update(companyId, company)
         await this._otpStore.deleteOtp(companyId)
 
-
+        await this._activityLogRepository.create({
+            id: '',
+            actorId: company.id,
+            actorType: userRole.Company,
+            action: ActivityAction.COMPANY_REGISTERED,
+            targetId: company.id,
+            targetType: 'Company',
+            title: `${company.getName()} joined Hirix`
+        })
         // const refreshToken = this.tokenService.generateRefreshToken({candidateId})
         // const accessToken = this.tokenService.generateAccessToken({candidateId, email: candidate.getEmail(), role: candidate.getRole()})
 

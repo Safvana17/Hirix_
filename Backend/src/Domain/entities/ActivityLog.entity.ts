@@ -9,6 +9,7 @@ export class ActivityLogEntity {
     targetId: string
     targetType: string
     title: string
+    createdAt?: Date
     
     constructor (
         id: string,

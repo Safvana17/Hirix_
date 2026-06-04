@@ -17,3 +17,10 @@ export const GetPaymentHistorySchema = z.object({
     limit: z.coerce.number()
 })
 export type PaymentHistoryQuery = z.infer<typeof GetPaymentHistorySchema>
+
+export const GetRecentActivitySchema = z.object({
+    month: z.coerce.number().pipe(z.nativeEnum(MonthPeriod)),
+    page: z.coerce.number(),
+    limit: z.coerce.number()
+})
+export type RecentActivityQuery = z.infer<typeof GetRecentActivitySchema>

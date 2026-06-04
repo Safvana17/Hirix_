@@ -1,10 +1,12 @@
 import { TestEntity } from "../../../../Domain/entities/Test.entity";
 import { TestCandidateEntity } from "../../../../Domain/entities/TestCandidate.entity";
 import { TestQuestionEntity } from "../../../../Domain/entities/TestQuestion.entity";
+import { ActivityAction } from "../../../../Domain/enums/activityLog";
 import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { CandidateTestStatus, QuestionMarks, TestStatus } from "../../../../Domain/enums/Test";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
+import { IActivityLogRepository } from "../../../../Domain/repositoryInterface/IActivityLog.repository";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
@@ -31,7 +33,8 @@ export class CompanyScheduleTestAgainUsecase implements ICompanyScheduleTestAgai
         private _subscriptionRepository: ISubscriptionRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
         private _jobRoleRepository: IJobRepository,
-        private _processNotificationUsecase: IAdminProcessNotificationUsecase
+        private _processNotificationUsecase: IAdminProcessNotificationUsecase,
+        private _activityLogRepository: IActivityLogRepository,
     ) {}
     async execute(request: CompanyScheduleAgainTestInputDTO): Promise<CompanyScheduleAgainTestOutputDTO> {
         const company = await this._companyRepository.findById(request.companyId)
@@ -176,6 +179,15 @@ export class CompanyScheduleTestAgainUsecase implements ICompanyScheduleTestAgai
             false
         )
         const savedTest = await this._testRepository.create(newTest)
+        await this._activityLogRepository.create({
+            id: '',
+            actorId: company.id,
+            actorType: userRole.Company,
+            action: ActivityAction.TEST_PUBLISHED,
+            targetId: savedTest.id,
+            targetType: 'Test',
+            title: `${savedTest.name} was published by ${company.getName()} `
+        })
         for(const candidate of request.candidates){
             const token = this._tokenService.generateTestToken()
             const testCandidate = new TestCandidateEntity(

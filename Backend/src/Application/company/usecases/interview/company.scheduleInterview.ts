@@ -1,9 +1,11 @@
 import { InterviewEntity } from "../../../../Domain/entities/Interview";
+import { ActivityAction } from "../../../../Domain/enums/activityLog";
 import { InterviewStatus } from "../../../../Domain/enums/interview";
 import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { CandidatePipelineStatus } from "../../../../Domain/enums/Test";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
+import { IActivityLogRepository } from "../../../../Domain/repositoryInterface/IActivityLog.repository";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IInterviewRepository } from "../../../../Domain/repositoryInterface/iInterview.repository";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
@@ -29,6 +31,7 @@ export class CompanyScheduleInterviewUsecase implements ICompanyScheduleIntervie
         private _interviewRepository: IInterviewRepository,
         private _tokenService: ITokenService,
         private _processNotificationUsecase: IAdminProcessNotificationUsecase,
+        private _activityLogRepository: IActivityLogRepository,
     ) {}
 
     async execute(request: CompanyScheduleInterviewInputDTO): Promise<CompanyScheduleInterviewOutputDTO> {
@@ -93,6 +96,15 @@ export class CompanyScheduleInterviewUsecase implements ICompanyScheduleIntervie
         )
         
         const savedInterview = await this._interviewRepository.create(interview)
+        await this._activityLogRepository.create({
+            id: '',
+            actorId: company.id,
+            actorType: userRole.Company,
+            action: ActivityAction.INTERVIEW_SCHEDULED,
+            targetId: savedInterview.id,
+            targetType: 'Interview',
+            title: `${savedInterview.name} was scheduled by ${company.getName()} `
+        })
 
         candidate.selectionStatus = CandidatePipelineStatus.INTERVIEW_SCHEDULED
         candidate.currentInterviewRound = savedInterview.round
