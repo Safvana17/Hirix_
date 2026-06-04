@@ -33,83 +33,83 @@ const AdminReport: React.FC = () => {
     ]
   return (
      <InternalLayout title='Report' subTitle='Comprehensive platform insights and data exports' sidebarItems={adminSidebarItems}>
-               <Grid size={{ xs: 12, md: 6}}>
-                  <Paper sx={{ p: 2 }}>
-                     <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        mb={2}
-                     >
-                        <h3>Revenue Trend</h3>
-                        <FormControl size="small" sx={{ minWidth: 120 }}>
-                           <InputLabel>Period</InputLabel>
-                           <Select
-                              value={month}
-                              label="Period"
-                              onChange={(e) => setMonth(Number(e.target.value))}
-                           >
-                              <MenuItem value={3}>3 Months</MenuItem>
-                              <MenuItem value={6}>6 Months</MenuItem>
-                              <MenuItem value={12}>12 Months</MenuItem>
-                           </Select>
-                        </FormControl>
-                     </Box>
-                     <ResponsiveContainer width="100%" height={350}>
-                        <LineChart data={candidateParticipation}>
-                           <CartesianGrid strokeDasharray="3 3" />
-                           <XAxis dataKey="month" />
-                           <YAxis />
-                           <Tooltip />
-                           <Line 
-                              type="monotone"
-                              dataKey="passedCount"
-                              stroke='#493a07'                     
-                           />
-                           <Line 
-                              type="monotone"
-                              dataKey="rejectedCount"
-                              stroke='#20024a'                     
-                           />
-                           <Line 
-                              type="monotone"
-                              dataKey="totalCandidates"
-                              stroke='#01560a'                     
-                           />
-                        </LineChart>
-                     </ResponsiveContainer>
-                  </Paper>
-               </Grid>
- <Grid size={{ xs: 12, md: 6}}>
-                  <Paper sx={{ p: 2 }}>
-                     <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        mb={2}
-                     >
-                        <h3>Revenue by Plan</h3>
-                     </Box>
-                     <ResponsiveContainer width="100%" height={350}>
-                        <BarChart data={companyUsage}>
-                           <CartesianGrid strokeDasharray="2 2" />
-                           <XAxis dataKey="company" />
-                           <YAxis />
-                           <Tooltip />
-                           <Bar 
-                              dataKey="totalTests"
-                              fill='#5a0d33'  
-                              radius={[3, 3, 0, 0]}                   
-                           />
-                           <Bar 
-                              dataKey="totalInterviews"
-                              fill='#31065b'  
-                              radius={[3, 3, 0, 0]}                   
-                           />
-                        </BarChart>
-                     </ResponsiveContainer>
-                  </Paper>
-               </Grid>
+      <Grid size={{ xs: 12, md: 6}}>
+         <Paper sx={{ p: 2 }}>
+            <Box
+               display="flex"
+               justifyContent="space-between"
+               alignItems="center"
+               mb={2}
+            >
+            <h3>Revenue Trend</h3>
+            <FormControl size="small" sx={{ minWidth: 120 }}>
+               <InputLabel>Period</InputLabel>
+               <Select
+                  value={month}
+                  label="Period"
+                  onChange={(e) => setMonth(Number(e.target.value))}
+               >
+                  <MenuItem value={3}>3 Months</MenuItem>
+                  <MenuItem value={6}>6 Months</MenuItem>
+                  <MenuItem value={12}>12 Months</MenuItem>
+               </Select>
+            </FormControl>
+            </Box>
+            <ResponsiveContainer width="100%" height={350}>
+               <LineChart data={candidateParticipation}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line 
+                     type="monotone"
+                     dataKey="passedCount"
+                     stroke='#493a07'                     
+                  />
+                  <Line 
+                     type="monotone"
+                     dataKey="rejectedCount"
+                     stroke='#20024a'                     
+                  />
+                  <Line 
+                     type="monotone"
+                     dataKey="totalCandidates"
+                     stroke='#01560a'                     
+                  />
+               </LineChart>
+            </ResponsiveContainer>
+         </Paper>
+      </Grid>
+      <Grid size={{ xs: 12, md: 6}}>
+         <Paper sx={{ p: 2 }}>
+            <Box
+               display="flex"
+               justifyContent="space-between"                  
+               alignItems="center"
+               mb={2}
+            >                  
+               <h3>Revenue by Plan</h3>
+               </Box>
+                  <ResponsiveContainer width="100%" height={350}>
+                     <BarChart data={companyUsage}>
+                        <CartesianGrid strokeDasharray="2 2" />
+                        <XAxis dataKey="company" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar 
+                           dataKey="totalTests"
+                           fill='#5a0d33'  
+                           radius={[3, 3, 0, 0]}                   
+                        />
+                        <Bar 
+                           dataKey="totalInterviews"
+                           fill='#31065b'                                
+                           radius={[3, 3, 0, 0]}                   
+                        />
+                     </BarChart>
+                  </ResponsiveContainer>
+               </Paper>
+            </Grid>
             <DataTable
                columns={columns}
                isLoading={loading}
