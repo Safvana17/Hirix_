@@ -353,6 +353,24 @@ RecentActivityResponse,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
+        // console.log('response: ', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get recent activity')
+    }
+})
+
+export const getCompanyRecentActivity = createAsyncThunk<
+RecentActivityResponse,
+{params: RecentActivityArgs},
+{rejectValue: string}
+>('company/recentActivity', async ({params}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.ANALYTICS.RECENT_ACTIVITIES, {params})
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
         console.log('response: ', response.data.data)
         return response.data.data
     } catch (error) {
@@ -548,6 +566,19 @@ const adminAnalyticsSlice = createSlice({
             state.pagination.activity.totalPages = action.payload.totalPages
          })
          .addCase(getAdminRecentActivity.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to get recent activity'
+         })
+         .addCase(getCompanyRecentActivity.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(getCompanyRecentActivity.fulfilled, (state, action) => {
+            state.loading = false
+            state.recentActivity = action.payload.activities
+            state.pagination.activity.totalCount = action.payload.totalCount
+            state.pagination.activity.totalPages = action.payload.totalPages
+         })
+         .addCase(getCompanyRecentActivity.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to get recent activity'
          })

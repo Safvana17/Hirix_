@@ -216,6 +216,7 @@ import { AdminCandidateParticipationTrendUsecase } from "../../../Application/ad
 import { AdminCompanyUsageUsecase } from "../../../Application/admin/usecases/analytics/admin.companyUsage.usecase";
 import { ActivityRepository } from "../../../Infrastructure/repositories/activityLog.repository";
 import { AdminGetRecentActivityUsecase } from "../../../Application/admin/usecases/analytics/admin.recentActivity.usecase";
+import { CompanyGetRecentActivityUsecase } from "../../../Application/company/usecases/analytics/company.getRecentActivity.usecase";
 
 
 
@@ -1068,6 +1069,9 @@ export const iAdminCompanyUsage = new AdminCompanyUsageUsecase (
 export const iAdminGetRecentActivity = new AdminGetRecentActivityUsecase (
     iActivityLogRepository
 )
+export const iCompanyRecentActivity = new CompanyGetRecentActivityUsecase(
+    iActivityLogRepository
+)
 //controller
 export const iUnifiedController = new UnifiedAuthController(
     iUnifiedGetMe,
@@ -1274,7 +1278,8 @@ export const iAdminAnalyticsController = new AdminAnalyticsController (
 export const iCompanyAnalyticsController = new CompanyAnalyticsController(
     iCompanyGetDashboardSummery,
     iCompanyTestParticipationTRend,
-    iComapnyCandidateStatusDistribution
+    iComapnyCandidateStatusDistribution,
+    iCompanyRecentActivity,
 )
 
 export const iCandidateAnalyticsController = new CandidateAnalyticsController (
