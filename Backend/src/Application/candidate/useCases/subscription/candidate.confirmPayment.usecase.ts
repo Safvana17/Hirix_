@@ -1,6 +1,9 @@
+import { ActivityAction } from "../../../../Domain/enums/activityLog";
 import { PaymentStatus } from "../../../../Domain/enums/payment";
 import { subscriptionStatus } from "../../../../Domain/enums/subscription";
+import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
+import { IActivityLogRepository } from "../../../../Domain/repositoryInterface/IActivityLog.repository";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
 import { IPaymentRepository } from "../../../../Domain/repositoryInterface/iPayment.repository";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
@@ -18,7 +21,8 @@ export class CandidateConfirmPaymentUsecase implements ICandidateConfirmPaymentU
         private _paymentRepository: IPaymentRepository,
         private _subscriptionRepository: ISubscriptionRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
-        private _razorpayService: IRazorpayService
+        private _razorpayService: IRazorpayService,
+        private _activityLogRepository: IActivityLogRepository,
     ) {}
 
     async execute(request: CandidateConfirmPaymentInputDTO): Promise<CandidateConfirmPaymentOutputDTO> {
@@ -61,6 +65,16 @@ export class CandidateConfirmPaymentUsecase implements ICandidateConfirmPaymentU
         newSubscription.status = subscriptionStatus.ACTIVE
         newSubscription.isCurrent = true
         await this._subscriptionRepository.update(newSubscription.id, newSubscription)
+
+        await this._activityLogRepository.create({
+            id: '',
+            actorId: candidate.id,
+            actorType: userRole.Candidate,
+            action: ActivityAction.SUBSCRIPTION_PURCHASED,
+            targetId: newSubscription.id,
+            targetType: 'Subscription',
+            title: `${candidate.getName()} purchased ${plan.planName}`
+        })
 
         payment.status = PaymentStatus.SUCCESS
         payment.paymentId = request.paymentId

@@ -1,5 +1,8 @@
+import { ActivityAction } from "../../../../Domain/enums/activityLog";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
+import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
+import { IActivityLogRepository } from "../../../../Domain/repositoryInterface/IActivityLog.repository";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
@@ -13,7 +16,8 @@ export class CompanyChangeSubscriptionUsecase implements ICompanyChangeSubscript
     constructor (
         private _companyRepository: ICompanyRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
-        private _subscriptionRepository: ISubscriptionRepository
+        private _subscriptionRepository: ISubscriptionRepository,
+        private _activityLogRepository: IActivityLogRepository
     ) {}
 
     async execute(request: CompanyChangeSubscriptionInputDTO): Promise<CompanyChangeSubscriptionOutputDTO> {
@@ -63,6 +67,15 @@ export class CompanyChangeSubscriptionUsecase implements ICompanyChangeSubscript
               isTrial: false,
               isCurrent: true
            })
+            await this._activityLogRepository.create({
+                id: '',
+                actorId: company.id,
+                actorType: userRole.Company,
+                action: ActivityAction.SUBSCRIPTION_DOWNGRADED_TO_FREE,
+                targetId: currentSubscription.id,
+                targetType: 'Subscription',
+                title: `${company.getName()} downgraded subscription to ${freePlan.planName}`
+            })
         }
         return{
             newPlan: newPlan,

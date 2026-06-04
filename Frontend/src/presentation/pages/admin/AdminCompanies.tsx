@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import type { AppDispatch, RootState } from '../../../redux/store'
@@ -103,7 +103,7 @@ const AdminCompanies : React.FC = () => {
         })
     }
 
-    const columns: Column<Company>[] = useMemo(() =>[
+    const columns: Column<Company>[] = [
         {header: 'Company Name', key: 'name', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
         {header: 'Email Address', key: 'email', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
         {header: 'Status', key: 'status', render: (val) => (
@@ -170,7 +170,7 @@ const AdminCompanies : React.FC = () => {
                 )}
             </div>
         )}
-    ],[dispatch, navigate, handleUpdateStatus, handleApproveCompany, handleRejectCompany])
+    ]
 
     
   return (
@@ -220,6 +220,7 @@ const AdminCompanies : React.FC = () => {
             emptyMessage='No companies found matching your criteria'
             pagination={{
             currentPage,
+            totalCount: pagination.users.totalCount,
             totalPages: pagination.users.totalPages,
             onPageChange: (page) => setCurrentPage(page)
             }}

@@ -56,7 +56,7 @@ const TemplateFieldSchema =new Schema({
     },
     purpose: {
         type: String,
-        enum: [ "SUBJECT", "TITLE", "BODY", "FOOTER", "CTA_BUTTON", "OTP_LABEL", "EXPIRY_TEXT", "SUPPORT_TEXT", "CUSTOM" ]
+        enum: [ "SUBJECT", "TITLE", "BODY", "FOOTER", "CTA_BUTTON","OTP_CODE", "OTP_LABEL", "EXPIRY_TEXT", "SUPPORT_TEXT", "CUSTOM" ]
     },
     type: {
         type: String,

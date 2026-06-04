@@ -6,6 +6,7 @@ import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterf
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { logger } from "../../../../utils/logging/loger";
 import { CompanyGetAllQuestionsForTestInputDTO, CompanyGetAllQuestionsForTestOutputDTO } from "../../dtos/test/company.getTestQuestions.dto";
 import { ICompanyGetQuestionsForTest } from "../../interfaces/test/ICompany.getQuestionsForTest.usecase";
 
@@ -41,6 +42,7 @@ export class CompanyGetAllQuestionsForTest implements ICompanyGetQuestionsForTes
         }
 
         const { questions } = await this._questionRepository.findAllForTest({ companyId: company.id, category: request.category, type: request.type, difficulty: request.difficulty, includeCompany: isIncludeCompany})
+        logger.info({'questions': questions}, 'from add questions usecase')
         return {
             questions
         }

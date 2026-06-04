@@ -116,6 +116,7 @@ export class QuestionRepository extends BaseRepository <QuestionEntity, IQuestio
         if(query.includeCompany){
             filter.$or = [
                 {createdBy: userRole.Company},
+                {createdBy: userRole.Admin},
                 {createdById: query.companyId}
             ]
         }else{

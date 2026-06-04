@@ -1,6 +1,9 @@
 import { SubscriptionEntity } from "../../../../Domain/entities/Subscription.entity";
+import { ActivityAction } from "../../../../Domain/enums/activityLog";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
+import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
+import { IActivityLogRepository } from "../../../../Domain/repositoryInterface/IActivityLog.repository";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
@@ -14,7 +17,8 @@ export class CompanyStartTrialUsecase implements ICompanyStartTrialUsecase {
     constructor(
         private _companyRepository: ICompanyRepository,
         private _subscriptionRepository: ISubscriptionRepository,
-        private _subscriptionPlanRepository: ISubscriptionPlanRepository
+        private _subscriptionPlanRepository: ISubscriptionPlanRepository,
+        private _activityLogRepository: IActivityLogRepository
     ) {}
 
     async execute(request: CompanyStartTrialInputDTO): Promise<CompanyStartTrialOutputDTO> {
@@ -62,8 +66,17 @@ export class CompanyStartTrialUsecase implements ICompanyStartTrialUsecase {
             true
         )
 
-        await this._subscriptionRepository.create(subscription)
-
+        const newSubscription = await this._subscriptionRepository.create(subscription)
+        await this._activityLogRepository.create({
+            id: '',
+            actorId: company.id,
+            actorType: userRole.Company,
+            action: ActivityAction.START_TRIAL,
+            targetId: newSubscription.id,
+            targetType: 'Subscription',
+            title: `${company.getName()} started a free trial for ${plan.planName}`
+        })
+        
         return {
             success: true
         }

@@ -1,7 +1,15 @@
-import { Box, Button, Grid, Paper, Stack, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
+import {
+  Box,
+  Button,
+  Grid,
+  Paper,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material'
+import { UploadFile } from '@mui/icons-material'
 import type { CreateTestPayload, ModalMode } from '../../../../types/test'
-
 
 interface CompanyAddCandidateProps {
   data: CreateTestPayload
@@ -9,19 +17,72 @@ interface CompanyAddCandidateProps {
   updateData: (data: Partial<CreateTestPayload>) => void
 }
 
-
-const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateData}) => {
+const CompanyAddCandidates: React.FC<CompanyAddCandidateProps> = ({
+  data,
+  updateData
+}) => {
   const [emailText, setEmailText] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const isValidEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+
+  const handleCsvUpload = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0]
+
+    if (!file) return
+
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      const csvText = e.target?.result as string
+
+      const emails = csvText
+        .split(/\r?\n/)
+        .flatMap((line) => line.split(','))
+        .map((email) => email.trim().toLowerCase())
+        .filter((email) => isValidEmail(email))
+
+      const uniqueEmails = Array.from(
+        new Set([
+          ...data.candidates.map((candidate) => candidate.email),
+          ...emails
+        ])
+      )
+
+      updateData({
+        candidates: uniqueEmails.map((email) => ({
+          email
+        }))
+      })
+    }
+
+    reader.readAsText(file)
+
+    event.target.value = ''
+  }
 
   const handleAddEmails = () => {
-    if(!emailText.trim()) return
-    const isValidEmail = (email: string) =>
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    if (!emailText.trim()) return
 
-    const emails = emailText.split(/[\n,]+/).map((email) => email.trim().toLowerCase()).filter((email) => isValidEmail(email))
-    const uniqueEmails = Array.from(new Set([...data.candidates.map((c) => c.email), ...emails])) 
+    const emails = emailText
+      .split(/[\n,]+/)
+      .map((email) => email.trim().toLowerCase())
+      .filter((email) => isValidEmail(email))
+
+    const uniqueEmails = Array.from(
+      new Set([
+        ...data.candidates.map((candidate) => candidate.email),
+        ...emails
+      ])
+    )
+
     updateData({
-      candidates: uniqueEmails.map((email) => ({ email }))
+      candidates: uniqueEmails.map((email) => ({
+        email
+      }))
     })
 
     setEmailText('')
@@ -29,7 +90,9 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
 
   const handleRemoveEmail = (email: string) => {
     updateData({
-      candidates: data.candidates?.filter((candidate) => candidate.email !== email)
+      candidates: data.candidates.filter(
+        (candidate) => candidate.email !== email
+      )
     })
   }
 
@@ -38,7 +101,7 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
       sx={{
         backgroundColor: '#E6DECF',
         borderRadius: 3,
-        p: 4,
+        p: 4
       }}
     >
       <Paper
@@ -53,10 +116,15 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
       >
         <Typography
           variant="h6"
-          sx={{ mb: 3, fontWeight: 600, color: '#2B2B2B' }}
+          sx={{
+            mb: 3,
+            fontWeight: 600,
+            color: '#2B2B2B'
+          }}
         >
           Add Email Addresses
         </Typography>
+
         <Grid container spacing={3}>
           <Grid size={{ xs: 12 }}>
             <TextField
@@ -64,51 +132,78 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
               multiline
               minRows={6}
               label="Add email addresses"
-              placeholder={`
-                sarah@gmail.com
-                johndoe@gmail.com
-                Or: sarah@gmail.com, johndoe@gmail.com
-              `}
+              placeholder={`sarah@gmail.com
+johndoe@gmail.com
+
+Or:
+sarah@gmail.com, johndoe@gmail.com`}
               value={emailText}
               onChange={(e) => setEmailText(e.target.value)}
             />
           </Grid>
-          <Grid size={{ xs: 12}}>
-             <Button
-               variant='contained'
-               onClick={handleAddEmails}
-               sx={{
-                backgroundColor: '#0B3861',
-                textTransform: 'none',
-                fontWeight: 600
-               }}
-             >
-              Add Emails to List
-             </Button>
-          </Grid>
+
           <Grid size={{ xs: 12 }}>
-            <Typography variant='subtitle2' sx={{ mb: 1}}>
-              Email List ({data.candidates?.length})
+            <Stack direction="row" spacing={2}>
+              <Button
+                variant="contained"
+                onClick={handleAddEmails}
+                sx={{
+                  backgroundColor: '#0B3861',
+                  textTransform: 'none',
+                  fontWeight: 600
+                }}
+              >
+                Add Emails to List
+              </Button>
+
+              <Button
+                variant="outlined"
+                startIcon={<UploadFile />}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                Upload CSV
+              </Button>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv"
+                hidden
+                onChange={handleCsvUpload}
+              />
+            </Stack>
+          </Grid>
+
+          <Grid size={{ xs: 12 }}>
+            <Typography
+              variant="subtitle2"
+              sx={{ mb: 1 }}
+            >
+              Email List ({data.candidates.length})
             </Typography>
 
             <Paper
-              variant='outlined'
+              variant="outlined"
               sx={{
                 minHeight: 110,
                 p: 2,
                 borderRadius: 1
               }}
             >
-              {data.candidates?.length === 0 ? (
+              {data.candidates.length === 0 ? (
                 <Typography
-                  variant='body2'
-                  sx={{ textAlign: 'center', color: 'secondary', mt: 4}}
+                  variant="body2"
+                  sx={{
+                    textAlign: 'center',
+                    color: 'text.secondary',
+                    mt: 4
+                  }}
                 >
                   No emails added yet
                 </Typography>
               ) : (
                 <Stack spacing={1}>
-                  {data.candidates?.map((candidate) => (
+                  {data.candidates.map((candidate) => (
                     <Box
                       key={candidate.email}
                       sx={{
@@ -121,11 +216,16 @@ const CompanyAddCandidates: React.FC<CompanyAddCandidateProps>= ({data, updateDa
                         backgroundColor: '#F5EFE6'
                       }}
                     >
-                      <Typography variant='body2'>{candidate.email}</Typography>
+                      <Typography variant="body2">
+                        {candidate.email}
+                      </Typography>
+
                       <Button
-                        size='small'
-                        color='error'
-                        onClick={() => handleRemoveEmail(candidate.email)}
+                        size="small"
+                        color="error"
+                        onClick={() =>
+                          handleRemoveEmail(candidate.email)
+                        }
                       >
                         Remove
                       </Button>

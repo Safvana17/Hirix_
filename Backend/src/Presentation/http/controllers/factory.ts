@@ -373,7 +373,8 @@ const iCandidateGetCurrentPlan = new CandidateGetCurrentPlanUsecse(
 const iCandidateChangeSubscription = new CandidateChangeSubscriptionUsecase(
     iCandidateRepository,
     iSubscriptionRepository,
-    iSubscriptionPlanRepository
+    iSubscriptionPlanRepository,
+    iActivityLogRepository
 )
 const iCandidateMakePayment = new CandidateMakePaymentUsecase(
     iCandidateRepository,
@@ -388,6 +389,7 @@ const iCandidateConfirmPayment = new CandidateConfirmPaymentUsecase(
     iSubscriptionRepository,
     iSubscriptionPlanRepository,
     iRazorpayService,
+    iActivityLogRepository
 )
 const iCandidateMarkFailure = new CandidateMarkPaymentFailureUsecase(
     iCandidateRepository,
@@ -401,7 +403,8 @@ const iCandidateGetBillingHistory = new CandidateGetBillingHistoryUsecase (
 const iCandidateCancelSubscription = new CandidateCancelSubscriptionUsecase(
     iCandidateRepository,
     iSubscriptionRepository,
-    iSubscriptionPlanRepository
+    iSubscriptionPlanRepository,
+    iActivityLogRepository
 )
 const iCandidateGetInvoice = new CandidateGetInvoiceUsecase(
     iCandidateRepository,
@@ -413,7 +416,8 @@ const iCandidateGetInvoice = new CandidateGetInvoiceUsecase(
 const iCandidateStartTrial = new CandidateStartFreeTrialUsecase(
     iCandidateRepository,
     iSubscriptionPlanRepository,
-    iSubscriptionRepository
+    iSubscriptionRepository,
+    iActivityLogRepository
 )
 
 //test
@@ -621,7 +625,8 @@ const iCompanyGetCurrentPlan = new CompanyGetCurrentPlanUsecase(
 const iCompanyChangeSubscription = new CompanyChangeSubscriptionUsecase(
     iCompanyRepository,
     iSubscriptionPlanRepository,
-    iSubscriptionRepository
+    iSubscriptionRepository,
+    iActivityLogRepository
 )
 const iCompanyMakePayment = new CompanyMakePaymentUsecase(
     iCompanyRepository,
@@ -635,7 +640,8 @@ const iCompanyConfirmPayment = new CompanyConfirmPaymentUsecase(
     iPaymentRepository,
     iSubscriptionRepository,
     iSubscriptionPlanRepository,
-    iRazorpayService
+    iRazorpayService,
+    iActivityLogRepository
 )
 const iCompanyMarkFailure = new CompanyPaymentFailureUsecase(
     iCompanyRepository,
@@ -649,7 +655,8 @@ const iCompanyGetBillingHistory = new CompanyGetBillingHistoryUsecase (
 const iCompanyCancelSubscription = new CompanyCancelSubscriptionUsecase(
     iCompanyRepository,
     iSubscriptionRepository,
-    iSubscriptionPlanRepository
+    iSubscriptionPlanRepository,
+    iActivityLogRepository
 )
 const iCompanyGetInvoice = new CompanyDownloadInvoiceUsecase(
     iCompanyRepository,
@@ -661,7 +668,8 @@ const iCompanyGetInvoice = new CompanyDownloadInvoiceUsecase(
 const iComapnyStartTrial = new CompanyStartTrialUsecase(
     iCompanyRepository,
     iSubscriptionRepository,
-    iSubscriptionPlanRepository
+    iSubscriptionPlanRepository,
+    iActivityLogRepository
 )
 
 //test

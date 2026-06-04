@@ -43,6 +43,7 @@ export class SendExpireSubscriptionReminderUsecase implements ISendExpireSubscri
                 variables: {
                     companyName: user.getName(),
                     platformName: "Hirix",
+                    planName: plan.planName,
                     expiryDate: endDate.toLocaleDateString(),
                     subscriptionUrl: `http://localhost:5173/${user.getRole()}/subscription`
                 }

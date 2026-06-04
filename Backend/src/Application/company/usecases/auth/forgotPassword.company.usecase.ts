@@ -43,7 +43,7 @@ export class CompanyForgotPasswordUsecase implements ICompanyForgotPasswordUseca
             variables: {
                 userName: company.getName(),
                 otpCode: otp,
-                expiryTime: '120',
+                expiryTime: '2',
                 platformName: 'Hirix'
             },
         })

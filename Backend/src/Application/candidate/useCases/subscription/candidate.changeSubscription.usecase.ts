@@ -1,5 +1,8 @@
+import { ActivityAction } from "../../../../Domain/enums/activityLog";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
+import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
+import { IActivityLogRepository } from "../../../../Domain/repositoryInterface/IActivityLog.repository";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
@@ -13,7 +16,8 @@ export class CandidateChangeSubscriptionUsecase implements ICandidateChangeSubsc
     constructor(
         private _candidateRepository: ICandidateRepository,
         private _subscriptionRepository: ISubscriptionRepository,
-        private _subscriptionPlanRepository: ISubscriptionPlanRepository
+        private _subscriptionPlanRepository: ISubscriptionPlanRepository,
+        private _activityLogRepository: IActivityLogRepository,
     ) {}
 
     async execute(request: CandidateChangeSubscriptionInputDTO): Promise<CandidateChangeSubscriptionOutputDTO> {
@@ -63,6 +67,15 @@ export class CandidateChangeSubscriptionUsecase implements ICandidateChangeSubsc
               isTrial: false,
               isCurrent: true
            })
+            await this._activityLogRepository.create({
+                id: '',
+                actorId: candidate.id,
+                actorType: userRole.Candidate,
+                action: ActivityAction.SUBSCRIPTION_DOWNGRADED_TO_FREE,
+                targetId: currentSubscription.id,
+                targetType: 'Subscription',
+                title: `${candidate.getName()} downgraded subscription to ${freePlan.planName}`
+            })
         }
         return{
             newPlan: newPlan,
