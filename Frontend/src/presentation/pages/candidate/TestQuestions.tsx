@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
@@ -13,7 +13,7 @@ import TestWarningBanner from '../../components/candidate/test/TestWarningBanner
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
-import { saveAnswer, submitTest, terninateTest } from '../../../redux/slices/features/test/CandidateTestSlice'
+import { saveAnswer, submitTest, terninateTest, updateWarningCount } from '../../../redux/slices/features/test/CandidateTestSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTES } from '../../../constants/routes'
 // import { useFullScreenMonitor } from '../../../hooks/useFullScreenMonitor'
@@ -32,14 +32,6 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
     const [warningMessage, setWarningMessage] = useState<string | null>(null)
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
-
-    useEffect(() => {
-  console.log("TestQuestion mounted")
-
-  return () => {
-    console.log("TestQuestion unmounted")
-  }
-}, [])
 
     const runTime = useTestRunTime({
       test,
@@ -76,7 +68,7 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
           toast.error(typeof error === 'string' ? error : 'Failed to terminate test')
         }
       },
-      onWarning: ({type, warningCount}) => {
+      onWarning: async({type, warningCount}) => {
         const messageMap = {
             TAB_SWITCH: 'Tab switch detected! Please stay on the test window.',
             FULLSCREEN_EXIT: 'Fullscreen exit detected! Please stay in fullscreen mode.',
@@ -89,6 +81,11 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
         console.log('warning: ',type, warningCount)
         setWarningMessage(messageMap[type] || 'Rule violation detected.')
         console.log("WARNING MESSAGE STATE:", warningMessage)
+        try {
+          await dispatch(updateWarningCount({token: token!})).unwrap()
+        } catch (error) {
+          toast.error(typeof error === 'string' ? error : 'Failed to update warning count')
+        }
       }
     })
 

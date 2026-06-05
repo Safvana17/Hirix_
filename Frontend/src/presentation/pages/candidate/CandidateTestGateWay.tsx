@@ -19,23 +19,11 @@ const CandidateTestGateway: React.FC = () => {
     const { test, loading, candidate } = useSelector((state: RootState) => state.candidateTest )
 
     useEffect(() => {
-  console.log("Gateway mounted")
-
-  return () => {
-    console.log("Gateway unmounted")
-  }
-}, [])
-    useEffect(() => {
         if (token && !test && !candidate) {
             dispatch(getTestByToken({ token }))
         }
     }, [dispatch, token, candidate, test])
 
-    console.log("Candidate answers from redux", candidate?.candidateAnswers)
-    console.log("Gateway render", {
-    loading,
-    candidateStatus: candidate?.candidateTestStatus
-})
     const step: CandidateTestGateStep = useMemo(() => {
         if (loading || !test || !candidate) return 'LOADING'
         const now = new Date()

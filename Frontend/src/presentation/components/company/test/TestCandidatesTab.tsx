@@ -604,7 +604,7 @@ const SelectionChip = ({ status }: { status?: string }) => {
       color: "#2E7D32",
       label: "Shortlisted",
     },
-    REJECTED: {
+    TEST_REJECTED: {
       bg: "#FDECEA",
       color: "#D32F2F",
       label: "Rejected",

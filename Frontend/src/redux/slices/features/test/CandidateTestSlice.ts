@@ -9,6 +9,7 @@ import type { Category } from "../../../../types/category"
 interface CandidateTestState {
     loading: boolean
     codeRunning: boolean
+    warningCount: number
     error: string | null
     test: CandidateTest | null
     candidate: TestCandidate | null
@@ -19,6 +20,7 @@ const initialState: CandidateTestState = {
     loading: false,
     codeRunning: false,
     error: null,
+    warningCount: 0,
     test: null,
     candidate: null,
     categories: []
@@ -180,6 +182,23 @@ void,
     }
 })
 
+export const updateWarningCount = createAsyncThunk<
+number,
+{token: string},
+{rejectValue: string}
+>('candidate/warning', async({token}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.CANDIDATE.TEST.WARNING_COUNT(token))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to update warning count')
+    }
+})
+
 const candidateTestSlice = createSlice({
     name: 'CandidateTestSlice',
     initialState,
@@ -282,6 +301,17 @@ const candidateTestSlice = createSlice({
         .addCase(saveAnswer.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to submit test'
+        })
+        // .addCase(updateWarningCount.pending, (state) => {
+        //     state.loading = true
+        // })
+        .addCase(updateWarningCount.fulfilled, (state, action) => {
+            state.loading = false
+            state.warningCount = action.payload
+        })
+        .addCase(updateWarningCount.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to update warning count'
         })
     }
 })

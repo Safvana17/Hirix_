@@ -35,7 +35,9 @@ export const API_ROUTES = {
       GET_CATEGORIES: (token: string) =>
         `/candidate/test/${token}/categories`,
       SAVE_ANSWER: (token: string) => 
-        `/candidate/test/${token}/save`
+        `/candidate/test/${token}/save`,
+      WARNING_COUNT: (token: string) => 
+        `/candidate/test/${token}/warning`,
     },
     PRACTICE: {
       GET_BY_ID: (questionId: string) => 
