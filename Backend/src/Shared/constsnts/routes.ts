@@ -122,6 +122,7 @@ export const ROUTES = {
             SUBMIT_QUESTION: '/test/:token/question',
             GET_CATEGORIES: '/test/:token/categories',
             SAVE_ANSWER: '/test/:token/save',
+            WARNING_COUNT: '/test/:token/warning',
         },
         ANALYTICS: {
             SUMMERY: '/dashboard-summery',

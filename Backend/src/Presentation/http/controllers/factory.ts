@@ -217,6 +217,7 @@ import { AdminCompanyUsageUsecase } from "../../../Application/admin/usecases/an
 import { ActivityRepository } from "../../../Infrastructure/repositories/activityLog.repository";
 import { AdminGetRecentActivityUsecase } from "../../../Application/admin/usecases/analytics/admin.recentActivity.usecase";
 import { CompanyGetRecentActivityUsecase } from "../../../Application/company/usecases/analytics/company.getRecentActivity.usecase";
+import { CandidateWarningCountUsecase } from "../../../Application/candidate/useCases/test/candidate.warningCount.usecase";
 
 
 
@@ -463,6 +464,10 @@ const iCandidateGetCategories = new CandidateGetAllCategoriesUsecase(
 const iCandidateSaveAnswer = new CandidateSaveAnswerUsecase(
     iTestRepository,
     iTestCandidateRepository
+)
+const iCandidateWarningCount = new CandidateWarningCountUsecase (
+    iTestCandidateRepository,
+    iTestRepository
 )
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -1250,6 +1255,7 @@ export const ICandidateTestController = new CandidatetestController(
     iCandidateSubmitQuestion,
     iCandidateGetCategories,
     iCandidateSaveAnswer,
+    iCandidateWarningCount
 )
 
 export const ICompanyInterviewController = new CompanyInterviewController (

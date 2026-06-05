@@ -13,6 +13,7 @@ import { ICandidateTerminateTestUsecase } from "../../../../Application/candidat
 import { ICandidateSubmitQuestionUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.submitQuestion.usecase";
 import { ICandidateGetAllCategoriesUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.getAllCategories.usecase";
 import { ICandidateSaveAnswerUsecase } from "../../../../Application/candidate/interfaces/test/ICandidae.saveAnswer.usecase";
+import { ICandidateWarningCountUsecase } from "../../../../Application/candidate/interfaces/test/ICandiate.warningCount.usecase";
 
 export class CandidatetestController {
     constructor (
@@ -25,6 +26,7 @@ export class CandidatetestController {
         private _submitQuestion: ICandidateSubmitQuestionUsecase,
         private _getAllCategories: ICandidateGetAllCategoriesUsecase,
         private _saveAnswer: ICandidateSaveAnswerUsecase,
+        private _warningCount: ICandidateWarningCountUsecase,
     ) {}
 
     getTestByToken = asyncHandler(async(req: Request, res: Response) => {
@@ -81,5 +83,11 @@ export class CandidatetestController {
         const { token } = req.validatedParams as TestTokenParams
         await this._saveAnswer.execute({token, ...req.body})
         return sendSuccess(res, statusCode.OK, '')
+    })
+
+    warningCount = asyncHandler(async(req: Request, res: Response) => {
+        const { token } = req.validatedParams as TestTokenParams
+        const { warningCount } = await this._warningCount.execute({token, ...req.body})
+        return sendSuccess(res, statusCode.OK, '', warningCount)
     })
 }
