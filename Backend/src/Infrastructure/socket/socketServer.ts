@@ -87,6 +87,12 @@ export const initializeSocket = (server: http.Server) => {
             socket.to(roomId).emit("toggle-media", { type, enabled })
         })
 
+        socket.on('screen-share-state', ({roomId, active}: {roomId: string, active: boolean}) => {
+            if(!socket.rooms.has(roomId)) return
+            logger.info({socketId: socket.id, roomId, active}, 'screen share state changed ')
+            socket.to(roomId).emit('screen-share-state', { active })
+        })
+        
         socket.on("interview-ended", ({ roomId }: {roomId: string}) => {
             if(!socket.rooms.has(roomId)) return
             logger.info({socketId: socket.id,roomId}, "interview ended")

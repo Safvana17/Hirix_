@@ -212,6 +212,9 @@ export const candidateAnswerSchema = z.object({
     codingAnswer: codingAnswerSchema.optional(),
 })
 
+export const saveAnswerSchema = z.object({
+  answer: z.array(candidateAnswerSchema)
+})
 export const submitTestSchema = z.object({
     answer: z.array(candidateAnswerSchema),
     warningCount: z.number().min(0)

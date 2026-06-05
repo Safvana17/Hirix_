@@ -179,6 +179,7 @@ void,
         return rejectWithValue(err.response?.data.message || 'Failed to save answer')
     }
 })
+
 const candidateTestSlice = createSlice({
     name: 'CandidateTestSlice',
     initialState,
@@ -272,12 +273,12 @@ const candidateTestSlice = createSlice({
             state.loading = false
             state.error = action.payload || 'Failed to get categories'
         })
-        .addCase(saveAnswer.pending, (state) => {
-            state.loading = true
-        })
-        .addCase(saveAnswer.fulfilled, (state) => {
-            state.loading = false
-        })
+        // .addCase(saveAnswer.pending, (state) => {
+        //     // state.loading = true
+        // })
+        // .addCase(saveAnswer.fulfilled, (state) => {
+        //     state.loading = false
+        // })
         .addCase(saveAnswer.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to submit test'

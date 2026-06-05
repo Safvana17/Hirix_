@@ -48,7 +48,7 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
     }
   }
 
-  console.log("question", question)
+  // console.log("question", question)
 
   return (
     <Box>

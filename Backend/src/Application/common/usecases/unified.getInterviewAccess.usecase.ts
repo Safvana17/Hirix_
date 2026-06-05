@@ -50,14 +50,15 @@ export class UnifiedGetInterviewAccessUsecase implements IUnifiedGetInterviewAcc
         }
         if(interview.interviewStatus === InterviewStatus.COMPLETED){
             status = InterviewJoinStatus.COMPLETED
-        }
-        const now = new Date()
-        if(interview.scheduledStartTime.getTime() > now.getTime()){
-            status = InterviewJoinStatus.WAITING
-        }else if(interview.scheduledEndTime.getTime() < now.getTime()){
-            status = InterviewJoinStatus.EXPIRED
         }else{
-            status = InterviewJoinStatus.LIVE
+            const now = new Date()
+            if(interview.scheduledStartTime.getTime() > now.getTime()){
+                status = InterviewJoinStatus.WAITING
+            }else if(interview.scheduledEndTime.getTime() < now.getTime()){
+                status = InterviewJoinStatus.EXPIRED
+            }else{
+                status = InterviewJoinStatus.LIVE
+            }
         }
 
         return {

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
@@ -33,6 +33,14 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
 
+    useEffect(() => {
+  console.log("TestQuestion mounted")
+
+  return () => {
+    console.log("TestQuestion unmounted")
+  }
+}, [])
+
     const runTime = useTestRunTime({
       test,
       rules: test.rules,
@@ -43,6 +51,7 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
             toast.error('Token is missing')
             return
           }
+          console.log('save answer: ', {token, answer: Object.values(answers)})
           await dispatch(saveAnswer({token, answer: Object.values(answers)})).unwrap()
         } catch (error) {
           toast.error(typeof error === 'string' ? error : 'failed to save answers')

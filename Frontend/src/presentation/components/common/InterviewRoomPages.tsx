@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Typography } from '@mui/material'
 // import { Mic, MicOff, PhoneOff, Send, Video, VideoOff } from 'lucide-react'
 import type { GetInterviewAccessResponse } from '../../../types/interview'
@@ -33,30 +33,43 @@ const InterviewRoomPage: React.FC <InterviewRoomPageProps> = ({interview}) => {
 
   const handleInterviewEnded = async () => {
     try {
-      if(token && roomId){
+      if(!token || !roomId) return 
+      if(role === 'Company'){
         const result = await dispatch(endInterview({roomId, token})).unwrap()
-        if(role === 'Company'){
-          navigate(`/company/interview/${result.id}`)
-        }else{
-          navigate(`/interview/${roomId}/${token}/completed`)
-        }
+        navigate(`/company/interview/${result.id}`)
+      }else{
+        navigate(`/interview/${roomId}/${token}/completed`, {replace: true})
       }
     } catch (error) {
       toast.error(typeof error === 'string' ? error : 'Failed to end interview')
     }
   }
 
-  const {toggleCamera, cameraEnabled, toggleMic, micEnabled, remoteCameraEnabled,remoteMicEnabled, localStream, remoteStream, remoteConnected, waitingForPeer, endCall, leaveRoom, getPeerConnection, localVideoRef, remoteVideoRef} = useWebRTC({roomId: roomId!, userId, userName: loaclParticipantName, role, enabled: Boolean(token), onInterviewEnded: handleInterviewEnded})
+  const {toggleCamera, cameraEnabled, toggleMic, micEnabled, remoteCameraEnabled,remoteMicEnabled, localStream, remoteStream, remoteConnected, waitingForPeer, endCall, leaveRoom, getPeerConnection, localVideoRef, remoteVideoRef, renegotiate, remoteScreenSharing} = useWebRTC({roomId: roomId!, userId, userName: loaclParticipantName, role, enabled: Boolean(token), onInterviewEnded: handleInterviewEnded, onUserLeft: () => {
+    if( role === 'Candidate'){
+      navigate(`/interview/${roomId}/${token}`, { replace: true})
+    }
+  }})
   const { message, sendMessage } = useChat({ roomId: roomId!, userId, userName: loaclParticipantName})
   const { code, language, updateCode, updateLanguage } = useCodeCollaboration({roomId: roomId!, })
-  const { startScreenShare, stopScreenShare, isScreenSharing } = useScreenShare({getPeerConnection, localStream, localVideoRef})
+  const { startScreenShare, stopScreenShare, isScreenSharing } = useScreenShare({roomId: roomId!, getPeerConnection, localStream, localVideoRef, renegotiate})
   
+  useEffect(() => {
+    const handleBeforeUnload = () => leaveRoom()
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [leaveRoom])
+
   const handleEndCall = () => {
+    console.log('handle end call clicked', {role})
     if(role === 'Company'){
       endCall()
+      return
     }else{
       leaveRoom()
-      navigate(`/interview/${roomId}/${token}`)
+      navigate(`/interview/${roomId}/${token}`, {
+        replace: true
+      })
     }
   }
   return (
@@ -92,6 +105,8 @@ const InterviewRoomPage: React.FC <InterviewRoomPageProps> = ({interview}) => {
               remoteCameraEnabled={remoteCameraEnabled}
               remoteMicEnabled={remoteMicEnabled}
               localVideoRef={localVideoRef}
+              isScreenSharing={isScreenSharing}
+              remoteScreenSharing={remoteScreenSharing}
               remoteVideoRef={remoteVideoRef}
             />
           </Box>
