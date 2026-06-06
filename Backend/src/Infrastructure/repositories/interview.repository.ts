@@ -1,10 +1,11 @@
-import { QueryFilter } from "mongoose";
+import mongoose, { QueryFilter } from "mongoose";
 import { InterviewMapper } from "../../Application/Mappers/mapper.interview";
 import { InterviewEntity } from "../../Domain/entities/Interview";
 import { InterviewStatus } from "../../Domain/enums/interview";
 import { IInterviewRepository } from "../../Domain/repositoryInterface/iInterview.repository";
 import { IInterview, InterviewModel } from "../database/Model/Interview";
 import { BaseRepository } from "./base.repository";
+import { InterviewDTO } from "../../Application/company/dtos/interview/company.getAllInterviews.dto";
 
 export class InterviewRepository extends BaseRepository<InterviewEntity, IInterview> implements IInterviewRepository {
     constructor() {
@@ -27,9 +28,9 @@ export class InterviewRepository extends BaseRepository<InterviewEntity, IInterv
         return this.mapToEntity(document)
     }
 
-    async findAllFiltered(query: {companyId: string, search?: string; status?: InterviewStatus; page: number; limit: number; }): Promise<{ data: InterviewEntity[]; totalCount: number; totalPages: number; }> {
+    async findAllFiltered(query: {companyId: string, search?: string; status?: InterviewStatus; page: number; limit: number; }): Promise<{ data: InterviewDTO[]; totalCount: number; totalPages: number; }> {
         const filter: QueryFilter<IInterview> = {
-            companyId: query.companyId
+            companyId: new mongoose.Types.ObjectId(query.companyId)
         }
 
         if(query.search){
@@ -44,16 +45,100 @@ export class InterviewRepository extends BaseRepository<InterviewEntity, IInterv
         }
 
         const skip = (query.page - 1) * query.limit
+        // const totalCount = await this._model.countDocuments(filter)
+        // const totalPages = Math.ceil(totalCount/ query.limit)
+
+        // const documents = await this._model.find(filter)
+        //         .sort({createdAt: -1})
+        //         .skip(skip)
+        //         .limit(query.limit)
+
+        // return {
+        //     data: documents.map(d => this.mapToEntity(d)),
+        //     totalCount,
+        //     totalPages
+        // }
+const document = await this._model.aggregate([
+  {
+    $match: filter
+  }
+])
+
+console.log('documents:', document.length)
+        const documents = await this._model.aggregate([
+            {
+                $match: filter
+            },
+            {
+                $lookup: {
+                    from: 'interviews',
+                    let: {
+                        testCandidateId: '$testCandidateId',
+                        currentRound: '$round',
+                        companyId: '$companyId'
+                    },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        {
+                                            $eq: [
+                                                '$testCandidateId',
+                                                '$$testCandidateId'
+                                            ]
+                                        },
+                                        {
+                                            $eq: [
+                                                '$round',
+                                                {
+                                                   $add: ['$$currentRound', 1] 
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $limit: 1
+                        }
+                    ],
+                    as: 'nextRound'
+                }
+            },
+            {
+                $addFields: {
+                    hasNextRound: {
+                        $gt: [
+                            {$size: '$nextRound'},
+                            0
+                        ]
+                    }
+                }
+            },
+            {
+                $project: {
+                    nextRound: 0
+                }
+            },
+            {
+                $sort: {
+                    createdAt: -1
+                }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: query.limit
+            }
+        ])
+
         const totalCount = await this._model.countDocuments(filter)
-        const totalPages = Math.ceil(totalCount/ query.limit)
-
-        const documents = await this._model.find(filter)
-                .sort({createdAt: -1})
-                .skip(skip)
-                .limit(query.limit)
-
+        const totalPages = Math.ceil(totalCount/query.limit)
         return {
-            data: documents.map(d => this.mapToEntity(d)),
+            data: documents,
             totalCount,
             totalPages
         }

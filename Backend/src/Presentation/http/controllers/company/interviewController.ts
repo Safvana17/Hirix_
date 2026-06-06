@@ -11,6 +11,7 @@ import { ICompanyGetInterviewByIdUsecase } from "../../../../Application/company
 import { ICompanyEditInterviewUsecase } from "../../../../Application/company/interfaces/interview/ICompany.editInterview.usecase";
 import { ICompanyUpdateInterviewResultUsecase } from "../../../../Application/company/interfaces/interview/ICompany.updateInterviewResult.usecase";
 import { ICompanySendOfferLetterUsecase } from "../../../../Application/company/interfaces/interview/ICompany.sendOfferLetter.usecase";
+import { logger } from "../../../../utils/logging/loger";
 
 export class CompanyInterviewController {
     constructor(
@@ -34,6 +35,7 @@ export class CompanyInterviewController {
         const companyId = req.user.id
         const query = req.validatedQuery as GetAllInterviewQuery
         const {interviews, totalCount, totalPages} = await this._getAllInterviews.execute({companyId, ...query})
+        logger.info({interviews: interviews}, 'from controller')
         return sendSuccess(res, statusCode.OK, '', { interviews, totalCount, totalPages })
     })
 

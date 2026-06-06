@@ -1,3 +1,4 @@
+import { InterviewDTO } from "../../Application/company/dtos/interview/company.getAllInterviews.dto";
 import { InterviewEntity } from "../entities/Interview";
 import { InterviewStatus } from "../enums/interview";
 import { IBaseRepository } from "./iBase.repository";
@@ -5,7 +6,7 @@ import { IBaseRepository } from "./iBase.repository";
 export interface IInterviewRepository extends IBaseRepository<InterviewEntity> {
     findByToken(token: string): Promise<InterviewEntity | null>
     findScheduledInterview(testCandidateId: string, round: number): Promise<InterviewEntity | null>  
-    findAllFiltered(query: { companyId: string, search?: string, status?: InterviewStatus, page: number, limit: number}): Promise<{data: InterviewEntity[], totalCount: number, totalPages: number}>  
+    findAllFiltered(query: { companyId: string, search?: string, status?: InterviewStatus, page: number, limit: number}): Promise<{data: InterviewDTO[], totalCount: number, totalPages: number}>  
     findByRoomId(roomId: string): Promise<InterviewEntity | null>
     getTotalInterviewsByCompany(companyId: string): Promise<number>
     getInterviewUsage(): Promise<{company: string, count: number}[]>

@@ -1,6 +1,9 @@
+import { InterviewResult } from "../../../../Domain/enums/interview";
+import { CandidatePipelineStatus } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IInterviewRepository } from "../../../../Domain/repositoryInterface/iInterview.repository";
+import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { InterviewMessages } from "../../../../Shared/constsnts/messages/interviewMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
@@ -10,7 +13,8 @@ import { ICompanyGetInterviewByIdUsecase } from "../../interfaces/interview/ICom
 export class CompanyGetInterviewByIdUsecase implements ICompanyGetInterviewByIdUsecase {
     constructor(
         private _interviewRepository: IInterviewRepository,
-        private _companyRepository: ICompanyRepository
+        private _companyRepository: ICompanyRepository,
+        private _testCandidateRepository: ITestCandidateRepository,
     ) {}
 
     async execute(request: CompanyGetInterviewByIdInputDTO): Promise<CompanyGetInterviewByIdOutputDTO> {
@@ -23,8 +27,23 @@ export class CompanyGetInterviewByIdUsecase implements ICompanyGetInterviewByIdU
         if(!interview){
             throw new AppError(InterviewMessages.error.INTERVIEW_NOT_FOUND, statusCode.NOT_FOUND)
         }
+        const candidate = await this._testCandidateRepository.findById(interview.testCandidateId!)
         return {
-            interview
+            interview: {
+                id: interview.id,
+                name: interview.name,
+                description: interview.description,
+                candidateEmail: interview.candidateEmail,
+                candidateName: interview.candidateName,
+                interviewerEmail: interview.interviewerEmail,
+                interviewerName: interview.interviewerEmail,
+                startTime: interview.scheduledStartTime.toISOString(),
+                endTime: interview.scheduledEndTime.toISOString(),
+                interviewResult: interview.result ?? InterviewResult.PENDING,
+                interviewStatus: interview.interviewStatus,
+                round: interview.round,
+                candidateStatus: candidate?.selectionStatus ?? CandidatePipelineStatus.INTERVIEW_SCHEDULED
+            }
         }
     }
 }

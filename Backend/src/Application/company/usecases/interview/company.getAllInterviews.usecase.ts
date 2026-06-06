@@ -9,8 +9,29 @@ export class CompanyGetAllInterviewsUsecase implements ICompanyGetAllInterviewsU
     
     async execute(request: CompanyGetAllInterviewsInputDTO): Promise<CompanyGetAllInterviewsOutputDTO> {
         const {data, totalPages, totalCount} = await this._interviewRepository.findAllFiltered(request)
+        console.log('data from usecase :', data)
         return {
-            interviews: data,
+            interviews: data.map((d) => ({
+                _id: d._id.toString(),
+                name: d.name,
+                description: d.description,
+                round: d.round,
+                candidateName: d.candidateName,
+                candidateStatus: d.candidateStatus,
+                interviewerName: d.interviewerName,
+                result: d.result,
+                interviewerEmail: d.interviewerEmail,
+                interviewStatus: d.interviewStatus,
+                scheduledStartTime: d.scheduledStartTime,
+                hasNextRound: d.hasNextRound,
+                scheduledEndTime: d.scheduledEndTime,
+                candidateEmail: d.candidateEmail,
+                testCandidateId: d.testCandidateId,
+                testId: d.testId,
+                jobRoleId: d.jobRoleId,
+                roomId: d.roomId,
+                interviewerToken: d.interviewerToken
+            })),
             totalCount,
             totalPages
         }

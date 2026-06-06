@@ -57,3 +57,9 @@ export const UpdateInterviewResultSchema = z.object({
   result: z.nativeEnum(InterviewResult),
   feedback: z.string().min(1, 'Feedback required')
 })
+
+export const InterviewRunCodeSchema = z.object({
+    language: z.enum(['javascript', 'python']),
+    sourceCode: z.string().min(1, 'Source code is required'),
+    input: z.array(z.string()).optional()
+})

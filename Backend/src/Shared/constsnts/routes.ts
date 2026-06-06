@@ -137,6 +137,7 @@ export const ROUTES = {
             GET_ACCESS: '/:roomId/:token/access',
             JOIN: '/:roomId/:token/join',
             END: '/:roomId/:token/end',
+            RUN_CODE: '/run-code',
         }
     },
 

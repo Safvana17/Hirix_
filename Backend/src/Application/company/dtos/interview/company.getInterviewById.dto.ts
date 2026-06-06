@@ -1,4 +1,5 @@
-import { InterviewEntity } from "../../../../Domain/entities/Interview"
+import { InterviewResult, InterviewStatus } from "../../../../Domain/enums/interview"
+import { CandidatePipelineStatus } from "../../../../Domain/enums/Test"
 
 export interface CompanyGetInterviewByIdInputDTO {
     companyId: string
@@ -6,5 +7,21 @@ export interface CompanyGetInterviewByIdInputDTO {
 }
 
 export interface CompanyGetInterviewByIdOutputDTO {
-    interview: InterviewEntity
+    interview: {
+        id: string
+        name: string
+        description: string
+        candidateName: string
+        interviewerName: string
+        interviewStatus:InterviewStatus
+        interviewResult: InterviewResult
+        candidateStatus: CandidatePipelineStatus
+        round: number
+        candidateEmail: string
+        interviewerEmail: string
+        startTime: string
+        endTime: string
+        feedback?: string
+
+    }
 }

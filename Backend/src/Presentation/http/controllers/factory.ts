@@ -218,6 +218,7 @@ import { ActivityRepository } from "../../../Infrastructure/repositories/activit
 import { AdminGetRecentActivityUsecase } from "../../../Application/admin/usecases/analytics/admin.recentActivity.usecase";
 import { CompanyGetRecentActivityUsecase } from "../../../Application/company/usecases/analytics/company.getRecentActivity.usecase";
 import { CandidateWarningCountUsecase } from "../../../Application/candidate/useCases/test/candidate.warningCount.usecase";
+import { UnifiedInterviewCodeRunnerUsecase } from "../../../Application/common/usecases/unified.interviewCodeRunner.usecase";
 
 
 
@@ -805,7 +806,8 @@ const iCompanyRescheduleInterview = new CompanyRescheduleInterviewUsecase (
 )
 const iCompanyGetInterviewById = new CompanyGetInterviewByIdUsecase (
     iInterviewRepository,
-    iCompanyRepository
+    iCompanyRepository,
+    iTestCandidateRepository
 )
 const iCompanyEditInterview = new CompanyEditInterviewUsecase (
     iCompanyRepository,
@@ -813,11 +815,15 @@ const iCompanyEditInterview = new CompanyEditInterviewUsecase (
     iProcessNotification,
     iJobRoleRepository
 )
+const iInterviewRunCode = new UnifiedInterviewCodeRunnerUsecase (
+    iCodeRunnerService
+)
 const iCompanyUpdateInterviewResult = new CompanyUpdateInterviewResultUsecase (
     iInterviewRepository,
     iCompanyRepository,
     iProcessNotification,
-    iJobRoleRepository
+    iJobRoleRepository,
+    iTestCandidateRepository
 )
 const iCompanySendOfferLetter = new CompanySendOfferLetterUsecase (
     iInterviewRepository,
@@ -1272,7 +1278,8 @@ export const ICompanyInterviewController = new CompanyInterviewController (
 export const IUnifiedInterviewController = new UnifiedInterviewController (
     iGetInterviewAccess,
     iJoinInterview,
-    iEndInterview
+    iEndInterview,
+    iInterviewRunCode,
 )
 
 export const iAdminAnalyticsController = new AdminAnalyticsController (
