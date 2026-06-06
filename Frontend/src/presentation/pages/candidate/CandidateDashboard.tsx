@@ -90,6 +90,7 @@ const CandidateDashboard: React.FC = () => {
           <SummeryCard label='Current Plan' value={candidateSummary?.currentPlan ?? 'Free'} icon={StarsIcon} color='black' bg='white'/>
         </Grid>
       </Grid>
+      {testHistory.length !== 0 && (
       <Grid sx={{ mt: 3, mx: 3}}>
         <DataTable
           columns={columns}
@@ -105,6 +106,7 @@ const CandidateDashboard: React.FC = () => {
         >
         </DataTable>
       </Grid>
+      )}
       <CandidatePracticeQuestions
         questions={PracticeQuestions}
         type={type}

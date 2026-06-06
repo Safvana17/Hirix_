@@ -67,14 +67,14 @@ const NavigationRulesSchema = new Schema({
     //     type: Boolean, 
     //     default: true 
     // },
-    shuffleQuestions: { 
-        type: Boolean, 
-        default: true 
-    },
-    shuffleOptions: { 
-        type: Boolean, 
-        default: true 
-    },
+    // shuffleQuestions: { 
+    //     type: Boolean, 
+    //     default: true 
+    // },
+    // shuffleOptions: { 
+    //     type: Boolean, 
+    //     default: true 
+    // },
     allowBackNavigation: { 
         type: Boolean, 
         default: true 
@@ -88,22 +88,25 @@ const ProctoringRulesSchema = new Schema({
         type: Boolean, 
         default: false 
     },
-    captureSnapshots: { 
-        type: Boolean, 
-        default: false 
+    movementDetection: {
+        type: Boolean,
     },
-    snapshotIntervalSeconds: { 
-        type: Number, 
-        default: 30 
-    },
-    detectNoFace: { 
-        type: Boolean, 
-        default: false 
-    },
-    detectMultipleFaces: { 
-        type: Boolean, 
-        default: false 
-    },
+    // captureSnapshots: { 
+    //     type: Boolean, 
+    //     default: false 
+    // },
+    // snapshotIntervalSeconds: { 
+    //     type: Number, 
+    //     default: 30 
+    // },
+    // detectNoFace: { 
+    //     type: Boolean, 
+    //     default: false 
+    // },
+    // detectMultipleFaces: { 
+    //     type: Boolean, 
+    //     default: false 
+    // },
     // maxWarningsAllowed: { 
     //     type: Number, 
     //     default: 3 

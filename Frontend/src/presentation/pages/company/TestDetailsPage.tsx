@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CircularProgress,
-  Container,
-  Tab,
-  Tabs,
-} from "@mui/material";
+import { Box, Button, Card, Container, Tab, Tabs} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import InternalLayout from "../../layouts/InternalLayout";
@@ -52,10 +44,10 @@ const TestDetailsPage = () => {
   
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" mt={8}>
-        <CircularProgress />
-      </Box>
-    );
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-600"></div>
+      </div>
+    )
   }
 
   const handleViewAnswer = (candidateId: string) => {
@@ -175,6 +167,7 @@ const TestDetailsPage = () => {
         </Card>
         </Container>
         <InterviewModal
+          loading={loading}
           isOpen={isModalOpen}
           mode={interviewModalMode}
           onClose={() => setIsModalOpen(false)}

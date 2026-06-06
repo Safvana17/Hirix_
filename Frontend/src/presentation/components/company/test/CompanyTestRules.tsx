@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material'
 import type { CreateTestPayload } from '../../../../types/test'
+import { createDefaultTestRules } from '../../../../utils/DefaultTestRules'
 
 interface CompanyTestRulesProps {
   data: CreateTestPayload
@@ -20,11 +21,12 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
     section: keyof CreateTestPayload['rules'],
     value: object
   ) => {
+    const rules = data.rules ?? createDefaultTestRules()
     updateData({
       rules: {
-        ...data.rules,
+        ...rules,
         [section]: {
-          ...data.rules[section],
+          ...rules[section],
           ...value,
         },
       },
@@ -53,7 +55,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Auto Submit On Time End"
                 description="Automatically submit when test time expires"
-                checked={data.rules.timing.autoSubmitOnTimeEnd}
+                checked={data?.rules?.timing.autoSubmitOnTimeEnd ?? false}
                 onChange={(checked) =>
                   updateRules('timing', { autoSubmitOnTimeEnd: checked })
                 }
@@ -107,7 +109,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                 }
               /> */}
 
-              <RuleSwitch
+              {/* <RuleSwitch
                 title="Shuffle Questions"
                 description="Randomize question order"
                 checked={data.rules.navigation.shuffleQuestions}
@@ -123,7 +125,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                 onChange={(checked) =>
                   updateRules('navigation', { shuffleOptions: checked })
                 }
-              />
+              /> */}
 
               <RuleSwitch
                 title="Allow Back Navigation"
@@ -141,7 +143,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Enable Camera"
                 description="Require webcam access"
-                checked={data.rules.proctoring.enableCamera}
+                checked={data.rules?.proctoring.enableCamera ?? false}
                 onChange={(checked) =>
                   updateRules('proctoring', { enableCamera: checked })
                 }
@@ -150,35 +152,9 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Capture Snapshots"
                 description="Capture candidate snapshots during the test"
-                checked={data.rules.proctoring.captureSnapshots}
+                checked={data.rules?.proctoring.movementDetection ?? false}
                 onChange={(checked) =>
                   updateRules('proctoring', { captureSnapshots: checked })
-                }
-              />
-
-              <RuleInput
-                label="Snapshot Interval Seconds"
-                value={data.rules.proctoring.snapshotIntervalSeconds}
-                onChange={(value) =>
-                  updateRules('proctoring', { snapshotIntervalSeconds: value })
-                }
-              />
-
-              <RuleSwitch
-                title="Detect No Face"
-                description="Warn if no face is detected"
-                checked={data.rules.proctoring.detectNoFace}
-                onChange={(checked) =>
-                  updateRules('proctoring', { detectNoFace: checked })
-                }
-              />
-
-              <RuleSwitch
-                title="Detect Multiple Face"
-                description="Warn if multiple faces are detected"
-                checked={data.rules.proctoring.detectMultipleFaces}
-                onChange={(checked) =>
-                  updateRules('proctoring', { detectMultipleFaces: checked })
                 }
               />
 
@@ -294,7 +270,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                 <Grid size={{ xs: 12, md: 4 }}>
                   <RuleInput
                     label="Interval In Seconds"
-                    value={data.rules.autoSave.intervalInSeconds}
+                    value={data.rules?.autoSave.intervalInSeconds ?? 60}
                     onChange={(value) =>
                       updateRules('autoSave', { intervalInSeconds: value })
                     }
@@ -305,7 +281,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                   <RuleSwitch
                     title="Save On Every Answer"
                     description="Save immediately after each answer"
-                    checked={data.rules.autoSave.saveOnEveryAnswer}
+                    checked={data.rules?.autoSave.saveOnEveryAnswer ?? false}
                     onChange={(checked) =>
                       updateRules('autoSave', { saveOnEveryAnswer: checked })
                     }

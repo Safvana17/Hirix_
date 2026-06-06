@@ -1,4 +1,3 @@
-import { TargetType } from "../../../../Domain/enums/subscription";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";

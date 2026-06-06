@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { ICandidateRegisterUsecase } from "../../../../Application/candidate/interfaces/auth/ICandidateRegisterUsecase";
@@ -35,22 +35,22 @@ export class CandidateAuthController {
      * @param res 
      * @param next 
      */
-    register = asyncHandler(async (req:Request, res: Response, next: NextFunction) => {
+    register = asyncHandler(async (req:Request, res: Response) => {
         await this._registerUsecase.execute(req.body)       
         return sendSuccess(res, statusCode.OK, authMessages.success.OTP_SEND_SUCCESS)
     })
 
-    VerifyOtp = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    VerifyOtp = asyncHandler(async (req: Request, res: Response) => {
         const savedCandidate = await this._verifyOtp.execute(req.body)
         return sendSuccess(res, statusCode.OK, authMessages.success.CANDIDATE_REGISTER_SUCCESS, {savedCandidate})
     })
 
-    resendOtp = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+    resendOtp = asyncHandler(async(req: Request, res: Response) => {
         await this._resendOtpUsecase.execute(req.body)
         return sendSuccess(res, statusCode.OK, authMessages.success.OTP_SEND_SUCCESS)
     })
 
-    login = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    login = asyncHandler(async (req: Request, res: Response) => {
             const {refreshToken, accessToken,csrfToken, candidate} = await this._loginUsecase.execute(req.body)
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
@@ -74,21 +74,21 @@ export class CandidateAuthController {
             return sendSuccess(res, statusCode.OK, authMessages.success.CANDIDATE_LOGIN_SUCCESS, {candidate})
     })
 
-    forgotPassword = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    forgotPassword = asyncHandler(async (req: Request, res: Response) => {
         await this._forgotPasswordUsecase.execute(req.body)    
         return sendSuccess(res, statusCode.OK, authMessages.success.RESET_PASSWORD_OTP_sEND)
     })
-    VerifyOtpForForgotPassword = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    VerifyOtpForForgotPassword = asyncHandler(async (req: Request, res: Response) => {
         const {resetToken, email}= await this._verifyOtpForForgotPassword.execute(req.body)
         return sendSuccess(res, statusCode.OK, authMessages.success.OTP_VERIFIED, {resetToken, email})
     })
 
-    resetPassword = asyncHandler(async ( req: Request, res: Response, next: NextFunction) => {
+    resetPassword = asyncHandler(async ( req: Request, res: Response) => {
         await this._resetPasswordUsecase.execute(req.body)
         return sendSuccess(res, statusCode.OK, authMessages.success.PASSWORD_RESET)
     })
 
-    googleLogin = asyncHandler(async (req: Request, res: Response, next: NextFunction) =>{
+    googleLogin = asyncHandler(async (req: Request, res: Response) =>{
            const { token } = req.body
            const {refreshToken, accessToken, candidate} = await this._gooleLoginUsecase.execute(token, userRole.Candidate)
            res.cookie('refreshToken', refreshToken, {

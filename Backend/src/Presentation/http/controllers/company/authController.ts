@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { ICompanyRegisterUsecase } from "../../../../Application/company/interfaces/auth/ICompanyRegisterUsecase";
 import { verifyRegisterCompanySchema } from "../../validators/registerValidator";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
@@ -29,28 +29,28 @@ export class CompanyAuthController {
         private _verifyCompanyRegisterOtp: IVerifyRegisterCompanyOtpUsecase,
     ) {}
 
-    register = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    register = asyncHandler(async (req: Request, res: Response) => {
         await this._registerUsecase.execute(req.body)
         return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_REGISTER_PENDING)
     })
 
-    verifyOtp = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    verifyOtp = asyncHandler(async (req: Request, res: Response) => {
         const savedCompany = await this._verifyCompanyRegisterOtp.execute(req.body)
         return sendSuccess(res, statusCode.OK, '', {savedCompany})
     })
 
-    verifyEmail = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    verifyEmail = asyncHandler(async (req: Request, res: Response) => {
         const payload = verifyRegisterCompanySchema.parse({token: req.query.token})
         const savedCompany = await this._verifyRegisterompany.execute(payload)
         return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_EMAIL_VERIFIED, {savedCompany})
     })
 
-    resendOtp = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    resendOtp = asyncHandler(async (req: Request, res: Response) => {
         await this._resendOtpCompanyUsecase.execute(req.body)
         return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_REGISTER_SUCCESS)
     })
 
-    login = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    login = asyncHandler(async (req: Request, res: Response) => {
             const {refreshToken, accessToken,csrfToken, company} = await this._loginCompanyUsecase.execute(req.body)
 
             res.cookie('refreshToken', refreshToken, {
@@ -78,22 +78,22 @@ export class CompanyAuthController {
             return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_LOGIN_SUCCESS, {company})
     })
 
-    forgotPassword = asyncHandler(async(req: Request, res: Response, next:NextFunction) => {
+    forgotPassword = asyncHandler(async(req: Request, res: Response) => {
         await this._companyForgotPasswordUsecase.execute(req.body)          
         return sendSuccess(res, statusCode.OK, authMessages.success.RESET_PASSWORD_OTP_sEND)
     })
 
-    VerifyOtpForForgotPassword = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    VerifyOtpForForgotPassword = asyncHandler(async (req: Request, res: Response) => {
         const {resetToken, email}= await this._verifyOtpForForgotPassword.execute(req.body)
         return sendSuccess(res, statusCode.OK, authMessages.success.OTP_VERIFIED, {resetToken, email})
     })
 
-    resetPassword = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    resetPassword = asyncHandler(async (req: Request, res: Response) => {
         await this._companyResetPasswordUsecase.execute(req.body)
         return sendSuccess(res, statusCode.OK, authMessages.success.PASSWORD_RESET)
     })
 
-    googleLogin = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    googleLogin = asyncHandler(async (req: Request, res: Response) => {
         const { token } = req.body
             const {refreshToken, accessToken, company} =await this._companyGoogleLogin.execute(token, userRole.Company)
             res.cookie('refreshToken', refreshToken, {

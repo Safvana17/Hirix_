@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { IAdminCreateQuestionUsecase } from "../../../../Application/admin/interfaces/question/iAdminCreateQuestionUsecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
 import { sendSuccess } from "../../utils/apiResponse";
@@ -20,26 +20,26 @@ export class AdminQestionController {
         private _deleteQuestion: IAdminDeleteQuestionUsecase,
     ) {}
 
-    createQuestion = asyncHandler (async( req: Request, res: Response, next: NextFunction) => {
+    createQuestion = asyncHandler (async( req: Request, res: Response) => {
         logger.info(req.user, 'from controller')
         const question = await this._createQuestion.execute({...req.body,user: req.user })
         return sendSuccess(res, statusCode.OK, questionMessages.success.ADMIN_TEST_QUESTION_CREATED, question)
     })
 
-    getAllQuestions = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+    getAllQuestions = asyncHandler( async (req: Request, res: Response) => {
         const parsed = getAllQuestionSchema.parse(req.query)
         const questions = await this._getAllQuestions.execute({...parsed, role: req.user.role, userId: req.user.id})
         logger.info(questions, 'from question controller')
         return sendSuccess(res, statusCode.OK, "", questions)
     })
 
-    getAllPracticeQuestions = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+    getAllPracticeQuestions = asyncHandler( async (req: Request, res: Response) => {
         const parsed = getAllQuestionSchema.parse(req.query)
         const practiceQuestions = await this._getAllPracticeQuestions.execute(parsed)
         return sendSuccess(res, statusCode.OK, '', practiceQuestions)
     })
 
-    editQuestion = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+    editQuestion = asyncHandler( async (req: Request, res: Response) => {
         const questionId = Array.isArray (req.params.id ) 
             ? req.params.id[0]
             :req.params.id 
@@ -47,7 +47,7 @@ export class AdminQestionController {
         const updatedQuestion = await this._editQuestion.execute({id: questionId, ...req.body})
         return sendSuccess(res, statusCode.OK, questionMessages.success.QUESTION_UPDATED_SUCCESSFULLY, updatedQuestion)
     })
-    deleteQuestion = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+    deleteQuestion = asyncHandler( async (req: Request, res: Response) => {
         const quesionId = Array.isArray(req.params.id)
               ? req.params.id[0]
               : req.params.id

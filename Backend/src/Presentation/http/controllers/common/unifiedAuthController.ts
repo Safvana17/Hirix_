@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express"
+import { Request, Response } from "express"
 import { statusCode } from "../../../../Shared/Enumes/statusCode"
 import  { authMessages } from '../../../../Shared/constsnts/messages/authMessages'
 import { IUnifiedGetMeUsecase } from "../../../../Application/common/interfaces/IUnifiedGetMeUsecase"
@@ -16,7 +16,7 @@ export class UnifiedAuthController {
         private _unifiedLogoutUsecase: IUnifiedLogoutUsecase
     ) {}
 
-    getMe = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+    getMe = asyncHandler(async(req: Request, res: Response) => {
             const userId = req.user?.id
             const role = req.user?.role
 
@@ -29,7 +29,7 @@ export class UnifiedAuthController {
             const user = await this._unifiedGetMeUsecase.execute({id: userId, role: role})
             return sendSuccess(res, statusCode.OK, '', user)
     })
-    refreshToken = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    refreshToken = asyncHandler(async (req: Request, res: Response) => {
             const refreshToken = req.cookies.refreshToken
             logger.info(`Refresh cookie:${req.cookies.refreshToken}`)
 
@@ -59,7 +59,7 @@ export class UnifiedAuthController {
 
             return sendSuccess(res, statusCode.OK, authMessages.success.TOKEN_REFRESHED)
     })
-    logout = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    logout = asyncHandler(async (req: Request, res: Response) => {
             const accessToken = req.cookies.accessToken
             const refreshToken = req.cookies.refreshToken
             await this._unifiedLogoutUsecase.execute(refreshToken, accessToken)

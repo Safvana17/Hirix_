@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { ICompanyCreateQuestionUsecase } from "../../../../Application/company/interfaces/question/iCompany.createQuestion.usecase";
 import { asyncHandler } from "../../../../utils/asyncHandler";
 import { logger } from "../../../../utils/logging/loger";
@@ -18,20 +18,20 @@ export class CompanyQuestionController {
         private _deleteQuestion: ICompanyDeleteQuestionUsecase
     ) {}
 
-    createQuestion = asyncHandler (async( req: Request, res: Response, next: NextFunction) => {
+    createQuestion = asyncHandler (async( req: Request, res: Response) => {
         logger.info(req.user, 'from controller')
         const question = await this._createQuestion.execute({...req.body,user: req.user })
         return sendSuccess(res, statusCode.OK, questionMessages.success.COMPANY_TEST_QUESTION_CREATED, question)
     })
 
-    getAllQuestions = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+    getAllQuestions = asyncHandler( async (req: Request, res: Response) => {
         const parsed = getAllQuestionSchema.parse(req.query)
         const questions = await this._getAllQuestions.execute({...parsed, role: req.user.role, userId: req.user.id})
         logger.info(questions)
         return sendSuccess(res, statusCode.OK, "", questions)
     })
 
-    editQuestion = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+    editQuestion = asyncHandler( async (req: Request, res: Response) => {
         const questionId = Array.isArray (req.params.id ) 
             ? req.params.id[0]
             :req.params.id 
@@ -40,7 +40,7 @@ export class CompanyQuestionController {
         return sendSuccess(res, statusCode.OK, questionMessages.success.QUESTION_UPDATED_SUCCESSFULLY, updatedQuestion)
     })
 
-    deleteQuestion = asyncHandler( async (req: Request, res: Response, next: NextFunction) => {
+    deleteQuestion = asyncHandler( async (req: Request, res: Response) => {
         const quesionId = Array.isArray(req.params.id)
               ? req.params.id[0]
               : req.params.id

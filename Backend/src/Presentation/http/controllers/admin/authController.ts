@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { IAdminLoginUsecase } from "../../../../Application/admin/interfaces/auth/IAdminLoginUsecase";
 
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
@@ -13,7 +13,7 @@ export class AdminAuthController {
         private _loginUsecase: IAdminLoginUsecase,
     ) {}
 
-    login = asyncHandler ( async (req: Request, res: Response, next: NextFunction) => {
+    login = asyncHandler ( async (req: Request, res: Response) => {
         const {refreshToken, accessToken, csrfToken, admin} = await this._loginUsecase.execute(req.body)    
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,

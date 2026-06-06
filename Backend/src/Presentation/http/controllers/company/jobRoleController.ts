@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { ICreateJobRolesUsecase } from "../../../../Application/company/interfaces/jobRoles/iJobRols.create.usecase";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
@@ -19,12 +19,12 @@ export class JobRolesController {
         private _deleteJobRole: IDeleteJobRoleUsecase
     ) {}
 
-    createJobRole = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    createJobRole = asyncHandler(async (req: Request, res: Response) => {
         const companyId = req.user.id
         const jobRole = await this._createJobRole.execute({...req.body, companyId})
         return sendSuccess(res, statusCode.OK, JobRoleMessages.success.JOB_ROLE_CREATED, {jobRole})
     })
-    getAllJobRoles = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    getAllJobRoles = asyncHandler(async (req: Request, res: Response) => {
         const parsed = JobRoleQuerySchema.parse(req.query)
         // validate(JobRoleQuerySchema, req.query)
         const userId = req.user.id
@@ -33,19 +33,19 @@ export class JobRolesController {
         return sendSuccess(res, statusCode.OK, '', {jobRoles, totalCount, totalPages, featureLocked})
     })
 
-    editJobRole = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    editJobRole = asyncHandler(async (req: Request, res: Response) => {
         const jobRoleId = req.params.id
         const updatedJobRole = await this._editJobRole.execute({...req.body, id: jobRoleId, userId: req.user.id})
         return sendSuccess(res, statusCode.OK, '', {updatedJobRole})
     })
 
-    updateStatus = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    updateStatus = asyncHandler(async (req: Request, res: Response) => {
         const jobRoleId = req.params.id
         const updatedJobRole = await this._updateJobRoleStatus.execute({...req.body, id: jobRoleId})
         return sendSuccess(res, statusCode.OK, '', {updatedJobRole})
     })
 
-    deleteJobRole = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    deleteJobRole = asyncHandler(async (req: Request, res: Response) => {
         const jobRoleId = Array.isArray(req.params.id)
             ? req.params.id[0]
             : req.params.id

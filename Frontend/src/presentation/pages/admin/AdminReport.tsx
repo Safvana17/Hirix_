@@ -41,7 +41,7 @@ const AdminReport: React.FC = () => {
                alignItems="center"
                mb={2}
             >
-            <h3>Revenue Trend</h3>
+            <h3 style={{ fontWeight: 800}}>Candidate Participation Trend</h3>
             <FormControl size="small" sx={{ minWidth: 120 }}>
                <InputLabel>Period</InputLabel>
                <Select
@@ -88,7 +88,7 @@ const AdminReport: React.FC = () => {
                alignItems="center"
                mb={2}
             >                  
-               <h3>Revenue by Plan</h3>
+               <h3 style={{ fontWeight: 800}}>Company Usage Distribution</h3>
                </Box>
                   <ResponsiveContainer width="100%" height={350}>
                      <BarChart data={companyUsage}>

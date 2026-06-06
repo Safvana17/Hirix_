@@ -22,8 +22,10 @@ export class CandidateDashboardSummeryUsecase implements ICandidateDashboardSumm
         if(!candidate){
             throw new AppError(authMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
-        const totalQuestionsAttempted = candidate.practiceQuestionCount
-        const accuracy = (candidate.correctPracticeAnswers && totalQuestionsAttempted) ? Math.ceil ( candidate.correctPracticeAnswers / totalQuestionsAttempted) *100 : 0
+        const totalQuestionsAttempted = candidate.practiceQuestionCount ?? 0
+        const correct = candidate.correctPracticeAnswers ?? 0
+        const accuracy = totalQuestionsAttempted > 0
+              ? Math.round( (correct / totalQuestionsAttempted) *100) : 0
         const subscription = await this._subscriptionRepository.findCurrentByUserId(candidate.id)
         if(!subscription){
             throw new AppError(subscriptionPlanMessages.error.CANNOT_FIND_SUBCRIPTION_DETAILS, statusCode.NOT_FOUND)

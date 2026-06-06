@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { IAdminGetAllCandidates } from "../../../../Application/admin/interfaces/userManagement/iAdmin.getAllCandidates.usecase";
 import { IAdminGetAllCompaniesUsecase } from "../../../../Application/admin/interfaces/userManagement/iAdmin.getAllCompanies.usecase";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
@@ -24,19 +24,19 @@ export class UserManagementController {
        private _rejectCompanyRegisterUsecase: IAdminRejectCompanyUsecase
     ) { }
     
-    getAllCompanies = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+    getAllCompanies = asyncHandler(async(req: Request, res: Response) => {
             const parsed = QuerySchema.parse(req.query)
             const {companies, totalPages, totalCount} = await this._getAllCompaniesUsecase.exexute(parsed)
             return sendSuccess(res, statusCode.OK, '', {companies, totalCount, totalPages})
     })
 
-    getAllCandidates = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+    getAllCandidates = asyncHandler(async(req: Request, res: Response) => {
             const parsed = QuerySchema.parse(req.query)
             const { candidates, totalPages, totalCount} = await this._getAllCandidatesUsecase.execute(parsed)
             return sendSuccess(res, statusCode.OK, '', {candidates, totalCount, totalPages})
     })
 
-    getCompanyById = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+    getCompanyById = asyncHandler(async(req: Request, res: Response) => {
             const companyId = Array.isArray(req.params.id)
                   ? req.params.id[0]
                   : req.params.id
@@ -44,7 +44,7 @@ export class UserManagementController {
             return sendSuccess(res, statusCode.OK, '', company)
     })
 
-    updateCompanyStatus = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+    updateCompanyStatus = asyncHandler(async(req: Request, res: Response) => {
             const companyId = Array.isArray(req.params.id)
                   ? req.params.id[0]
                   : req.params.id
@@ -54,7 +54,7 @@ export class UserManagementController {
             return sendSuccess(res, statusCode.OK, '', updatedCompany)
     })
 
-    updateCandidateStatus = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+    updateCandidateStatus = asyncHandler(async(req: Request, res: Response) => {
             const candidateId = Array.isArray(req.params.id)
                   ? req.params.id[0]
                   : req.params.id
@@ -62,7 +62,7 @@ export class UserManagementController {
             return sendSuccess(res, statusCode.OK, '', updatedCandidate)
     })
 
-    approveCompany =asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    approveCompany =asyncHandler(async (req: Request, res: Response) => {
             const companyId = Array.isArray(req.params.id)
                   ? req.params.id[0]
                   : req.params.id
@@ -71,7 +71,7 @@ export class UserManagementController {
             return sendSuccess(res, statusCode.OK, '', company)
     })
 
-    rejectCompany =asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    rejectCompany =asyncHandler(async (req: Request, res: Response) => {
             const companyId = Array.isArray(req.params.id)
                   ? req.params.id[0]
                   : req.params.id

@@ -3,7 +3,7 @@ import { adminSidebarItems } from '../../../constants/sidebarItems'
 import InternalLayout from '../../layouts/InternalLayout'
 import { Box, FormControl, Grid, InputLabel, MenuItem, Pagination, Paper, Select } from '@mui/material'
 import SummeryCard from '../../components/layout/SummeryCard'
-import { BookCheck, Building2Icon, DollarSign, FileQuestionIcon, User2 } from 'lucide-react'
+import { BookCheck, Building2Icon, FileQuestionIcon, User2 } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAdminDashboardSummary, getAdminRecentActivity, getSubscriptionDistribution, getTestActivty } from '../../../redux/slices/features/analytics/adminAnalysticsSlice'
 import type { AppDispatch, RootState } from '../../../redux/store'
@@ -46,9 +46,9 @@ const AdminDashboard: React.FC= () => {
                 <Grid size={{xs: 10, md: 3}}>
                    <SummeryCard label='Total Questions' value={adminSummary?.totalQuestions ?? 0} icon={FileQuestionIcon} color='black' bg='white'/>
                 </Grid>
-                <Grid size={{xs: 10, md: 3}}>
+                {/* <Grid size={{xs: 10, md: 3}}>
                    <SummeryCard label='Total Revenue' value={adminSummary?.totalRevenue ?? 0} icon={DollarSign} color='black' bg='white'/>
-                </Grid>
+                </Grid> */}
             </Grid>
             <Grid container spacing={3} sx={{ mt: 2}}>
                <Grid size={{ xs: 12, md: 6}}>
@@ -59,7 +59,7 @@ const AdminDashboard: React.FC= () => {
                         alignItems="center"
                         mb={2}
                      >
-                        <h3>Revenue Trend</h3>
+                        <h3 style={{ fontWeight: 800}}>Test Activity Trend</h3>
                         <FormControl size="small" sx={{ minWidth: 120 }}>
                            <InputLabel>Period</InputLabel>
                            <Select
@@ -106,7 +106,7 @@ const AdminDashboard: React.FC= () => {
                         alignItems="center"
                         mb={2}
                      >
-                        <h3>Revenue by Plan</h3>
+                        <h3 style={{ fontWeight: 800}}>Subscription Distribution</h3>
                         <FormControl size="small" sx={{ minWidth: 120 }}>
                            <InputLabel>Type</InputLabel>
                            <Select
@@ -150,7 +150,7 @@ const AdminDashboard: React.FC= () => {
                   alignItems="center"
                   mb={3}
                   >
-                  <h3 style={{ margin: 0 }}>Recent Activity</h3>
+                  <h3 style={{ margin: 0, fontWeight: 800}}>Recent Activity</h3>
 
                   <FormControl size="small" sx={{ minWidth: 140 }}>
                      <InputLabel>Period</InputLabel>

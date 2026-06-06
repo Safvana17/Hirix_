@@ -11,8 +11,8 @@ export class NavigationRules {
         public allowTabSwitch: boolean,
         // public maxTabSwitchCount: number,
         // public autoSubmitOnTabViolation: boolean,
-        public shuffleQuestions: boolean,
-        public shuffleOptions: boolean,
+        // public shuffleQuestions: boolean,
+        // public shuffleOptions: boolean,
         public allowBackNavigation: boolean
     ) {}
 }
@@ -20,10 +20,11 @@ export class NavigationRules {
 export class ProctoringRules {
     constructor (
         public enableCamera: boolean,
-        public captureSnapshots: boolean,
-        public snapshotIntervalSeconds: number,
-        public detectNoFace: boolean,
-        public detectMultipleFaces: boolean,
+        public movementDetection: boolean,
+        // public captureSnapshots: boolean,
+        // public snapshotIntervalSeconds: number,
+        // public detectNoFace: boolean,
+        // public detectMultipleFaces: boolean,
         // public maxWarningsAllowed: number,
         // public autoSubmitOnMaxWarnings: boolean
     ) {}

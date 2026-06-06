@@ -45,6 +45,10 @@ export const useWebRTC = ({
   const makingOfferRef = useRef(false)
 
   useEffect(() => {
+  console.log('UPDATED onUserLeft ref', onUserLeft);
+}, [onUserLeft]);
+
+  useEffect(() => {
     onInterviewEndedRef.current = onInterviewEnded;
     onUserLeftRef.current = onUserLeft;
   }, [onInterviewEnded, onUserLeft]);
@@ -284,6 +288,8 @@ export const useWebRTC = ({
     stopLocalMedia();
     cleanupPeerConnection();
     socket.emit('user-left', { roomId });
+    onUserLeftRef.current?.();
+
   }, [roomId, stopLocalMedia, cleanupPeerConnection]);
 
   useEffect(() => {
@@ -400,6 +406,9 @@ export const useWebRTC = ({
     }
 
     const handleUserLeft = () => {
+        console.log('user left received');
+  console.log('ref value', onUserLeftRef.current);
+
       console.log('user left received')
       cleanupPeerConnection();
       setWaitingForPeer(true);

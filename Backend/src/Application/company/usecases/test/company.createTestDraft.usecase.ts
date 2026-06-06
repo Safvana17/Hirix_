@@ -101,16 +101,17 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
                 ),
                 new NavigationRules(
                     request.rules.navigation.allowTabSwitch,
-                    request.rules.navigation.shuffleQuestions,
-                    request.rules.navigation.shuffleOptions,
+                    // request.rules.navigation.shuffleQuestions,
+                    // request.rules.navigation.shuffleOptions,
                     request.rules.navigation.allowBackNavigation,
                 ),
                 new ProctoringRules(
                     request.rules.proctoring.enableCamera ?? false,
-                    request.rules.proctoring.captureSnapshots ?? false,
-                    request.rules.proctoring.snapshotIntervalSeconds ?? 60,
-                    request.rules.proctoring.detectNoFace ?? false,
-                    request.rules.proctoring.detectMultipleFaces ?? false,
+                    request.rules.proctoring.movementDetection ?? false,
+                    // request.rules.proctoring.captureSnapshots ?? false,
+                    // request.rules.proctoring.snapshotIntervalSeconds ?? 60,
+                    // request.rules.proctoring.detectNoFace ?? false,
+                    // request.rules.proctoring.detectMultipleFaces ?? false,
                 ),
                 new BehaviorRules(
                     request.rules.behavior.enforceFullScreen ?? true,

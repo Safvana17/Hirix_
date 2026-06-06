@@ -8,16 +8,17 @@ export const createDefaultTestRules = (): TestRules => ({
   },
   navigation: {
     allowTabSwitch: false,
-    shuffleQuestions: false,
-    shuffleOptions: false,
+    // shuffleQuestions: false,
+    // shuffleOptions: false,
     allowBackNavigation: true,
   },
   proctoring: {
     enableCamera: false,
-    captureSnapshots: false,
-    snapshotIntervalSeconds: 30,
-    detectNoFace: false,
-    detectMultipleFaces: false,
+    movementDetection: false,
+    // captureSnapshots: false,
+    // snapshotIntervalSeconds: 30,
+    // detectNoFace: false,
+    // detectMultipleFaces: false,
   },
   behavior: {
     enforceFullScreen: false,

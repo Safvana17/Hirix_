@@ -68,17 +68,18 @@ const TimingRulesSchema = z.object({
 
 const NavigationRulesSchema = z.object({
   allowTabSwitch: z.boolean(),
-  shuffleQuestions: z.boolean(),
-  shuffleOptions: z.boolean(),
+  // shuffleQuestions: z.boolean(),
+  // shuffleOptions: z.boolean(),
   allowBackNavigation: z.boolean(),
 })
 
 const ProctoringRulesSchema = z.object({
   enableCamera: z.boolean(),
-  captureSnapshots: z.boolean(),
-  snapshotIntervalSeconds: z.number().min(0),
-  detectNoFace: z.boolean(),
-  detectMultipleFaces: z.boolean(),
+  movementDetection: z.boolean(),
+  // captureSnapshots: z.boolean(),
+  // snapshotIntervalSeconds: z.number().min(0),
+  // detectNoFace: z.boolean(),
+  // detectMultipleFaces: z.boolean(),
 })
 
 const BehaviorRulesSchema = z.object({

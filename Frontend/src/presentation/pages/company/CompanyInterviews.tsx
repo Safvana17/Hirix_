@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import InternalLayout from '../../layouts/InternalLayout'
 import { companySidebarItems } from '../../../constants/sidebarItems'
-import { FilterIcon, Plus, Search } from 'lucide-react'
+import { FilterIcon, Search } from 'lucide-react'
 import { Box, FormControl, InputAdornment, InputLabel, MenuItem, Pagination, Paper, Select, Stack, TextField, Typography } from '@mui/material'
 import type { InterviewDTO, InterviewStatus, ModalMode, ScheduleInterviewPayload } from '../../../types/interview'
 import { useDebounce } from '../../../hooks/useDebounce'

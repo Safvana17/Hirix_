@@ -73,7 +73,7 @@ const AdminRevenue: React.FC = () => {
                         alignItems="center"
                         mb={2}
                      >
-                        <h3>Revenue Trend</h3>
+                        <h3 style={{ fontWeight: 800}}>Revenue Trend</h3>
                         <FormControl size="small" sx={{ minWidth: 120 }}>
                            <InputLabel>Period</InputLabel>
                            <Select
@@ -110,7 +110,7 @@ const AdminRevenue: React.FC = () => {
                         alignItems="center"
                         mb={2}
                      >
-                        <h3>Revenue by Plan</h3>
+                        <h3 style={{ fontWeight: 800}}>Revenue by Plan</h3>
                         <FormControl size="small" sx={{ minWidth: 120 }}>
                            <InputLabel>Type</InputLabel>
                            <Select

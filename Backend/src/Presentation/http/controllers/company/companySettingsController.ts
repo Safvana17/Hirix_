@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { ICompanyUpdateProfileUsecase } from "../../../../Application/company/interfaces/settings/iCompany.updateProfile.usecase";
 import { restoreAccountSchema } from "../../validators/settingsValidator";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
@@ -30,7 +30,7 @@ export class CompanySettingsController {
 
     ) {}
 
-    updateProfile = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    updateProfile = asyncHandler(async (req: Request, res: Response) => {
         const companyId = Array.isArray(req.params.id)
             ? req.params.id[0]
             : req.params.id    
@@ -39,7 +39,7 @@ export class CompanySettingsController {
         return sendSuccess(res, statusCode.OK, settingsMessages.success.COMPANY_PROFILE_UPDATED, {updatedCompany})
     })
 
-    getCompanyProfile = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    getCompanyProfile = asyncHandler(async (req: Request, res: Response) => {
         const companyId = Array.isArray(req.params.id) 
               ? req.params.id[0]
               : req.params.id
@@ -47,7 +47,7 @@ export class CompanySettingsController {
         return sendSuccess(res, statusCode.OK, '', result.company)
     })
 
-    uploadProfileImage = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    uploadProfileImage = asyncHandler(async (req: Request, res: Response) => {
         const companyId = Array.isArray(req.params.id)
             ? req.params.id[0]
             : req.params.id
@@ -65,7 +65,7 @@ export class CompanySettingsController {
         return sendSuccess(res, statusCode.OK, settingsMessages.success.COMPANY_PROFILE_UPDATED, updatedCompany.company)
     })
 
-    changePassword = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    changePassword = asyncHandler(async (req: Request, res: Response) => {
         const companyId = Array.isArray(req.params.id)
             ? req.params.id[0]
             : req.params.id
@@ -73,7 +73,7 @@ export class CompanySettingsController {
         return sendSuccess(res, statusCode.OK, settingsMessages.success.PASSWORD_CHANGED_SUCCESSFULYY)
     })
 
-    deleteAccount = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+    deleteAccount = asyncHandler(async(req: Request, res: Response) => {
         const companyId = Array.isArray(req.params.id) 
             ? req.params.id[0]
             : req.params.id
@@ -81,18 +81,18 @@ export class CompanySettingsController {
         return sendSuccess(res, statusCode.OK, settingsMessages.success.ACCOUNT_DELETED)
     })
 
-    requestRestoreLink = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    requestRestoreLink = asyncHandler(async (req: Request, res: Response) => {
         await this._sendRestoreAccountEmail.execute(req.body)
         return sendSuccess(res, statusCode.OK, settingsMessages.success.RESTORE_LINK_SEND_SUCCESSFULLY)
     })
 
-    getDeletedAccountDetails = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
+    getDeletedAccountDetails = asyncHandler(async(req: Request, res: Response) => {
         const parsed = restoreAccountSchema.parse({token: req.query.token})
         const company = await this._getDeletedAccountDetails.execute({token: parsed.token})
         return sendSuccess(res, statusCode.OK, '', {company})
     })
 
-    confirmRestoreAccount = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    confirmRestoreAccount = asyncHandler(async (req: Request, res: Response) => {
         const parsed = restoreAccountSchema.parse({token: req.query.token})
         const {refreshToken, accessToken, csrfToken, company} = await this._confirmRestoreAccount.execute({token: parsed.token})
         res.cookie('refreshToken', refreshToken, {

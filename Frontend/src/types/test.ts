@@ -85,17 +85,18 @@ export interface TestRules {
     allowTabSwitch: boolean
     // maxTabSwitchCount: number
     // autoSubmitOnTabViolation: boolean
-    shuffleQuestions: boolean
-    shuffleOptions: boolean
+    // shuffleQuestions: boolean
+    // shuffleOptions: boolean
     allowBackNavigation: boolean
   }
 
   proctoring: {
     enableCamera: boolean
-    captureSnapshots: boolean
-    snapshotIntervalSeconds: number
-    detectNoFace: boolean
-    detectMultipleFaces: boolean
+    movementDetection: boolean
+    // captureSnapshots: boolean
+    // snapshotIntervalSeconds: number
+    // detectNoFace: boolean
+    // detectMultipleFaces: boolean
     // maxWarningsAllowed: number
     // autoSubmitOnMaxWarnings: boolean
   }
@@ -160,7 +161,7 @@ export interface CreateTestPayload {
     endTime: string
     questions: TestQuestions[]
     candidates: CreateTestCandidatePayload[]
-    rules?: TestRules
+    rules: TestRules
 }
 
 // export interface editTestPayload {

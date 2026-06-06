@@ -47,6 +47,7 @@ const InterviewRoomPage: React.FC <InterviewRoomPageProps> = ({interview}) => {
 
   const {toggleCamera, cameraEnabled, toggleMic, micEnabled, remoteCameraEnabled,remoteMicEnabled, localStream, remoteStream, remoteConnected, waitingForPeer, endCall, leaveRoom, getPeerConnection, localVideoRef, remoteVideoRef, renegotiate, remoteScreenSharing} = useWebRTC({roomId: roomId!, userId, userName: loaclParticipantName, role, enabled: Boolean(token), onInterviewEnded: handleInterviewEnded, onUserLeft: () => {
     if( role === 'Candidate'){
+      console.log('candidate removing..')
       navigate(`/interview/${roomId}/${token}`, { replace: true})
     }
   }})

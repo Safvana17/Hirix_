@@ -29,17 +29,18 @@ export interface TimingRulesDTO {
 
 export interface NavigationRulesDTO {
     allowTabSwitch: boolean
-    shuffleQuestions: boolean
-    shuffleOptions: boolean
+    // shuffleQuestions: boolean
+    // shuffleOptions: boolean
     allowBackNavigation: boolean
 }
 
 export interface ProctoringRulesDTO {
     enableCamera?: boolean
-    captureSnapshots?: boolean
-    snapshotIntervalSeconds?: number
-    detectNoFace?: boolean
-    detectMultipleFaces?: boolean
+    movementDetection?: boolean
+    // captureSnapshots?: boolean
+    // snapshotIntervalSeconds?: number
+    // detectNoFace?: boolean
+    // detectMultipleFaces?: boolean
 }
 
 export interface BehaviorRulesDTO {

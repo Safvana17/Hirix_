@@ -14,16 +14,17 @@ export class TestMapper {
             ),
             new NavigationRules(
                 doc.rules.navigation.allowTabSwitch,
-                doc.rules.navigation.shuffleQuestions,
-                doc.rules.navigation.shuffleOptions,
+                // doc.rules.navigation.shuffleQuestions,
+                // doc.rules.navigation.shuffleOptions,
                 doc.rules.navigation.allowBackNavigation
             ),
             new ProctoringRules(
                 doc.rules.proctoring.enableCamera,
-                doc.rules.proctoring.captureSnapshots,
-                doc.rules.proctoring.snapshotIntervalSeconds,
-                doc.rules.proctoring.detectNoFace,
-                doc.rules.proctoring.detectMultipleFaces,
+                doc.rules.proctoring.movementDetection
+                // doc.rules.proctoring.captureSnapshots,
+                // doc.rules.proctoring.snapshotIntervalSeconds,
+                // doc.rules.proctoring.detectNoFace,
+                // doc.rules.proctoring.detectMultipleFaces,
             ),
             new BehaviorRules(
                 doc.rules.behavior.enforceFullScreen,
@@ -95,16 +96,17 @@ export class TestMapper {
                 },
                 navigation: {
                     allowTabSwitch: entity.rules.navigation.allowTabSwitch,
-                    shuffleQuestions: entity.rules.navigation.shuffleQuestions,
-                    shuffleOptions: entity.rules.navigation.shuffleOptions,
+                    // shuffleQuestions: entity.rules.navigation.shuffleQuestions,
+                    // shuffleOptions: entity.rules.navigation.shuffleOptions,
                     allowBackNavigation: entity.rules.navigation.allowBackNavigation
                 },
                 proctoring: {
                     enableCamera: entity.rules.proctoring.enableCamera,
-                    captureSnapshots: entity.rules.proctoring.captureSnapshots,
-                    snapshotIntervalSeconds: entity.rules.proctoring.snapshotIntervalSeconds,
-                    detectNoFace: entity.rules.proctoring.detectNoFace,
-                    detectMultipleFaces: entity.rules.proctoring.detectMultipleFaces,
+                    movementDetection: entity.rules.proctoring.movementDetection
+                    // captureSnapshots: entity.rules.proctoring.captureSnapshots,
+                    // snapshotIntervalSeconds: entity.rules.proctoring.snapshotIntervalSeconds,
+                    // detectNoFace: entity.rules.proctoring.detectNoFace,
+                    // detectMultipleFaces: entity.rules.proctoring.detectMultipleFaces,
                 },
                 behavior: {
                     enforceFullScreen: entity.rules.behavior.enforceFullScreen,

@@ -51,7 +51,7 @@ const CompanyDashboard: React.FC = () => {
                         alignItems="center"
                         mb={2}
                      >
-                        <h3>Revenue Trend</h3>
+                        <h3 style={{fontWeight: 800}}>Test Participation Trend</h3>
                         <FormControl size="small" sx={{ minWidth: 120 }}>
                            <InputLabel>Period</InputLabel>
                            <Select
@@ -98,7 +98,7 @@ const CompanyDashboard: React.FC = () => {
                         alignItems="center"
                         mb={2}
                      >
-                        <h3>Revenue Trend</h3>
+                        <h3 style={{fontWeight: 800}}>Candidate Status Distribution</h3>
                         <FormControl size="small" sx={{ minWidth: 120 }}>
                            <InputLabel>Period</InputLabel>
                            <Select
@@ -151,7 +151,7 @@ const CompanyDashboard: React.FC = () => {
                   alignItems="center"
                   mb={3}
                   >
-                  <h3 style={{ margin: 0 }}>Recent Activity</h3>
+                  <h3 style={{ margin: 0, fontWeight: 800 }}>Recent Activity</h3>
 
                   <FormControl size="small" sx={{ minWidth: 140 }}>
                      <InputLabel>Period</InputLabel>
