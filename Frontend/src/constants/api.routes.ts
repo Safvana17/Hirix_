@@ -252,7 +252,7 @@ export const API_ROUTES = {
         `/interview/${roomId}/${token}/join`,
       END: (roomId: string, token: string) => 
         `/interview/${roomId}/${token}/end`,
-      
+      RUN_CODE: `/interview/run-code`,
     }
   }
 }

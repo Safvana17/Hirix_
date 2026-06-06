@@ -14,14 +14,15 @@ import { Close } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import type {
   ModalMode,
-  Interview,
   ScheduleInterviewPayload,
+  InterviewDTO,
 } from "../../../types/interview";
 
 interface InterviewModalProps {
+  loading: boolean;
   isOpen: boolean;
   mode: ModalMode;
-  initialData?: Partial<Interview> | null;
+  initialData?: Partial<InterviewDTO> | null;
   defaultData?: Partial<ScheduleInterviewPayload>;
   onClose: () => void;
   onSave: (data: ScheduleInterviewPayload) => Promise<void> | void;
@@ -43,12 +44,12 @@ const createEmptyFormData = (): ScheduleInterviewPayload => ({
 });
 
 const buildFormData = (
-  initialData?: Partial<Interview> | null,
+  initialData?: Partial<InterviewDTO> | null,
   defaultData?: Partial<ScheduleInterviewPayload>
 ): ScheduleInterviewPayload => {
   if (initialData) {
     return {
-      id: initialData.id,
+      id: initialData._id,
       name: initialData.name || "",
       description: initialData.description || "",
       testCandidateId: initialData.testCandidateId || "",
@@ -90,14 +91,14 @@ const InterviewModal: React.FC<InterviewModalProps> = (props) => {
   const formKey = useMemo(() => {
     return [
       props.mode,
-      props.initialData?.id || "new",
+      props.initialData?._id || "new",
       props.defaultData?.testCandidateId || "",
       props.defaultData?.candidateEmail || "",
       props.isOpen ? "open" : "closed",
     ].join("-");
   }, [
     props.mode,
-    props.initialData?.id,
+    props.initialData?._id,
     props.defaultData?.testCandidateId,
     props.defaultData?.candidateEmail,
     props.isOpen,
@@ -117,6 +118,7 @@ interface InterviewModalFormProps extends InterviewModalProps {
 }
 
 const InterviewModalForm: React.FC<InterviewModalFormProps> = ({
+  loading,
   isOpen,
   mode,
   onClose,
@@ -317,7 +319,7 @@ const InterviewModalForm: React.FC<InterviewModalFormProps> = ({
             sx={{ bgcolor: "#0B3358" }}
             onClick={handleSubmit}
           >
-            {mode === "create" ? "Schedule Interview" : "Update Interview"}
+            {mode === "create" ? loading? "Scheduling..." : "Schedule Interview" : loading ? "Updating..." : "Update Interview"}
           </Button>
         </DialogActions>
       )}

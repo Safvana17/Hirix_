@@ -1,33 +1,34 @@
 import React from 'react'
 import { Box, Button, Chip, Paper, Stack, Typography } from '@mui/material'
 import { CalendarDays, Clock3, User, Mail } from 'lucide-react'
-import type { Interview, InterviewResult, InterviewStatus } from '../../../../types/interview'
+import type { InterviewDTO, InterviewResult, InterviewStatus } from '../../../../types/interview'
+import { Leaderboard } from '@mui/icons-material'
 
 interface InterviewCardProps {
-  interview: Interview
-  onJoin: () => void
-  onEdit: (interview: Interview) => void
+  interview: InterviewDTO
+  onJoin: (interview: InterviewDTO) => void
+  onEdit: (interview: InterviewDTO) => void
   onReschedule: (id: string) => void
   onCancel: (id: string) => void
   onViewDetails: (id: string) => void
   onUpdateResult: (id: string) => void
-  onScheduleNextRound: (interview: Interview, round: number) => void
+  onScheduleNextRound: (interview: InterviewDTO, round: number) => void
   onSendOfferLetter: (id: string) => void
 }
 
 const getStatusColor = (status: InterviewStatus) => {
   switch (status) {
     case 'SCHEDULED':
-      return '#2E7D32'
+      return '#034406'
 
     case 'RESCHEDULED':
-      return '#ED6C02'
+      return '#462001'
 
     case 'COMPLETED':
-      return '#1565C0'
+      return '#05264d'
 
     case 'CANCELLED':
-      return '#D32F2F'
+      return '#760707'
 
     default:
       return '#795003'
@@ -37,13 +38,13 @@ const getStatusColor = (status: InterviewStatus) => {
 const getResultColor = (result?: InterviewResult) => {
   switch (result) {
     case 'SELECTED':
-      return '#2E7D32'
+      return '#034d07'
 
     case 'REJECTED':
-      return '#D32F2F'
+      return '#5c0909'
 
     case 'HOLD':
-      return '#ED6C02'
+      return '#7b3902'
 
     default:
       return '#795003'
@@ -63,7 +64,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
 }) => {
   const isActiveInterview = interview.interviewStatus !== 'COMPLETED' && interview.interviewStatus !== 'CANCELLED'
   const isCompleted =interview.interviewStatus === 'COMPLETED'
-
+console.log('from card', interview)
   return (
     <Paper
       elevation={0}
@@ -118,9 +119,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
             <Box display="flex" alignItems="center" gap={1}>
               <CalendarDays size={16} />
               <Typography variant="body2">
-                {new Date(
-                  interview.scheduledStartTime
-                ).toLocaleDateString()}
+                {new Date( interview.scheduledStartTime).toLocaleDateString()}
               </Typography>
             </Box>
 
@@ -128,7 +127,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
               <Clock3 size={16} />
               <Typography variant="body2">
                 {new Date(
-                  interview.scheduledStartTime
+                  interview.scheduledEndTime
                 ).toLocaleTimeString([], {
                   hour: '2-digit',
                   minute: '2-digit',
@@ -142,16 +141,33 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                 Interviewer: {interview.interviewerName}
               </Typography>
             </Box>
+
+            <Box display="flex" alignItems="center" gap={1}>
+              <Leaderboard />
+              <Typography variant="body2">
+                Interview Result: 
+              </Typography>
+              <Chip
+                label={interview.result}
+                sx={{
+                backgroundColor: getResultColor(
+                  interview.result
+                ),
+                color: '#fff',
+                fontWeight: 700,
+              }}
+            />
+            </Box>
           </Stack>
 
-          {isCompleted && interview.result && (
+          {/* {isCompleted && interview.result && (
             <Box mt={2}>
               <Typography
                 variant="body2"
                 fontWeight={700}
                 color="#2B2B2B"
               >
-                Result:
+                Interview Result:
               </Typography>
 
               <Typography
@@ -161,9 +177,9 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                 {interview.result}
               </Typography>
             </Box>
-          )}
+          )} */}
 
-          {interview.feedback && (
+          {/* {interview.feedback && (
             <Box mt={2}>
               <Typography
                 variant="body2"
@@ -180,7 +196,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                 {interview.feedback}
               </Typography>
             </Box>
-          )}
+          )} */}
 
           <Stack
             direction="row"
@@ -194,7 +210,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={onJoin}
+                  onClick={() => onJoin(interview)}
                   sx={{
                     backgroundColor: '#0B3861',
                     textTransform: 'none',
@@ -221,7 +237,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                   variant="contained"
                   size="small"
                   onClick={() =>
-                    onReschedule(interview.id)
+                    onReschedule(interview._id)
                   }
                   sx={{
                     backgroundColor: '#D4A017',
@@ -235,7 +251,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={() => onCancel(interview.id)}
+                  onClick={() => onCancel(interview._id)}
                   sx={{
                     backgroundColor: '#800909',
                     textTransform: 'none',
@@ -252,7 +268,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                 variant="contained"
                 size="small"
                 onClick={() =>
-                  onUpdateResult(interview.id)
+                  onUpdateResult(interview._id)
                 }
                 sx={{
                   backgroundColor: '#795003',
@@ -264,7 +280,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
               </Button>
             )}
 
-            {isCompleted &&
+            {isCompleted && !interview.hasNextRound &&
               interview.result === 'SELECTED' && (
                 <>
                   <Button
@@ -274,7 +290,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                       onScheduleNextRound(interview, interview.round+1)
                     }
                     sx={{
-                      backgroundColor: '#0B3861',
+                      backgroundColor: '#032546',
                       textTransform: 'none',
                       borderRadius: 2,
                     }}
@@ -286,10 +302,10 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
                     variant="contained"
                     size="small"
                     onClick={() =>
-                      onSendOfferLetter(interview.id)
+                      onSendOfferLetter(interview._id)
                     }
                     sx={{
-                      backgroundColor: '#2E7D32',
+                      backgroundColor: '#5e3d05',
                       textTransform: 'none',
                       borderRadius: 2,
                     }}
@@ -336,23 +352,10 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
             }}
           />
 
-          {interview.result && (
-            <Chip
-              label={interview.result}
-              sx={{
-                backgroundColor: getResultColor(
-                  interview.result
-                ),
-                color: '#fff',
-                fontWeight: 700,
-              }}
-            />
-          )}
-
           <Button
             variant="outlined"
             onClick={() =>
-              onViewDetails(interview.id)
+              onViewDetails(interview._id)
             }
             sx={{
               borderColor: '#795003',

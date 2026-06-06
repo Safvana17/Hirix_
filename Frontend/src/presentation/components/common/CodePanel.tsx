@@ -3,6 +3,9 @@ import Editor from '@monaco-editor/react';
 import { Box, Typography, Button, MenuItem, Select, FormControl, CircularProgress } from '@mui/material';
 import { Play, Terminal, Trash2, Code2 } from 'lucide-react';
 import type { CodingLanguage } from '../../../types/test';
+import { interviewRunCode } from '../../../redux/slices/features/interview/CompanyInterviewSlice';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../../../redux/store';
 
 interface CodePanelProps {
   code: string;
@@ -19,6 +22,7 @@ export const CodePanel: React.FC<CodePanelProps> = ({
   updateCode,
   updateLanguage,
 }) => {
+  const dispatch = useDispatch<AppDispatch>()
   const [isRunning, setIsRunning] = useState(false);
   const [consoleOutput, setConsoleOutput] = useState<string | null>(null);
 
@@ -27,9 +31,16 @@ export const CodePanel: React.FC<CodePanelProps> = ({
     setConsoleOutput('Running...');
     try {
         console.log('run code...')
-    //   const result = await codeRunnerApi.executeCode(language, code);
-    //   setConsoleOutput(result.output || result.error || 'No output');
-    } catch (err: unknown) {
+        const result = await dispatch(interviewRunCode({data: {language, sourceCode: code}})).unwrap()
+        console.log('after run code...')
+        if(result.error){
+          setConsoleOutput(result.error)
+        }else if(result.stderr){
+          setConsoleOutput(result.stderr)
+        }else{
+          setConsoleOutput(result.stdout || 'No Output')
+        }
+      } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Execution failed';
       setConsoleOutput(`[Error] ${message}`);
     } finally {
@@ -100,43 +111,65 @@ export const CodePanel: React.FC<CodePanelProps> = ({
         />
       </Box>
 
-      <Box className="border-t border-slate-800 bg-slate-950 flex flex-col max-h-[180px]">
-        <Box className="flex items-center justify-between px-4 py-2 border-b border-slate-900 bg-slate-900/60">
-          <Box className="flex items-center gap-2 text-slate-400">
-            <Terminal className="h-4 w-4" />
-            <Typography variant="caption" className="font-bold tracking-wider uppercase text-[10px]">
-              Output
-            </Typography>
-          </Box>
-          {consoleOutput && (
-            <Button
-              size="small"
-              onClick={() => setConsoleOutput(null)}
-              startIcon={<Trash2 className="h-3 w-3" />}
-              sx={{ textTransform: 'none', fontSize: '10px', color: '#64748b' }}
-            >
-              Clear
-            </Button>
-          )}
-        </Box>
-        <Box className="p-4 overflow-y-auto font-mono text-[11.5px] leading-relaxed min-h-[80px]">
-          {consoleOutput ? (
-            <pre
-              style={{
-                margin: 0,
-                whiteSpace: 'pre-wrap',
-                color: consoleOutput.includes('[Error]') ? '#f87171' : '#34d399',
-              }}
-            >
-              {consoleOutput}
-            </pre>
-          ) : (
-            <Typography variant="caption" className="text-slate-600 italic">
-              Run code to see output here.
-            </Typography>
-          )}
-        </Box>
-      </Box>
+
+{/* Output Section */}
+<Box className="border-t border-slate-800 bg-slate-950 flex flex-col h-[220px]">
+  <Box className="flex items-center justify-between px-4 py-2 border-b border-slate-900 bg-slate-900/60">
+    <Box className="flex items-center gap-2 text-slate-400">
+      <Terminal className="h-4 w-4" />
+      <Typography
+        variant="caption"
+        className="font-bold tracking-wider uppercase text-[10px]"
+      >
+        Output
+      </Typography>
+    </Box>
+
+    {consoleOutput && (
+      <Button
+        size="small"
+        onClick={() => setConsoleOutput(null)}
+        startIcon={<Trash2 className="h-3 w-3" />}
+        sx={{
+          textTransform: 'none',
+          fontSize: '10px',
+          color: '#64748b',
+        }}
+      >
+        Clear
+      </Button>
+    )}
+  </Box>
+
+  <Box
+    className="flex-1 overflow-y-auto p-4 font-mono text-[11.5px] leading-relaxed"
+    sx={{
+      scrollbarWidth: 'thin',
+    }}
+  >
+    {consoleOutput ? (
+      <pre
+        style={{
+          margin: 0,
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          color: consoleOutput.includes('[Error]')
+            ? '#f87171'
+            : '#34d399',
+        }}
+      >
+        {consoleOutput}
+      </pre>
+    ) : (
+      <Typography
+        variant="caption"
+        className="text-slate-600 italic"
+      >
+        Run code to see output here.
+      </Typography>
+    )}
+  </Box>
+</Box>
     </Box>
   );
 };

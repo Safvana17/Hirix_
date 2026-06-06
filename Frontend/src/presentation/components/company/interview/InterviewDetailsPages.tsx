@@ -3,7 +3,7 @@ import {
   Box,
   Button,
   Chip,
-  Container,
+  // Container,
   Divider,
   Paper,
   Stack,
@@ -14,21 +14,23 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../../redux/store'
 import { getInterviewById } from '../../../../redux/slices/features/interview/CompanyInterviewSlice'
+import InternalLayout from '../../../layouts/InternalLayout'
+import { companySidebarItems } from '../../../../constants/sidebarItems'
 
 
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'SCHEDULED':
-      return '#2E7D32'
+      return '#013f04'
 
     case 'RESCHEDULED':
-      return '#ED6C02'
+      return '#582a03'
 
     case 'COMPLETED':
-      return '#1565C0'
+      return '#1b035d'
 
     case 'CANCELLED':
-      return '#D32F2F'
+      return '#830606'
 
     default:
       return '#795003'
@@ -38,26 +40,20 @@ const getStatusColor = (status: string) => {
 const getResultColor = (result?: string) => {
   switch (result) {
     case 'SELECTED':
-      return '#2E7D32'
+      return '#034e2d'
 
     case 'REJECTED':
-      return '#D32F2F'
+      return '#640303'
 
     case 'HOLD':
-      return '#ED6C02'
+      return '#642f04'
 
     default:
-      return '#795003'
+      return '#633803'
   }
 }
 
-const InfoRow = ({
-  label,
-  value,
-}: {
-  label: string
-  value?: string
-}) => (
+const InfoRow = ({ label, value }: {label: string; value?: string }) => (
   <Stack direction="row" spacing={2}>
     <Typography minWidth={170} fontWeight={700}>
       {label}
@@ -94,8 +90,7 @@ const InterviewDetailsPage: React.FC = () => {
 
 
   return (
-    
-    <Container maxWidth="md" sx={{ py: 4, minHeight: '100vh', backgroundColor: '#E6DECF' }}>
+    <InternalLayout title='Interview' subTitle='' sidebarItems={companySidebarItems}>
       <Stack direction="row" alignItems="center" spacing={1} mb={3}>
         <Button
           startIcon={<ArrowLeft size={18} />}
@@ -110,13 +105,8 @@ const InterviewDetailsPage: React.FC = () => {
         </Button>
       </Stack>
 
-      <Paper
-        elevation={0}
-        sx={{
-          borderRadius: 4,
-          p: 4,
-          border: '1px solid #E0E0E0',
-        }}
+      <Paper elevation={0}
+        sx={{ borderRadius: 4, p: 4, border: '1px solid #E0E0E0'}}
       >
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
@@ -149,11 +139,11 @@ const InterviewDetailsPage: React.FC = () => {
               }}
             />
 
-            {selectedInterview?.result && (
+            {selectedInterview?.interviewResult && (
               <Chip
-                label={selectedInterview?.result}
+                label={selectedInterview?.interviewResult}
                 sx={{
-                  bgcolor: getResultColor(selectedInterview?.result),
+                  bgcolor: getResultColor(selectedInterview?.interviewResult),
                   color: '#fff',
                   fontWeight: 700,
                 }}
@@ -165,39 +155,14 @@ const InterviewDetailsPage: React.FC = () => {
         <Divider sx={{ mb: 3 }} />
 
         <Stack spacing={2.5}>
-          <InfoRow
-            label="Candidate Name"
-            value={selectedInterview?.candidateName}
-          />
-
-          <InfoRow
-            label="Candidate Email"
-            value={selectedInterview?.candidateEmail}
-          />
-
-          <InfoRow
-            label="Interviewer Name"
-            value={selectedInterview?.interviewerName}
-          />
-
-          <InfoRow
-            label="Interviewer Email"
-            value={selectedInterview?.interviewerEmail}
-          />
-
-          <InfoRow
-            label="Start Time"
-            value={ selectedInterview ? new Date( selectedInterview?.scheduledStartTime).toLocaleString() : '-'}
-          />
-          <InfoRow
-            label="End Time"
-            value={selectedInterview ? new Date(selectedInterview?.scheduledEndTime).toLocaleString() : '-'}
-          />
-
-          <InfoRow
-            label="Round"
-            value={`Round ${selectedInterview?.round}`}
-          />
+          <InfoRow label="Candidate Name" value={selectedInterview?.candidateName}/>
+          <InfoRow label="Candidate Email"  value={selectedInterview?.candidateEmail} />
+          <InfoRow label="Interviewer Name"  value={selectedInterview?.interviewerName}/>
+          <InfoRow label="Interviewer Email" value={selectedInterview?.interviewerEmail}/>
+          <InfoRow label="Start Time" value={ selectedInterview ? new Date(selectedInterview?.startTime).toLocaleString() : '-'}/>
+          <InfoRow label="End Time" value={selectedInterview ? new Date(selectedInterview?.endTime).toLocaleString() : '-'} />
+          <InfoRow label="Round" value={`Round ${selectedInterview?.round}`}/>
+          <InfoRow label="Candidate Current status" value={`${selectedInterview?.candidateStatus}`}/>
         </Stack>
 
         {selectedInterview?.feedback && (
@@ -237,12 +202,12 @@ const InterviewDetailsPage: React.FC = () => {
           useFlexGap
         >
           {selectedInterview?.interviewStatus === 'COMPLETED' && 
-             selectedInterview.result === 'PENDING' &&(
+             selectedInterview.interviewResult === 'PENDING' &&(
               <Button
                 variant="contained"
                 onClick={handleUpdateResult}
                 sx={{
-                  bgcolor: '#795003',
+                  bgcolor: '#4a3203',
                   textTransform: 'none',
                   borderRadius: 2,
                 }}
@@ -251,13 +216,13 @@ const InterviewDetailsPage: React.FC = () => {
               </Button>
             )}
 
-          {selectedInterview?.result === 'SELECTED' && (
+          {selectedInterview?.interviewResult === 'SELECTED' && (
             <>
               <Button
                 variant="contained"
                 onClick={handleScheduleNextRound}
                 sx={{
-                  bgcolor: '#0B3861',
+                  bgcolor: '#08035c',
                   textTransform: 'none',
                   borderRadius: 2,
                 }}
@@ -269,7 +234,7 @@ const InterviewDetailsPage: React.FC = () => {
                 variant="contained"
                 onClick={handleSendOfferLetter}
                 sx={{
-                  bgcolor: '#2E7D32',
+                  bgcolor: '#034e06',
                   textTransform: 'none',
                   borderRadius: 2,
                 }}
@@ -280,7 +245,7 @@ const InterviewDetailsPage: React.FC = () => {
           )}
         </Stack>
       </Paper>
-    </Container>
+    </InternalLayout>
   )
 }
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { GetAllInterviewsParams, GetAllInterviewsResponse, GetInterviewAccessResponse, Interview, RescheduleInterviewArgs, ScheduleInterviewPayload, UpdateInterviewResultArgs } from "../../../../types/interview"
+import type { GetAllInterviewsParams, GetAllInterviewsResponse, GetInterviewAccessResponse, GetInterviewByIdResponse, Interview, InterviewCodeRunnerArgs, InterviewCodeRunnerResponse, InterviewDTO, RescheduleInterviewArgs, ScheduleInterviewPayload, UpdateInterviewResultArgs } from "../../../../types/interview"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -7,8 +7,9 @@ import { API_ROUTES } from "../../../../constants/api.routes"
 
 interface CompanyInterviewState {
     loading: boolean
+    interviewDetails: InterviewDTO[]
     interviews: Interview[] 
-    selectedInterview: Interview | null
+    selectedInterview: GetInterviewByIdResponse | null
     error: string | null
     canJoin: boolean
     accessInterview: GetInterviewAccessResponse | null
@@ -22,6 +23,7 @@ interface CompanyInterviewState {
 
 const initialState: CompanyInterviewState = {
     loading: false,
+    interviewDetails: [],
     interviews: [],
     selectedInterview: null,
     error: null,
@@ -63,7 +65,7 @@ GetAllInterviewsResponse,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-
+console.log('interview: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -106,7 +108,7 @@ RescheduleInterviewArgs,
 })
 
 export const getInterviewById = createAsyncThunk<
-Interview,
+GetInterviewByIdResponse,
 {id: string},
 {rejectValue: string}
 >('interview/getById', async({id}, {rejectWithValue}) => {
@@ -178,7 +180,7 @@ boolean,
 })
 
 export const endInterview = createAsyncThunk<
-Interview,
+GetInterviewByIdResponse,
 {token: string, roomId: string},
 {rejectValue: string}
 >('interview/end', async({token, roomId}, {rejectWithValue}) => {
@@ -192,6 +194,25 @@ Interview,
     } catch (error) {
         const err = error as AxiosError<{message: string}>
         return rejectWithValue(err.response?.data.message || 'Failed to end interview')
+    }
+})
+
+export const interviewRunCode = createAsyncThunk<
+InterviewCodeRunnerResponse,
+{data: InterviewCodeRunnerArgs},
+{rejectValue: string}
+>('/interview/runCode', async({data}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.COMMON.INTERVIEW.RUN_CODE, data)
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+
+        console.log('from run code slice', response.data.data)
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to run code')
     }
 })
 
@@ -254,7 +275,7 @@ const CompanyInterviewSlice = createSlice({
          })
          .addCase(getAllInterview.fulfilled, (state, action) => {
             state.loading = false
-            state.interviews = action.payload.interviews
+            state.interviewDetails = action.payload.interviews
             state.pagination.interview.totalCount = action.payload.totalCount
             state.pagination.interview.totalPages = action.payload.totalPages
          })

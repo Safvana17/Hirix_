@@ -1,4 +1,5 @@
 import type { UserRole } from "../constants/role"
+import type { CandidateSelectionStatus, CodingLanguage } from "./test"
 
 export type InterviewStatus = 'SCHEDULED' | 'RESCHEDULED' | 'CANCELLED' | 'COMPLETED'
 export type InterviewResult = 'PENDING' | 'SELECTED' | 'REJECTED' | 'HOLD'
@@ -36,6 +37,22 @@ export interface Interview {
     roomId: string
 }
 
+export interface GetInterviewByIdResponse {
+        id: string
+        name: string
+        description: string
+        candidateName: string
+        interviewerName: string
+        interviewStatus:InterviewStatus
+        interviewResult: InterviewResult
+        candidateStatus: CandidateSelectionStatus
+        round: number
+        candidateEmail: string
+        interviewerEmail: string
+        startTime: string
+        endTime: string
+        feedback?: string
+}
 export interface ScheduleInterviewPayload {
     id?: string
     name: string
@@ -59,8 +76,30 @@ export interface GetAllInterviewsParams {
     limit: number
 }
 
+export interface InterviewDTO {
+    _id: string
+    name: string
+    description: string
+    candidateName: string
+    interviewerName: string
+    interviewStatus:InterviewStatus
+    result: InterviewResult
+    candidateStatus: CandidateSelectionStatus
+    interviewerEmail: string
+    round: number
+    scheduledStartTime: string
+    hasNextRound: boolean
+    candidateEmail: string
+    scheduledEndTime: string
+    testId: string
+    testCandidateId: string
+    jobRoleId: string
+    roomId: string
+    interviewerToken: string
+}
+
 export interface GetAllInterviewsResponse {
-    interviews: Interview[]
+    interviews: InterviewDTO[]
     totalPages: number
     totalCount: number
 }
@@ -89,4 +128,17 @@ export interface GetInterviewAccessResponse {
 export interface UpdateInterviewResultArgs {
     result: InterviewResult
     feedback: string
+}
+
+export interface InterviewCodeRunnerArgs {
+    language: CodingLanguage
+    sourceCode: string
+    input?: string[]
+}
+
+export interface InterviewCodeRunnerResponse {
+    stdout: string
+    stderr: string
+    error: string | null
+    exitCode: number | null
 }

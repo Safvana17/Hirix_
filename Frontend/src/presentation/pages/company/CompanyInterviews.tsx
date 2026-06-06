@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import InternalLayout from '../../layouts/InternalLayout'
 import { companySidebarItems } from '../../../constants/sidebarItems'
-import { Plus, Search } from 'lucide-react'
+import { FilterIcon, Plus, Search } from 'lucide-react'
 import { Box, FormControl, InputAdornment, InputLabel, MenuItem, Pagination, Paper, Select, Stack, TextField, Typography } from '@mui/material'
-import { Filter } from '@mui/icons-material'
-import type { Interview, InterviewStatus, ModalMode, ScheduleInterviewPayload } from '../../../types/interview'
+import type { InterviewDTO, InterviewStatus, ModalMode, ScheduleInterviewPayload } from '../../../types/interview'
 import { useDebounce } from '../../../hooks/useDebounce'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../../redux/store'
@@ -22,11 +21,11 @@ const CompanyInterviews: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [interviewModalMode, setInterviewModalMode] = useState<ModalMode>('create')
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [interview, setInterview] = useState<Interview | null>(null)
+    const [interview, setInterview] = useState<InterviewDTO | null>(null)
     const searchTerm = useDebounce(search, 500)
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
-    const {interviews, pagination} = useSelector((state: RootState) => state.companyInterview)
+    const { pagination, interviewDetails, loading} = useSelector((state: RootState) => state.companyInterview)
 
     useEffect(() => {
         dispatch(getAllInterview({params: { search: searchTerm || undefined, status: statusfilter || undefined, page: currentPage, limit: 10}}))
@@ -41,13 +40,17 @@ const CompanyInterviews: React.FC = () => {
         navigate(`/company/interview/${interviewId}/reschedule`)
     }
 
-    const handleScheduleNextRound = (interview: Interview) => {
+    const handleScheduleNextRound = (interview: InterviewDTO) => {
         setInterview(interview)
         setInterviewModalMode('create')
         setIsModalOpen(true)
     }
 
-  const handleInterviewSubmit = async(data: ScheduleInterviewPayload) => {
+    const handleJoinInterview = (interview: InterviewDTO) => {
+        navigate(`/interview/${interview.roomId}/${interview.interviewerToken}`)
+    }
+    const handleInterviewSubmit = async(data: ScheduleInterviewPayload) => {
+        console.log('data: ', data)
     try {
         if(interviewModalMode === 'create'){ 
             await dispatch(scheduleInterview({data})).unwrap()
@@ -55,7 +58,7 @@ const CompanyInterviews: React.FC = () => {
             dispatch(getAllInterview({params: { search: searchTerm || undefined, status: statusfilter || undefined, page: currentPage, limit: 10}}))
         }
         if(interviewModalMode === 'edit' && interview){
-            await dispatch(editInterview({data, id: interview.id})).unwrap()
+            await dispatch(editInterview({data, id: interview._id})).unwrap()
             toast.success('Interview updated successfully')
             dispatch(getAllInterview({params: { search: searchTerm || undefined, status: statusfilter || undefined, page: currentPage, limit: 10}}))
         }
@@ -68,7 +71,7 @@ const CompanyInterviews: React.FC = () => {
     navigate(`/company/interview/${interviewId}`)
   } 
 
-  const handleEditInterview = (interview: Interview) => {
+  const handleEditInterview = (interview: InterviewDTO) => {
     setInterview(interview)
     setInterviewModalMode('edit')
     setIsModalOpen(true)
@@ -89,14 +92,14 @@ const CompanyInterviews: React.FC = () => {
   }
   return (
     <InternalLayout title='Interviews' subTitle='Manage multi-round interview process' sidebarItems={companySidebarItems}>
-        <div>
+        {/* <div>
             <div className='flex justify-end mb-5'>
                 <button className='bg-[#795003] rounded-xl font-bold text-white p-3 flex items-center gap-2'>
                     <Plus className='w-4 h-4' />
                     Schedule Interview
                 </button>
             </div>
-        </div>
+        </div> */}
         <Paper
             elevation={0}
             sx={{
@@ -159,7 +162,7 @@ const CompanyInterviews: React.FC = () => {
                     }}
                     startAdornment={
                     <InputAdornment position="start">
-                        <Filter  />
+                        <FilterIcon />
                     </InputAdornment>
                     }
                     sx={{
@@ -182,14 +185,14 @@ const CompanyInterviews: React.FC = () => {
                 </FormControl>
             </Box>
         </Paper>
-        {interviews.length > 0 ? (
+        {interviewDetails.length > 0 ? (
         <>
             <Stack spacing={3}>
-            {interviews.map((interview) => (
+            {interviewDetails.map((interview) => (
                 <InterviewCard
-                    key={interview.id}
+                    key={interview._id}
                     interview={interview}
-                    onJoin={() => console.log('joining...')}
+                    onJoin={handleJoinInterview}
                     onCancel={handleCancelInterview}
                     onReschedule={handleRescheduleInterview}
                     onViewDetails={handleViewDetails}
@@ -250,6 +253,7 @@ const CompanyInterviews: React.FC = () => {
         </Paper>
         )}
         <InterviewModal 
+            loading={loading}
             isOpen={isModalOpen}
             mode={interviewModalMode}
             onClose={() => setIsModalOpen(false)}
@@ -261,7 +265,7 @@ const CompanyInterviews: React.FC = () => {
                 round: interview ? interview.round + 1 : 1, 
                 jobRoleId: interview?.jobRoleId
             }}
-            initialData={interview}
+            initialData={interviewModalMode === 'edit' ? interview : undefined}
             onSave={handleInterviewSubmit}
         />
     </InternalLayout>
