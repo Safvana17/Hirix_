@@ -1,5 +1,6 @@
 import { SubscriptionEntity } from "../../../../Domain/entities/Subscription.entity";
 import { ActivityAction } from "../../../../Domain/enums/activityLog";
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
@@ -10,6 +11,7 @@ import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterf
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { CandidateCancelSubscriptionInputDTO, CandidateCancelSubscriptionOutputDTO } from "../../dtos/subscription/candidate.cancelSubscription.dto";
 import { ICandidateCancelSubscriptionUsecase } from "../../interfaces/subscription/ICandidate.cancelSubscription.usecase";
 
@@ -18,7 +20,8 @@ export class CandidateCancelSubscriptionUsecase implements ICandidateCancelSubsc
         private _candidateRepository: ICandidateRepository,
         private _subscriptionRepository: ISubscriptionRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
-        private _activityLogRepository: IActivityLogRepository
+        private _activityLogRepository: IActivityLogRepository,
+        private _processNotification: IAdminProcessNotificationUsecase
     ){}
 
     async execute(request: CandidateCancelSubscriptionInputDTO): Promise<CandidateCancelSubscriptionOutputDTO> {
@@ -73,6 +76,14 @@ export class CandidateCancelSubscriptionUsecase implements ICandidateCancelSubsc
             targetId: currentSubscription.id,
             targetType: 'Subscription',
             title: `${candidate.getName()} was downgraded subscription to free plan`
+        })
+        await this._processNotification.execute({
+            event: NotificationEvents.SUBSCRIPTION_ACTIVATED,
+            recipients: [{
+                recipientType: userRole.Candidate,
+                recipientId: candidate.id
+            }],
+          variables: {}
         })
         
         return {

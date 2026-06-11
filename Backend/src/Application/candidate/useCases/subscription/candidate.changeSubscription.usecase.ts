@@ -1,4 +1,5 @@
 import { ActivityAction } from "../../../../Domain/enums/activityLog";
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
@@ -9,6 +10,7 @@ import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterf
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { CandidateChangeSubscriptionInputDTO, CandidateChangeSubscriptionOutputDTO } from "../../dtos/subscription/candidate.changeSubscription.dto";
 import { ICandidateChangeSubscriptionUsecase } from "../../interfaces/subscription/ICandidate.changeSubscription.usecase";
 
@@ -18,6 +20,7 @@ export class CandidateChangeSubscriptionUsecase implements ICandidateChangeSubsc
         private _subscriptionRepository: ISubscriptionRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
         private _activityLogRepository: IActivityLogRepository,
+        private _processNotification: IAdminProcessNotificationUsecase
     ) {}
 
     async execute(request: CandidateChangeSubscriptionInputDTO): Promise<CandidateChangeSubscriptionOutputDTO> {
@@ -75,6 +78,14 @@ export class CandidateChangeSubscriptionUsecase implements ICandidateChangeSubsc
                 targetId: currentSubscription.id,
                 targetType: 'Subscription',
                 title: `${candidate.getName()} downgraded subscription to ${freePlan.planName}`
+            })
+            await this._processNotification.execute({
+                event: NotificationEvents.SUBSCRIPTION_ACTIVATED,
+                recipients: [{
+                    recipientType: userRole.Candidate,
+                    recipientId: candidate.id
+                }],
+            variables: {}
             })
         }
         return{

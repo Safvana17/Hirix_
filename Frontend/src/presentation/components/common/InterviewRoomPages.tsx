@@ -45,12 +45,14 @@ const InterviewRoomPage: React.FC <InterviewRoomPageProps> = ({interview}) => {
     }
   }
 
-  const {toggleCamera, cameraEnabled, toggleMic, micEnabled, remoteCameraEnabled,remoteMicEnabled, localStream, remoteStream, remoteConnected, waitingForPeer, endCall, leaveRoom, getPeerConnection, localVideoRef, remoteVideoRef, renegotiate, remoteScreenSharing} = useWebRTC({roomId: roomId!, userId, userName: loaclParticipantName, role, enabled: Boolean(token), onInterviewEnded: handleInterviewEnded, onUserLeft: () => {
+  const handleUserLeft = () => {
     if( role === 'Candidate'){
       console.log('candidate removing..')
       navigate(`/interview/${roomId}/${token}`, { replace: true})
     }
-  }})
+  }
+
+  const {toggleCamera, cameraEnabled, toggleMic, micEnabled, remoteCameraEnabled,remoteMicEnabled, localStream, remoteStream, remoteConnected, waitingForPeer, endCall, leaveRoom, getPeerConnection, localVideoRef, remoteVideoRef, renegotiate, remoteScreenSharing} = useWebRTC({roomId: roomId!, userId, userName: loaclParticipantName, role, enabled: Boolean(token), onInterviewEnded: handleInterviewEnded, onUserLeft: handleUserLeft})
   const { message, sendMessage } = useChat({ roomId: roomId!, userId, userName: loaclParticipantName})
   const { code, language, updateCode, updateLanguage } = useCodeCollaboration({roomId: roomId!, })
   const { startScreenShare, stopScreenShare, isScreenSharing } = useScreenShare({roomId: roomId!, getPeerConnection, localStream, localVideoRef, renegotiate})

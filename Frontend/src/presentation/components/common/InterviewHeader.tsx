@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Chip } from '@mui/material';
+import { Box, Typography} from '@mui/material';
 // import { Code2 } from 'lucide-react';
 import Logo from '../../../assets/images/Logo.jpeg'
 
@@ -21,7 +21,6 @@ export const InterviewHeader: React.FC<InterviewHeaderProps> = ({
       className="flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-6 py-4 backdrop-blur-md"
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
     >
-      {/* Branding and Room Meta */}
       <Box className="flex items-center gap-4" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <Box className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 shadow-lg shadow-indigo-500/20">
           {/* <Code2 className="h-5 w-5 text-white animate-pulse" /> */}
@@ -32,11 +31,11 @@ export const InterviewHeader: React.FC<InterviewHeaderProps> = ({
             <Typography variant="h6" className="font-bold text-white tracking-wide" style={{ color: '#fff', fontWeight: 'bold' }}>
               {companyName}
             </Typography>
-            <Chip 
+            {/* <Chip 
               label="Live Sandbox" 
               size="small" 
               className="bg-indigo-900/40 text-indigo-300 border border-indigo-500/30 text-[10px] uppercase font-bold tracking-wider px-1"
-            />
+            /> */}
           </Box>
           <Typography variant="body2" className="text-slate-400 text-sm font-medium">
             Role: <span className="text-slate-300 font-semibold">{roleName}</span>
@@ -44,7 +43,6 @@ export const InterviewHeader: React.FC<InterviewHeaderProps> = ({
         </Box>
       </Box>
 
-      {/* Connection Indicator Bar */}
       <Box className="flex items-center gap-6" sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
         <Box className="hidden sm:block text-right">
           <Typography variant="caption" className="block text-slate-500 font-mono">

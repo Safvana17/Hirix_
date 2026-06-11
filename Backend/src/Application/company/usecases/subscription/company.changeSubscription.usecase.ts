@@ -1,4 +1,5 @@
 import { ActivityAction } from "../../../../Domain/enums/activityLog";
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
@@ -9,6 +10,7 @@ import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterf
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { CompanyChangeSubscriptionInputDTO, CompanyChangeSubscriptionOutputDTO } from "../../dtos/subscription/company.changeSubscription.dto";
 import { ICompanyChangeSubscriptionUsecase } from "../../interfaces/subscription/ICompany.changeSubscription.usecase";
 
@@ -17,7 +19,8 @@ export class CompanyChangeSubscriptionUsecase implements ICompanyChangeSubscript
         private _companyRepository: ICompanyRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
         private _subscriptionRepository: ISubscriptionRepository,
-        private _activityLogRepository: IActivityLogRepository
+        private _activityLogRepository: IActivityLogRepository,
+        private _processNotification: IAdminProcessNotificationUsecase
     ) {}
 
     async execute(request: CompanyChangeSubscriptionInputDTO): Promise<CompanyChangeSubscriptionOutputDTO> {
@@ -75,6 +78,15 @@ export class CompanyChangeSubscriptionUsecase implements ICompanyChangeSubscript
                 targetId: currentSubscription.id,
                 targetType: 'Subscription',
                 title: `${company.getName()} downgraded subscription to ${freePlan.planName}`
+            })
+            
+            await this._processNotification.execute({
+                event: NotificationEvents.SUBSCRIPTION_ACTIVATED,
+                recipients: [{
+                    recipientType: userRole.Company,
+                    recipientId: company.id
+                }],
+            variables: {}
             })
         }
         return{

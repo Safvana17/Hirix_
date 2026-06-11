@@ -44,7 +44,7 @@ export const useWebRTC = ({
   const localMediaReadyRef = useRef(false)
   const makingOfferRef = useRef(false)
 
-  useEffect(() => {
+useEffect(() => {
   console.log('UPDATED onUserLeft ref', onUserLeft);
 }, [onUserLeft]);
 
@@ -406,8 +406,8 @@ export const useWebRTC = ({
     }
 
     const handleUserLeft = () => {
-        console.log('user left received');
-  console.log('ref value', onUserLeftRef.current);
+      console.log('user left received');
+      console.log('ref value', onUserLeftRef.current);
 
       console.log('user left received')
       cleanupPeerConnection();

@@ -1,4 +1,4 @@
-import CandidateEntity from "../entities/candidate.entity";
+import CandidateEntity from "../entities/Candidate.entity";
 import { IAuthRepository } from "./iAuth.repository";
 
 

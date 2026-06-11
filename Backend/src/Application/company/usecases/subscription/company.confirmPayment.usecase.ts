@@ -1,4 +1,5 @@
 import { ActivityAction } from "../../../../Domain/enums/activityLog";
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { PaymentStatus } from "../../../../Domain/enums/payment";
 import { subscriptionStatus } from "../../../../Domain/enums/subscription";
 import userRole from "../../../../Domain/enums/userRole.enum";
@@ -11,6 +12,7 @@ import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterf
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { IRazorpayService } from "../../../interface/service/IRazorpayService";
 import { CompanyConfirmPaymentInputDTO, CompanyConfirmPaymentOutputDTO } from "../../dtos/subscription/company.confirmPayment.dto";
 import { ICompanyConfirmPaymentUsecase } from "../../interfaces/subscription/ICompany.confirmPyment.usecase";
@@ -22,7 +24,8 @@ export class CompanyConfirmPaymentUsecase implements ICompanyConfirmPaymentUseca
         private _subscriptionRepository: ISubscriptionRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
         private _razorpayService: IRazorpayService,
-        private _activityLogRepository: IActivityLogRepository
+        private _activityLogRepository: IActivityLogRepository,
+        private _processNotification: IAdminProcessNotificationUsecase
     ) {}
 
     async execute(request: CompanyConfirmPaymentInputDTO): Promise<CompanyConfirmPaymentOutputDTO> {
@@ -65,6 +68,15 @@ export class CompanyConfirmPaymentUsecase implements ICompanyConfirmPaymentUseca
         newSubscription.status = subscriptionStatus.ACTIVE
         newSubscription.isCurrent = true
         await this._subscriptionRepository.update(newSubscription.id, newSubscription)
+        await this._processNotification.execute({
+            event: NotificationEvents.PAYMENT_FAILED,
+            recipients: [{
+                recipientType: userRole.Company,
+                recipientId: company.id
+            }],
+          variables: {}
+        })
+        
         await this._activityLogRepository.create({
             id: '',
             actorId: company.id,
@@ -79,6 +91,14 @@ export class CompanyConfirmPaymentUsecase implements ICompanyConfirmPaymentUseca
         payment.paymentId = request.paymentId
         payment.signature = request.signature
         await this._paymentRepository.update(payment.id, payment)
+        await this._processNotification.execute({
+            event: NotificationEvents.PAYMENT_SUCCESSFULL,
+            recipients: [{
+                recipientType: userRole.Company,
+                recipientId: company.id
+            }],
+          variables: {}
+        })
 
         return { success: true }
     }

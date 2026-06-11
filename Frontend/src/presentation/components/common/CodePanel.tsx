@@ -111,65 +111,61 @@ export const CodePanel: React.FC<CodePanelProps> = ({
         />
       </Box>
 
-
-{/* Output Section */}
-<Box className="border-t border-slate-800 bg-slate-950 flex flex-col h-[220px]">
-  <Box className="flex items-center justify-between px-4 py-2 border-b border-slate-900 bg-slate-900/60">
-    <Box className="flex items-center gap-2 text-slate-400">
-      <Terminal className="h-4 w-4" />
-      <Typography
-        variant="caption"
-        className="font-bold tracking-wider uppercase text-[10px]"
-      >
-        Output
-      </Typography>
-    </Box>
-
-    {consoleOutput && (
-      <Button
-        size="small"
-        onClick={() => setConsoleOutput(null)}
-        startIcon={<Trash2 className="h-3 w-3" />}
-        sx={{
-          textTransform: 'none',
-          fontSize: '10px',
-          color: '#64748b',
-        }}
-      >
-        Clear
-      </Button>
-    )}
-  </Box>
-
-  <Box
-    className="flex-1 overflow-y-auto p-4 font-mono text-[11.5px] leading-relaxed"
-    sx={{
-      scrollbarWidth: 'thin',
-    }}
-  >
-    {consoleOutput ? (
-      <pre
-        style={{
-          margin: 0,
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
-          color: consoleOutput.includes('[Error]')
-            ? '#f87171'
-            : '#34d399',
-        }}
-      >
-        {consoleOutput}
-      </pre>
-    ) : (
-      <Typography
-        variant="caption"
-        className="text-slate-600 italic"
-      >
-        Run code to see output here.
-      </Typography>
-    )}
-  </Box>
-</Box>
+      <Box className="border-t border-slate-800 bg-slate-950 flex flex-col h-[220px]">
+        <Box className="flex items-center justify-between px-4 py-2 border-b border-slate-900 bg-slate-900/60">
+          <Box className="flex items-center gap-2 text-slate-400">
+            <Terminal className="h-4 w-4" />
+            <Typography
+              variant="caption"
+              className="font-bold tracking-wider uppercase text-[10px]"
+            >
+              Output
+            </Typography>
+          </Box>
+          {consoleOutput && (
+            <Button
+              size="small"
+              onClick={() => setConsoleOutput(null)}
+              startIcon={<Trash2 className="h-3 w-3" />}
+              sx={{
+                textTransform: 'none',
+                fontSize: '10px',
+                color: '#64748b',
+              }}
+            >
+              Clear
+            </Button>
+          )}
+        </Box>
+        <Box
+          className="flex-1 overflow-y-auto p-4 font-mono text-[11.5px] leading-relaxed"
+          sx={{
+            scrollbarWidth: 'thin',
+          }}
+        >
+          {consoleOutput ? (
+            <pre
+              style={{
+                margin: 0,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                color: consoleOutput.includes('[Error]')
+                  ? '#f87171'
+                  : '#34d399',
+              }}
+            >
+              {consoleOutput}
+            </pre>
+          ) : (
+            <Typography
+              variant="caption"
+              className="text-slate-600 italic"
+            >
+              Run code to see output here.
+            </Typography>
+          )}
+        </Box>
+      </Box>
     </Box>
   );
 };

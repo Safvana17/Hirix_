@@ -1,17 +1,21 @@
 import { CandidateAnswerEntity } from "../../../../Domain/entities/CandidateAnswer.entity";
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { CandidateTestStatus, TestStatus } from "../../../../Domain/enums/Test";
+import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { CandidateSubmitTestInputDTO, CandidateSubmitTestOutputDTO } from "../../dtos/test/candidate.submitTest.dto";
 import { ICandidateSubmitTestUsecase } from "../../interfaces/test/ICandidate.submitTest.usecase";
 
 export class CandidateSubmitTestUsecase implements ICandidateSubmitTestUsecase{
     constructor(
         private _testCandidateRepositoy: ITestCandidateRepository,
-        private _testRepository: ITestRepository
+        private _testRepository: ITestRepository,
+        private _processNotification: IAdminProcessNotificationUsecase,
     ) {}
 
     async execute(request: CandidateSubmitTestInputDTO): Promise<CandidateSubmitTestOutputDTO> {
@@ -48,6 +52,17 @@ export class CandidateSubmitTestUsecase implements ICandidateSubmitTestUsecase{
         candidate.candidateAnswers = answers
         candidate.warningCount = request.warningCount
         await this._testCandidateRepositoy.update(candidate.id, candidate)
+        await this._processNotification.execute({
+            event: NotificationEvents.TEST_SUBMITTED,
+            recipients: [{
+                recipientType: userRole.Company,
+                recipientId: test.companyId
+            }],
+            variables: {
+                candidateName: candidate.name!,
+                testName: test.name
+            }
+        })
 
         return {
             success: true

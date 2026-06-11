@@ -128,6 +128,7 @@ export class CompanyScheduleInterviewUsecase implements ICompanyScheduleIntervie
                 joinLink: `${env.FRONTEND_URL}/interview/${savedInterview.roomId}/${savedInterview.candidateToken}`
             }
         })
+
         await this._processNotificationUsecase.execute({
             event: NotificationEvents.INVITE_INTERVIWER,
             recipients: [{
@@ -144,6 +145,16 @@ export class CompanyScheduleInterviewUsecase implements ICompanyScheduleIntervie
                 joinLink: `${env.FRONTEND_URL}/interview/${savedInterview.roomId}/${savedInterview.interviewerToken}`
             }
         })
+
+        await this._processNotificationUsecase.execute({
+            event: NotificationEvents.INTERVIEW_sCHEDULED,
+            recipients: [{
+                recipientType: userRole.Candidate,
+                recipientId: candidate.id
+            }],
+          variables: {}
+        })
+        
         return {
             interview: savedInterview
         }

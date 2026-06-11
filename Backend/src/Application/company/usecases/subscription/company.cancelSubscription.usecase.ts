@@ -1,5 +1,6 @@
 import { SubscriptionEntity } from "../../../../Domain/entities/Subscription.entity";
 import { ActivityAction } from "../../../../Domain/enums/activityLog";
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { subscriptionStatus, TargetType } from "../../../../Domain/enums/subscription";
 import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
@@ -10,6 +11,7 @@ import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterf
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { CompanyCancelSubscriptionInputDTO, CompanyCancelSubscriptionOutputDTO } from "../../dtos/subscription/company.cancelSubscription.dto";
 import { ICompanyCancelSubscriptionUsecase } from "../../interfaces/subscription/ICompany.cancelSubscription.usecase";
 
@@ -19,6 +21,7 @@ export class CompanyCancelSubscriptionUsecase implements ICompanyCancelSubscript
         private _subscriptionRepository: ISubscriptionRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
         private _activityLogRepository: IActivityLogRepository,
+        private _processNotification: IAdminProcessNotificationUsecase
     ) {}
 
     async execute(request: CompanyCancelSubscriptionInputDTO): Promise<CompanyCancelSubscriptionOutputDTO> {
@@ -65,7 +68,7 @@ export class CompanyCancelSubscriptionUsecase implements ICompanyCancelSubscript
             true
         )
         const currentSubscription = await this._subscriptionRepository.create(newSubscription)
-                await this._activityLogRepository.create({
+        await this._activityLogRepository.create({
             id: '',
             actorId: company.id,
             actorType: userRole.Company,
@@ -73,6 +76,15 @@ export class CompanyCancelSubscriptionUsecase implements ICompanyCancelSubscript
             targetId: currentSubscription.id,
             targetType: 'Subscription',
             title: `${company.getName()} was downgraded subscription to free plan`
+        })
+        
+        await this._processNotification.execute({
+            event: NotificationEvents.SUBSCRIPTION_ACTIVATED,
+            recipients: [{
+                recipientType: userRole.Company,
+                recipientId: company.id
+            }],
+          variables: {}
         })
         
         return {

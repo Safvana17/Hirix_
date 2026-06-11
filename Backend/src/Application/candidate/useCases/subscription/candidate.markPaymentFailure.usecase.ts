@@ -1,5 +1,7 @@
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { PaymentStatus } from "../../../../Domain/enums/payment";
 import { subscriptionStatus } from "../../../../Domain/enums/subscription";
+import userRole from "../../../../Domain/enums/userRole.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
 import { IPaymentRepository } from "../../../../Domain/repositoryInterface/iPayment.repository";
@@ -7,6 +9,7 @@ import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { CandidatePaymentFailureInputDTO, CandidatePaymentFailureOutputDTO } from "../../dtos/subscription/candidate.markFailurePayment.dto";
 import { ICandidateMarkPaymentFailureUsecase } from "../../interfaces/subscription/ICandidate.markPaymentFailure.usecase";
 
@@ -14,7 +17,8 @@ export class CandidateMarkPaymentFailureUsecase implements ICandidateMarkPayment
     constructor(
        private _coandidateRepository: ICandidateRepository,
        private _paymentRepository: IPaymentRepository,
-       private _subscriptionRepository: ISubscriptionRepository
+       private _subscriptionRepository: ISubscriptionRepository,
+       private _processNotification: IAdminProcessNotificationUsecase
     ) {}
 
     async execute(request: CandidatePaymentFailureInputDTO): Promise<CandidatePaymentFailureOutputDTO> {
@@ -35,6 +39,14 @@ export class CandidateMarkPaymentFailureUsecase implements ICandidateMarkPayment
             subscription.isCurrent = false
             await this._subscriptionRepository.update(subscription.id, subscription)
         }
+        await this._processNotification.execute({
+            event: NotificationEvents.PAYMENT_FAILED,
+            recipients: [{
+                recipientType: userRole.Candidate,
+                recipientId: candidate.id
+            }],
+          variables: {}
+        })
         return {
             success: true
         }

@@ -1,4 +1,5 @@
 import { ActivityAction } from "../../../../Domain/enums/activityLog";
+import { NotificationEvents } from "../../../../Domain/enums/notification";
 import { PaymentStatus } from "../../../../Domain/enums/payment";
 import { subscriptionStatus } from "../../../../Domain/enums/subscription";
 import userRole from "../../../../Domain/enums/userRole.enum";
@@ -11,6 +12,7 @@ import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterf
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
 import { IRazorpayService } from "../../../interface/service/IRazorpayService";
 import { CandidateConfirmPaymentInputDTO, CandidateConfirmPaymentOutputDTO } from "../../dtos/subscription/candidate.confirmPayment.dto";
 import { ICandidateConfirmPaymentUsecase } from "../../interfaces/subscription/ICandidate.confirmPayment.usecase";
@@ -23,6 +25,7 @@ export class CandidateConfirmPaymentUsecase implements ICandidateConfirmPaymentU
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
         private _razorpayService: IRazorpayService,
         private _activityLogRepository: IActivityLogRepository,
+        private _processNotification: IAdminProcessNotificationUsecase
     ) {}
 
     async execute(request: CandidateConfirmPaymentInputDTO): Promise<CandidateConfirmPaymentOutputDTO> {
@@ -80,6 +83,14 @@ export class CandidateConfirmPaymentUsecase implements ICandidateConfirmPaymentU
         payment.paymentId = request.paymentId
         payment.signature = request.signature
         await this._paymentRepository.update(payment.id, payment)
+        await this._processNotification.execute({
+            event: NotificationEvents.PAYMENT_SUCCESSFULL,
+            recipients: [{
+                recipientType: userRole.Candidate,
+                recipientId: candidate.id
+            }],
+          variables: {}
+        })
 
         return { success: true }
     }

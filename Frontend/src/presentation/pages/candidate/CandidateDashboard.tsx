@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 import CandidateHeader from '../../components/layout/CandidateHeader';
 import CandidatePracticeQuestions from '../../components/candidate/CandidatePracticeQuestions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -65,7 +66,7 @@ const CandidateDashboard: React.FC = () => {
       {header: 'Type', key: 'company', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
       {header: 'Name', key: 'testName', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
       {header: 'Plan', key: 'jobRole', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
-      {header: 'Date', key: 'date', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+      {header: 'Date', key: 'date', render: (val) => <span className='font-bold text-gray-800'>{moment(val).format('DD MMM YYYY hh: mm: A')}</span>},
       {header: 'Status', key: 'status', render: (val) => (
          <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${val === 'success' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
             {val}

@@ -40,7 +40,7 @@ export const InterviewSidebar: React.FC<InterviewSidebarProps> = ({
         height: '100%',
       }}
     >
-      {/* Tabs Selector */}
+
       <Box className="border-b border-slate-800 bg-slate-900/60">
         <Tabs
           value={activeTab}
@@ -57,7 +57,7 @@ export const InterviewSidebar: React.FC<InterviewSidebarProps> = ({
             },
           }}
         >
-          {/* Chat Tab */}
+
           <Tab
             icon={<MessageSquare className="h-4.5 w-4.5 mr-2" />}
             iconPosition="start"
@@ -73,7 +73,6 @@ export const InterviewSidebar: React.FC<InterviewSidebarProps> = ({
             }}
           />
 
-          {/* Code Tab */}
           <Tab
             icon={<Code2 className="h-4.5 w-4.5 mr-2" />}
             iconPosition="start"
@@ -91,7 +90,7 @@ export const InterviewSidebar: React.FC<InterviewSidebarProps> = ({
         </Tabs>
       </Box>
 
-      {/* Tab Panels */}
+
       <Box className="flex-1 overflow-hidden p-2 bg-slate-950/20">
         {activeTab === 0 && (
           <Box className="h-full">
