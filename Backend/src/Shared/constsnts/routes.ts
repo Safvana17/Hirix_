@@ -127,6 +127,11 @@ export const ROUTES = {
         ANALYTICS: {
             SUMMERY: '/dashboard-summery',
             TEST_HISTORY: '/test-history',
+        },
+        SETTINGS: {
+            CHANGE_PASSWORD: '/:id/change-password',
+            PROFILE: '/profile',
+            INTERVIEW_HISTORY: '/interview-history'
         }
     },
 

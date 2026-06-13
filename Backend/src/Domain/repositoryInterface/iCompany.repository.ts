@@ -1,4 +1,4 @@
-import CompanyEntity from "../entities/company.entity";
+import CompanyEntity from "../entities/Company.entity";
 import { IAuthRepository } from "./iAuth.repository";
 
 

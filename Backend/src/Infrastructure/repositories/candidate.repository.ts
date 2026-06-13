@@ -22,8 +22,8 @@ export class CandidateRepository extends BaseRepository <CandidateEntity, ICandi
 
     async updatePassword(id: string, hashedPassword: string): Promise<void> {
 
-          logger.info(`Reset password ID: ${id}`);
-          logger.info(`Is valid ObjectId:${mongoose.Types.ObjectId.isValid(id)}`);
+        logger.info(`Reset password ID: ${id}`);
+        logger.info(`Is valid ObjectId:${mongoose.Types.ObjectId.isValid(id)}`);
         await this._model.findByIdAndUpdate(
             id, 
             {$set: {password: hashedPassword}}

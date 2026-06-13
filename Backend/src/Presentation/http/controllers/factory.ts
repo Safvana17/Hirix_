@@ -219,6 +219,8 @@ import { AdminGetRecentActivityUsecase } from "../../../Application/admin/usecas
 import { CompanyGetRecentActivityUsecase } from "../../../Application/company/usecases/analytics/company.getRecentActivity.usecase";
 import { CandidateWarningCountUsecase } from "../../../Application/candidate/useCases/test/candidate.warningCount.usecase";
 import { UnifiedInterviewCodeRunnerUsecase } from "../../../Application/common/usecases/unified.interviewCodeRunner.usecase";
+import { CandidateSettingsController } from "./candidate/candidateSettingsController";
+import { CandidateChangePasswordUsecase } from "../../../Application/candidate/useCases/profile/candidate.changePassword.usecase";
 
 
 
@@ -474,6 +476,12 @@ const iCandidateSaveAnswer = new CandidateSaveAnswerUsecase(
 const iCandidateWarningCount = new CandidateWarningCountUsecase (
     iTestCandidateRepository,
     iTestRepository
+)
+
+//settings
+const iCandidateChangePassword = new CandidateChangePasswordUsecase (
+    iCandidateRepository,
+    iHashService
 )
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -1315,4 +1323,8 @@ export const iCompanyAnalyticsController = new CompanyAnalyticsController(
 export const iCandidateAnalyticsController = new CandidateAnalyticsController (
     iCandidateDashboardSummery,
     iCandidateTestHistory
+)
+
+export const iCandidateSettingsController = new CandidateSettingsController (
+    iCandidateChangePassword,
 )

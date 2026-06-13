@@ -1,13 +1,14 @@
 import Express from 'express'
 import { ROUTES } from '../../../../Shared/constsnts/routes'
 import { authHandler } from '../../middlewares/authMiddleware'
-import { iCandidateAnalyticsController, iCandidateSubscriptionController, ICandidateTestController, iPracticeLibraryController, iTokenService, iUnifiedSettingsController } from '../../controllers/factory'
+import { iCandidateAnalyticsController, iCandidateSettingsController, iCandidateSubscriptionController, ICandidateTestController, iPracticeLibraryController, iTokenService, iUnifiedSettingsController } from '../../controllers/factory'
 import { verifyCsrf } from '../../middlewares/csrfVerify'
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
 import { CandidateRunCodeSchema, saveAnswerSchema, submitTestSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
 import { createQuestionSchema, questionParamsSchema, submitPraticeAnswerSchema } from '../../validators/questionValidator'
 import { GetPaymentHistorySchema } from '../../validators/analyticsValidator'
+import { changePasswordSchema } from '../../validators/settingsValidator'
 
 
 const router = Express.Router()
@@ -49,4 +50,8 @@ router.patch(ROUTES.CANDIDATE.TEST.WARNING_COUNT, validate(TestTokenSchema, 'par
 //dashboard
 router.get(ROUTES.CANDIDATE.ANALYTICS.SUMMERY, authHandler(iTokenService), iCandidateAnalyticsController.getSummery)
 router.get(ROUTES.CANDIDATE.ANALYTICS.TEST_HISTORY, authHandler(iTokenService), validate(GetPaymentHistorySchema, 'query'), iCandidateAnalyticsController.testHistory)
+
+//settings
+router.put(ROUTES.CANDIDATE.SETTINGS.CHANGE_PASSWORD, authHandler(iTokenService), validate(changePasswordSchema, 'body'), iCandidateSettingsController.changePassword)
+
 export default router
