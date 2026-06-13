@@ -52,7 +52,11 @@ export const API_ROUTES = {
     ANALYTICS: {
       SUMMERY: '/candidate/dashboard-summery',
       TEST_HISTORY: '/candidate/test-history',
-    } 
+    },
+    SETTINGS: {
+      CHANGE_PASSWORD: (id: string) => 
+        `/candidate/${id}/change-password`,
+    }
   },
 
   COMPANY: {

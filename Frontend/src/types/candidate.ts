@@ -17,3 +17,10 @@ export interface FetchCandidatesResponse{
     totalCount: number
     totalPages: number
 }
+
+export interface ChangePassword {
+    id: string
+    oldPassword: string
+    newPassword: string
+    confirmPassword: string
+}

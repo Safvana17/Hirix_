@@ -46,6 +46,7 @@ import InterviewErrorPage from '../presentation/components/common/InterviewError
 import UpdateInterviewResultPage from '../presentation/components/company/interview/UpdateInterviewResultPage'
 import AdminRevenue from '../presentation/pages/admin/AdminRevenue'
 import AdminReport from '../presentation/pages/admin/AdminReport'
+import CandidateProfile from '../presentation/pages/candidate/CandidateProfile'
 
 
 
@@ -229,6 +230,12 @@ const App = () => {
           <Route path={ROUTES.CANDIDATE.DASHBOARD} element={
             <RoleRoute allowedRoles={[ROLES.CANDIDATE]}>
               <CandidateDashboard />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.CANDIDATE.PROFILE} element={
+            <RoleRoute allowedRoles={[ROLES.CANDIDATE]}>
+              <CandidateProfile />
             </RoleRoute>
           } />
 

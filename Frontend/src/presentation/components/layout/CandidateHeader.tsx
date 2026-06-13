@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react'
 import HirixLogo from '../../../assets/images/Logo.jpeg'
-import { LogOut, ChevronDown, Star } from 'lucide-react'
+import { LogOut, ChevronDown, Star, User } from 'lucide-react'
 import { FaUserCircle } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
 import { logoutUser } from '../../../redux/slices/features/auth/authSlice'
 import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../../constants/routes'
 
 
 const CandidateHeader: React.FC= () => {
@@ -53,6 +54,13 @@ const CandidateHeader: React.FC= () => {
 
                   {isDropDown && (
                         <div className="absolute right-0 mt-3 w-38 bg-white rounded-2xl shadow-xl border border-[#e2d8c3] py-1 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                            <button
+                                onClick={() => navigate(ROUTES.CANDIDATE.PROFILE)}
+                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                            >
+                                <User className="w-4 h-4" />
+                                Profile
+                            </button>
                             <button
                                 onClick={handleSubmit}
                                 className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import moment from 'moment';
 import CandidateHeader from '../../components/layout/CandidateHeader';
 import CandidatePracticeQuestions from '../../components/candidate/CandidatePracticeQuestions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,17 +13,14 @@ import { getAllPlans } from '../../../redux/slices/features/subscription/subscri
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
 import SummeryCard from '../../components/layout/SummeryCard';
-import { getCandidateDashboardSummary, getTestHistory } from '../../../redux/slices/features/analytics/adminAnalysticsSlice';
-import type { Column } from '../../../types/table';
-import type { TestHistory } from '../../../types/analytics';
-import DataTable from '../../components/ui/DataTable';
+import { getCandidateDashboardSummary } from '../../../redux/slices/features/analytics/adminAnalysticsSlice';
 
 
 
 const CandidateDashboard: React.FC = () => {
   const [type, setType] = useState<QuestionType | ''>('')
   const [page, setPage] = useState(1)
-  const [hitoryPage, setHistoryPage] = useState(1)
+  // const [hitoryPage, setHistoryPage] = useState(1)
   const [difficulty, setDifficulty] = useState<QuestionDifficulty | ''>('');
   const [searchTerm, setSearchTerm] = useState('');
   const { currentPlan, plans } = useSelector((state: RootState) => state.subscription)
@@ -32,16 +28,16 @@ const CandidateDashboard: React.FC = () => {
   const navigate = useNavigate()
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const { PracticeQuestions } = useSelector( (state: RootState) => state.practiceQuestion)
-  const { candidateSummary, testHistory, pagination, loading } = useSelector((state: RootState) => state.adminAnalytics)
+  const { candidateSummary } = useSelector((state: RootState) => state.adminAnalytics)
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if(user){
       dispatch(getAllPlans({params: {target: 'candidate'}, role: user?.role}))
-      dispatch(getTestHistory({params: {page: hitoryPage || undefined, limit: 5}}))
+      // dispatch(getTestHistory({params: {page: hitoryPage || undefined, limit: 5}}))
       dispatch(getCandidateDashboardSummary())
     }
-  }, [dispatch, user, hitoryPage])
+  }, [dispatch, user])
 
   useEffect(() => {
     if(user){
@@ -62,17 +58,17 @@ const CandidateDashboard: React.FC = () => {
 
   const proPlan = plans.find(p => p.price > 0)
 
-    const columns: Column<TestHistory>[] =  [
-      {header: 'Type', key: 'company', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
-      {header: 'Name', key: 'testName', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
-      {header: 'Plan', key: 'jobRole', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
-      {header: 'Date', key: 'date', render: (val) => <span className='font-bold text-gray-800'>{moment(val).format('DD MMM YYYY hh: mm: A')}</span>},
-      {header: 'Status', key: 'status', render: (val) => (
-         <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${val === 'success' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
-            {val}
-         </span>
-      )},
-    ]
+    // const columns: Column<TestHistory>[] =  [
+    //   {header: 'Type', key: 'company', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+    //   {header: 'Name', key: 'testName', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+    //   {header: 'Plan', key: 'jobRole', render: (val) => <span className='font-bold text-gray-800'>{val}</span>},
+    //   {header: 'Date', key: 'date', render: (val) => <span className='font-bold text-gray-800'>{moment(val).format('DD MMM YYYY hh: mm: A')}</span>},
+    //   {header: 'Status', key: 'status', render: (val) => (
+    //      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${val === 'success' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
+    //         {val}
+    //      </span>
+    //   )},
+    // ]
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#021A30] to-[#0B0707]">
@@ -91,9 +87,9 @@ const CandidateDashboard: React.FC = () => {
           <SummeryCard label='Current Plan' value={candidateSummary?.currentPlan ?? 'Free'} icon={StarsIcon} color='black' bg='white'/>
         </Grid>
       </Grid>
-      {testHistory.length !== 0 && (
+      {/* {testHistory.length !== 0 && (
       <Grid sx={{ mt: 3, mx: 3}}>
-        <DataTable
+        {/* <DataTable
           columns={columns}
           isLoading={loading}
           data={testHistory}
@@ -105,9 +101,8 @@ const CandidateDashboard: React.FC = () => {
             onPageChange: (page) => setHistoryPage(page)
           }}
         >
-        </DataTable>
-      </Grid>
-      )}
+        </DataTable> */}
+
       <CandidatePracticeQuestions
         questions={PracticeQuestions}
         type={type}

@@ -53,7 +53,7 @@ const ChangePassword: React.FC= () => {
        return
     } 
     if(!id){
-        toast.error('Candidate not found')
+        toast.error('Company not found')
         return
     }
 

@@ -34,6 +34,7 @@ export const ROUTES = {
   },
 
   CANDIDATE: {
+    PROFILE: '/candidate/profile',
     VERIFY_OTP: '/candidate/verifyotp',
     FORGOT_PASSWORD: '/candidate/forgotpassword',
     RESET_PASSWORD: '/candidate/resetpassword',

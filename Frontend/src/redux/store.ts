@@ -13,6 +13,7 @@ import CompanyTestSlice from './slices/features/test/companyTestSlice'
 import CandidateTestSlice from './slices/features/test/CandidateTestSlice'
 import CompanyInterviewSlice from './slices/features/interview/CompanyInterviewSlice'
 import AdminAnalyticsSlice from './slices/features/analytics/adminAnalysticsSlice'
+import CandidateSettingsSlice from './slices/features/settingsSlice/candidateSettingsSlice'
 
 
 export const store = configureStore({
@@ -31,6 +32,7 @@ export const store = configureStore({
         candidateTest: CandidateTestSlice,
         companyInterview: CompanyInterviewSlice,
         adminAnalytics: AdminAnalyticsSlice,
+        candidateSettings: CandidateSettingsSlice,
     }
 })
 
