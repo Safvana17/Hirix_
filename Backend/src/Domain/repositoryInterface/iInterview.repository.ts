@@ -1,3 +1,4 @@
+import { InterviewHistoryDTO } from "../../Application/candidate/dtos/profile/candidate.interviewHistory.dto";
 import { InterviewDTO } from "../../Application/company/dtos/interview/company.getAllInterviews.dto";
 import { InterviewEntity } from "../entities/Interview";
 import { InterviewStatus } from "../enums/interview";
@@ -10,4 +11,5 @@ export interface IInterviewRepository extends IBaseRepository<InterviewEntity> {
     findByRoomId(roomId: string): Promise<InterviewEntity | null>
     getTotalInterviewsByCompany(companyId: string): Promise<number>
     getInterviewUsage(): Promise<{company: string, count: number}[]>
+    getInterviewHistory(query: {email: string, page: number, limit: number}): Promise<{history: InterviewHistoryDTO[]; totalPages: number; totalCount: number}>
 }

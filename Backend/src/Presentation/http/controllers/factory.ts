@@ -221,6 +221,7 @@ import { CandidateWarningCountUsecase } from "../../../Application/candidate/use
 import { UnifiedInterviewCodeRunnerUsecase } from "../../../Application/common/usecases/unified.interviewCodeRunner.usecase";
 import { CandidateSettingsController } from "./candidate/candidateSettingsController";
 import { CandidateChangePasswordUsecase } from "../../../Application/candidate/useCases/profile/candidate.changePassword.usecase";
+import { CandidateGetInterviewHistoryUsecase } from "../../../Application/candidate/useCases/profile/candidate.getInterviewHistory.usecase";
 
 
 
@@ -482,6 +483,10 @@ const iCandidateWarningCount = new CandidateWarningCountUsecase (
 const iCandidateChangePassword = new CandidateChangePasswordUsecase (
     iCandidateRepository,
     iHashService
+)
+const iCandidateInterviewHistory = new CandidateGetInterviewHistoryUsecase (
+    iInterviewRepository,
+    iCandidateRepository
 )
 //company
 const iRegisterCompany = new RegisterCompanyUsecase(
@@ -1327,4 +1332,6 @@ export const iCandidateAnalyticsController = new CandidateAnalyticsController (
 
 export const iCandidateSettingsController = new CandidateSettingsController (
     iCandidateChangePassword,
+    iCandidateInterviewHistory,
 )
+

@@ -6,6 +6,7 @@ import { IInterviewRepository } from "../../Domain/repositoryInterface/iIntervie
 import { IInterview, InterviewModel } from "../database/Model/Interview";
 import { BaseRepository } from "./base.repository";
 import { InterviewDTO } from "../../Application/company/dtos/interview/company.getAllInterviews.dto";
+import { InterviewHistoryDTO } from "../../Application/candidate/dtos/profile/candidate.interviewHistory.dto";
 
 export class InterviewRepository extends BaseRepository<InterviewEntity, IInterview> implements IInterviewRepository {
     constructor() {
@@ -186,6 +187,74 @@ console.log('documents:', document.length)
         ])
     }
     
+    async getInterviewHistory(query: { email: string; page: number; limit: number; }): Promise<{ history: InterviewHistoryDTO[]; totalPages: number; totalCount: number; }> {
+        const skip = query.limit * (query.page - 1)
+        const totalCount = await this._model.countDocuments({candidateEmail: query.email})
+        const totalPages = Math.ceil(totalCount / query.limit)
+        const documents = await this._model.aggregate([
+            {
+                $match: {
+                    candidateEmail: query.email
+                }
+            },
+            {
+                $sort: {
+                    createdAt: -1
+                }
+            },
+            {
+                $lookup: {
+                    from: 'companies',
+                    localField: 'companyId',
+                    foreignField: '_id',
+                    as: 'Company'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'jobroles',
+                    localField: 'jobRoleId',
+                    foreignField: '_id',
+                    as: 'JobRole'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$Company',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $unwind: {
+                    path: '$JobRole',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    companyName: '$Company.name',
+                    interviewName: '$name',
+                    jobRole: '$JobRole.name',
+                    interviewerName: '$interviewerName',
+                    status: '$result',
+                    createdAt: 1
+                }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: query.limit
+            }
+        ])
+        return {
+            history: documents,
+            totalCount,
+            totalPages
+        }
+    }
+
     protected mapToEntity(doc: IInterview): InterviewEntity {
         return InterviewMapper.mapToEntity(doc)
     }

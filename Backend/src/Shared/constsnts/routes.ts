@@ -130,7 +130,7 @@ export const ROUTES = {
         },
         SETTINGS: {
             CHANGE_PASSWORD: '/:id/change-password',
-            PROFILE: '/profile',
+            PROFILE: '/:id/profile',
             INTERVIEW_HISTORY: '/interview-history'
         }
     },

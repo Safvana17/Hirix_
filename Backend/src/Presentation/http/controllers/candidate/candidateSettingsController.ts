@@ -3,15 +3,25 @@ import { ICandidateChangePasswordUsecase } from "../../../../Application/candida
 import { asyncHandler } from "../../../../utils/asyncHandler";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { ICandidateGetInterviewHistoryUsecase } from "../../../../Application/candidate/interfaces/profile/ICandidate.getInterviewHistory.usecase";
+import { PaymentHistoryQuery } from "../../validators/analyticsValidator";
 
 export class CandidateSettingsController {
     constructor (
-        private _candidateChangePasswordUsecase: ICandidateChangePasswordUsecase
+        private _candidateChangePasswordUsecase: ICandidateChangePasswordUsecase,
+        private _candidateGetInterviewHistory: ICandidateGetInterviewHistoryUsecase,
     ) {}
 
     changePassword = asyncHandler (async (req: Request, res: Response ) => {
         const candidateId = req.user.id
         await this._candidateChangePasswordUsecase.execute({candidateId, ...req.body})
         return sendSuccess(res, statusCode.OK, '')
+    })
+
+    interviewHistory = asyncHandler (async (req: Request, res: Response) => {
+        const candidateId = req.user.id
+        const query = req.validatedQuery as PaymentHistoryQuery
+        const { history, totalPages, totalCount } = await this._candidateGetInterviewHistory.execute({ candidateId, ...query})
+        return sendSuccess(res, statusCode.OK, '', { history, totalCount, totalPages })
     })
 }
