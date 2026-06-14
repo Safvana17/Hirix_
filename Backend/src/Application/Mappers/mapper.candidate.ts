@@ -16,6 +16,21 @@ export class candidateMapper {
         )
         candidate.correctPracticeAnswers = doc.correctPracticeAnswers
         candidate.practiceQuestionCount = doc.practiceQuestionCount
+        candidate.profilePicture = doc.profilePicture
+        candidate.canidateType = doc.canidateType
+        candidate.college = doc.college
+        candidate.degree = doc.degree
+        candidate.greduationYear = doc.greduationYear
+        candidate.company = doc.company
+        candidate.designation = doc.designation
+        candidate.yearsOfExperience = doc.yearsOfExperience
+        candidate.skills = doc.skills
+        candidate.interestedRoles = doc.interestedRoles
+        candidate.linkedinUrl = doc.linkedinUrl
+        candidate.githubUrl = doc.githubUrl
+        candidate.portfolioUrl = doc.portfolioUrl
+        candidate.attendedQuestionIds = doc.attendedQuestionIds
+
         return candidate
     }
 
@@ -31,7 +46,20 @@ export class candidateMapper {
             refreshTokens: entity.getRefreshToken(),
             isBlocked: entity.getIsBlocked(),
             correctPracticeAnswers: entity.correctPracticeAnswers,
-            practiceQuestionCount: entity.practiceQuestionCount
+            practiceQuestionCount: entity.practiceQuestionCount,
+            profilePicture: entity.profilePicture,
+            candidateType: entity.canidateType,
+            degree: entity.degree,
+            graduationYear: entity.greduationYear,
+            company: entity.company,
+            designation: entity.designation,
+            yearsOfExperience: entity.yearsOfExperience,
+            skills: entity.skills,
+            interestedRoles: entity.interestedRoles,
+            linkedinUrl: entity.linkedinUrl,
+            githubUrl: entity.githubUrl,
+            portfolioUrl: entity.portfolioUrl,
+            attendedQuestionIds: entity.attendedQuestionIds
         }
     }
 }

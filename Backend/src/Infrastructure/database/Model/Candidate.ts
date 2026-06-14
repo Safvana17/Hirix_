@@ -1,6 +1,7 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import userRole from "../../../Domain/enums/userRole.enum";
 import { UserStatus } from "../../../Domain/enums/userStatus.enum";
+import { CandidateType } from "../../../Domain/enums/candidate";
 
 
 
@@ -17,6 +18,20 @@ export interface ICandidate extends Document {
     isVerified: boolean;
     practiceQuestionCount: number
     correctPracticeAnswers: number
+    profilePicture: string
+    canidateType: CandidateType
+    college: string
+    degree: string
+    greduationYear: number
+    company: string
+    designation: string
+    yearsOfExperience: number
+    skills: string[]
+    interestedRoles: string[]
+    linkedinUrl: string
+    githubUrl: string
+    portfolioUrl: string
+    attendedQuestionIds: string[]
 }
 
 const candidateSchema: Schema<ICandidate> = new Schema ({
@@ -63,6 +78,45 @@ const candidateSchema: Schema<ICandidate> = new Schema ({
     },
     practiceQuestionCount: {
         type: Number
+    },
+    profilePicture: {
+        type: String
+    },
+    portfolioUrl: {
+        type: String
+    },
+    college:{
+        type: String
+    },
+    degree: {
+        type: String
+    },
+    greduationYear: {
+        type: Number
+    },
+    company: {
+        type: String
+    },
+    designation: {
+        type: String
+    },
+    yearsOfExperience: {
+        type: Number
+    },
+    skills: {
+        type: [String]
+    },
+    interestedRoles: {
+        type: [String]
+    },
+    linkedinUrl: {
+        type: String
+    },
+    githubUrl: {
+        type: String
+    },
+    attendedQuestionIds: {
+        type: [String]
     }
 },{
     timestamps: true

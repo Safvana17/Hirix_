@@ -11,5 +11,3 @@ export const connectDB = async () => {
         process.exit(1)
     }
 }
-
-//mongodb+srv://safvana277_db_user:hirixbcr752025@hirixcluster.azh5b06.mongodb.net/?appName=HirixCluster

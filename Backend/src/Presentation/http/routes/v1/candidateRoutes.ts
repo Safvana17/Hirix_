@@ -8,7 +8,7 @@ import { validate } from '../../middlewares/validate'
 import { CandidateRunCodeSchema, saveAnswerSchema, submitTestSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
 import { createQuestionSchema, questionParamsSchema, submitPraticeAnswerSchema } from '../../validators/questionValidator'
 import { GetPaymentHistorySchema } from '../../validators/analyticsValidator'
-import { changePasswordSchema } from '../../validators/settingsValidator'
+import { candidateProfileSchema, changePasswordSchema } from '../../validators/settingsValidator'
 
 
 const router = Express.Router()
@@ -54,7 +54,7 @@ router.get(ROUTES.CANDIDATE.ANALYTICS.TEST_HISTORY, authHandler(iTokenService), 
 //settings
 router.put(ROUTES.CANDIDATE.SETTINGS.CHANGE_PASSWORD, authHandler(iTokenService), validate(changePasswordSchema, 'body'), iCandidateSettingsController.changePassword)
 router.get(ROUTES.CANDIDATE.SETTINGS.INTERVIEW_HISTORY, authHandler(iTokenService), validate(PaymnetQuerySchema, 'query'), iCandidateSettingsController.interviewHistory)
-
+router.post(ROUTES.CANDIDATE.SETTINGS.PROFILE, authHandler(iTokenService), validate(candidateProfileSchema, 'body'), iCandidateSettingsController.updateProfile)
 
 
 export default router

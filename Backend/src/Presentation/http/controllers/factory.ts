@@ -222,6 +222,7 @@ import { UnifiedInterviewCodeRunnerUsecase } from "../../../Application/common/u
 import { CandidateSettingsController } from "./candidate/candidateSettingsController";
 import { CandidateChangePasswordUsecase } from "../../../Application/candidate/useCases/profile/candidate.changePassword.usecase";
 import { CandidateGetInterviewHistoryUsecase } from "../../../Application/candidate/useCases/profile/candidate.getInterviewHistory.usecase";
+import { CandidateUpdateProfileUsecase } from "../../../Application/candidate/useCases/profile/candidate.updateProfile.usecase";
 
 
 
@@ -486,6 +487,9 @@ const iCandidateChangePassword = new CandidateChangePasswordUsecase (
 )
 const iCandidateInterviewHistory = new CandidateGetInterviewHistoryUsecase (
     iInterviewRepository,
+    iCandidateRepository
+)
+const iCandidateUpdateProfile = new CandidateUpdateProfileUsecase (
     iCandidateRepository
 )
 //company
@@ -1333,5 +1337,6 @@ export const iCandidateAnalyticsController = new CandidateAnalyticsController (
 export const iCandidateSettingsController = new CandidateSettingsController (
     iCandidateChangePassword,
     iCandidateInterviewHistory,
+    iCandidateUpdateProfile,
 )
 

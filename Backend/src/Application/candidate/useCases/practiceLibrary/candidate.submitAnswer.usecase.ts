@@ -42,6 +42,7 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
         }
 
         const canViewFeedback = plan.hasDetailedFeedback
+        candidate.attendedQuestionIds?.push(question.id)
         if(request.questionType === QuestionType.MCQ){
             const isCorrect = await this._evaluationService.evaluateMcq({questionAnswer: question.answer ?? [], candidateAnswer:request.selectedOption ?? []})
             await this.updatePracticeState(candidate, isCorrect)
