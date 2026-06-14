@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { ChangePassword, InterviewHistory, InterviewHistoryArgs, InterviewHistoryResponse } from "../../../../types/candidate"
+import type { CandidateProfileForm, ChangePassword, InterviewHistory, InterviewHistoryArgs, InterviewHistoryResponse, UpdateCandidateProfile } from "../../../../types/candidate"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
 import type { AxiosError } from "axios"
@@ -9,6 +9,7 @@ interface CandidateInitialState {
     loading: boolean
     error: string | null
     interviewHistory: InterviewHistory[]
+    candidate: CandidateProfileForm | null
     pagination: {
       history: {
         totalPages: number
@@ -22,6 +23,7 @@ const initialState: CandidateInitialState = {
     loading: false,
     error: null,
     interviewHistory: [],
+    candidate: null,
     pagination: {
       history: {
         totalCount: 0,
@@ -68,11 +70,11 @@ InterviewHistoryResponse,
 
 export const updateProfile = createAsyncThunk<
 void,
-{id: string, candidate: FormData},
+{id: string, candidate: UpdateCandidateProfile},
 {rejectValue: string}
-> ('settings/updateProfile', async({id, candidate}, {rejectWithValue}) => {
+> ('candidate/updateProfile', async({id, candidate}, {rejectWithValue}) => {
    try {
-     const response = await api.put(API_ROUTES.COMPANY.PROFILE(id), candidate)
+     const response = await api.put(API_ROUTES.CANDIDATE.SETTINGS.PROFILE(id), candidate)
  
      if(!response.data.success){
          return rejectWithValue('Invalid response')
@@ -83,6 +85,24 @@ void,
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to update candidate profile')       
    }
+})
+
+export const getCandidateProfile = createAsyncThunk<
+CandidateProfileForm,
+{id: string},
+{rejectValue: string}
+>('candidate/getProfile', async({id}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.CANDIDATE.SETTINGS.PROFILE(id))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log('candidate', response.data.data)
+        return response.data.data
+    } catch (error) {
+       const err = error as AxiosError<{message: string}>
+       return rejectWithValue(err.response?.data?.message || 'Failed to get candidate profile')        
+    }
 })
 
 const candidateSettingsSlice = createSlice({
@@ -123,6 +143,17 @@ const candidateSettingsSlice = createSlice({
          .addCase(updateProfile.rejected, (state, action) => {
           state.loading = false
           state.error = action.payload || 'Failed to update candidate profile'
+         })
+         .addCase(getCandidateProfile.pending, (state) => {
+          state.loading = true
+         })
+         .addCase(getCandidateProfile.fulfilled, (state, action) => {
+          state.loading = false
+          state.candidate = action.payload
+         })
+         .addCase(getCandidateProfile.rejected, (state, action) => {
+          state.loading = false
+          state.error = action.payload || 'Failed to get candidate profile'
          })
 })
 

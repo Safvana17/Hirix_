@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { CandidateType } from '../../types/candidate'
 
 export const updateProfileSchema = z.object({
   // id: z.string().regex(/^[0-9a-fA-F]{24}$/),
@@ -117,4 +118,78 @@ export const deleteAccountSchema = z.object({
     .trim()
     .min(6, 'Password must contain atleast 6 characters')
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@$%*&?])[a-zA-Z\d!@$%*&?]{6,}$/, "Password must contain uppercase, lowercase, number and special character"),
+})
+
+
+export const candidateProfileSchema = z.object({
+  // profilePicture: z
+  //   .string()
+  //   .url("Invalid profile picture URL")
+  //   .optional()
+  //   .or(z.literal("")),
+  name: z
+    .string()
+    .trim()
+    .min(2, 'Name must be at least 2 characters')
+    .max(30, 'Name must be at most 30 characters'),
+  email: z
+    .string()
+    .trim()
+    .email('Invalid email'),
+
+  candidateType: z.nativeEnum(CandidateType).optional(),
+  college: z
+    .string()
+    .trim()
+    .max(100, "College name cannot exceed 100 characters")
+    .optional(),
+  degree: z
+    .string()
+    .trim()
+    .max(100, "Degree cannot exceed 100 characters")
+    .optional(),
+  graduationYear: z
+    .number()
+    .min(1950, "Invalid graduation year")
+    .max(new Date().getFullYear() + 10, "Invalid graduation year")
+    .optional(),
+  company: z
+    .string()
+    .trim()
+    .max(100, "Company name cannot exceed 100 characters")
+    .optional(),
+  designation: z
+    .string()
+    .trim()
+    .max(100, "Designation cannot exceed 100 characters")
+    .optional(),
+  yearsOfExperience: z
+    .number()
+    .min(0, "Experience cannot be negative")
+    .max(50, "Experience cannot exceed 50 years")
+    .optional(),
+  skills: z
+    .string()
+    .optional(),
+  interestedRoles: z
+    .string()
+    .optional(),
+
+  linkedinUrl: z
+    .string()
+    .url("Invalid LinkedIn URL")
+    .optional()
+    .or(z.literal("")),
+
+  githubUrl: z
+    .string()
+    .url("Invalid GitHub URL")
+    .optional()
+    .or(z.literal("")),
+
+  portfolioUrl: z
+    .string()
+    .url("Invalid Portfolio URL")
+    .optional()
+    .or(z.literal("")),
 })

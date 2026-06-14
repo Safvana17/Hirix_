@@ -1,36 +1,96 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { CandidateType, type CandidateProfileForm } from "../../../types/candidate";
-// import { useSelector } from "react-redux";
-// import type { RootState } from "../../../redux/store";
-// import { Upload, User2 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../../redux/store";
+//import { Upload, User2 } from "lucide-react";
+import { getCandidateProfile, updateProfile } from "../../../redux/slices/features/settingsSlice/candidateSettingsSlice";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { candidateProfileSchema } from "../../../lib/validation/settingsValidator";
+import toast from "react-hot-toast";
 
 const CandidateProfileInfo: React.FC = () => {
-  // const { user } = useSelector((state: RootState) => state.auth)
-  const {
-    register,
-    handleSubmit,
-    watch,
-  } = useForm<CandidateProfileForm>();
+  const dispatch = useDispatch<AppDispatch>()
+  const { user } = useSelector((state: RootState) => state.auth)
+  const { candidate, loading } = useSelector((state: RootState) => state.candidateSettings)
 
+  useEffect(() => {
+    if(user){
+      dispatch(getCandidateProfile({id: user.id}))
+    }
+  }, [user, dispatch])
+
+  const profileData = useMemo(() => ({
+      name: candidate?.name || user?.name,
+      email: candidate?.email || user?.email,
+      candidateType: candidate?.candidateType || CandidateType.STUDENT, 
+      college: candidate?.college || '',
+      degree: candidate?.degree || '',
+      graduationYear: candidate?.graduationYear || undefined,
+      company: candidate?.company || '',
+      designation: candidate?.designation || '',
+      yearsOfExperience: candidate?.yearsOfExperience || undefined,
+      skills: Array.isArray(candidate?.skills) ? candidate.skills.join(', ') : candidate?.skills || "",
+      interestedRoles: Array.isArray(candidate?.interestedRoles) ? candidate.interestedRoles.join(', ') : candidate?.interestedRoles || "",
+      linkedinUrl: candidate?.linkedinUrl || '',
+      githubUrl: candidate?.githubUrl || '',
+      portfolioUrl: candidate?.portfolioUrl || '',
+
+  }), [candidate, user])
+
+  const { register, handleSubmit, watch, reset, formState: { errors} } = useForm<CandidateProfileForm>({
+    resolver: zodResolver(candidateProfileSchema),
+    defaultValues: profileData
+  })
+
+  useEffect(() => {
+    if(candidate || user){
+      reset(profileData)
+    }
+  }, [profileData, reset, candidate, user])
+  
   const candidateType = watch("candidateType");
+  
+  const onSubmit = async (data: CandidateProfileForm) => {
+    if(!user?.id) {
+      console.log('not id found')
+      return
+    }
+    try {
+      console.log('inside submit')
 
-  const onSubmit = (data: CandidateProfileForm) => {
-    const payload = {
-      ...data,
-      skills: data.skills
-        ?.split(",")
-        .map((skill) => skill.trim())
-        .filter(Boolean),
+      const formData = new FormData()
 
-      interestedRoles: data.interestedRoles
-        ?.split(",")
-        .map((role) => role.trim())
-        .filter(Boolean),
-    };
+      Object.entries(data).forEach(([key, value]) => {
+        if(value !== undefined && value !== null){
+          formData.append(key, String(value))
+        }
+      })
 
-    console.log(payload);
-  };
+const payload = {
+  ...data,
+  skills:
+    data.skills?.split(",")
+      .map((skill) => skill.trim())
+      .filter(Boolean) ?? [],
+
+  interestedRoles:
+    data.interestedRoles?.split(",")
+      .map((role) => role.trim())
+      .filter(Boolean) ?? [],
+};
+
+
+      
+      await dispatch(updateProfile({ id: user.id, candidate: payload })).unwrap()
+      // await dispatch(getCandidateProfile({id: user.id}))
+
+      toast.success('Your profile has been updated successfully')
+    } catch (error) {
+      console.log('update error: ', error)
+      toast.error(typeof error === 'string' ? error : 'Failed to update profile')
+    } 
+  }
 
   return (
     <div className="max-w-5xl mx-auto p-6">
@@ -39,10 +99,15 @@ const CandidateProfileInfo: React.FC = () => {
           Candidate Profile
         </h1>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-8"
-        >
+<form
+  onSubmit={handleSubmit(
+    onSubmit,
+    (errors) => {
+      console.log("VALIDATION ERRORS", errors);
+    }
+  )}
+  className="space-y-8"
+>
           {/* Personal Information */}
           <div>
             <h2 className="text-lg font-semibold mb-4">
@@ -75,11 +140,13 @@ const CandidateProfileInfo: React.FC = () => {
                   placeholder="Name"
                   className="border rounded-lg p-3"
                 />
+                {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
                 <input
                   {...register("email")}
                   placeholder="Email"
                   className="border rounded-lg p-3"
                 />
+                {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
               <div>
                 <label className="block mb-2 text-sm font-medium">
                   Candidate Type
@@ -100,6 +167,7 @@ const CandidateProfileInfo: React.FC = () => {
                     Professional
                   </option>
                 </select>
+                {errors.candidateType && <p className="text-red-500 text-sm">{errors.candidateType.message}</p>}
               </div>
             </div>
           </div>
@@ -117,21 +185,24 @@ const CandidateProfileInfo: React.FC = () => {
                   placeholder="College"
                   className="border rounded-lg p-3"
                 />
+                {errors.college && <p className="text-red-500 text-sm">{errors.college.message}</p>}
 
                 <input
                   {...register("degree")}
                   placeholder="Degree"
                   className="border rounded-lg p-3"
                 />
+                {errors.degree && <p className="text-red-500 text-sm">{errors.degree.message}</p>}
 
                 <input
                   type="number"
                   {...register("graduationYear", {
-                    valueAsNumber: true,
+                    setValueAs: (v) => v === "" ? undefined : Number(v),
                   })}
                   placeholder="Graduation Year"
                   className="border rounded-lg p-3"
                 />
+                {errors.graduationYear && <p className="text-red-500 text-sm">{errors.graduationYear.message}</p>}
               </div>
             </div>
           )}
@@ -149,21 +220,24 @@ const CandidateProfileInfo: React.FC = () => {
                   placeholder="Company"
                   className="border rounded-lg p-3"
                 />
+                {errors.company && <p className="text-red-500 text-sm">{errors.company.message}</p>}
 
                 <input
                   {...register("designation")}
                   placeholder="Designation"
                   className="border rounded-lg p-3"
                 />
+                {errors.designation && <p className="text-red-500 text-sm">{errors.designation.message}</p>}
 
                 <input
                   type="number"
                   {...register("yearsOfExperience", {
-                    valueAsNumber: true,
+                    setValueAs: (v) => v === "" ? undefined : Number(v),
                   })}
                   placeholder="Years of Experience"
                   className="border rounded-lg p-3"
                 />
+                {errors.yearsOfExperience && <p className="text-red-500 text-sm">{errors.yearsOfExperience.message}</p>}
               </div>
             </div>
           )}
@@ -180,12 +254,14 @@ const CandidateProfileInfo: React.FC = () => {
                 placeholder="React, Node.js, MongoDB"
                 className="w-full border rounded-lg p-3"
               />
+              {errors.skills && <p className="text-red-500 text-sm">{errors.skills.message}</p>}
 
               <input
                 {...register("interestedRoles")}
                 placeholder="Frontend Developer, Backend Developer"
                 className="w-full border rounded-lg p-3"
               />
+              {errors.interestedRoles && <p className="text-red-500 text-sm">{errors.interestedRoles.message}</p>}
             </div>
           </div>
 
@@ -201,18 +277,21 @@ const CandidateProfileInfo: React.FC = () => {
                 placeholder="LinkedIn URL"
                 className="border rounded-lg p-3"
               />
+              {errors.linkedinUrl && <p className="text-red-500 text-sm">{errors.linkedinUrl.message}</p>}
 
               <input
                 {...register("githubUrl")}
                 placeholder="GitHub URL"
                 className="border rounded-lg p-3"
               />
+              {errors.githubUrl && <p className="text-red-500 text-sm">{errors.githubUrl.message}</p>}
 
               <input
                 {...register("portfolioUrl")}
                 placeholder="Portfolio URL"
                 className="border rounded-lg p-3"
               />
+              {errors.portfolioUrl && <p className="text-red-500 text-sm">{errors.portfolioUrl.message}</p>}
             </div>
           </div>
 
@@ -222,7 +301,7 @@ const CandidateProfileInfo: React.FC = () => {
               type="submit"
               className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
             >
-              Update Profile
+              { loading ? 'Updating...' :  'Update Profile' }
             </button>
           </div>
         </form>
