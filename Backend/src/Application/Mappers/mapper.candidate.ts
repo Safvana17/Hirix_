@@ -17,7 +17,7 @@ export class candidateMapper {
         candidate.correctPracticeAnswers = doc.correctPracticeAnswers
         candidate.practiceQuestionCount = doc.practiceQuestionCount
         candidate.profilePicture = doc.profilePicture
-        candidate.canidateType = doc.canidateType
+        candidate.candidateType = doc.candidateType
         candidate.college = doc.college
         candidate.degree = doc.degree
         candidate.greduationYear = doc.greduationYear
@@ -48,7 +48,7 @@ export class candidateMapper {
             correctPracticeAnswers: entity.correctPracticeAnswers,
             practiceQuestionCount: entity.practiceQuestionCount,
             profilePicture: entity.profilePicture,
-            candidateType: entity.canidateType,
+            candidateType: entity.candidateType,
             degree: entity.degree,
             graduationYear: entity.greduationYear,
             company: entity.company,

@@ -5,7 +5,7 @@ import UserEntity from "./user.entity";
 
 export default class CandidateEntity extends UserEntity{
     profilePicture?: string
-    canidateType?: CandidateType
+    candidateType?: CandidateType
     college?: string
     degree?: string
     greduationYear?: number

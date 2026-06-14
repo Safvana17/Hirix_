@@ -223,6 +223,7 @@ import { CandidateSettingsController } from "./candidate/candidateSettingsContro
 import { CandidateChangePasswordUsecase } from "../../../Application/candidate/useCases/profile/candidate.changePassword.usecase";
 import { CandidateGetInterviewHistoryUsecase } from "../../../Application/candidate/useCases/profile/candidate.getInterviewHistory.usecase";
 import { CandidateUpdateProfileUsecase } from "../../../Application/candidate/useCases/profile/candidate.updateProfile.usecase";
+import { CandidateGetProfileUsecase } from "../../../Application/candidate/useCases/profile/candidate.getProfile.usecase";
 
 
 
@@ -490,6 +491,9 @@ const iCandidateInterviewHistory = new CandidateGetInterviewHistoryUsecase (
     iCandidateRepository
 )
 const iCandidateUpdateProfile = new CandidateUpdateProfileUsecase (
+    iCandidateRepository
+)
+const iCandidateGetProfile = new CandidateGetProfileUsecase (
     iCandidateRepository
 )
 //company
@@ -1338,5 +1342,6 @@ export const iCandidateSettingsController = new CandidateSettingsController (
     iCandidateChangePassword,
     iCandidateInterviewHistory,
     iCandidateUpdateProfile,
+    iCandidateGetProfile,
 )
 

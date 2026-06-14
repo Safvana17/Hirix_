@@ -54,7 +54,7 @@ router.get(ROUTES.CANDIDATE.ANALYTICS.TEST_HISTORY, authHandler(iTokenService), 
 //settings
 router.put(ROUTES.CANDIDATE.SETTINGS.CHANGE_PASSWORD, authHandler(iTokenService), validate(changePasswordSchema, 'body'), iCandidateSettingsController.changePassword)
 router.get(ROUTES.CANDIDATE.SETTINGS.INTERVIEW_HISTORY, authHandler(iTokenService), validate(PaymnetQuerySchema, 'query'), iCandidateSettingsController.interviewHistory)
-router.post(ROUTES.CANDIDATE.SETTINGS.PROFILE, authHandler(iTokenService), validate(candidateProfileSchema, 'body'), iCandidateSettingsController.updateProfile)
-
+router.put(ROUTES.CANDIDATE.SETTINGS.PROFILE, authHandler(iTokenService), validate(candidateProfileSchema, 'body'), iCandidateSettingsController.updateProfile)
+router.get(ROUTES.CANDIDATE.SETTINGS.PROFILE, authHandler(iTokenService), iCandidateSettingsController.getProfile)
 
 export default router

@@ -1,7 +1,13 @@
 import { CandidateType } from "../../../../Domain/enums/candidate"
 
-export interface CandidateUpdateProfileInputDTO {
+export interface CandidateGetProfileInputDTO {
     candidateId: string
+}
+
+export interface CandidateGetProfileOutputDTO {
+    id: string
+    name: string
+    email: string
     profilePicture?: string
     candidateType?: CandidateType
     college?: string
@@ -15,8 +21,4 @@ export interface CandidateUpdateProfileInputDTO {
     linkedinUrl?: string
     githubUrl?: string
     portfolioUrl?: string
-}
-
-export interface CandidateUpdateProfileOutputDTO {
-    success: boolean
 }

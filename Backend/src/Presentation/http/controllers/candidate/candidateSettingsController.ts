@@ -6,12 +6,14 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { ICandidateGetInterviewHistoryUsecase } from "../../../../Application/candidate/interfaces/profile/ICandidate.getInterviewHistory.usecase";
 import { PaymentHistoryQuery } from "../../validators/analyticsValidator";
 import { ICandidateUpdateProfileUsecase } from "../../../../Application/candidate/interfaces/profile/ICandidate.updateProfile.usecase";
+import { ICandidateGetProfileUsecase } from "../../../../Application/candidate/interfaces/profile/ICandidate.getProfile.usecase";
 
 export class CandidateSettingsController {
     constructor (
         private _candidateChangePasswordUsecase: ICandidateChangePasswordUsecase,
         private _candidateGetInterviewHistory: ICandidateGetInterviewHistoryUsecase,
         private _candidateUpdateProfileUsecase: ICandidateUpdateProfileUsecase,
+        private _candidateGetProfileUsecase: ICandidateGetProfileUsecase,
     ) {}
 
     changePassword = asyncHandler (async (req: Request, res: Response ) => {
@@ -31,5 +33,11 @@ export class CandidateSettingsController {
         const candidateId = req.user.id
         await this._candidateUpdateProfileUsecase.execute({candidateId, ...req.body})
         return sendSuccess(res, statusCode.OK, '')
+    })
+
+    getProfile = asyncHandler( async (req: Request, res: Response) => {
+        const candidateId = req.user.id
+        const candidate = await this._candidateGetProfileUsecase.execute({candidateId})
+        return sendSuccess(res, statusCode.OK, '', candidate)
     })
 }

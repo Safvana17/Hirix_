@@ -15,7 +15,7 @@ export class CandidateUpdateProfileUsecase implements ICandidateUpdateProfileUse
         if(!candidate){
             throw new AppError(authMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
-        candidate.canidateType = request.canidateType
+        candidate.candidateType = request.candidateType
         candidate.college = request.college
         candidate.degree = request.degree
         candidate.greduationYear = request.greduationYear

@@ -19,7 +19,7 @@ export interface ICandidate extends Document {
     practiceQuestionCount: number
     correctPracticeAnswers: number
     profilePicture: string
-    canidateType: CandidateType
+    candidateType: CandidateType
     college: string
     degree: string
     greduationYear: number
@@ -78,6 +78,10 @@ const candidateSchema: Schema<ICandidate> = new Schema ({
     },
     practiceQuestionCount: {
         type: Number
+    },
+    candidateType: {
+        type: String,
+        enum: Object.values(CandidateType)
     },
     profilePicture: {
         type: String

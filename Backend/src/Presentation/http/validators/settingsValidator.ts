@@ -203,4 +203,4 @@ export const candidateProfileSchema = z.object({
     .url("Invalid Portfolio URL")
     .optional()
     .or(z.literal("")),
-});
+})
