@@ -56,6 +56,9 @@ export const API_ROUTES = {
     SETTINGS: {
       CHANGE_PASSWORD: (id: string) => 
         `/candidate/${id}/change-password`,
+      INTERVIEW_HISTORY: `/candidate/interview-history`,
+      PROFILE: (id: string) => 
+        `/candidate/${id}/profile`
     }
   },
 
