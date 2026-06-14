@@ -66,6 +66,25 @@ InterviewHistoryResponse,
     }
 })
 
+export const updateProfile = createAsyncThunk<
+void,
+{id: string, candidate: FormData},
+{rejectValue: string}
+> ('settings/updateProfile', async({id, candidate}, {rejectWithValue}) => {
+   try {
+     const response = await api.put(API_ROUTES.COMPANY.PROFILE(id), candidate)
+ 
+     if(!response.data.success){
+         return rejectWithValue('Invalid response')
+     }
+ 
+     return response.data.data
+   } catch (error) {
+       const err = error as AxiosError<{message: string}>
+       return rejectWithValue(err.response?.data?.message || 'Failed to update candidate profile')       
+   }
+})
+
 const candidateSettingsSlice = createSlice({
     name: 'CandidateSettings',
     initialState,
@@ -94,6 +113,16 @@ const candidateSettingsSlice = createSlice({
          .addCase(getInterviewHistory.rejected, (state, action) => {
           state.loading = false
           state.error = action.payload || 'Failed to get interview history'
+         })
+         .addCase(updateProfile.pending, (state) => {
+          state.loading = true
+         })
+         .addCase(updateProfile.fulfilled, (state) => {
+          state.loading = false
+         })
+         .addCase(updateProfile.rejected, (state, action) => {
+          state.loading = false
+          state.error = action.payload || 'Failed to update candidate profile'
          })
 })
 

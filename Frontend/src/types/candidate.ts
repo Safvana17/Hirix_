@@ -47,3 +47,29 @@ export interface InterviewHistoryArgs {
     page?: number
     limit?: number
 }
+
+export const CandidateType = {
+  STUDENT: "student",
+  PROFESSIONAL: "professional",
+  FRESHER: "fresher",
+} as const
+
+export type CandidateType = (typeof CandidateType)[keyof typeof CandidateType]
+
+export interface CandidateProfileForm  {
+  name: string
+  email: string
+  profilePicture?: string;
+  candidateType?: CandidateType;
+  college?: string;
+  degree?: string;
+  graduationYear?: number;
+  company?: string;
+  designation?: string;
+  yearsOfExperience?: number;
+  skills?: string;
+  interestedRoles?: string;
+  linkedinUrl?: string;
+  githubUrl?: string;
+  portfolioUrl?: string;
+};
