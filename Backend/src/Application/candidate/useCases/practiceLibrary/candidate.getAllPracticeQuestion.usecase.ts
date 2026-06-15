@@ -1,5 +1,6 @@
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
+import { ICandidatePracticeAttemptRepository } from "../../../../Domain/repositoryInterface/ICandidatePracticeAttempt.repository";
 import { IQuestionRepository } from "../../../../Domain/repositoryInterface/iQuestion.repository";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
@@ -14,7 +15,8 @@ export class CandidateGetAllPracticeQuestionsUsecase implements ICandidateGetAll
         private _candidateRepository: ICandidateRepository,
         private _subscriptionrepository :ISubscriptionRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
-        private _questionRepository: IQuestionRepository
+        private _questionRepository: IQuestionRepository,
+        private _candidatePracticeAttemptRepository: ICandidatePracticeAttemptRepository
     ) {}
 
     async execute(request: CandidateGetAllPracticeQuestionsInputDTO): Promise<CandidatePaginatedPracticeQuestionDTO> {
@@ -39,8 +41,31 @@ export class CandidateGetAllPracticeQuestionsUsecase implements ICandidateGetAll
         if(!currentPlan.canAccessPremiumQuestions){
             questions = questions.filter(q => !q.isPremium)
         }
+        const attendedQuestionIds = await this._candidatePracticeAttemptRepository.findAttemptedQuestionIds(candidate.id)
+        const attendedQuestionIdsSet = new Set(attendedQuestionIds)
+        const questionsWithAttendance = questions.map(question => ({
+            ...question,
+            isAttended: attendedQuestionIdsSet.has(question.id)
+        }))
+        
         return {
-            practiceQuestions: questions,
+            practiceQuestions: questionsWithAttendance.map((q) => ({
+                id: q.id,
+                title: q.title,
+                description: q.description,
+                type: q.type,
+                options: q.options,
+                testCase: q.testCases,
+                starterCode: q.starterCode,
+                functionName: q.functionName,
+                difficulty: q.difficulty,
+                categoryId: q.categoryId,
+                categoryName: q.categoryName,
+                isPremium: q.isPremium,
+                isDeleted: q.isDeleted,
+                isAttended: q.isAttended
+
+            })),
             totalCount,
             totalPages
         }

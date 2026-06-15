@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, Box, Typography, Chip, Button } from '@mui/material';
-import type { Question } from '../../../types/question';
+import type { PracticeQuestion } from '../../../types/question';
 
 interface QuestionCardProps {
-  question: Question
+  question: PracticeQuestion
   onTry: (questionId: string) => void
 }
 
@@ -44,6 +44,17 @@ const CandidateQuestionCard: React.FC<QuestionCardProps> = ({ question, onTry })
                 fontWeight: 500,
               }}
             /> 
+          )}
+          {question.isAttended && (
+            <Chip
+              label="Attended"
+              size="small"
+              sx={{
+                background: '#16A34A',
+                color: '#fff',
+                fontWeight: 600,
+              }}
+            />
           )}
         </Box>
 

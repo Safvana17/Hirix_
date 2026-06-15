@@ -8,10 +8,10 @@ import {
   Typography,
 } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import type { Question } from '../../../../types/question';
+import type { PracticeQuestion } from '../../../../types/question';
 
 interface RelatedPracticeQuestionsProps {
-  questions?: Question[];
+  questions?: PracticeQuestion[];
   onTry: (questionId: string) => void;
 }
 
@@ -74,6 +74,18 @@ const RelatedPracticeQuestions: React.FC<RelatedPracticeQuestionsProps> = ({
                 size="small"
                 sx={{ background: '#6B4705', color: '#fff' }}
               />
+              {question.isAttended && (
+                <Chip
+                  label="✓ Attended"
+                  size="small"
+                  sx={{
+                    background: '#DCFCE7',
+                    color: '#166534',
+                    fontWeight: 600,
+                  }}
+                />
+              )}
+
             </Stack>
 
             <Typography fontWeight={700} fontSize={14} minHeight={45}>

@@ -47,6 +47,8 @@ export interface PracticeQuestion {
   categoryId: string
   categoryName: string
   isPremium: boolean
+  isDeleted: boolean
+  isAttended: boolean
 }
 
 export interface PracticeResultResponse {
@@ -87,6 +89,12 @@ export type QuestionFormData = {
 
 export interface getAllQuestionsResponse {
   questions: Question[],
+  totalCount: number;
+  totalPages: number
+}
+
+export interface getAllPracticeQuestionsResponse {
+  questions: PracticeQuestion[],
   totalCount: number;
   totalPages: number
 }

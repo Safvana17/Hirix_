@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { getAllQuestionsParams, getAllQuestionsResponse,  PracticeQuestion, PracticeResultResponse, PracticeSubmitAnswerData, Question } from "../../../../types/question";
+import type { getAllPracticeQuestionsResponse, getAllQuestionsParams,  PracticeQuestion, PracticeResultResponse, PracticeSubmitAnswerData, Question } from "../../../../types/question";
 import type { UserRole } from "../../../../constants/role";
 import type { AxiosError } from "axios";
 import api from "../../../../lib/axios";
 import { API_ROUTES } from "../../../../constants/api.routes";
 
 interface PracticeQuestionState {
-    PracticeQuestions: Question[];
+    PracticeQuestions: PracticeQuestion[];
     error: string | null;
     loading: boolean;
     selectedPracticeQuestion: PracticeQuestion | null;
@@ -32,7 +32,7 @@ const initialState: PracticeQuestionState = {
 }
 
 export const getAllPracticeQuestions = createAsyncThunk<
-getAllQuestionsResponse,
+getAllPracticeQuestionsResponse,
 {params: getAllQuestionsParams | undefined, role: UserRole},
 {rejectValue: string}
 >('practiceQuestions/getAll', async({params, role}, {rejectWithValue}) => {
@@ -72,7 +72,7 @@ PracticeQuestion,
 })
 
 export const getRelatedQuestions = createAsyncThunk<
-Question[],
+PracticeQuestion[],
 {questionId: string},
 {rejectValue: string}
 >('practiceQuestions/getRelated', async({questionId}, {rejectWithValue}) => {

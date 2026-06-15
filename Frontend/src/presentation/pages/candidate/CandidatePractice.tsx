@@ -15,12 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CandidateHeader from '../../components/layout/CandidateHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../redux/store';
-import {
-  getExplanation,
-  getQuestionById,
-  getRelatedQuestions,
-  submitAnswer,
-} from '../../../redux/slices/features/question/practiceQuestionSlice';
+import { getExplanation, getQuestionById, getRelatedQuestions, submitAnswer} from '../../../redux/slices/features/question/practiceQuestionSlice';
 import PracticeMcqQuestion from '../../components/candidate/practice/PracticeMcqQuestion';
 import PracticeDescriptiveQuestion from '../../components/candidate/practice/PracticeDescriptiveQuestion';
 import PracticeCodingQuestion from '../../components/candidate/practice/PracticeCodingQuestion';
@@ -179,6 +174,17 @@ console.log("explanation from page: ",  explanation)
                   size="small"
                   sx={{ background: '#F5E3BD' }}
                 />
+                {selectedPracticeQuestion?.isAttended && (
+                  <Chip
+                    label="✓ Attended"
+                    size="small"
+                    sx={{
+                      backgroundColor: "#DCFCE7",
+                      color: "#166534",
+                      fontWeight: 600,
+                    }}
+                  />
+                )}
               </Stack>
 
               <Typography fontWeight={700} fontSize={17} mb={2}>

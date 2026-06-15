@@ -53,8 +53,8 @@ const CandidateProfile: React.FC = () => {
             onClick={() => setActiveMenu(item.key as MenuType)}
             className={`w-full text-left px-5 py-4 rounded-xl transition-all duration-300 font-medium ${
               activeMenu === item.key
-                ? "bg-blue-600 text-white shadow-lg"
-                : "text-blue-100 hover:bg-[#0A3C73]"
+                ? "bg-white text-[#6B4705] shadow-lg"
+                : "text-[#C89A44] hover:bg-[#0A3C73]"
             }`}
           >
             {item.label}

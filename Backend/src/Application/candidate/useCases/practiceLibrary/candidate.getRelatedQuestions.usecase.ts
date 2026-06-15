@@ -1,5 +1,6 @@
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
+import { ICandidatePracticeAttemptRepository } from "../../../../Domain/repositoryInterface/ICandidatePracticeAttempt.repository";
 import { IQuestionRepository } from "../../../../Domain/repositoryInterface/iQuestion.repository";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
@@ -15,7 +16,8 @@ export class CandidateGetRelatedQuestionsUsecase implements ICandidateGetRelated
         private _candidateRepository: ICandidateRepository,
         private _questionRepository: IQuestionRepository,
         private _subscriptionRepository: ISubscriptionRepository,
-        private _subscriptionPlanRepository: ISubscriptionPlanRepository
+        private _subscriptionPlanRepository: ISubscriptionPlanRepository,
+        private _candidatePracticeAttemptRepository: ICandidatePracticeAttemptRepository
     ) {}
     async execute(request: CandidateGetRelatedQuestionsInputDTO): Promise<CandidateGetRelatedQuestionsOutputDTO> {
         const candidate = await this._candidateRepository.findById(request.candidateId)
@@ -35,8 +37,29 @@ export class CandidateGetRelatedQuestionsUsecase implements ICandidateGetRelated
             throw new AppError(questionMessages.error.QUESTION_NOT_FOUND, statusCode.NOT_FOUND)
         }
         const questions = await this._questionRepository.findRelated({currentQuestionId: question.id, category: question.categoryId, isIncludePremium: plan.canAccessPremiumQuestions!})
+        const attendedQuestionIds = await this._candidatePracticeAttemptRepository.findAttemptedQuestionIds(candidate.id)
+        const attendedQuestionIdsSet = new Set(attendedQuestionIds)
+        const questionsWithAttendance = questions.map(question => ({
+            ...question,
+            isAttended: attendedQuestionIdsSet.has(question.id)
+        }))
         return {
-            questions
+            questions: questionsWithAttendance.map((q) => ({
+                id: q.id,
+                title: q.title,
+                description: q.description,
+                type: q.type,
+                options: q.options,
+                testCase: q.testCases,
+                starterCode: q.starterCode,
+                functionName: q.functionName,
+                difficulty: q.difficulty,
+                categoryId: q.categoryId,
+                categoryName: q.categoryName,
+                isPremium: q.isPremium,
+                isDeleted: q.isDeleted,
+                isAttended: q.isAttended
+            }))
         }
     }
 }

@@ -21,5 +21,7 @@ export interface CandidateGetQuestionOutputDTO {
         expectedOutput?: string
     }[]
     options?: string[]
+    isAttended: boolean
+    isDeleted: boolean
 
 }

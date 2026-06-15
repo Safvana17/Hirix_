@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Tab, Tabs, TextField, MenuItem, Typography, Pagination } from '@mui/material';
-import type { QuestionType, QuestionDifficulty, Question } from '../../../types/question';
+import type { QuestionType, QuestionDifficulty, PracticeQuestion } from '../../../types/question';
 import CandidateQuestionCard from '../../pages/candidate/CandidateQuestionCard';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../redux/store';
@@ -10,7 +10,7 @@ const questionType: QuestionType[] = ['mcq', 'coding', 'descriptive'];
 const questionDifficulty: QuestionDifficulty[] = ['easy', 'medium', 'hard'];
 
 interface CandidatePracticeQuestionsProps {
-  questions: Question[];
+  questions: PracticeQuestion[];
   type: QuestionType | '';
   setType: React.Dispatch<React.SetStateAction<QuestionType | ''>>;
   difficulty: QuestionDifficulty | '';

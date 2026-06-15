@@ -1,5 +1,6 @@
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
+import { ICandidatePracticeAttemptRepository } from "../../../../Domain/repositoryInterface/ICandidatePracticeAttempt.repository";
 import { IQuestionRepository } from "../../../../Domain/repositoryInterface/iQuestion.repository";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
@@ -15,7 +16,8 @@ export class CandidateGetQuestionByIdUsecase implements ICandidateGetQuestionByI
         private _candidateRepository: ICandidateRepository,
         private _questionRepository: IQuestionRepository,
         private _subscriptionRepository: ISubscriptionRepository,
-        private _subscriptionPlanRepository: ISubscriptionPlanRepository
+        private _subscriptionPlanRepository: ISubscriptionPlanRepository,
+        private _candidatePracticeAttemptRepository: ICandidatePracticeAttemptRepository
     ) {}
     async execute(request: CandidateGetQuestionInputDTO): Promise<CandidateGetQuestionOutputDTO> {
         const candidate = await this._candidateRepository.findById(request.candidateId)
@@ -40,6 +42,8 @@ export class CandidateGetQuestionByIdUsecase implements ICandidateGetQuestionByI
         if(plan.price === 0 && question.isPremium){
             throw new AppError(questionMessages.error.CANNOT_ACCESS_PREMIUM_QUESTIONS, statusCode.FORBIDDEN)
         }
+        const isAttended = !!(await this._candidatePracticeAttemptRepository.findByQuestionId(question.id, candidate.id))
+        
         return {
             id: question.id,
             title: question.title,
@@ -50,7 +54,9 @@ export class CandidateGetQuestionByIdUsecase implements ICandidateGetQuestionByI
             options: question.options,
             starterCode: question.starterCode,
             testCases: question.testCases,
-            isPremium: question.isPremium
+            isPremium: question.isPremium,
+            isDeleted: question.isDeleted,
+            isAttended
         }
     }
 }

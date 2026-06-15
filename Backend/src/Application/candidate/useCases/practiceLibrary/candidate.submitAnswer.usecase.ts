@@ -3,6 +3,7 @@ import QuestionType from "../../../../Domain/enums/questionType";
 import { CodingLanguage } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICandidateRepository from "../../../../Domain/repositoryInterface/iCandidate.repository";
+import { ICandidatePracticeAttemptRepository } from "../../../../Domain/repositoryInterface/ICandidatePracticeAttempt.repository";
 import { IQuestionRepository } from "../../../../Domain/repositoryInterface/iQuestion.repository";
 import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/iSubscription.repository";
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
@@ -21,7 +22,8 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
         private _questionRepository :IQuestionRepository,
         private _subscriptionRepository: ISubscriptionRepository,
         private _subscriptionPlanRepository: ISubscriptionPlanRepository,
-        private _evaluationService: IPracticeEvaluationService
+        private _evaluationService: IPracticeEvaluationService,
+        private _candidatePracticeAttemptRepository: ICandidatePracticeAttemptRepository,
     ) {}
     async execute(request: CandidateSubmitAnswerInputDTO): Promise<CandidateSubmitAnswerOutputDTO> {
         const candidate = await this._candidateRepository.findById(request.candidateId)
@@ -42,11 +44,14 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
         }
 
         const canViewFeedback = plan.hasDetailedFeedback
-        candidate.attendedQuestionIds?.push(question.id)
+        
         if(request.questionType === QuestionType.MCQ){
             const isCorrect = await this._evaluationService.evaluateMcq({questionAnswer: question.answer ?? [], candidateAnswer:request.selectedOption ?? []})
-            await this.updatePracticeState(candidate, isCorrect)
-            return {
+            await Promise.all([
+                this.updatePracticeState(candidate, isCorrect),
+                this.addAttendedQuestions({ candidateId: candidate.id, questionId: question.id, isCorrect: isCorrect})
+            ])
+                return {
                 isCorrect,
                 correctAnswer: question.answer ?? [],
                 feedback: canViewFeedback 
@@ -60,8 +65,11 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
         if(request.questionType === QuestionType.DESCRIPTIVE){
             const result = await this._evaluationService.evaluateDescriptive({question: question.description, candidateAnswer: request.descriptiveAnswer ?? ''})
             logger.info(result, 'from usecase')
-            await this.updatePracticeState(candidate, result.isCorrect)
-            return {
+            await Promise.all([
+                this.updatePracticeState(candidate, result.isCorrect),
+                this.addAttendedQuestions({ candidateId: candidate.id, questionId: question.id, isCorrect: result.isCorrect})
+            ])
+                return {
                 isCorrect: result.isCorrect,
                 feedback: canViewFeedback ? result.feedback : null,
                 hasDetailedExplanation: plan.hasDetailedFeedback ?? false
@@ -73,8 +81,11 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
                 expectedOutput: tc.expectedOutput ?? ""
             })),})
             logger.info(result, 'from usecase')
-            await this.updatePracticeState(candidate, result.isCorrect)
-            return {
+            await Promise.all([
+                this.updatePracticeState(candidate, result.isCorrect),
+                this.addAttendedQuestions({ candidateId: candidate.id, questionId: question.id, isCorrect: result.isCorrect })
+            ])
+                return {
                 isCorrect: result.isCorrect,
                 feedback: canViewFeedback ? result.feedback : null,
                 hasDetailedExplanation: plan.hasDetailedFeedback ?? false
@@ -89,5 +100,14 @@ export class CandidateSubmitAnswerUsecase implements ICandidateSubmitAnswerUseca
             candidate.correctPracticeAnswers = (candidate.correctPracticeAnswers ?? 0 ) + 1
         }
         await this._candidateRepository.update(candidate.id, candidate)
+    }
+
+    private async addAttendedQuestions(data: {candidateId: string, questionId: string, isCorrect: boolean} ){
+        await this._candidatePracticeAttemptRepository.create({
+            id: '',
+            candidateId: data.candidateId,
+            questionId: data.questionId,
+            isCorrect: data.isCorrect
+        })
     }
 }

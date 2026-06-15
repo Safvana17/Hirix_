@@ -224,6 +224,7 @@ import { CandidateChangePasswordUsecase } from "../../../Application/candidate/u
 import { CandidateGetInterviewHistoryUsecase } from "../../../Application/candidate/useCases/profile/candidate.getInterviewHistory.usecase";
 import { CandidateUpdateProfileUsecase } from "../../../Application/candidate/useCases/profile/candidate.updateProfile.usecase";
 import { CandidateGetProfileUsecase } from "../../../Application/candidate/useCases/profile/candidate.getProfile.usecase";
+import { CandidatePracticeAttemptRepository } from "../../../Infrastructure/repositories/candidatePracticeAttempt.repository";
 
 
 
@@ -245,6 +246,7 @@ const iTestRepository = new TestRepository()
 const iTestCandidateRepository = new TestCandidateRepository()
 const iInterviewRepository = new InterviewRepository()
 const iActivityLogRepository = new ActivityRepository()
+const iCandidatePracticeAttemptRepository = new CandidatePracticeAttemptRepository()
 
 
 const iHashService = new HashService()
@@ -340,26 +342,30 @@ const iCandidateGetAllPracticeQuestions = new CandidateGetAllPracticeQuestionsUs
     iCandidateRepository,
     iSubscriptionRepository,
     iSubscriptionPlanRepository,
-    iQuestionRepository
+    iQuestionRepository,
+    iCandidatePracticeAttemptRepository
 )
 const iCandidateGetQuestionById = new CandidateGetQuestionByIdUsecase(
     iCandidateRepository,
     iQuestionRepository,
     iSubscriptionRepository,
-    iSubscriptionPlanRepository
+    iSubscriptionPlanRepository,
+    iCandidatePracticeAttemptRepository
 )
 const iCandidateGetRelatedQuestions = new CandidateGetRelatedQuestionsUsecase(
     iCandidateRepository,
     iQuestionRepository,
     iSubscriptionRepository,
-    iSubscriptionPlanRepository
+    iSubscriptionPlanRepository,
+    iCandidatePracticeAttemptRepository
 )
 const iCandidateSubmitAnswer = new CandidateSubmitAnswerUsecase(
     iCandidateRepository,
     iQuestionRepository,
     iSubscriptionRepository,
     iSubscriptionPlanRepository,
-    iPracticeEvaluateService
+    iPracticeEvaluateService,
+    iCandidatePracticeAttemptRepository
 )
 const iCandidateGetExplanation = new CandidateGetExplanationUsecase (
     iCandidateRepository,
