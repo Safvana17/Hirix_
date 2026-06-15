@@ -16,6 +16,7 @@ import type { AppDispatch } from '../../../redux/store'
 import { saveAnswer, submitTest, terninateTest, updateWarningCount } from '../../../redux/slices/features/test/CandidateTestSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTES } from '../../../constants/routes'
+import SubmitTestModal from '../../components/modal/SubmitTestModal'
 // import { useFullScreenMonitor } from '../../../hooks/useFullScreenMonitor'
 
 
@@ -30,6 +31,7 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
     const questions = test?.questions ?? []
     const currentQuestion = questions[currentQuestionIndex]
     const [warningMessage, setWarningMessage] = useState<string | null>(null)
+    const [openSubmitModal, setOpenSubmitModal] = useState(false)
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
 
@@ -100,6 +102,31 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
         })
     }, [runTime.answers])
 
+const getTestSummary = () => {
+  const totalQuestions = questions.length;
+
+  const answered = questions.filter((q) => {
+    const answer = runTime.answers[q.id];
+
+    return Boolean(
+      answer?.selectedOptionIds?.length ||
+      answer?.descriptiveAnswer ||
+      answer?.codingAnswer?.code
+    );
+  }).length;
+
+  const markedForReview = Object.values(
+    runTime.answers
+  ).filter((a) => a?.isMarkedForReview).length;
+
+  return {
+    totalQuestions,
+    answered,
+    unanswered: totalQuestions - answered,
+    markedForReview,
+  };
+};
+
     if(!test || !candidate) return null
 
     const handleQuestionClick = async (index: number) => {
@@ -143,7 +170,7 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
     const isMarkedForReview = runTime.answers[currentQuestion.id] ?.isMarkedForReview ?? false
     return (
       <Box sx={{ height: '100vh', overflow: 'hidden', background: 'linear-gradient(to bottom, #021A30, #0B0707)', }} >
-        <CandidateTestHeader test={test} onSubmit={runTime.handleSubmit} />
+        <CandidateTestHeader test={test} onSubmit={() => setOpenSubmitModal(true)} />
         {warningMessage && (
           <TestWarningBanner 
              warningCount={runTime.warningCount}
@@ -338,6 +365,17 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
             />
           </Box>
         </Box>
+        <SubmitTestModal 
+        open={openSubmitModal}
+        type='MANUAL'
+        summary={getTestSummary()}
+        onClose={() => setOpenSubmitModal(false)}
+        onReview={() => setOpenSubmitModal(false)}
+        onSubmit={async () => {
+          setOpenSubmitModal(false)
+          await runTime.handleSubmit()
+        }}
+        />
       </Box>
     )
 }

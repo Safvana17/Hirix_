@@ -86,13 +86,22 @@ const CompanyTest: React.FC = () => {
   }
 
   const handlePublishTest = async(id: string) => {
-    try {
-      await dispatch(publishTest({id})).unwrap()
-      toast.success('Test published successfully')
-      await dispatch(getAllTests({params: {search: debouncedSearchTerm || undefined,status: statusFilter || undefined,page: currentPage,limit: 10,}}))
-    } catch (error) {
-      toast.error(typeof error === 'string' ? error : 'Failed to publish test')
-    }
+    openModal({
+      title: 'Publish Test',
+      message: 'Are you sure you want to publish this test?',
+      type: 'warning',
+      onConfirm: async() => {
+        try {
+          await dispatch(publishTest({id})).unwrap()
+          toast.success('Test published successfully')
+          await dispatch(getAllTests({params: {search: debouncedSearchTerm || undefined,status: statusFilter || undefined,page: currentPage,limit: 10,}}))
+        } catch (error: unknown) {
+          toast.error(typeof error === 'string' ? error : 'Failed to publish test')
+        } finally {
+          closeModal()
+        }
+      }
+    })
   }
 
   const getStatusColor = (status: TestStatus) => {

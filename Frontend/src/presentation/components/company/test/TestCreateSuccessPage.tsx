@@ -3,33 +3,33 @@ import { Box, Button, Paper, Typography } from "@mui/material"
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import { ROUTES } from "../../../../constants/routes"
-import { useDispatch, useSelector } from "react-redux"
-import type { AppDispatch, RootState } from "../../../../redux/store"
-import toast from "react-hot-toast"
-import { publishTest } from "../../../../redux/slices/features/test/companyTestSlice"
+// import { useDispatch, useSelector } from "react-redux"
+// import type { AppDispatch, RootState } from "../../../../redux/store"
+// import toast from "react-hot-toast"
+// import { publishTest } from "../../../../redux/slices/features/test/companyTestSlice"
 
 const TestCreateSuccessPage: React.FC = () => {
   const navigate = useNavigate()
-  const dispatch = useDispatch<AppDispatch>()
-  const {selectedTest } = useSelector((state:RootState) => state.companyTest)
+  // const dispatch = useDispatch<AppDispatch>()
+  // const {selectedTest } = useSelector((state:RootState) => state.companyTest)
   // const location = useLocation()
 
   // const testId = location.state?.testId
 
-  const handlePublishTest = async() => {
-    try {
-      if (!selectedTest) {
-        console.log('id not found')
-        return
-      }
-      await dispatch(publishTest({id: selectedTest.id})).unwrap()
-      toast.success('Your test has been published.')
-      navigate(ROUTES.COMPANY.TEST)
-    } catch (error) {
-      toast.error(typeof error === 'string' ? error : 'Failed to publish test')
-    }
+  // const handlePublishTest = async() => {
+  //   try {
+  //     if (!selectedTest) {
+  //       console.log('id not found')
+  //       return
+  //     }
+  //     await dispatch(publishTest({id: selectedTest.id})).unwrap()
+  //     toast.success('Your test has been published.')
+  //     navigate(ROUTES.COMPANY.TEST)
+  //   } catch (error) {
+  //     toast.error(typeof error === 'string' ? error : 'Failed to publish test')
+  //   }
 
-  }
+  // }
 
   return (
     <Box
@@ -134,7 +134,7 @@ const TestCreateSuccessPage: React.FC = () => {
             View All Tests
           </Button>
 
-          <Button
+          {/* <Button
             variant="contained"
             sx={{
               backgroundColor: "#6B4705",
@@ -151,7 +151,7 @@ const TestCreateSuccessPage: React.FC = () => {
             onClick={handlePublishTest}
           >
             Publish Test
-          </Button>
+          </Button> */}
         </Box>
       </Paper>
     </Box>
