@@ -1,12 +1,19 @@
 import { CandidatePipelineStatus, CandidateTestStatus, ValuationStatus } from "../enums/Test"
 import { CandidateAnswerEntity } from "./CandidateAnswer.entity"
 
+export interface OptionOrder {
+    questionId: string
+    order: number[]
+}
+
 export class TestCandidateEntity {
     id: string
     testId: string
     name?: string
     email: string
     testToken: string
+    questionOrder?: string[]
+    mcqOptionsOrder?: OptionOrder[]
     selectionStatus?: CandidatePipelineStatus
     candidateTestStatus: CandidateTestStatus
     warningCount: number

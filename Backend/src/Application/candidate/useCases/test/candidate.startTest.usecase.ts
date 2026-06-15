@@ -1,9 +1,12 @@
+import { OptionOrder } from "../../../../Domain/entities/TestCandidate.entity";
+import QuestionType from "../../../../Domain/enums/questionType";
 import { CandidateTestStatus } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
+import { shuffleArray } from "../../../../Presentation/http/utils/shuffleOrder";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { TestMessages } from "../../../../Shared/constsnts/messages/testMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
@@ -37,9 +40,56 @@ export class CandidateStartTestUsecase implements ICandidateStartTestUsecase{
             throw new AppError(JobRoleMessages.error.JOBROLE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
+        const baseQuestionOrder = [...test.questions].sort((a, b) => a.order - b.order).map((q) => q.id)
+        const questionOrder = candidate.questionOrder?.length
+        ? candidate.questionOrder
+        :test.rules.navigation.shuffleQuestions 
+           ? shuffleArray(baseQuestionOrder) 
+           : baseQuestionOrder
+
+        const optionOrder: OptionOrder[] = candidate.mcqOptionsOrder ?? []
+        if(!optionOrder.length && test.rules.navigation.shuffleOptions) {
+            for(const q of test.questions){
+                if(q.type === QuestionType.MCQ && q.options?.length) {
+                    optionOrder.push({
+                        questionId: q.id,
+                        order: shuffleArray(q.options.map((_, i) => i))
+                    })
+                }
+            }
+        }
+        candidate.questionOrder = questionOrder
+        candidate.mcqOptionsOrder = optionOrder
         candidate.candidateTestStatus = CandidateTestStatus.IN_PROGRESS
-        candidate.startedAt = new Date()
+        if(!candidate.startedAt )
+            candidate.startedAt = new Date()
+
         await this._testCandidateRepository.update(candidate.id, candidate)
+        const orderedQuestions = candidate.questionOrder.map((questionId) => {
+            const question = test.questions.find(
+            (q) => q.id === questionId
+            )!
+
+            if (question.type !== QuestionType.MCQ) {
+            return question
+            }
+
+            const optionOrder =
+            candidate.mcqOptionsOrder?.find(
+                (o) => o.questionId === question.id
+            )
+
+            if (!optionOrder) {
+            return question
+            }
+
+            return {
+            ...question,
+            options: optionOrder.order
+                .map((index) => question.options![index])!
+                .filter(Boolean)
+            }
+        })
         return {
             test: {
                 id: test.id,
@@ -49,7 +99,7 @@ export class CandidateStartTestUsecase implements ICandidateStartTestUsecase{
                 endTime: test.endTime,
                 companyName: company.getName(),
                 jobrole: jobRole.name,
-                questions: test.questions,
+                questions: orderedQuestions,
                 rules: test.rules,
                 testStatus: test.testStatus
             },

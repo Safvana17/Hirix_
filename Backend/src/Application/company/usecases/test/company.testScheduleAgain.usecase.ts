@@ -119,15 +119,15 @@ export class CompanyScheduleTestAgainUsecase implements ICompanyScheduleTestAgai
             ),
             new NavigationRules(
                 request.rules.navigation.allowTabSwitch ?? false,
-                // request.rules.navigation.shuffleQuestions ?? true,
-                // request.rules.navigation.shuffleOptions ?? true,
+                request.rules.navigation.shuffleQuestions ?? true,
+                request.rules.navigation.shuffleOptions ?? true,
                 request.rules.navigation.allowBackNavigation ?? true,
             ),
             new ProctoringRules(
                 request.rules.proctoring.enableCamera ?? false,
-                request.rules.proctoring.movementDetection ?? false
-                // request.rules.proctoring.captureSnapshots ?? false,
-                // request.rules.proctoring.snapshotIntervalSeconds ?? 60,
+                request.rules.proctoring.movementDetection ?? false,
+                request.rules.proctoring.captureSnapshots ?? false,
+                request.rules.proctoring.snapshotIntervalSeconds ?? 60,
                 // request.rules.proctoring.detectNoFace ?? false,
                 // request.rules.proctoring.detectMultipleFaces ?? false,
             ),
