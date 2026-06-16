@@ -47,6 +47,7 @@ import UpdateInterviewResultPage from '../presentation/components/company/interv
 import AdminRevenue from '../presentation/pages/admin/AdminRevenue'
 import AdminReport from '../presentation/pages/admin/AdminReport'
 import CandidateProfile from '../presentation/pages/candidate/CandidateProfile'
+import CandidateSnapshotsPage from '../presentation/components/company/test/CandidateSnapshotsPage'
 
 
 
@@ -191,6 +192,12 @@ const App = () => {
           <Route path={ROUTES.COMPANY.VIEW_INTERVIEW_DETAILS} element={
             <RoleRoute allowedRoles={[ROLES.COMPANY]}>
               <InterviewDetailsPage />
+            </RoleRoute>
+          } />
+
+          <Route path={ROUTES.COMPANY.VIEW_SNAPSHOTS} element={
+            <RoleRoute allowedRoles={[ROLES.COMPANY]}>
+              <CandidateSnapshotsPage />
             </RoleRoute>
           } />
 

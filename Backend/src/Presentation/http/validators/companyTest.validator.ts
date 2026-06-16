@@ -221,8 +221,8 @@ export const submitTestSchema = z.object({
     warningCount: z.number().min(0)
 })
 
-export const ShortlistCandidateSchema = z.object({
-     candidateId: z.string().regex(/^[0-9a-fA-F]{24}$/)
+export const TestCandidateIdSchema = z.object({
+    candidateId: z.string().regex(/^[0-9a-fA-F]{24}$/)
 })
 
 export const GenerateSnapshotUrlSchema = z.object({
@@ -233,3 +233,9 @@ export const GenerateSnapshotUrlSchema = z.object({
 export const SaveSnapshotSchema = z.object({
  key: z.string(),
 })
+
+export const ViewSnapshotSchema = z.object({
+  testId: z.string().regex(/^[0-9a-fA-F]{24}$/),
+  candidateId: z.string().regex(/^[0-9a-fA-F]{24}$/)
+})
+export type ViewSnapshotParams = z.infer<typeof ViewSnapshotSchema>

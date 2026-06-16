@@ -113,7 +113,9 @@ export const API_ROUTES = {
       REJECT: (id: string) => 
         `/company/test/${id}/reject`,
       SCHEDULE_AGAIN: (id: string) => 
-        `/company/test/${id}/schedule-again`
+        `/company/test/${id}/schedule-again`,
+      VIEW_SNAPSHOTS: (testId: string, candidateId: string) => 
+        `/company/test/${testId}/${candidateId}/snapshot`
     },
     INTERVIEW :{
       SCHEDULE: '/company/interview/schedule',

@@ -230,6 +230,7 @@ import { s3Client } from "../../../Infrastructure/config/s3.config";
 import { env } from "../../../Infrastructure/config/env";
 import { CandidateGenerateSnapshotUrlUsecase } from "../../../Application/candidate/useCases/test/candidate.generateSnapshotUrl.usecase";
 import { CandidateSaveSnapshotUsecase } from "../../../Application/candidate/useCases/test/candidate.saveSnapshot.usecase";
+import { CompanyViewSnapshotsUsecase } from "../../../Application/company/usecases/test/company.viewSnapshots.usecase";
 
 
 
@@ -825,7 +826,11 @@ const iCompanyScheduleTestAgain = new CompanyScheduleTestAgainUsecase(
     iProcessNotification,
     iActivityLogRepository
 )
-
+const iCompanyViewSnapshots = new CompanyViewSnapshotsUsecase (
+    iTestRepository,
+    iTestCandidateRepository,
+    iS3Service
+)
 //interview
 const iCompanyScheduleInterview = new CompanyScheduleInterviewUsecase (
     iCompanyRepository,
@@ -1297,7 +1302,8 @@ export const iCompanyTestController = new CompanyTestController (
     iCompanyEvaluateTest,
     iCompanyShortlistCandidate,
     iCompanyRejectCandidate,
-    iCompanyScheduleTestAgain
+    iCompanyScheduleTestAgain,
+    iCompanyViewSnapshots
 )
 
 export const ICandidateTestController = new CandidatetestController(

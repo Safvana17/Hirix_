@@ -4,7 +4,7 @@ import { asyncHandler } from "../../../../utils/asyncHandler";
 import { sendSuccess } from "../../utils/apiResponse";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { ICompanyGetQuestionsForTest } from "../../../../Application/company/interfaces/test/ICompany.getQuestionsForTest.usecase";
-import { GetAllTestQuery, GetQuestionsForTestQuery, testParams } from "../../validators/companyTest.validator";
+import { GetAllTestQuery, GetQuestionsForTestQuery, testParams, ViewSnapshotParams } from "../../validators/companyTest.validator";
 import { ICompanyGetAllTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.getAllTest.usecase";
 import { ICompanyPublishTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.publishTest.usecase";
 import { ICompanyDeleteTestUsecase } from "../../../../Application/company/interfaces/test/ICompany.deleteTest.usecase";
@@ -16,6 +16,7 @@ import { ICompanyEvaluateTestUsecase } from "../../../../Application/company/int
 import { ICompanyShortlistCandidateUsecase } from "../../../../Application/company/interfaces/test/ICompany.shortlistCandidate.usecase";
 import { ICompanyRejectCandidateUsecase } from "../../../../Application/company/interfaces/test/ICompany.rejectCandidate.usecase";
 import { ICompanyScheduleTestAgainUsecase } from "../../../../Application/company/interfaces/test/ICompany.testScheduleAgain.usecase";
+import { ICompanyViewSnapshotsUsecase } from "../../../../Application/company/interfaces/test/ICompany.viewSnapshots.usecase";
 
 export class CompanyTestController {
     constructor(
@@ -32,6 +33,7 @@ export class CompanyTestController {
         private _shortlistCandidate: ICompanyShortlistCandidateUsecase,
         private _rejectCandidate: ICompanyRejectCandidateUsecase,
         private _scheduleTestAgain: ICompanyScheduleTestAgainUsecase,
+        private _viewSnapshots: ICompanyViewSnapshotsUsecase
     ) {}
 
     createTestDraft = asyncHandler(async(req: Request, res: Response) => {
@@ -119,8 +121,15 @@ export class CompanyTestController {
 
     scheduleTestAgain = asyncHandler(async(req: Request, res: Response) => {
         const companyId = req.user.id
-        const {testId } = req.validatedParams as testParams
+        const { testId } = req.validatedParams as testParams
         const test = await this._scheduleTestAgain.execute({companyId, testId, ...req.body})
         return sendSuccess(res, statusCode.OK, '', {test})
+    })
+
+    viewSnapshots = asyncHandler( async( req: Request, res: Response) => {
+        // const companyId = req.user.id
+        const { testId, candidateId } = req.validatedParams as ViewSnapshotParams
+        const {snapshots} = await this._viewSnapshots.execute({testId, candidateId})
+        return sendSuccess(res, statusCode.OK, '', {snapshots})
     })
 }

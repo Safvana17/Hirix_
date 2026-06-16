@@ -268,3 +268,8 @@ export interface UploadSnpshotResponse {
     uploadUrl: string
     key: string
 }
+
+export interface Snapshots {
+    url: string
+    capturedAt: Date
+}

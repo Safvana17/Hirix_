@@ -8,6 +8,7 @@ interface TestCandidatesTabProps {
   onEvaluateSubmitted?: () => void
   onScheduleAgain: () => void
   onViewAnswers?: (candidateId: string) => void
+  onViewSnapshots?: (testId: string, candidateId: string) => void
   onShortlist?: (candidateId: string) => void
   onReject?: (candidateId: string) => void
 }
@@ -20,6 +21,7 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
   onEvaluateSubmitted,
   onScheduleAgain,
   onViewAnswers,
+  onViewSnapshots,
   onShortlist,
   onReject,
 }) => {
@@ -285,6 +287,7 @@ const TestCandidatesTab: React.FC<TestCandidatesTabProps> = ({
                         <CandidateActions
                           candidate={candidate}
                           onViewAnswers={onViewAnswers}
+                          onViewSnapshots={onViewSnapshots}
                           onShortlist={onShortlist}
                           onReject={onReject}
                         />
@@ -306,11 +309,13 @@ export default TestCandidatesTab;
 const CandidateMobileCard = ({
   candidate,
   onViewAnswers,
+  onViewSnapshots,
   onShortlist,
   onReject,
 }: {
   candidate: TestCandidate;
   onViewAnswers?: (candidateId: string) => void;
+  onViewSnapshots?: (testId: string, candidateId: string) => void
   onShortlist?: (candidateId: string) => void;
   onReject?: (candidateId: string) => void;
 }) => {
@@ -359,6 +364,7 @@ const CandidateMobileCard = ({
           <CandidateActions
             candidate={candidate}
             onViewAnswers={onViewAnswers}
+            onViewSnapshots={onViewSnapshots}
             onShortlist={onShortlist}
             onReject={onReject}
           />
@@ -371,11 +377,13 @@ const CandidateMobileCard = ({
 const CandidateActions = ({
   candidate,
   onViewAnswers,
+  onViewSnapshots,
   onShortlist,
   onReject,
 }: {
   candidate: TestCandidate;
   onViewAnswers?: (candidateId: string) => void;
+  onViewSnapshots?: (testId: string, candidateId: string) => void
   onShortlist?: (candidateId: string) => void;
   onReject?: (candidateId: string) => void;
 }) => {
@@ -399,6 +407,19 @@ const CandidateActions = ({
       justifyContent="flex-end"
       sx={{ width: { xs: "100%", sm: "auto" } }}
     >
+      <Button
+        size="small"
+        variant="outlined"
+        fullWidth
+        onClick={() => onViewSnapshots?.(candidate.testId,candidate.id)}
+        sx={{
+          textTransform: "none",
+          fontWeight: 600,
+          width: { xs: "100%", sm: "auto" },
+        }}
+      >
+        View Snapshots
+      </Button>
       <Button
         size="small"
         variant="outlined"

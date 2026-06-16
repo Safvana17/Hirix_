@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { CancelTestArgs, CompanyTestList, CreateTestPayload, GetAllTestParams, GetAllTestResponse, ResheduleTestArgs, SelectedTest, Test, TestCandidate } from "../../../../types/test"
+import type { CancelTestArgs, CompanyTestList, CreateTestPayload, GetAllTestParams, GetAllTestResponse, ResheduleTestArgs, SelectedTest, Snapshots, Test, TestCandidate } from "../../../../types/test"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -12,6 +12,7 @@ interface CompanyTestState {
     selectedTest: SelectedTest | null
     candidates: TestCandidate[]
     testList: CompanyTestList[]
+    snapshots: Snapshots[]
     featureLocked: boolean
     pagination: {
         test: {
@@ -29,6 +30,7 @@ const initialState: CompanyTestState = {
     testList: [],
     selectedTest: null,
     candidates: [],
+    snapshots: [],
     featureLocked: false,
     pagination: {
         test: {
@@ -254,6 +256,26 @@ Test,
         })
     }
 })
+
+export const getSnapshots = createAsyncThunk<
+Snapshots[],
+{testId: string, candidateId: string},
+{rejectValue: string}
+>('test/snapshots', async({testId, candidateId}, {rejectWithValue}) => {
+    try {
+        const response = await api.get(API_ROUTES.COMPANY.TEST.VIEW_SNAPSHOTS(testId, candidateId))
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        console.log("snapshots:", response.data.data.snapshots)
+        return response.data.data.snapshots
+    } catch (error) {
+        const err = error as AxiosError<{message: string, code?: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to get snapshots',)
+    }
+})
+
+
 const CompanyTestSlice = createSlice({
     name: 'CompanyTestSlice',
     initialState,
@@ -394,6 +416,17 @@ const CompanyTestSlice = createSlice({
                 state.featureLocked = true
             }
             state.error = action.payload?.message || 'Failed to again schedule test'
+        })
+        .addCase(getSnapshots.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(getSnapshots.fulfilled, (state, action) => {
+            state.loading = false
+            state.snapshots = action.payload
+        })
+        .addCase(getSnapshots.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to get snapshots'
         })
     },
 })

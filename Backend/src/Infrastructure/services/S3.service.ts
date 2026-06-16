@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { IS3Service } from "../../Application/interface/service/IS3Service";
 
@@ -27,5 +27,18 @@ export class S3Service implements IS3Service {
             key,
             uploadUrl
         }
+    }
+
+    generateViewUrl(key: string): Promise<string> {
+        const command = new GetObjectCommand({
+            Bucket: this.bucketName,
+            Key: key
+        })
+
+        return getSignedUrl(
+            this.s3Client,
+            command,
+            { expiresIn: 300 }
+        )
     }
 }

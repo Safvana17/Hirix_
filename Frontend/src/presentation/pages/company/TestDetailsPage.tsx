@@ -77,6 +77,10 @@ const TestDetailsPage = () => {
     }
   }
 
+  const handleViewSnapshots = async(testId: string, candidateId: string) => {
+    navigate(`/company/test/${testId}/${candidateId}/snapshots`)
+  }
+
   const handleShortlist = async(candidateId: string) => {
     try {
       if(candidateId && testId) {
@@ -158,7 +162,7 @@ const TestDetailsPage = () => {
                 <TestQuestionsTab questions={selectedTest.questions} />
             )}
             {activeTab === "candidates" && (
-                <TestCandidatesTab candidates={selectedTest.candidates} onViewAnswers={handleViewAnswer} onEvaluateSubmitted={handleEvaluation} onShortlist={handleShortlist} onReject={handleRejectCandidate} onScheduleAgain={handleScheduleAgain}/>
+                <TestCandidatesTab candidates={selectedTest.candidates} onViewAnswers={handleViewAnswer} onViewSnapshots={handleViewSnapshots} onEvaluateSubmitted={handleEvaluation} onShortlist={handleShortlist} onReject={handleRejectCandidate} onScheduleAgain={handleScheduleAgain}/>
             )}
             {activeTab === "shortlisted" && (
                 <ShortlistedCandidatesTab candidates={shortlistedCandidates} onScheduleInterview={handleScheduleInterview} />

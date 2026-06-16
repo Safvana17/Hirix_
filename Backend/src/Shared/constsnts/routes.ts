@@ -65,7 +65,7 @@ export const ROUTES = {
         SHORTLIST: '/test/:testId/shortlist',
         REJECT: '/test/:testId/reject',
         SCHEDULE_AGAIN: '/test/:testId/schedule-again',
-
+        GET_SNAPSHOTS: '/test/:testId/:candidateId/snapshot'
       },
       INTERVIEW: {
         SCHEDULE: '/interview/schedule',

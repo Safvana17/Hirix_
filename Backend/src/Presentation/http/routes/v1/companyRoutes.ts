@@ -10,7 +10,7 @@ import { createJobRoleSchema, EditJobRoleSchema, updateJobRoleSchema} from "../.
 import { changePasswordSchema, deleteAccountSchema, sendRestoreLinkSchema, updateProfileSchema } from "../../validators/settingsValidator";
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from "../../validators/subscriptionValidators";
 import { certificateUpload } from "../../middlewares/certificateUpload";
-import { CancelTestSchema, CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator, editTestValidator, ResheduleTestSchema, ShortlistCandidateSchema, TestParamsSchema } from "../../validators/companyTest.validator";
+import { CancelTestSchema, CompanyGetAllTestSchema, CompanyGetQuestionsForTestSchema, createTestValidator, editTestValidator, ResheduleTestSchema, TestCandidateIdSchema, TestParamsSchema, ViewSnapshotSchema } from "../../validators/companyTest.validator";
 import { CancelInterviewSchema, CompanyGetAllInterviewSchema, EditInterviewSchema, InterviewParamsSchema, RescheduleInterviewSchema, ScheduleInterviewSchema, UpdateInterviewResultSchema } from "../../validators/interviewValidator";
 import { GetRecentActivitySchema, GetRevenueTrendByMonthSchema } from "../../validators/analyticsValidator";
 
@@ -72,9 +72,10 @@ router.patch(ROUTES.COMPANY.TEST.RESHEDULE, authHandler(iTokenService), verifyCs
 router.get(ROUTES.COMPANY.TEST.GET_BY_ID, authHandler(iTokenService), validate(TestParamsSchema, 'params'), iCompanyTestController.getTestById)
 router.post(ROUTES.COMPANY.TEST.EDIT, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(editTestValidator, 'body'), iCompanyTestController.editTest)
 router.post(ROUTES.COMPANY.TEST.EVALUATE, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), iCompanyTestController.evaluateTest)
-router.patch(ROUTES.COMPANY.TEST.SHORTLIST, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(ShortlistCandidateSchema, 'body'), iCompanyTestController.shortlistCandidate)
-router.patch(ROUTES.COMPANY.TEST.REJECT, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(ShortlistCandidateSchema, 'body'), iCompanyTestController.rejectCandidate)
+router.patch(ROUTES.COMPANY.TEST.SHORTLIST, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(TestCandidateIdSchema, 'body'), iCompanyTestController.shortlistCandidate)
+router.patch(ROUTES.COMPANY.TEST.REJECT, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(TestCandidateIdSchema, 'body'), iCompanyTestController.rejectCandidate)
 router.post(ROUTES.COMPANY.TEST.SCHEDULE_AGAIN, authHandler(iTokenService), verifyCsrf, validate(TestParamsSchema, 'params'), validate(createTestValidator, 'body'), iCompanyTestController.scheduleTestAgain)
+router.get(ROUTES.COMPANY.TEST.GET_SNAPSHOTS, authHandler(iTokenService), verifyCsrf, validate(ViewSnapshotSchema, 'params'), iCompanyTestController.viewSnapshots)
 
 
 //interview
