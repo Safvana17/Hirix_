@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
@@ -13,10 +13,11 @@ import TestWarningBanner from '../../components/candidate/test/TestWarningBanner
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
-import { saveAnswer, submitTest, terninateTest, updateWarningCount } from '../../../redux/slices/features/test/CandidateTestSlice'
+import { saveAnswer, submitTest, terninateTest, updateWarningCount, uploadCandidateSnapshot } from '../../../redux/slices/features/test/CandidateTestSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTES } from '../../../constants/routes'
 import SubmitTestModal from '../../components/modal/SubmitTestModal'
+import { useCamera } from '../../../hooks/useCamera'
 // import { useFullScreenMonitor } from '../../../hooks/useFullScreenMonitor'
 
 
@@ -34,6 +35,7 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
     const [openSubmitModal, setOpenSubmitModal] = useState(false)
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
+    const uploadSnapshorRef = useRef(false)
 
     const runTime = useTestRunTime({
       test,
@@ -87,6 +89,46 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
           await dispatch(updateWarningCount({token: token!})).unwrap()
         } catch (error) {
           toast.error(typeof error === 'string' ? error : 'Failed to update warning count')
+        }
+      }
+    })
+
+    const snapshotInterval = useMemo(() => {
+      const targetCount = test.rules.proctoring.targetSnapshotCount ?? 8
+      const durationInMinutes = (test.endTime.getTime() - test.startTime.getTime()) / (1000 * 60)
+      return ( durationInMinutes * 60 * 1000 ) / targetCount
+    }, [test])
+
+    const { videoRef, canvasRef } = useCamera({
+      enableCamera: test.rules.proctoring.enableCamera,
+      captureSnapshots: test.rules.proctoring.captureSnapshots,
+      snapshotInterval,
+      onSnapshot: async (blob) => {
+        if(uploadSnapshorRef.current) return
+
+        uploadSnapshorRef.current = true
+        // const formData = new FormData()
+        // formData.append(
+        //   "snapshot",
+        //   blob,
+        //   `snapshot-${Date.now()}.jpg`
+        // )
+        
+        try {
+          const result = await dispatch(uploadCandidateSnapshot({token: token!})).unwrap()
+          await fetch(result.uploadUrl, {
+            method: "PUT",
+            body: blob,
+            headers: {
+              "Content-Type": "image/jpeg"
+            }
+          })
+          
+
+        } catch (error) {
+          console.log("Snapshot upload failed", error)
+        }finally {
+          uploadSnapshorRef.current = false
         }
       }
     })
@@ -375,6 +417,17 @@ const getTestSummary = () => {
           setOpenSubmitModal(false)
           await runTime.handleSubmit()
         }}
+        />
+        <video 
+           ref={videoRef}
+           autoPlay
+           muted
+           playsInline
+           style={{ width: 100, borderRadius: 12}}
+        />
+        <canvas 
+          ref={canvasRef}
+          style={{ display: "none"}}
         />
       </Box>
     )

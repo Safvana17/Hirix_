@@ -24,5 +24,9 @@ export const envSchema = z.object({
     RAZORPAY_API_KEY:z.string().min(1),
     RAZORPAY_API_SECRET: z.string().min(1),
     GROQ_API_KEY: z.string().min(1),
-    GROQ_MODEL: z.string().min(1)
+    GROQ_MODEL: z.string().min(1),
+    AWS_REGION: z.string().min(1),
+    AWS_BUCKET_NAME: z.string().min(1),
+    AWS_SECRET_ACCESS_KEY: z.string().min(1),
+    AWAS_ACCESS_KEY_ID: z.string().min(1)
 })

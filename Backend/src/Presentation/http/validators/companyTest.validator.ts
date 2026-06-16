@@ -224,3 +224,8 @@ export const submitTestSchema = z.object({
 export const ShortlistCandidateSchema = z.object({
      candidateId: z.string().regex(/^[0-9a-fA-F]{24}$/)
 })
+
+export const GenerateSnapshotUrlSchema = z.object({
+  fileName: z.string(),
+  contentType: z.string()
+})

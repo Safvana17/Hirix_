@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { CandidateTest, CodeRunnerArgs, CodeRunnerResponse, TestCandidate, TestCandidateAnswer, TestCandidateResponse } from "../../../../types/test"
+import type { CandidateTest, CodeRunnerArgs, CodeRunnerResponse, TestCandidate, TestCandidateAnswer, TestCandidateResponse, UploadSnpshotResponse } from "../../../../types/test"
 import type { AxiosError } from "axios"
 import api from "../../../../lib/axios"
 import { API_ROUTES } from "../../../../constants/api.routes"
@@ -199,6 +199,27 @@ number,
     }
 })
 
+export const uploadCandidateSnapshot = createAsyncThunk<
+UploadSnpshotResponse,
+{token: string},
+{rejectValue: string}
+>('candidate/snapshot', async({token}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.CANDIDATE.TEST.GET_UPLOAD_URL(token), {
+            fileName: `snapshot-${Date.now()}.jpg`,
+            contentType: "image/jpeg"
+        })
+
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to upload anpshot')
+    }
+})
+
 const candidateTestSlice = createSlice({
     name: 'CandidateTestSlice',
     initialState,
@@ -312,6 +333,16 @@ const candidateTestSlice = createSlice({
         .addCase(updateWarningCount.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to update warning count'
+        })
+        .addCase(uploadCandidateSnapshot.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(uploadCandidateSnapshot.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(uploadCandidateSnapshot.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to upload snapshot'
         })
     }
 })

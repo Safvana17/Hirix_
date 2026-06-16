@@ -6,6 +6,11 @@ export interface OptionOrder {
     order: number[]
 }
 
+export interface Snapshots {
+    url: string
+    capturedAt: Date
+}
+
 export class TestCandidateEntity {
     id: string
     testId: string
@@ -13,6 +18,7 @@ export class TestCandidateEntity {
     email: string
     testToken: string
     questionOrder?: string[]
+    snapshots?: Snapshots[]
     mcqOptionsOrder?: OptionOrder[]
     selectionStatus?: CandidatePipelineStatus
     candidateTestStatus: CandidateTestStatus

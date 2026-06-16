@@ -43,6 +43,12 @@ export class TestCandidateMapper {
         testCandidate.name = doc.name
         testCandidate.currentInterviewRound = doc.currentInterviewRound
         testCandidate.lastInterviewId = doc.lastInterviewId ?  doc.lastInterviewId.toString() : undefined
+        testCandidate.snapshots = doc.snapshots
+        testCandidate.mcqOptionsOrder = doc.mcqOptionOrder.map((option) => ({
+            questionId: option.questionId.toString(),
+            order: option.order
+        }))
+        testCandidate.questionOrder = doc.questionOrder
 
         return testCandidate
     }
@@ -83,7 +89,13 @@ export class TestCandidateMapper {
             submittedAt: entity.submittedAt,
             evaluatedAt: entity.evaluatedAt,
             currentInterviewRound: entity.currentInterviewRound,
-            lastInterviewId: entity.lastInterviewId ? new Types.ObjectId(entity.lastInterviewId) : undefined
+            lastInterviewId: entity.lastInterviewId ? new Types.ObjectId(entity.lastInterviewId) : undefined,
+            questionOrder: entity.questionOrder,
+            snapshots: entity.snapshots,
+            mcqOptionOrder: entity.mcqOptionsOrder?.map((option) => ({
+                questionId: new Types.ObjectId(option.questionId),
+                order: option.order
+            }))
 
         }
     }

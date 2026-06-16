@@ -65,6 +65,7 @@ export const ROUTES = {
         SHORTLIST: '/test/:testId/shortlist',
         REJECT: '/test/:testId/reject',
         SCHEDULE_AGAIN: '/test/:testId/schedule-again',
+
       },
       INTERVIEW: {
         SCHEDULE: '/interview/schedule',
@@ -123,6 +124,7 @@ export const ROUTES = {
             GET_CATEGORIES: '/test/:token/categories',
             SAVE_ANSWER: '/test/:token/save',
             WARNING_COUNT: '/test/:token/warning',
+            GET_UPLOAD_URL: '/test/:token/snapshot'
         },
         ANALYTICS: {
             SUMMERY: '/dashboard-summery',

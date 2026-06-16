@@ -9,6 +9,16 @@ export interface ICodingAnswer {
     output?: string
 }
 
+export interface ISnapshot {
+    url: string
+    capturedAt: Date
+}
+
+export interface IOptionOrder {
+    questionId: Types.ObjectId,
+    order: number[]
+}
+
 export interface ICandidateAnswer {
     _id: Types.ObjectId
     testQuestionId: Types.ObjectId
@@ -33,6 +43,9 @@ export interface ITestCandidate extends Document {
     candidateTestStatus: CandidateTestStatus
     selectionStatus: CandidatePipelineStatus
     evaluationStatus: ValuationStatus
+    questionOrder: string[]
+    mcqOptionOrder: IOptionOrder[]
+    snapshots: ISnapshot[]
     warningCount: number
     candidateAnswers: ICandidateAnswer[]
     aiRank: number
@@ -62,6 +75,25 @@ const CodingAnswerSchema: Schema<ICodingAnswer> = new Schema({
     }
 }, {
     _id: false
+})
+
+const SnapshotSchema: Schema<ISnapshot> = new Schema({
+    url: {
+        type: String
+    },
+    capturedAt: {
+        type: Date
+    }
+})
+
+const OptionOrderSchema: Schema<IOptionOrder> = new Schema({
+    questionId: {
+        type: Types.ObjectId,
+        ref: 'Question'
+    },
+    order: {
+        type: [Number]
+    }
 })
 
 const CandidateAnswerSchema: Schema<ICandidateAnswer> = new Schema({
@@ -134,6 +166,18 @@ const TestCandidateSchema: Schema<ITestCandidate> = new Schema({
     warningCount: {
         type: Number,
         default: 0
+    },
+    snapshots: {
+        type: [SnapshotSchema],
+        default: []
+    },
+    mcqOptionOrder: {
+        type: [OptionOrderSchema],
+        default: []
+    },
+    questionOrder: {
+        type: [String],
+        default: []
     },
     candidateAnswers: {
         type: [CandidateAnswerSchema],

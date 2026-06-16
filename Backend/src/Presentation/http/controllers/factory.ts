@@ -225,6 +225,10 @@ import { CandidateGetInterviewHistoryUsecase } from "../../../Application/candid
 import { CandidateUpdateProfileUsecase } from "../../../Application/candidate/useCases/profile/candidate.updateProfile.usecase";
 import { CandidateGetProfileUsecase } from "../../../Application/candidate/useCases/profile/candidate.getProfile.usecase";
 import { CandidatePracticeAttemptRepository } from "../../../Infrastructure/repositories/candidatePracticeAttempt.repository";
+import { S3Service } from "../../../Infrastructure/services/S3.service";
+import { s3Client } from "../../../Infrastructure/config/s3.config";
+import { env } from "../../../Infrastructure/config/env";
+import { CandidateGenerateSnapshotUrlUsecase } from "../../../Application/candidate/useCases/test/candidate.generateSnapshotUrl.usecase";
 
 
 
@@ -264,6 +268,7 @@ const iEvaluateService = new TestEvaluationService(iCodeRunnerService)
 const iPracticeEvaluateService = new PracticeEvaluationService(iCodeRunnerService)
 const iRankCandidateService = new CandidateRankingService(iTestCandidateRepository)
 const iTestCodeRunService = new TestCodeRunService(iCodeRunnerService)
+const iS3Service = new S3Service(s3Client, env.AWS_BUCKET_NAME)
 
 //notification
 const iProcessNotification = new AdminProcessNotificationEventUsecase(
@@ -486,7 +491,10 @@ const iCandidateWarningCount = new CandidateWarningCountUsecase (
     iTestCandidateRepository,
     iTestRepository
 )
-
+const iCandidateGenerateSnapshotUrl = new CandidateGenerateSnapshotUrlUsecase (
+    iTestCandidateRepository,
+    iS3Service
+)
 //settings
 const iCandidateChangePassword = new CandidateChangePasswordUsecase (
     iCandidateRepository,
@@ -1297,7 +1305,8 @@ export const ICandidateTestController = new CandidatetestController(
     iCandidateSubmitQuestion,
     iCandidateGetCategories,
     iCandidateSaveAnswer,
-    iCandidateWarningCount
+    iCandidateWarningCount,
+    iCandidateGenerateSnapshotUrl,
 )
 
 export const ICompanyInterviewController = new CompanyInterviewController (

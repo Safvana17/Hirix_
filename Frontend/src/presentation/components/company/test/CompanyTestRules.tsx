@@ -109,7 +109,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                 }
               /> */}
 
-              {/* <RuleSwitch
+              <RuleSwitch
                 title="Shuffle Questions"
                 description="Randomize question order"
                 checked={data.rules.navigation.shuffleQuestions}
@@ -125,7 +125,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                 onChange={(checked) =>
                   updateRules('navigation', { shuffleOptions: checked })
                 }
-              /> */}
+              />
 
               <RuleSwitch
                 title="Allow Back Navigation"

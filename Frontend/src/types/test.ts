@@ -85,16 +85,16 @@ export interface TestRules {
     allowTabSwitch: boolean
     // maxTabSwitchCount: number
     // autoSubmitOnTabViolation: boolean
-    // shuffleQuestions: boolean
-    // shuffleOptions: boolean
+    shuffleQuestions: boolean
+    shuffleOptions: boolean
     allowBackNavigation: boolean
   }
 
   proctoring: {
     enableCamera: boolean
-    movementDetection: boolean
-    // captureSnapshots: boolean
-    // snapshotIntervalSeconds: number
+    // movementDetection: boolean
+    captureSnapshots: boolean
+    targetSnapshotCount: number
     // detectNoFace: boolean
     // detectMultipleFaces: boolean
     // maxWarningsAllowed: number
@@ -262,4 +262,9 @@ export interface CodeRunnerResponse {
 
 export interface SubmitTestPayload {
   answers: TestCandidateAnswer[]
+}
+
+export interface UploadSnpshotResponse {
+    uploadUrl: string
+    key: string
 }
