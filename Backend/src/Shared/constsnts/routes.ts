@@ -124,7 +124,8 @@ export const ROUTES = {
             GET_CATEGORIES: '/test/:token/categories',
             SAVE_ANSWER: '/test/:token/save',
             WARNING_COUNT: '/test/:token/warning',
-            GET_UPLOAD_URL: '/test/:token/snapshot'
+            GET_UPLOAD_URL: '/test/:token/generate',
+            SAVE_SNAPSHOT: '/test/:token/snapshot',
         },
         ANALYTICS: {
             SUMMERY: '/dashboard-summery',

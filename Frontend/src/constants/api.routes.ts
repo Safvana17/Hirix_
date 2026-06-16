@@ -39,6 +39,8 @@ export const API_ROUTES = {
       WARNING_COUNT: (token: string) => 
         `/candidate/test/${token}/warning`,
       GET_UPLOAD_URL: (token: string) => 
+        `/candidate/test/${token}/generate`,
+      SAVE_SNAPSHOT: (token: string) => 
         `/candidate/test/${token}/snapshot`
     },
     PRACTICE: {

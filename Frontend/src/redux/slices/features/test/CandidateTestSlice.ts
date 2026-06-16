@@ -199,11 +199,11 @@ number,
     }
 })
 
-export const uploadCandidateSnapshot = createAsyncThunk<
+export const generateSnapshotUrl = createAsyncThunk<
 UploadSnpshotResponse,
 {token: string},
 {rejectValue: string}
->('candidate/snapshot', async({token}, {rejectWithValue}) => {
+>('candidate/generateUrl', async({token}, {rejectWithValue}) => {
     try {
         const response = await api.post(API_ROUTES.CANDIDATE.TEST.GET_UPLOAD_URL(token), {
             fileName: `snapshot-${Date.now()}.jpg`,
@@ -216,7 +216,25 @@ UploadSnpshotResponse,
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
-        return rejectWithValue(err.response?.data.message || 'Failed to upload anpshot')
+        return rejectWithValue(err.response?.data.message || 'Failed to generate url')
+    }
+})
+
+export const saveCandidateSnapshot = createAsyncThunk<
+void,
+{token: string, key: string},
+{rejectValue: string}
+>('candidate/snapshot', async({token, key}, {rejectWithValue}) => {
+    try {
+        const response = await api.post(API_ROUTES.CANDIDATE.TEST.SAVE_SNAPSHOT(token), key)
+
+        if(!response.data.success){
+            return rejectWithValue('Invalid response')
+        }
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to upload snapshot')
     }
 })
 
@@ -334,13 +352,23 @@ const candidateTestSlice = createSlice({
             state.loading = false
             state.error = action.payload || 'Failed to update warning count'
         })
-        .addCase(uploadCandidateSnapshot.pending, (state) => {
+        .addCase(generateSnapshotUrl.pending, (state) => {
             state.loading = true
         })
-        .addCase(uploadCandidateSnapshot.fulfilled, (state) => {
+        .addCase(generateSnapshotUrl.fulfilled, (state) => {
             state.loading = false
         })
-        .addCase(uploadCandidateSnapshot.rejected, (state, action) => {
+        .addCase(generateSnapshotUrl.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'Failed to generate url'
+        })
+        .addCase(saveCandidateSnapshot.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(saveCandidateSnapshot.fulfilled, (state) => {
+            state.loading = false
+        })
+        .addCase(saveCandidateSnapshot.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to upload snapshot'
         })

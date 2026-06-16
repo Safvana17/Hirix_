@@ -14,9 +14,9 @@ export const createDefaultTestRules = (): TestRules => ({
   },
   proctoring: {
     enableCamera: false,
-    movementDetection: false,
+    // movementDetection: false,
     captureSnapshots: false,
-    snapshotIntervalSeconds: 30,
+    targetSnapshotCount: 8,
     // detectNoFace: false,
     // detectMultipleFaces: false,
   },

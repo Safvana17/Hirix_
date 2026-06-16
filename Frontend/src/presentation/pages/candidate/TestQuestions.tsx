@@ -13,7 +13,7 @@ import TestWarningBanner from '../../components/candidate/test/TestWarningBanner
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
-import { saveAnswer, submitTest, terninateTest, updateWarningCount, uploadCandidateSnapshot } from '../../../redux/slices/features/test/CandidateTestSlice'
+import { saveAnswer, submitTest, terninateTest, updateWarningCount, generateSnapshotUrl, saveCandidateSnapshot } from '../../../redux/slices/features/test/CandidateTestSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ROUTES } from '../../../constants/routes'
 import SubmitTestModal from '../../components/modal/SubmitTestModal'
@@ -115,7 +115,7 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
         // )
         
         try {
-          const result = await dispatch(uploadCandidateSnapshot({token: token!})).unwrap()
+          const result = await dispatch(generateSnapshotUrl({token: token!})).unwrap()
           await fetch(result.uploadUrl, {
             method: "PUT",
             body: blob,
@@ -124,7 +124,7 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
             }
           })
           
-
+          await dispatch(saveCandidateSnapshot({token: token!, key: result.key})).unwrap()
         } catch (error) {
           console.log("Snapshot upload failed", error)
         }finally {

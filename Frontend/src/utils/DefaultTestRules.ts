@@ -15,7 +15,7 @@ export const createDefaultTestRules = (): TestRules => ({
     enableCamera: false,
     // movementDetection: false,
     captureSnapshots: false,
-    targetSnapshotCount: 30,
+    targetSnapshotCount: 8,
     // detectNoFace: false,
     // detectMultipleFaces: false,
   },

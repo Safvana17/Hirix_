@@ -125,9 +125,9 @@ export class CompanyScheduleTestAgainUsecase implements ICompanyScheduleTestAgai
             ),
             new ProctoringRules(
                 request.rules.proctoring.enableCamera ?? false,
-                request.rules.proctoring.movementDetection ?? false,
+                // request.rules.proctoring.movementDetection ?? false,
                 request.rules.proctoring.captureSnapshots ?? false,
-                request.rules.proctoring.snapshotIntervalSeconds ?? 60,
+                request.rules.proctoring.targetSnapshotCount ?? 8,
                 // request.rules.proctoring.detectNoFace ?? false,
                 // request.rules.proctoring.detectMultipleFaces ?? false,
             ),

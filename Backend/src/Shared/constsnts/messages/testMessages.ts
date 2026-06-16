@@ -34,5 +34,6 @@ export const TestMessages = {
         ALREADY_SHORTLISTED: 'Candidate is already shortlisted',
         CANNOT_RESCHEDULT_CANDIDATE: 'Cannot reschedult test for this candidate',
         DUPLICATE_CANDIDATE_EMAIL: 'Duplicate candidate email',
+        SNAPSHOT_COUNT_EXCEEDED: 'Snap shot count exceeded',
     }
 }

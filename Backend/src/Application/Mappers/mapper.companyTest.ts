@@ -20,9 +20,9 @@ export class TestMapper {
             ),
             new ProctoringRules(
                 doc.rules.proctoring.enableCamera,
-                doc.rules.proctoring.movementDetection,
+                // doc.rules.proctoring.movementDetection,
                 doc.rules.proctoring.captureSnapshots,
-                doc.rules.proctoring.snapshotIntervalSeconds,
+                doc.rules.proctoring.targetSnapshotCount,
                 // doc.rules.proctoring.detectNoFace,
                 // doc.rules.proctoring.detectMultipleFaces,
             ),
@@ -102,9 +102,9 @@ export class TestMapper {
                 },
                 proctoring: {
                     enableCamera: entity.rules.proctoring.enableCamera,
-                    movementDetection: entity.rules.proctoring.movementDetection,
+                    // movementDetection: entity.rules.proctoring.movementDetection,
                     captureSnapshots: entity.rules.proctoring.captureSnapshots,
-                    snapshotIntervalSeconds: entity.rules.proctoring.snapshotIntervalSeconds,
+                    targetSnapshotCount: entity.rules.proctoring.targetSnapshotCount,
                     // detectNoFace: entity.rules.proctoring.detectNoFace,
                     // detectMultipleFaces: entity.rules.proctoring.detectMultipleFaces,
                 },

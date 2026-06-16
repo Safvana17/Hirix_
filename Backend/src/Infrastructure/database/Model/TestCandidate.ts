@@ -10,7 +10,7 @@ export interface ICodingAnswer {
 }
 
 export interface ISnapshot {
-    url: string
+    key: string
     capturedAt: Date
 }
 
@@ -78,7 +78,7 @@ const CodingAnswerSchema: Schema<ICodingAnswer> = new Schema({
 })
 
 const SnapshotSchema: Schema<ISnapshot> = new Schema({
-    url: {
+    key: {
         type: String
     },
     capturedAt: {

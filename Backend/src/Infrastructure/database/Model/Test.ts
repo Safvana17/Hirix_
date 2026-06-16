@@ -88,16 +88,16 @@ const ProctoringRulesSchema = new Schema({
         type: Boolean, 
         default: false 
     },
-    movementDetection: {
-        type: Boolean,
-    },
+    // movementDetection: {
+    //     type: Boolean,
+    // },
     captureSnapshots: { 
         type: Boolean, 
         default: false 
     },
-    snapshotIntervalSeconds: { 
+    targetSnapshotCount: { 
         type: Number, 
-        default: 30 
+        default: 8 
     },
     // detectNoFace: { 
     //     type: Boolean, 

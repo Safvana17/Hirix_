@@ -229,6 +229,7 @@ import { S3Service } from "../../../Infrastructure/services/S3.service";
 import { s3Client } from "../../../Infrastructure/config/s3.config";
 import { env } from "../../../Infrastructure/config/env";
 import { CandidateGenerateSnapshotUrlUsecase } from "../../../Application/candidate/useCases/test/candidate.generateSnapshotUrl.usecase";
+import { CandidateSaveSnapshotUsecase } from "../../../Application/candidate/useCases/test/candidate.saveSnapshot.usecase";
 
 
 
@@ -494,6 +495,10 @@ const iCandidateWarningCount = new CandidateWarningCountUsecase (
 const iCandidateGenerateSnapshotUrl = new CandidateGenerateSnapshotUrlUsecase (
     iTestCandidateRepository,
     iS3Service
+)
+const iCandidateSaveSnapshot = new CandidateSaveSnapshotUsecase (
+    iTestCandidateRepository,
+    iTestRepository
 )
 //settings
 const iCandidateChangePassword = new CandidateChangePasswordUsecase (
@@ -1307,6 +1312,7 @@ export const ICandidateTestController = new CandidatetestController(
     iCandidateSaveAnswer,
     iCandidateWarningCount,
     iCandidateGenerateSnapshotUrl,
+    iCandidateSaveSnapshot
 )
 
 export const ICompanyInterviewController = new CompanyInterviewController (

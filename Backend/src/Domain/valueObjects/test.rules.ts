@@ -20,9 +20,9 @@ export class NavigationRules {
 export class ProctoringRules {
     constructor (
         public enableCamera: boolean,
-        public movementDetection: boolean,
+        // public movementDetection: boolean,
         public captureSnapshots: boolean,
-        public snapshotIntervalSeconds: number,
+        public targetSnapshotCount: number,
         // public detectNoFace: boolean,
         // public detectMultipleFaces: boolean,
         // public maxWarningsAllowed: number,

@@ -61,16 +61,16 @@ const TimingRulesSchema = z.object({
 
 const NavigationRulesSchema = z.object({
   allowTabSwitch: z.boolean(),
-  // shuffleQuestions: z.boolean(),
-  // shuffleOptions: z.boolean(),
+  shuffleQuestions: z.boolean(),
+  shuffleOptions: z.boolean(),
   allowBackNavigation: z.boolean(),
 })
 
 const ProctoringRulesSchema = z.object({
   enableCamera: z.boolean(),
-  movementDetection: z.boolean(),
-  // captureSnapshots: z.boolean(),
-  // snapshotIntervalSeconds: z.number().min(1),
+  // movementDetection: z.boolean(),
+  captureSnapshots: z.boolean(),
+  targetSnapshotCount: z.number(),
   // detectNoFace: z.boolean(),
   // detectMultipleFaces: z.boolean(),
 })
@@ -228,4 +228,8 @@ export const ShortlistCandidateSchema = z.object({
 export const GenerateSnapshotUrlSchema = z.object({
   fileName: z.string(),
   contentType: z.string()
+})
+
+export const SaveSnapshotSchema = z.object({
+ key: z.string(),
 })

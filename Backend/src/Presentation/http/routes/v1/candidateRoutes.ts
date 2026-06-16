@@ -5,7 +5,7 @@ import { iCandidateAnalyticsController, iCandidateSettingsController, iCandidate
 import { verifyCsrf } from '../../middlewares/csrfVerify'
 import { CancelSubscriptionSchema, ChangeSubscriptionSchema, ConfirmPaymnetSchema, GetInvoiceSchema, MakePaymentSchema, MarkFailureSchema, PaymnetQuerySchema, startTrialSchema } from '../../validators/subscriptionValidators'
 import { validate } from '../../middlewares/validate'
-import { CandidateRunCodeSchema, GenerateSnapshotUrlSchema, saveAnswerSchema, submitTestSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
+import { CandidateRunCodeSchema, GenerateSnapshotUrlSchema, saveAnswerSchema, SaveSnapshotSchema, submitTestSchema, TestCandidateLoginSchema, TestTokenSchema } from '../../validators/companyTest.validator'
 import { createQuestionSchema, questionParamsSchema, submitPraticeAnswerSchema } from '../../validators/questionValidator'
 import { GetPaymentHistorySchema } from '../../validators/analyticsValidator'
 import { candidateProfileSchema, changePasswordSchema } from '../../validators/settingsValidator'
@@ -47,6 +47,8 @@ router.get(ROUTES.CANDIDATE.TEST.GET_CATEGORIES, validate(TestTokenSchema, 'para
 router.post(ROUTES.CANDIDATE.TEST.SAVE_ANSWER, validate(TestTokenSchema, 'params'), validate(saveAnswerSchema, 'body'), ICandidateTestController.saveAnswers)
 router.patch(ROUTES.CANDIDATE.TEST.WARNING_COUNT, validate(TestTokenSchema, 'params'), ICandidateTestController.warningCount)
 router.post(ROUTES.CANDIDATE.TEST.GET_UPLOAD_URL, validate(GenerateSnapshotUrlSchema, 'body'), ICandidateTestController.generateUrl)
+router.patch(ROUTES.CANDIDATE.TEST.SAVE_SNAPSHOT, validate(SaveSnapshotSchema, 'body'), ICandidateTestController.saveSnapshot)
+
 //dashboard
 router.get(ROUTES.CANDIDATE.ANALYTICS.SUMMERY, authHandler(iTokenService), iCandidateAnalyticsController.getSummery)
 router.get(ROUTES.CANDIDATE.ANALYTICS.TEST_HISTORY, authHandler(iTokenService), validate(GetPaymentHistorySchema, 'query'), iCandidateAnalyticsController.testHistory)

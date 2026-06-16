@@ -7,7 +7,7 @@ export interface OptionOrder {
 }
 
 export interface Snapshots {
-    url: string
+    key: string
     capturedAt: Date
 }
 

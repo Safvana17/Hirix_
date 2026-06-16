@@ -15,6 +15,7 @@ import { ICandidateGetAllCategoriesUsecase } from "../../../../Application/candi
 import { ICandidateSaveAnswerUsecase } from "../../../../Application/candidate/interfaces/test/ICandidae.saveAnswer.usecase";
 import { ICandidateWarningCountUsecase } from "../../../../Application/candidate/interfaces/test/ICandiate.warningCount.usecase";
 import { ICandidateGenereateSnapshotUrlUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.generateSnapshotUrl.usecase";
+import { ICandidateSaveSnapshotUsecase } from "../../../../Application/candidate/interfaces/test/ICandidate.saveSnapshot.usecase";
 
 export class CandidatetestController {
     constructor (
@@ -29,6 +30,7 @@ export class CandidatetestController {
         private _saveAnswer: ICandidateSaveAnswerUsecase,
         private _warningCount: ICandidateWarningCountUsecase,
         private _generateSnapshotUrl: ICandidateGenereateSnapshotUrlUsecase,
+        private _saveSnapshot: ICandidateSaveSnapshotUsecase
     ) {}
 
     getTestByToken = asyncHandler(async(req: Request, res: Response) => {
@@ -97,5 +99,11 @@ export class CandidatetestController {
         const { token } = req.validatedParams as TestTokenParams
         const { uploadUrl, key} = await this._generateSnapshotUrl.execute({token, ...req.body})
         return sendSuccess(res, statusCode.OK, '', {uploadUrl, key})
+    })
+
+    saveSnapshot = asyncHandler ( async (req: Request, res: Response) => {
+        const { token } = req.validatedParams as TestTokenParams
+        await this._saveSnapshot.execute({token, key: req.body.key})
+        return sendSuccess(res, statusCode.OK, '')
     })
 }

@@ -36,9 +36,9 @@ export interface NavigationRulesDTO {
 
 export interface ProctoringRulesDTO {
     enableCamera?: boolean
-    movementDetection?: boolean
+    // movementDetection?: boolean
     captureSnapshots?: boolean
-    snapshotIntervalSeconds?: number
+    targetSnapshotCount?: number
     // detectNoFace?: boolean
     // detectMultipleFaces?: boolean
 }
