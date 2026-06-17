@@ -95,7 +95,7 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
 
     const snapshotInterval = useMemo(() => {
       const targetCount = test.rules.proctoring.targetSnapshotCount ?? 8
-      const durationInMinutes = (test.endTime.getTime() - test.startTime.getTime()) / (1000 * 60)
+      const durationInMinutes = (new Date(test.endTime).getTime() - new Date(test.startTime).getTime()) / (1000 * 60)
       return ( durationInMinutes * 60 * 1000 ) / targetCount
     }, [test])
 
@@ -105,26 +105,16 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
       snapshotInterval,
       onSnapshot: async (blob) => {
         if(uploadSnapshorRef.current) return
-
         uploadSnapshorRef.current = true
-        // const formData = new FormData()
-        // formData.append(
-        //   "snapshot",
-        //   blob,
-        //   `snapshot-${Date.now()}.jpg`
-        // )
-        
         try {
           const result = await dispatch(generateSnapshotUrl({token: token!})).unwrap()
           await fetch(result.uploadUrl, {
             method: "PUT",
             body: blob,
-            headers: {
-              "Content-Type": "image/jpeg"
-            }
           })
           
           await dispatch(saveCandidateSnapshot({token: token!, key: result.key})).unwrap()
+          
         } catch (error) {
           console.log("Snapshot upload failed", error)
         }finally {

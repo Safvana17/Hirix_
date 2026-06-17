@@ -4,7 +4,7 @@ import type { CandidateSelectionStatus, CodingLanguage } from "./test"
 export type InterviewStatus = 'SCHEDULED' | 'RESCHEDULED' | 'CANCELLED' | 'COMPLETED'
 export type InterviewResult = 'PENDING' | 'SELECTED' | 'REJECTED' | 'HOLD'
 export type ModalMode = 'create' | 'edit' | 'view'
-export type InterviewJoinStatus = 'WAITING' | 'LIVE' | 'COMPLETED' | 'CANCELLED' | 'EXPIRED'
+export type InterviewJoinStatus = 'WAITING' | 'LIVE' | 'COMPLETED' | 'CANCELLED' | 'EXPIRED' | 'READY'
 
 export interface Message {
     id: string

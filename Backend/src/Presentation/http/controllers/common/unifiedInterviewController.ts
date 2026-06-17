@@ -7,6 +7,7 @@ import { InterviewAccessParams } from "../../validators/interviewValidator";
 import { IUnifiedJoinInterviewUsecase } from "../../../../Application/common/interfaces/IUnified.joinUnterview.usecase";
 import { IUnifiedEndInterviewCallUsecase } from "../../../../Application/common/interfaces/IUnified.endInterviewCall.usecase";
 import { IUnifiedRunInterviewCodeUsecase } from "../../../../Application/common/interfaces/IUnified.runInterviewCode.usecase";
+import { ICandidateLeftInterviewRoomUsecase } from "../../../../Application/common/interfaces/ICandidate.leftInterview.usecase";
 
 export class UnifiedInterviewController {
     constructor (
@@ -14,6 +15,7 @@ export class UnifiedInterviewController {
         private _joinInterview: IUnifiedJoinInterviewUsecase,
         private _endInterview: IUnifiedEndInterviewCallUsecase,
         private _runCode: IUnifiedRunInterviewCodeUsecase,
+        private _candidateLeft: ICandidateLeftInterviewRoomUsecase
     ) {}
 
     getInterviewAccess = asyncHandler( async(req: Request, res: Response ) => {
@@ -37,5 +39,11 @@ export class UnifiedInterviewController {
     runCode = asyncHandler( async (req: Request, res: Response) => {
         const result = await this._runCode.execute(req.body)
         return sendSuccess(res, statusCode.OK, '', result)
+    })
+
+    candidateLeft = asyncHandler(async(req: Request, res: Response) => {
+        const { token, roomId } = req.validatedParams as InterviewAccessParams
+        const interview = await this._candidateLeft.execute({ token, roomId })
+        return sendSuccess(res, statusCode.OK, '', interview )
     })
 }

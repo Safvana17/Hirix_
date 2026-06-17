@@ -213,6 +213,7 @@ UploadSnpshotResponse,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
+        console.log('generated url: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -226,11 +227,14 @@ void,
 {rejectValue: string}
 >('candidate/snapshot', async({token, key}, {rejectWithValue}) => {
     try {
-        const response = await api.post(API_ROUTES.CANDIDATE.TEST.SAVE_SNAPSHOT(token), key)
+        const response = await api.patch(API_ROUTES.CANDIDATE.TEST.SAVE_SNAPSHOT(token), {key})
 
         if(!response.data.success){
             return rejectWithValue('Invalid response')
+        
         }
+        
+        console.log('saved url: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>

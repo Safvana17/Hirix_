@@ -266,6 +266,8 @@ export const API_ROUTES = {
       END: (roomId: string, token: string) => 
         `/interview/${roomId}/${token}/end`,
       RUN_CODE: `/interview/run-code`,
+      CANDIDATE_LEFT: (roomId: string, token: string) => 
+        `/interview/${roomId}/${token}/left`
     }
   }
 }

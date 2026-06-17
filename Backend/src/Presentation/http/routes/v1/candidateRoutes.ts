@@ -46,8 +46,8 @@ router.post(ROUTES.CANDIDATE.TEST.SUBMIT_QUESTION, validate(TestTokenSchema, 'pa
 router.get(ROUTES.CANDIDATE.TEST.GET_CATEGORIES, validate(TestTokenSchema, 'params'), ICandidateTestController.getAllCategories)
 router.post(ROUTES.CANDIDATE.TEST.SAVE_ANSWER, validate(TestTokenSchema, 'params'), validate(saveAnswerSchema, 'body'), ICandidateTestController.saveAnswers)
 router.patch(ROUTES.CANDIDATE.TEST.WARNING_COUNT, validate(TestTokenSchema, 'params'), ICandidateTestController.warningCount)
-router.post(ROUTES.CANDIDATE.TEST.GET_UPLOAD_URL, validate(GenerateSnapshotUrlSchema, 'body'), ICandidateTestController.generateUrl)
-router.patch(ROUTES.CANDIDATE.TEST.SAVE_SNAPSHOT, validate(SaveSnapshotSchema, 'body'), ICandidateTestController.saveSnapshot)
+router.post(ROUTES.CANDIDATE.TEST.GET_UPLOAD_URL, validate(TestTokenSchema, 'params'), validate(GenerateSnapshotUrlSchema, 'body'), ICandidateTestController.generateUrl)
+router.patch(ROUTES.CANDIDATE.TEST.SAVE_SNAPSHOT, validate(TestTokenSchema, 'params'), validate(SaveSnapshotSchema, 'body'), ICandidateTestController.saveSnapshot)
 
 //dashboard
 router.get(ROUTES.CANDIDATE.ANALYTICS.SUMMERY, authHandler(iTokenService), iCandidateAnalyticsController.getSummery)

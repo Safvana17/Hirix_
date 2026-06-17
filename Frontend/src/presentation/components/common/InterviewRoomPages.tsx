@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { Box, Typography } from '@mui/material'
-// import { Mic, MicOff, PhoneOff, Send, Video, VideoOff } from 'lucide-react'
 import type { GetInterviewAccessResponse } from '../../../types/interview'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useWebRTC } from '../../../hooks/useWebRTC'
@@ -14,7 +13,7 @@ import InterviewSidebar from './InterviewSidebar'
 import InterviewToolbar from './InterviewToolbar'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../redux/store'
-import { endInterview } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
+import { candidateLeft, endInterview } from '../../../redux/slices/features/interview/CompanyInterviewSlice'
 
 interface InterviewRoomPageProps {
   interview: GetInterviewAccessResponse
@@ -45,10 +44,20 @@ const InterviewRoomPage: React.FC <InterviewRoomPageProps> = ({interview}) => {
     }
   }
 
-  const handleUserLeft = () => {
-    if( role === 'Candidate'){
-      console.log('candidate removing..')
-      navigate(`/interview/${roomId}/${token}`, { replace: true})
+  const handleUserLeft = async() => {
+    try {
+      if(!token || !roomId) {
+        console.log("not token or roomid")
+        return
+      }
+      if( role === 'Candidate'){
+        console.log('user is lefting from room')
+        const result = await dispatch(candidateLeft({roomId, token})).unwrap()
+         console.log('candidateLeft success', result)
+        navigate(`/interview/${roomId}/${token}`)
+      }
+    } catch (error) {
+      toast.error(typeof error === 'string' ? error : 'Failed to leave interiew room!')
     }
   }
 
@@ -63,16 +72,24 @@ const InterviewRoomPage: React.FC <InterviewRoomPageProps> = ({interview}) => {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [leaveRoom])
 
-  const handleEndCall = () => {
+  const handleEndCall = async() => {
     console.log('handle end call clicked', {role})
     if(role === 'Company'){
       endCall()
       return
     }else{
       leaveRoom()
-      navigate(`/interview/${roomId}/${token}`, {
-        replace: true
-      })
+      // try {
+      //   console.log('user is lefting from room')
+      //   if(!roomId || !token){
+      //     console.log("from leave call no token")
+      //     return
+      //   }
+      //   await dispatch(candidateLeft({roomId, token})).unwrap()
+      //   navigate(`/interview/${roomId}/${token}`)
+      // } catch (error) {
+      //   console.log("failed to leave candidate", error)
+      // }
     }
   }
   return (

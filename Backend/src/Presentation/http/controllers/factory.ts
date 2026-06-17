@@ -231,6 +231,7 @@ import { env } from "../../../Infrastructure/config/env";
 import { CandidateGenerateSnapshotUrlUsecase } from "../../../Application/candidate/useCases/test/candidate.generateSnapshotUrl.usecase";
 import { CandidateSaveSnapshotUsecase } from "../../../Application/candidate/useCases/test/candidate.saveSnapshot.usecase";
 import { CompanyViewSnapshotsUsecase } from "../../../Application/company/usecases/test/company.viewSnapshots.usecase";
+import { CandidateLeftInterviewRoomUsecase } from "../../../Application/common/usecases/candidate.leftInterview.usecase";
 
 
 
@@ -900,6 +901,11 @@ const iJoinInterview = new UnifiedJoinInterviewUsecase (
 const iEndInterview = new UnifiedEndInterviewCallUsecase (
     iInterviewRepository
 )
+const iCandidateLeft = new CandidateLeftInterviewRoomUsecase (
+    iInterviewRepository,
+    iCompanyRepository,
+    iJobRoleRepository
+)
 //admin
 const iLoginAdmin = new AdminLoginUsecase(
     iAdminRepository,
@@ -1337,6 +1343,7 @@ export const IUnifiedInterviewController = new UnifiedInterviewController (
     iJoinInterview,
     iEndInterview,
     iInterviewRunCode,
+    iCandidateLeft
 )
 
 export const iAdminAnalyticsController = new AdminAnalyticsController (

@@ -20,6 +20,7 @@ const InterviewGateWayPage: React.FC = () => {
         }
     }, [dispatch, token, roomId])
 
+    console.log('candidate reached here...')
 
     if (loading) {
         return (
@@ -42,11 +43,18 @@ const InterviewGateWayPage: React.FC = () => {
     }
 
     if(canJoin){
+        console.log("moving here...1")
         return <InterviewRoomPage interview={accessInterview} />
     }
-    if(accessInterview.status === 'WAITING'){
+    if(accessInterview.status === 'READY'){
+        console.log("moving here...3")
         return <InterviewReadyPage interview={accessInterview} />
     }
+    if(accessInterview.status === 'WAITING'){
+        console.log("moving here...2")
+        return <InterviewReadyPage interview={accessInterview} />
+    }
+
     if(accessInterview.status === 'EXPIRED'){
         return <InterviewErrorPage />
     }

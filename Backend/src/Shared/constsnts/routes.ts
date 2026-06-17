@@ -146,6 +146,7 @@ export const ROUTES = {
             JOIN: '/:roomId/:token/join',
             END: '/:roomId/:token/end',
             RUN_CODE: '/run-code',
+            CANDIDATE_LEFT: '/:roomId/:token/left'
         }
     },
 

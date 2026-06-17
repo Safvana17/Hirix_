@@ -18,5 +18,6 @@ export const InterviewMessages = {
         CANNOT_END_CALL: 'Only interviewer can end interview',
         ALREADY_ENDED_INTERVIEW: 'This interview is already ended',
         CANNOT_UPDATE_RESULT: 'You can only update completed interview result',
+        INTERVIEWER_CANNOT_LEAVE: 'Interviewer cannot leave interview',
     }
 }

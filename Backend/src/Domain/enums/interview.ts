@@ -18,4 +18,5 @@ export enum InterviewJoinStatus {
     COMPLETED = 'COMPLETED',
     EXPIRED = 'EXPIRED',
     CANCELLED = 'CANCELLED',
+    READY = 'READY'
 }

@@ -44,11 +44,11 @@ const TestCandidateInstructions: React.FC = () => {
             ?  'Tab switching is allowed.'
             : 'Tab switching or minimizing the window is not allowed.',
 
-        // navigation.shuffleQuestions &&
-        //     'Questions will be shown in random order.',
+        navigation.shuffleQuestions &&
+            'Questions will be shown in random order.',
 
-        // navigation.shuffleOptions &&
-        //     'Options will be shown in random order.',
+        navigation.shuffleOptions &&
+            'Options will be shown in random order.',
 
         navigation.allowBackNavigation
             ? 'You can go back to previous questions.'
@@ -62,9 +62,9 @@ const TestCandidateInstructions: React.FC = () => {
         proctoring.enableCamera &&
             'Ensure your face is clearly visible during the entire test.',
 
-        // proctoring.captureSnapshots &&
-        //     proctoring.snapshotIntervalSeconds > 0 &&
-        //     `Snapshots may be captured every ${proctoring.snapshotIntervalSeconds} seconds for monitoring purposes.`,
+        proctoring.captureSnapshots &&
+            proctoring.targetSnapshotCount > 0 &&
+            `Snapshots may be captured for monitoring purposes.`,
 
         // proctoring.detectNoFace &&
         //     'Warnings may be triggered if your face is not detected by the camera.',

@@ -152,21 +152,21 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
               <RuleSwitch
                 title="Capture Snapshots"
                 description="Capture candidate snapshots during the test"
-                checked={data.rules?.proctoring.movementDetection ?? false}
+                checked={data.rules?.proctoring.captureSnapshots ?? false}
                 onChange={(checked) =>
                   updateRules('proctoring', { captureSnapshots: checked })
                 }
               />
 
-              {/* <RuleInput
-                label="Max Warnings Allowed"
-                value={data.rules.proctoring.maxWarningsAllowed}
+              <RuleInput
+                label="Target snapshot count"
+                value={data.rules.proctoring.targetSnapshotCount}
                 onChange={(value) =>
-                  updateRules('proctoring', { maxWarningsAllowed: value })
+                  updateRules('proctoring', { targetSnapshotCount: value })
                 }
               />
 
-              <RuleSwitch
+              {/* <RuleSwitch
                 title="Auto Submit On Max Warnings"
                 description="Submit when warning limit is reached"
                 checked={data.rules.proctoring.autoSubmitOnMaxWarnings}
@@ -175,7 +175,7 @@ const CompanyTestRules: React.FC<CompanyTestRulesProps> = ({ data, updateData })
                     autoSubmitOnMaxWarnings: checked,
                   })
                 }
-              /> */}
+              />  */}
             </RuleCard>
           </Grid>
 

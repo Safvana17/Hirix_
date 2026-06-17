@@ -88,6 +88,7 @@ export const InterviewToolbar: React.FC<InterviewToolbarProps> = ({
 
       <Box className="h-6 w-px bg-slate-800 mx-2" />
 
+
       <Tooltip title={isInterviewer ? 'End Interview' : 'Leave Interview'} arrow>
         <IconButton
           onClick={endCall}
@@ -102,7 +103,8 @@ export const InterviewToolbar: React.FC<InterviewToolbarProps> = ({
           <PhoneOff className="h-5 w-5" />
         </IconButton>
       </Tooltip>
+
     </Box>
   );
-};
+}
 export default InterviewToolbar;

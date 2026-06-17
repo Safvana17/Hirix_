@@ -197,6 +197,24 @@ GetInterviewByIdResponse,
     }
 })
 
+export const candidateLeft = createAsyncThunk<
+GetInterviewAccessResponse,
+{token: string, roomId: string},
+{rejectValue: string}
+>('interview/candidateLeft', async({token, roomId}, {rejectWithValue}) => {
+    try {
+        const response = await api.patch(API_ROUTES.COMMON.INTERVIEW.CANDIDATE_LEFT(roomId, token))
+        if(!response.data.success){
+            return rejectWithValue("Invalid response")
+        }
+
+        return response.data.data
+    } catch (error) {
+        const err = error as AxiosError<{message: string}>
+        return rejectWithValue(err.response?.data.message || 'Failed to leave interview')
+    }
+})
+
 export const interviewRunCode = createAsyncThunk<
 InterviewCodeRunnerResponse,
 {data: InterviewCodeRunnerArgs},
@@ -377,6 +395,18 @@ const CompanyInterviewSlice = createSlice({
          .addCase(sendOfferLetter.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'failed to send offer letter'
+         })
+         .addCase(candidateLeft.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(candidateLeft.fulfilled, (state, action) => {
+            state.loading = false
+            state.accessInterview = action.payload
+            state.canJoin = false
+         })
+         .addCase(candidateLeft.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload || 'failed to left candidate'
          })
     }
 })

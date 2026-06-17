@@ -10,6 +10,6 @@ router.get(ROUTES.COMMON.INTERVIEW.GET_ACCESS, validate(GetInterviewAccessParams
 router.patch(ROUTES.COMMON.INTERVIEW.JOIN, validate(GetInterviewAccessParamsSchema, 'params'), IUnifiedInterviewController.joinInterview)
 router.patch(ROUTES.COMMON.INTERVIEW.END, validate(GetInterviewAccessParamsSchema, 'params'), IUnifiedInterviewController.endInterview)
 router.post(ROUTES.COMMON.INTERVIEW.RUN_CODE, validate(InterviewRunCodeSchema, 'body'), IUnifiedInterviewController.runCode )
-
+router.patch(ROUTES.COMMON.INTERVIEW.CANDIDATE_LEFT, validate(GetInterviewAccessParamsSchema, 'params'), IUnifiedInterviewController.candidateLeft)
 
 export default router;
