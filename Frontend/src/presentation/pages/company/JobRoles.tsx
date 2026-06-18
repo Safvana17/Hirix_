@@ -151,7 +151,7 @@ const JobRoles: React.FC= () => {
             <div className="flex items-center gap-1 sm:gap-2">
             
                 <button
-                    onClick={() => handleUpdateStatus(id, item.status)}
+                    onClick={() => handleUpdateStatus(id as string, item.status)}
                     title={item.status === 'Active' ? 'Deactivate' : 'Activate'}
                     className={`p-2 rounded-lg border transition-all duration-200 
                     ${item.status === 'Active'
@@ -184,7 +184,7 @@ const JobRoles: React.FC= () => {
                 <button
                     title="Delete"
                     className="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all"
-                    onClick={() => handleDeleteJobRole(id)}
+                    onClick={() => handleDeleteJobRole(id as string)}
                 >
                     <LucideDelete className="w-4 h-4" />
                 </button>

@@ -129,7 +129,7 @@ const AdminCompanies : React.FC = () => {
                 { item.status === 'pending' && (
                     <>
                        <button
-                          onClick={() => handleApproveCompany(id)}
+                          onClick={() => handleApproveCompany(id as string)}
                           title='Approve Company'
                           className='p-2 hover:bg-green-50 text-green-600 rounded-lg transition-colors border border-transparent'
                        >
@@ -137,7 +137,7 @@ const AdminCompanies : React.FC = () => {
                        </button>
 
                        <button
-                          onClick={() => handleRejectCompany(id)}
+                          onClick={() => handleRejectCompany(id as string)}
                           title='Reject Company'
                           className='p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors border border-transparent'
                        >
@@ -148,7 +148,7 @@ const AdminCompanies : React.FC = () => {
 
                 {(item.status === 'rejected') && (
                        <button
-                          onClick={() => handleApproveCompany(id)}
+                          onClick={() => handleApproveCompany(id as string)}
                           title='Approve Company'
                           className='p-2 hover:bg-green-50 text-green-600 rounded-lg transition-colors border border-transparent'
                        >
@@ -158,7 +158,7 @@ const AdminCompanies : React.FC = () => {
 
                 {(item.status === 'active' || item.status === 'blocked') && (
                     <button
-                        onClick={() => handleUpdateStatus(id, item.status)}
+                        onClick={() => handleUpdateStatus(id as string, item.status)}
                         title={item.status === 'active' ? 'Block Company' : 'Unblock Company'}
                         className={`p-2 rounded-lg transition-colors border border-transparent ${item.status === 'active' 
                             ?'hover:bg-red-50 text-red-600 hover:border-red-100'
