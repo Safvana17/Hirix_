@@ -34,7 +34,14 @@ export class CompanySettingsController {
         const companyId = Array.isArray(req.params.id)
             ? req.params.id[0]
             : req.params.id    
-        const certificateFile = req.file        
+        const file = req.file   
+        const certificateFile: FileUpload = {
+            originalName: file?.originalname,
+            buffer: file?.buffer,
+            size: file?.size,
+            mimetype: file?.mimetype
+        }
+        console.log('controller', certificateFile)     
         const updatedCompany = await this._updateCompanyProfileUsecase.execute({id: companyId, certificateFile , ...req.body})
         return sendSuccess(res, statusCode.OK, settingsMessages.success.COMPANY_PROFILE_UPDATED, {updatedCompany})
     })
@@ -44,7 +51,8 @@ export class CompanySettingsController {
               ? req.params.id[0]
               : req.params.id
         const result = await this._getCompanyProfileUsecase.execute({id: companyId})
-        return sendSuccess(res, statusCode.OK, '', result.company)
+        // console.log(result)
+        return sendSuccess(res, statusCode.OK, '', result)
     })
 
     uploadProfileImage = asyncHandler(async (req: Request, res: Response) => {
@@ -55,12 +63,14 @@ export class CompanySettingsController {
         if(!multerFile){
             throw new AppError(settingsMessages.error.IMAGE_REQUIRED, statusCode.BAD_REQUEST)
         }
+        console.log('multer type: ', multerFile)
         const file: FileUpload = {
-            filename: multerFile.filename,
+            originalName: multerFile.originalname,
             mimetype: multerFile.mimetype,
             size: multerFile.size,
-            path: multerFile.path
+            buffer: multerFile.buffer
         }
+        console.log('type: ', file)
         const updatedCompany = await this._uploadCompanyProfileImage.execute({id: companyId, file})
         return sendSuccess(res, statusCode.OK, settingsMessages.success.COMPANY_PROFILE_UPDATED, updatedCompany.company)
     })

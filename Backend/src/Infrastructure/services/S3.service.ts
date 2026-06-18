@@ -41,4 +41,17 @@ export class S3Service implements IS3Service {
             { expiresIn: 300 }
         )
     }
+
+    async uploadFile(folder: string, fileBuffer: Buffer, fileName: string, mimeType: string): Promise<string> {
+        const fileKey = `${folder}/${Date.now()}_${fileName}`
+
+        await this.s3Client.send( new PutObjectCommand({
+            Bucket: this.bucketName,
+            Key: fileKey,
+            Body: fileBuffer,
+            ContentType: mimeType
+        }))
+        return fileKey
+    }
+
 }

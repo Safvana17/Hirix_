@@ -32,8 +32,14 @@ export class CompanyMapper {
         company.primaryContactName = doc.primaryContactName
         company.billingEmail = doc.billingEmail
         company.profileLogo = doc.profileLogo
+        // company.profileLogoKey = doc.profileLogoKey
+        // company.profileLogoContentType = doc.profileLogoContentType
+        // company.profileLogoFileName = doc.profileLogoFileName
         company.certificateType = doc.certificateType
-        company.certificate = doc.certificate
+        company.certificateUrl = doc.certificateUrl
+        company.certificateFileName = doc.certificateFileName
+        company.certificateKey = doc.certificateKey
+        company.certificateContentType = doc.certificateContentType
         company.certificateNumber = doc.certificateNumber
         company.deletedAt = doc.deletedAt
         company.deleteFeedback = doc.deleteFeedback
@@ -69,9 +75,15 @@ export class CompanyMapper {
             billingEmail: entity.billingEmail,
             phoneNumber: entity.phoneNumber,
             profileLogo: entity.profileLogo,
+            // profileLogoKey: entity.profileLogoKey,
+            // profileLogoFileName: entity.profileLogoFileName,
+            // profileLogoContentType: entity.profileLogoContentType,
             isProfileUpdated: entity.isProfileUpdated,
             certificateType: entity.certificateType,
-            certificate: entity.certificate,
+            certificateUrl: entity.certificateUrl,
+            certificateKey: entity.certificateKey,
+            certificateFileName: entity.certificateFileName,
+            certificateContentType: entity.certificateContentType,
             certificateNumber: entity.certificateNumber,
             isDeleted: entity.isDeleted,
             deletedAt: entity.deletedAt,

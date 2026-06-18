@@ -5,11 +5,13 @@ import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { UploadProfileImageInputDTO, UpdateCompanyProfileOutputDTO } from "../../dtos/settings/settings.company.dto";
 import { IUploadCompanyProfileImage } from "../../interfaces/settings/iCompany.uploadProfileImage.usecase";
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
+import { IS3Service } from "../../../interface/service/IS3Service";
 
 
 export class UploadCompanyProfileImageUsecase implements IUploadCompanyProfileImage {
     constructor (
-        private _companyRepository: ICompanyRepository
+        private _companyRepository: ICompanyRepository,
+        private _s3Service: IS3Service
     ) {}
 
     async execute(request: UploadProfileImageInputDTO): Promise<UpdateCompanyProfileOutputDTO> {
@@ -19,9 +21,16 @@ export class UploadCompanyProfileImageUsecase implements IUploadCompanyProfileIm
         }
 
         const file = request.file
-        const imageUrl = `http://localhost:4000/uploads/${file.filename}`
+        const folder = 'profileLogo'
+        const key = await this._s3Service.uploadFile(folder, file.buffer!, file.originalName!, file.mimetype!)
         
-        company.profileLogo = imageUrl
+        
+        // company.profileLogoKey = key
+        // company.profileLogoFileName = file.originalName
+        // company.profileLogoContentType = file.mimetype
+        //const imageUrl = `http://${env.AWS_BUCKET_NAME}.s3.${env.AWS_REGION}.amazonaws.com/${key}`
+        company.profileLogo = key
+    
         const updated = await this._companyRepository.update(company.getId(), company)
 
         if(!updated){

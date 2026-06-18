@@ -21,7 +21,8 @@ export interface UpdateCompanyProfileInputDTO {
   billingEmail?: string
   certificateType: 'GST' | 'COI'
   certificateNumber?: string
-  certificateFile: FileUpload
+  certificateFile?: FileUpload
+
 }
 
 export interface UpdateCompanyProfileOutputDTO {
@@ -33,7 +34,26 @@ export interface getCompanyProfileInputDTO {
 }
 
 export interface getCompanyProfileOutputDTO {
-    company: CompanyEntity
+  id: string
+  name?: string
+  profileLogo?: string
+  legalName?: string
+  domain?: string
+  website?: string
+  teamSize?: number
+  about?: string
+  phoneNumber?: string
+  streetName?: string
+  country?: string
+  state?: string
+  city?: string
+  pinCode?: string
+  primaryContactName?: string
+  primaryContactEmail?: string
+  billingEmail?: string
+  certificateType?: 'GST' | 'COI'
+  certificateNumber?: string
+  certificateFile?: string
 }
 
 export interface UploadProfileImageInputDTO {

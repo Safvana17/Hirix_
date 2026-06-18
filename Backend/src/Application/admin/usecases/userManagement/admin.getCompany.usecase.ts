@@ -2,12 +2,14 @@ import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
+import { IS3Service } from "../../../interface/service/IS3Service";
 import { AdminGetCompanyInputDTO, AdminGetCompanyOutputDTO } from "../../dtos/userManagement/getCompany.admin.dto";
 import { IAdminGetCompanyUsecase } from "../../interfaces/userManagement/iAdmin.getCompany.usecase";
 
 export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
     constructor(
-        private _companyRepository: ICompanyRepository
+        private _companyRepository: ICompanyRepository,
+        private _s3Service: IS3Service
     ) {}
 
     /**
@@ -20,6 +22,10 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
         if(!company){
             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
         }
+        let url;
+        if(company.profileLogo){
+           url = await this._s3Service.generateViewUrl(company.profileLogo)
+        }
         return {
             id: company.getId(),
             name: company.getName(),
@@ -30,7 +36,7 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
             pinCode: company.pinCode,
             primaryContactEmail: company.getEmail(),
             primaryContactName: company.primaryContactName,
-            profileLogo: company.profileLogo,
+            profileLogo: url,
             legalName: company.legalName,
             domain: company.domain,
             website: company.website,
@@ -42,7 +48,7 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
             billingEmail: company.billingEmail,
             certificateType: company.certificateType,
             certificateNumber: company.certificateNumber,
-            certificate: company.certificate,
+            // certificate: company.certificate,
         }
     }
 }

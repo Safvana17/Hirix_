@@ -26,7 +26,7 @@ export interface CompanySettings extends Company {
   billingEmail?: string
   certificateType?: 'GST' | 'COI';
   certificateNumber: string;
-  certificate: string;
+  certificateFile: string;
   certificateVerified: boolean;
   subscriptionPlan?: string
   maxCandidates?: number

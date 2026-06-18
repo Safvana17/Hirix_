@@ -13,11 +13,17 @@ export interface ICompany extends Document {
     status: UserStatus;
     isAdminVerified: boolean;
     certificateType: 'GST' | 'COI';
-    certificate: string;
     certificateNumber: string;
+    certificateUrl: string;
+    certificateKey: string;
+    certificateFileName: string
+    certificateContentType: string
     googleId: string;
     isBlocked: boolean;
-    profileLogo: string
+    profileLogo: string;
+    // profileLogoKey: string;
+    // profileLogoFileName: string;
+    // profileLogoContentType: string
     domain: string;
     teamSize: number;
     about: string;
@@ -77,10 +83,19 @@ const companySchema: Schema<ICompany> = new Schema({
         type: String,
         default: 'GST'
     },
-    certificate: {
+    certificateNumber: {
         type: String
     },
-    certificateNumber: {
+    certificateUrl: {
+        type: String
+    },
+    certificateKey: {
+        type: String
+    },
+    certificateFileName: {
+        type: String
+    },
+    certificateContentType: {
         type: String
     },
     isBlocked: {
@@ -91,8 +106,17 @@ const companySchema: Schema<ICompany> = new Schema({
         type: String
     },
     profileLogo: {
-       type: String
+        type: String
     },
+    // profileLogoKey: {
+    //    type: String
+    // },
+    // profileLogoContentType: {
+    //     type: String
+    // },
+    // profileLogoFileName: {
+    //     type: String
+    // },
     domain: {
         type: String
     },

@@ -3,7 +3,11 @@ import { UserStatus } from "../enums/userStatus.enum";
 import UserEntity from "./user.entity";
 
 export default class CompanyEntity extends UserEntity{
+    // profileLogoKey?: string;
+    // profileLogoFileName?: string;
+    // profileLogoContentType?: string
     profileLogo?: string
+    
     legalName?: string;
     domain?: string;
     website?: string;
@@ -12,7 +16,10 @@ export default class CompanyEntity extends UserEntity{
 
     certificateType?: 'GST' | 'COI';
     certificateNumber?: string;
-    certificate?: string;
+    certificateUrl?: string;
+    certificateKey?: string;
+    certificateFileName?: string
+    certificateContentType?: string
 
     phoneNumber?: string;
     streetName?: string;

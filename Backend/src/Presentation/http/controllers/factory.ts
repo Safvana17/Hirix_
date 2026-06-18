@@ -588,13 +588,16 @@ const iVerifyRegisterCompany = new VerifyRegisterCompanyUsecase(
 //company settings
 const iUpdateCompanyProfile = new UpdateCompanyProfileUsecase(
     iCompanyRepository,
-    iProcessNotification
+    iProcessNotification,
+    iS3Service
 )
 const iGetCompanyProfle = new GetCompanyProfileUsecase(
-    iCompanyRepository
+    iCompanyRepository,
+    iS3Service
 )
 const iUploadCompanyProfileImage = new UploadCompanyProfileImageUsecase(
-    iCompanyRepository
+    iCompanyRepository,
+    iS3Service
 )
 const iChangeCompanyPassword = new CompanyChangePasswordUsecase (
     iCompanyRepository,
@@ -1031,7 +1034,8 @@ const iGetAllCandidates = new AdminGetAllCandidates(
 )
 
 const iGetCompany = new AdminGetCompanyUsecase(
-    iCompanyRepository
+    iCompanyRepository,
+    iS3Service
 )
 
 const iUpdateCompanyStatus = new AdminUpdateCompanyStatus(

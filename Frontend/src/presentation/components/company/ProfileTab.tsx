@@ -64,7 +64,7 @@ const ProfileTab: React.FC = () => {
     profileLogo: company?.profileLogo || '',
     certificateType: company?.certificateType || undefined,
     certificateNumber: company?.certificateNumber || '',
-    certificate: company?.certificate || ''
+    certificateFile: company?.certificateFile || ''
   }), [company, user])
 
   const { register, handleSubmit,reset, watch, setValue, formState: {errors} } = useForm<ProfileFormValues>({
@@ -279,7 +279,7 @@ const ProfileTab: React.FC = () => {
             </div>
           )}
         </div>
-        {company?.certificate && (
+        {company?.certificateFile && (
           <div className="mt-6">
             <label className="text-sm font-medium text-gray-600">Current Document</label>
 
@@ -299,7 +299,7 @@ const ProfileTab: React.FC = () => {
               </div>
 
               <a
-                href={company.certificate}
+                href={company.certificateFile}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-blue-600 hover:underline font-medium"

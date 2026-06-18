@@ -6,13 +6,15 @@ import { authMessages } from "../../../../Shared/constsnts/messages/authMessages
 import { settingsMessages } from "../../../../Shared/constsnts/messages/settingsMessages";
 import { statusCode } from "../../../../Shared/Enumes/statusCode";
 import { IAdminProcessNotificationUsecase } from "../../../admin/interfaces/settings/IAdmin.processNotification.usecase";
+import { IS3Service } from "../../../interface/service/IS3Service";
 import { UpdateCompanyProfileInputDTO, UpdateCompanyProfileOutputDTO } from "../../dtos/settings/settings.company.dto";
 import { ICompanyUpdateProfileUsecase } from "../../interfaces/settings/iCompany.updateProfile.usecase";
 
 export class UpdateCompanyProfileUsecase implements ICompanyUpdateProfileUsecase {
     constructor(
         private _companyRepository: ICompanyRepository,
-        private _processNotificationUsecase: IAdminProcessNotificationUsecase
+        private _processNotificationUsecase: IAdminProcessNotificationUsecase,
+        private _s3Service: IS3Service
     ) {}
 
     async execute(request: UpdateCompanyProfileInputDTO): Promise<UpdateCompanyProfileOutputDTO> {
@@ -25,10 +27,19 @@ export class UpdateCompanyProfileUsecase implements ICompanyUpdateProfileUsecase
             throw new AppError(settingsMessages.error.GST_NUMBER_REQUIRED, statusCode.BAD_REQUEST)
         }
 
-        let certificateUrl = company.certificate;
+        // let certificateUrl = company.certificate;
 
-        if (request.certificateFile) {
-        certificateUrl = `http://localhost:4000/uploads/${request.certificateFile.filename}`;
+        // if (request.certificateFile) {
+        // certificateUrl = `http://localhost:4000/uploads/${request.certificateFile.filename}`;
+        // }
+
+        const folder = 'documents'
+        if(request.certificateFile){
+            const key = await this._s3Service.uploadFile(folder, request.certificateFile.buffer!, request.certificateFile.originalName!, request.certificateFile.mimetype!)
+            company.certificateContentType = request.certificateFile.mimetype
+            company.certificateFileName = request.certificateFile.originalName
+            company.certificateKey = key
+            // company.certificateUrl = request.certificateFile.
         }
         company.setName(request.name!)
         company.legalName = request.legalName
@@ -47,7 +58,6 @@ export class UpdateCompanyProfileUsecase implements ICompanyUpdateProfileUsecase
         company.billingEmail = request.billingEmail
         company.isProfileUpdated = true
         company.certificateType = request.certificateType
-        company.certificate = certificateUrl
         company.certificateNumber = request.certificateNumber
 
         
