@@ -1,6 +1,6 @@
 import userRole from "../enums/userRole.enum";
 import { UserStatus } from "../enums/userStatus.enum";
-import UserEntity from "./user.entity";
+import UserEntity from "./User.entity";
 
 export default class CompanyEntity extends UserEntity{
     // profileLogoKey?: string;

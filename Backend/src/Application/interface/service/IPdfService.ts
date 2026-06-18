@@ -1,7 +1,7 @@
 import { PaymentEntity } from "../../../Domain/entities/Payment.entity";
 import { SubscriptionEntity } from "../../../Domain/entities/Subscription.entity";
 import { SubscriptionPlanEntity } from "../../../Domain/entities/SubscriptionPlan.entity";
-import UserEntity from "../../../Domain/entities/user.entity";
+import UserEntity from "../../../Domain/entities/User.entity";
 
 
 export interface IPdfService {

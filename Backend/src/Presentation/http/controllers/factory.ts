@@ -1,6 +1,6 @@
 import { redisClient } from "../../../Infrastructure/config/redis.config";
 import userRole from "../../../Domain/enums/userRole.enum";
-import UserEntity from "../../../Domain/entities/user.entity";
+import UserEntity from "../../../Domain/entities/User.entity";
 
 //controllers
 import { CandidateAuthController } from "./candidate/authController";

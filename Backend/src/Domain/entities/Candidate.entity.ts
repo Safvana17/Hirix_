@@ -1,7 +1,7 @@
 import { CandidateType } from "../enums/candidate";
 import userRole from "../enums/userRole.enum";
 import { UserStatus } from "../enums/userStatus.enum";
-import UserEntity from "./user.entity";
+import UserEntity from "./User.entity";
 
 export default class CandidateEntity extends UserEntity{
     profilePicture?: string
