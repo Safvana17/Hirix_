@@ -1,4 +1,4 @@
-import AdminEntity from "../entities/admin.entity";
+import AdminEntity from "../entities/Admin.entity";
 import { IAuthRepository } from "./iAuth.repository";
 
 
