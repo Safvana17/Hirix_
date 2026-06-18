@@ -5,7 +5,7 @@ import { env } from "../config/env";
 
 export class HashService implements IHashService{
     async hash(password: string): Promise<string> {
-        const saltRounds = env.BCRYPT_sALT_ROUNDS
+        const saltRounds = env.BCRYPT_SALT_ROUNDS
         return await bcrypt.hash(password, saltRounds)
     }
 

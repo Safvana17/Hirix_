@@ -11,7 +11,7 @@ export class OtpService implements IOtpService{
     }
 
     async hash(otp: string): Promise<string> {
-        const saltRounds = env.BCRYPT_sALT_ROUNDS
+        const saltRounds = env.BCRYPT_SALT_ROUNDS
         return await bcrypt.hash(otp, saltRounds)
     }
 
