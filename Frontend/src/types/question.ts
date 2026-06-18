@@ -43,7 +43,11 @@ export interface PracticeQuestion {
   testCase?: TestCase[]
   starterCode?: string
   functionName?: string
+  visibility: QuestionVisibility
   difficulty: QuestionDifficulty
+  createdBy: UserRole
+  isPractice: boolean
+  answer: string[]
   categoryId: string
   categoryName: string
   isPremium: boolean

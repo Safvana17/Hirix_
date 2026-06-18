@@ -27,7 +27,7 @@ export const InterviewSidebar: React.FC<InterviewSidebarProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState(defaultTab);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
 

@@ -49,8 +49,7 @@ export class GetCompanyProfileUsecase implements IGetCompanyProfileUsecase{
             billingEmail: company.billingEmail,
             certificateType: company.certificateType,
             certificateNumber: company.certificateNumber,
-            certificateFile: documentUrl
-            
+            certificateFile: documentUrl    
         }
     }
 }

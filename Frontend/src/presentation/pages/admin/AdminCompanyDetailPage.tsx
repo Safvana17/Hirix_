@@ -266,7 +266,7 @@ const AdminCompanyDetailPage: React.FC = () => {
           <div className='grid grid-cols-2 gap-5'>
             <Field label='Certificate Type' value={selectedCompany.certificateType} />
             <Field label='Certificate Number' value={selectedCompany.certificateNumber} />
-            {selectedCompany?.certificate && (
+            {selectedCompany?.certificateFile && (
               <div className="mt-6">
                 <div className="mt-2 flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-4 py-3">
                   <div className="flex items-center gap-3">
@@ -284,7 +284,7 @@ const AdminCompanyDetailPage: React.FC = () => {
                   </div>
 
                   <a
-                    href={selectedCompany.certificate}
+                    href={selectedCompany.certificateFile}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-blue-600 hover:underline font-medium"

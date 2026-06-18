@@ -26,5 +26,5 @@ export interface AdminGetCompanyOutputDTO {
   billingEmail?: string
   certificateType?: 'GST' | 'COI'
   certificateNumber?: string
-  // certificate?: string
+  certificateFile?: string
 }

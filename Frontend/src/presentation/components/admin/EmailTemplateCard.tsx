@@ -54,13 +54,13 @@ export default function TemplateCard({
         Key: {template.key}
       </Typography>
 
-      {template.subject && (
-        <Typography variant="body2">Subject: {template.subject}</Typography>
+      {/* {template.values.subject && (
+        <Typography variant="body2">Subject: {template.values.subject as string}</Typography>
       )}
 
-      {template.title && (
-        <Typography variant="body2">Title: {template.title}</Typography>
-      )}
+      {template.values.title && (
+        <Typography variant="body2">Title: {template.values.title as string}</Typography>
+      )} */}
 
       <Box display="flex" flexWrap="wrap" gap={1} mt={2}>
         <Button

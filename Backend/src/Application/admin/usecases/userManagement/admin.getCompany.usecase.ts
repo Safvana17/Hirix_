@@ -26,6 +26,10 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
         if(company.profileLogo){
            url = await this._s3Service.generateViewUrl(company.profileLogo)
         }
+        let documentUrl
+        if(company.certificateKey){
+            documentUrl = await this._s3Service.generateViewUrl(company.certificateKey)
+        }
         return {
             id: company.getId(),
             name: company.getName(),
@@ -48,7 +52,7 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
             billingEmail: company.billingEmail,
             certificateType: company.certificateType,
             certificateNumber: company.certificateNumber,
-            // certificate: company.certificate,
+            certificateFile: documentUrl,
         }
     }
 }
