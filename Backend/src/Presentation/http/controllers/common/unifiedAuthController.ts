@@ -67,18 +67,18 @@ export class UnifiedAuthController {
 
             res.clearCookie('refreshToken', {
                 httpOnly: true,
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                secure: process.env.NODE_ENV === 'production',
+                secure: true,
+                sameSite: 'none',
                 path: '/'
             })
 
             res.clearCookie('accessToken', {
                 httpOnly: true,
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-                secure: process.env.NODE_ENV === 'production',
+                secure: true,
+                sameSite: 'none',
                 path: '/'
             })
-
+            console.log('cleared cookies')
             return res.status(statusCode.NO_CONTENT).json({
                 success: true,
                 message: authMessages.success.CANDIDATE_LOGGEDOUT_SUCCESS
