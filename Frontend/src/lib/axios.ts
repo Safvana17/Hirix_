@@ -18,19 +18,20 @@ export const setLogoutHandler = (handler: () => void) => {
 //        ?.split("=")[1]
 // }
 
-const getCsrfToken = () => {
-    console.log('cookies: ', document.cookie)
-    const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
-    return match ? match[1] : null;
-};
+// const getCsrfToken = () => {
+//     console.log('cookies: ', document.cookie)
+//     const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+//     return match ? match[1] : null;
+// };
 
 const api = axios.create({
     baseURL: BACKEND_URL,
     withCredentials: true,
-    // xsrfCookieName: "XSRF-TOKEN",
-    // xsrfHeaderName: "X-CSRF-TOKEN",
+    xsrfCookieName: "XSRF-TOKEN",
+    xsrfHeaderName: "x-csrf-token",
 })
 
+console.log('api: ', api)
 
 let isRefreshing = false
 
@@ -50,16 +51,16 @@ const processQueue = (error: unknown) => {
     failedQueue = []
 }
 
-api.interceptors.request.use((config) => {
-    const csrfToken = getCsrfToken()
-    console.log("CSRF TOKEN FROM BROWSER:", csrfToken);
+// api.interceptors.request.use((config) => {
+//     const csrfToken = getCsrfToken()
+//     console.log("CSRF TOKEN FROM BROWSER:", csrfToken);
 
-    if(csrfToken){
-        config.headers["x-csrf-token"] = csrfToken
-    }
-    console.log("FINAL HEADERS:", config.headers);
-    return config
-})
+//     if(csrfToken){
+//         config.headers["x-csrf-token"] = csrfToken
+//     }
+//     console.log("FINAL HEADERS:", config.headers);
+//     return config
+// })
 
 api.interceptors.response.use(
     (response) => response,
