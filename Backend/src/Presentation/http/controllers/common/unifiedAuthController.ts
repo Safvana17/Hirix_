@@ -38,7 +38,7 @@ export class UnifiedAuthController {
             res.cookie('refreshToken', tokens.refreshToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
@@ -46,16 +46,17 @@ export class UnifiedAuthController {
             res.cookie('accessToken', tokens.accessToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
             })
 
             res.cookie("XSRF-TOKEN", tokens.csrfToken, {
                 httpOnly: false,
-                sameSite: "none",
-                secure: true
-            })
+                sameSite: "lax",
+                secure: true,
+                path:"/"
+            })            
 
             return sendSuccess(res, statusCode.OK, authMessages.success.TOKEN_REFRESHED)
     })

@@ -19,6 +19,7 @@ router.get(ROUTES.CANDIDATE.PRACTICE.GET_BY_ID, authHandler(iTokenService), vali
 router.get(ROUTES.CANDIDATE.PRACTICE.GET_RELATED, authHandler(iTokenService), validate(questionParamsSchema, 'params'), iPracticeLibraryController.getRelatedQuestions)
 router.post(ROUTES.CANDIDATE.PRACTICE.SUBMIT,authHandler(iTokenService), verifyCsrf, validate(questionParamsSchema, 'params'), validate(submitPraticeAnswerSchema, 'body'), iPracticeLibraryController.submitAnswer)
 router.get(ROUTES.CANDIDATE.PRACTICE.GET_EXPLANATION, authHandler(iTokenService), validate(questionParamsSchema, 'params'), iPracticeLibraryController.getExplanation)
+
 //subscription
 router.get(ROUTES.CANDIDATE.SUBSCRIPTION.GET_ALL, authHandler(iTokenService), iCandidateSubscriptionController.getAllPlan)
 router.get(ROUTES.CANDIDATE.SUBSCRIPTION.GET_CURRENT, authHandler(iTokenService), iCandidateSubscriptionController.getCurrentPlan)
@@ -54,8 +55,8 @@ router.get(ROUTES.CANDIDATE.ANALYTICS.SUMMERY, authHandler(iTokenService), iCand
 router.get(ROUTES.CANDIDATE.ANALYTICS.TEST_HISTORY, authHandler(iTokenService), validate(GetPaymentHistorySchema, 'query'), iCandidateAnalyticsController.testHistory)
 
 //settings
-router.put(ROUTES.CANDIDATE.SETTINGS.CHANGE_PASSWORD, authHandler(iTokenService), validate(changePasswordSchema, 'body'), iCandidateSettingsController.changePassword)
-router.get(ROUTES.CANDIDATE.SETTINGS.INTERVIEW_HISTORY, authHandler(iTokenService), validate(PaymnetQuerySchema, 'query'), iCandidateSettingsController.interviewHistory)
+router.put(ROUTES.CANDIDATE.SETTINGS.CHANGE_PASSWORD, authHandler(iTokenService), verifyCsrf, validate(changePasswordSchema, 'body'), iCandidateSettingsController.changePassword)
+router.get(ROUTES.CANDIDATE.SETTINGS.INTERVIEW_HISTORY, authHandler(iTokenService), verifyCsrf, validate(PaymnetQuerySchema, 'query'), iCandidateSettingsController.interviewHistory)
 router.put(ROUTES.CANDIDATE.SETTINGS.PROFILE, authHandler(iTokenService), validate(candidateProfileSchema, 'body'), iCandidateSettingsController.updateProfile)
 router.get(ROUTES.CANDIDATE.SETTINGS.PROFILE, authHandler(iTokenService), iCandidateSettingsController.getProfile)
 

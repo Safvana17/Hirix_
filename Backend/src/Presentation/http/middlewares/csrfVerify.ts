@@ -9,6 +9,10 @@ export const verifyCsrf = (req: Request, res: Response, next: NextFunction) => {
     const csrfHeader = Array.isArray(csrfHeaderRaw)
           ? csrfHeaderRaw[0]
           : csrfHeaderRaw;
+    console.log('csrf cookies', csrfCookie)
+    console.log('csrf header', csrfHeaderRaw)
+    console.log('csrf cookies', csrfCookie)
+    console.log("isEqual: ", csrfCookie === csrfHeader)
 
     if(!csrfCookie || !csrfHeader || csrfCookie !== csrfHeader){
         throw new AppError(authMessages.error.INVALID_CSRF_TOKEN, statusCode.FORBIDDEN)

@@ -56,7 +56,7 @@ export class CompanyAuthController {
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
@@ -64,16 +64,17 @@ export class CompanyAuthController {
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
             })
 
             res.cookie("XSRF-TOKEN", csrfToken, {
                 httpOnly: false,
-                sameSite: "none",
-                secure: true
-            })
+                sameSite: "lax",
+                secure: true,
+                path:"/"
+            })            
             
             return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_LOGIN_SUCCESS, {company})
     })
@@ -99,7 +100,7 @@ export class CompanyAuthController {
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
@@ -107,10 +108,10 @@ export class CompanyAuthController {
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
-            })
+            })           
             return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_LOGIN_SUCCESS, {company})          
     })
 }
