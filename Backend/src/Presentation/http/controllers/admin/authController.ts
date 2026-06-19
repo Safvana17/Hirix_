@@ -15,25 +15,27 @@ export class AdminAuthController {
 
     login = asyncHandler ( async (req: Request, res: Response) => {
         const {refreshToken, accessToken, csrfToken, admin} = await this._loginUsecase.execute(req.body)    
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-            maxAge: env.REFRESH_TOKEN_MAX_AGE,
-            path: '/'
-        })
-        res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-            maxAge: env.ACCESS_TOKEN_MAX_AGE,
-            path: '/'
-        })
-        res.cookie("XSRF-TOKEN", csrfToken, {
-            httpOnly: false,
-            secure: true,
-            sameSite: "lax"
-        })
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                maxAge: env.REFRESH_TOKEN_MAX_AGE,
+                path: '/'
+            })
+
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                maxAge: env.ACCESS_TOKEN_MAX_AGE,
+                path: '/'
+            })
+
+            res.cookie("XSRF-TOKEN", csrfToken, {
+                httpOnly: false,
+                sameSite: "none",
+                secure: true
+            })
         return sendSuccess(res, statusCode.OK, authMessages.success.ADMIN_LOGIN_SUCCESS, admin)
     })
 }

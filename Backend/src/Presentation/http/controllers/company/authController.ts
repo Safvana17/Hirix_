@@ -55,23 +55,23 @@ export class CompanyAuthController {
 
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: true,
+                sameSite: 'none',
                 maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
 
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: true,
+                sameSite: 'none',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
             })
 
             res.cookie("XSRF-TOKEN", csrfToken, {
                 httpOnly: false,
-                sameSite: "lax",
+                sameSite: "none",
                 secure: true
             })
             
@@ -98,18 +98,19 @@ export class CompanyAuthController {
             const {refreshToken, accessToken, company} =await this._companyGoogleLogin.execute(token, userRole.Company)
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: true,
+                sameSite: 'none',
                 maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
+
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: true,
+                sameSite: 'none',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
-            })          
+            })
             return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_LOGIN_SUCCESS, {company})          
     })
 }

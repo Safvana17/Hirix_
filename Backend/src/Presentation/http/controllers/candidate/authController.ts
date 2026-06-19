@@ -54,22 +54,24 @@ export class CandidateAuthController {
             const {refreshToken, accessToken,csrfToken, candidate} = await this._loginUsecase.execute(req.body)
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: true,
+                sameSite: 'none',
                 maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
-           res.cookie('accessToken', accessToken, {
+
+            res.cookie('accessToken', accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: true,
+                sameSite: 'none',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
-            })            
-            res.cookie('XSRF-TOKEN', csrfToken, {
+            })
+
+            res.cookie("XSRF-TOKEN", csrfToken, {
                 httpOnly: false,
-                secure: true,
-                sameSite: "lax"
+                sameSite: "none",
+                secure: true
             })            
             return sendSuccess(res, statusCode.OK, authMessages.success.CANDIDATE_LOGIN_SUCCESS, {candidate})
     })
@@ -91,20 +93,22 @@ export class CandidateAuthController {
     googleLogin = asyncHandler(async (req: Request, res: Response) =>{
            const { token } = req.body
            const {refreshToken, accessToken, candidate} = await this._gooleLoginUsecase.execute(token, userRole.Candidate)
-           res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-            maxAge: env.REFRESH_TOKEN_MAX_AGE,
-            path: '/'
-           })
-           res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-            maxAge: env.ACCESS_TOKEN_MAX_AGE,
-            path: '/' 
-           })
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                maxAge: env.REFRESH_TOKEN_MAX_AGE,
+                path: '/'
+            })
+
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                maxAge: env.ACCESS_TOKEN_MAX_AGE,
+                path: '/'
+            })
+
         return sendSuccess(res, statusCode.OK, authMessages.success.CANDIDATE_LOGIN_SUCCESS, {candidate})
     })
 }
