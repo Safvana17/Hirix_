@@ -27,8 +27,8 @@ export const setLogoutHandler = (handler: () => void) => {
 const api = axios.create({
     baseURL: BACKEND_URL,
     withCredentials: true,
-    xsrfCookieName: "XSRF-TOKEN",
-    xsrfHeaderName: "x-csrf-token",
+    // xsrfCookieName: "XSRF-TOKEN",
+    // xsrfHeaderName: "x-csrf-token",
 })
 
 console.log('api: ', api)
@@ -51,16 +51,16 @@ const processQueue = (error: unknown) => {
     failedQueue = []
 }
 
-// api.interceptors.request.use((config) => {
-//     const csrfToken = getCsrfToken()
-//     console.log("CSRF TOKEN FROM BROWSER:", csrfToken);
+api.interceptors.request.use((config) => {
+    const csrfToken = localStorage.getItem("csrfToken")
+    console.log("CSRF TOKEN FROM BROWSER:", csrfToken);
 
-//     if(csrfToken){
-//         config.headers["x-csrf-token"] = csrfToken
-//     }
-//     console.log("FINAL HEADERS:", config.headers);
-//     return config
-// })
+    if(csrfToken){
+        config.headers["x-csrf-token"] = csrfToken
+    }
+    console.log("FINAL HEADERS:", config.headers);
+    return config
+})
 
 api.interceptors.response.use(
     (response) => response,

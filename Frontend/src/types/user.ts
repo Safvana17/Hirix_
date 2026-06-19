@@ -13,7 +13,8 @@ export interface AuthState {
     isAuthenticated: boolean;
     loading: boolean;
     error: string | null;
-    role: UserRole | null
+    role: UserRole | null;
+    csrfToken: string | null
 }
 
 export interface LoginPayload {

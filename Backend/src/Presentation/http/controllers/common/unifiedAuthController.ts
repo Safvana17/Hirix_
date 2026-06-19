@@ -58,7 +58,7 @@ export class UnifiedAuthController {
                 path:"/"
             })            
 
-            return sendSuccess(res, statusCode.OK, authMessages.success.TOKEN_REFRESHED)
+            return sendSuccess(res, statusCode.OK, authMessages.success.TOKEN_REFRESHED, tokens.csrfToken)
     })
     logout = asyncHandler(async (req: Request, res: Response) => {
             const accessToken = req.cookies.accessToken

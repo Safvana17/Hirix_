@@ -9,6 +9,7 @@ import { API_ROUTES } from "../../../../constants/api.routes";
 
 const initialState: AuthState = {
     user: null,
+    csrfToken: null,
     loading: true,
     error: null,
     role:  null,
@@ -32,7 +33,7 @@ export const registerUser = createAsyncThunk<
 })
 
 export const loginUser = createAsyncThunk< 
-{user: User; role: UserRole}, LoginPayload, {rejectValue: string}
+{user: User; role: UserRole; csrfToken: string}, LoginPayload, {rejectValue: string}
 > ('auth/login', async({role, data}, {rejectWithValue}) => {
     try {
         const response = await api.post(API_ROUTES.AUTH.LOGIN(role), data);
@@ -44,8 +45,8 @@ export const loginUser = createAsyncThunk<
         if(!user){
             return rejectWithValue('Invalid login response')
         }
-
-        return {user, role}
+        const csrfToken = response.data.csrfToken
+        return {user, role, csrfToken}
     } catch (error) {
        const err = error as AxiosError<{ message: string }>
        return rejectWithValue(err.response?.data?.message || 'Failed to login')
@@ -53,36 +54,37 @@ export const loginUser = createAsyncThunk<
 })
 
 export const adminLogin = createAsyncThunk <
-{admin: User}, AdminLoginPayload, {rejectValue: string}
+{admin: User, csrfToken: string}, AdminLoginPayload, {rejectValue: string}
 >('admin/login', async({email, password}, {rejectWithValue}) => {
     try {
         const response = await api.post(API_ROUTES.ADMIN.LOGIN,{email, password})
 
         console.log('response: ', response.data)
-        const admin = response.data.data
+        const admin = response.data.data.admin
         console.log("admin: ", admin)
         if(!admin){
             return rejectWithValue('Invalid response')
         }
-
-        return {admin}
+        const csrfToken = response.data.data.csrfToken
+        return {admin, csrfToken}
     } catch (error) {
         return rejectWithValue(`failed admin login: ${error}`)
     }
 })
 
 export const googleLogin = createAsyncThunk<
-{user: User, role: UserRole}, {role: UserRole,token: string}, {rejectValue: string}
+{user: User, role: UserRole, csrfToken: string}, {role: UserRole,token: string}, {rejectValue: string}
 >('/auth/googlelogin', async({role,token}, {rejectWithValue}) => {
     try {
         const response = await api.post(API_ROUTES.AUTH.GOOGLE_LOGIN(role), {role, token})
 
         const user = response.data.data.company || response.data.data.candidate
+        const csrfToken = response.data.data.csrfToken
         if(!user){
             return rejectWithValue('Invalid response')
         }
 
-        return {user, role}
+        return {user, role, csrfToken}
     } catch (error) {
        const err = error as AxiosError<{ message: string }>
        return rejectWithValue(err.response?.data?.message || 'Google login failed')
@@ -262,7 +264,7 @@ const authSlice = createSlice({
             state.user = action.payload.user;
             state.role = action.payload.role
             state.isAuthenticated = true
-
+            localStorage.setItem("csrfToken", action.payload.csrfToken)
             // localStorage.setItem('userRole', action.payload.role)
         })
         .addCase(loginUser.rejected, (state, action) => {
@@ -277,6 +279,7 @@ const authSlice = createSlice({
             state.loading = false;
             state.isAuthenticated = true
             state.user= action.payload.admin
+            localStorage.setItem("csrfToken", action.payload.csrfToken)
         })
         .addCase(adminLogin.rejected, (state, action) => {
             state.loading = false
@@ -291,6 +294,7 @@ const authSlice = createSlice({
             state.user = null;
             state.isAuthenticated = false;
             state.role = null
+            localStorage.removeItem("csrfToken")
 
             // localStorage.removeItem("userRole")
         })
@@ -321,6 +325,7 @@ const authSlice = createSlice({
             state.isAuthenticated = true
             state.user = action.payload.user
             state.role = action.payload.role
+            localStorage.setItem("csrfToken", action.payload.csrfToken)
         })
         .addCase(googleLogin.rejected, (state, action) => {
             state.loading = false

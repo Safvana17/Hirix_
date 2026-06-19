@@ -76,7 +76,7 @@ export class CompanyAuthController {
                 path:"/"
             })            
             
-            return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_LOGIN_SUCCESS, {company})
+            return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_LOGIN_SUCCESS, {company, csrfToken})
     })
 
     forgotPassword = asyncHandler(async(req: Request, res: Response) => {
@@ -96,7 +96,7 @@ export class CompanyAuthController {
 
     googleLogin = asyncHandler(async (req: Request, res: Response) => {
         const { token } = req.body
-            const {refreshToken, accessToken, company} =await this._companyGoogleLogin.execute(token, userRole.Company)
+            const {refreshToken, accessToken, csrfToken, company} =await this._companyGoogleLogin.execute(token, userRole.Company)
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true,
@@ -111,7 +111,13 @@ export class CompanyAuthController {
                 sameSite: 'none',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
-            })           
-            return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_LOGIN_SUCCESS, {company})          
+            })  
+            res.cookie("XSRF-TOKEN", csrfToken, {
+                httpOnly: false,
+                sameSite: "none",
+                secure: true,
+                path:"/"
+            })          
+            return sendSuccess(res, statusCode.OK, authMessages.success.COMPANY_LOGIN_SUCCESS, {company, csrfToken})          
     })
 }

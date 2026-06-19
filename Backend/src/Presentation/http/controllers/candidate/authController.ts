@@ -74,7 +74,7 @@ export class CandidateAuthController {
                 secure: true,
                 path:"/"
             })            
-            return sendSuccess(res, statusCode.OK, authMessages.success.CANDIDATE_LOGIN_SUCCESS, {candidate})
+            return sendSuccess(res, statusCode.OK, authMessages.success.CANDIDATE_LOGIN_SUCCESS, {candidate, csrfToken})
     })
 
     forgotPassword = asyncHandler(async (req: Request, res: Response) => {
@@ -93,7 +93,7 @@ export class CandidateAuthController {
 
     googleLogin = asyncHandler(async (req: Request, res: Response) =>{
            const { token } = req.body
-           const {refreshToken, accessToken, candidate} = await this._gooleLoginUsecase.execute(token, userRole.Candidate)
+           const {refreshToken, accessToken, csrfToken, candidate} = await this._gooleLoginUsecase.execute(token, userRole.Candidate)
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true,
@@ -108,8 +108,14 @@ export class CandidateAuthController {
                 sameSite: 'none',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
-            })            
+            })   
+            res.cookie("XSRF-TOKEN", csrfToken, {
+                httpOnly: false,
+                sameSite: "none",
+                secure: true,
+                path:"/"
+            })          
 
-        return sendSuccess(res, statusCode.OK, authMessages.success.CANDIDATE_LOGIN_SUCCESS, {candidate})
+        return sendSuccess(res, statusCode.OK, authMessages.success.CANDIDATE_LOGIN_SUCCESS, {candidate, csrfToken})
     })
 }

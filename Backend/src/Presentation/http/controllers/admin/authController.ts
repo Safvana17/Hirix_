@@ -37,7 +37,7 @@ export class AdminAuthController {
                 secure: true,
                 path:"/",
             })            
-        return sendSuccess(res, statusCode.OK, authMessages.success.ADMIN_LOGIN_SUCCESS, admin)
+        return sendSuccess(res, statusCode.OK, authMessages.success.ADMIN_LOGIN_SUCCESS, {admin, csrfToken})
     })
 }
 
