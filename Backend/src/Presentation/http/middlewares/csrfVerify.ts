@@ -5,7 +5,7 @@ import { statusCode } from "../../../Shared/Enumes/statusCode";
 
 export const verifyCsrf = (req: Request, res: Response, next: NextFunction) => {
     const csrfCookie = req.cookies["XSRF-TOKEN"]
-    const csrfHeaderRaw = req.headers["x-csrf-token"];
+    const csrfHeaderRaw = req.headers["x-csrf-token"] || req.headers["X-CSRF-TOKEN"];
     const csrfHeader = Array.isArray(csrfHeaderRaw)
           ? csrfHeaderRaw[0]
           : csrfHeaderRaw;
