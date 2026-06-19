@@ -45,7 +45,9 @@ export const loginUser = createAsyncThunk<
         if(!user){
             return rejectWithValue('Invalid login response')
         }
-        const csrfToken = response.data.csrfToken
+        const csrfToken = response.data.data.csrfToken
+        console.log("response from candidate login", response.data.data)
+        console.log("csrf token", csrfToken)
         return {user, role, csrfToken}
     } catch (error) {
        const err = error as AxiosError<{ message: string }>
