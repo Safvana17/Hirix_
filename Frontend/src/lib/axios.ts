@@ -25,7 +25,9 @@ const getCsrfToken = () => {
 
 const api = axios.create({
     baseURL: BACKEND_URL,
-    withCredentials: true
+    withCredentials: true,
+    xsrfCookieName: "XSRF-TOKEN",
+    xsrfHeaderName: "X-XSRF-TOKEN",
 })
 
 let isRefreshing = false
