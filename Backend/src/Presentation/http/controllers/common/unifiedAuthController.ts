@@ -67,14 +67,16 @@ export class UnifiedAuthController {
 
             res.clearCookie('refreshToken', {
                 httpOnly: true,
-                sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
-                secure: process.env.NODE_ENV === 'production'
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: process.env.NODE_ENV === 'production',
+                path: '/'
             })
 
             res.clearCookie('accessToken', {
                 httpOnly: true,
-                sameSite: process.env.NODE_ENV === ' production' ? 'none' : 'lax',
-                secure: process.env.NODE_ENV === 'production'
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: process.env.NODE_ENV === 'production',
+                path: '/'
             })
 
             return res.status(statusCode.NO_CONTENT).json({
