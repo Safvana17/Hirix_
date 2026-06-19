@@ -18,7 +18,7 @@ export class AdminAuthController {
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'lax',
+                sameSite: 'none',
                 maxAge: env.REFRESH_TOKEN_MAX_AGE,
                 path: '/'
             })
@@ -26,14 +26,14 @@ export class AdminAuthController {
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'lax',
+                sameSite: 'none',
                 maxAge: env.ACCESS_TOKEN_MAX_AGE,
                 path: '/'
             })
 
             res.cookie("XSRF-TOKEN", csrfToken, {
                 httpOnly: false,
-                sameSite: "lax",
+                sameSite: "none",
                 secure: true,
                 path:"/"
             })            
