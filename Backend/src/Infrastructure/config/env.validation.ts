@@ -28,5 +28,6 @@ export const envSchema = z.object({
     AWS_REGION: z.string().min(1),
     AWS_BUCKET_NAME: z.string().min(1),
     AWS_SECRET_ACCESS_KEY: z.string().min(1),
-    AWAS_ACCESS_KEY_ID: z.string().min(1)
+    AWAS_ACCESS_KEY_ID: z.string().min(1),
+    CLIENT_URL: z.string().min(1)
 })

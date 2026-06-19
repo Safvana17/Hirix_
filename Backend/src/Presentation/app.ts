@@ -6,7 +6,7 @@ import { connectDB } from '../Infrastructure/config/mongo.config';
 import routes from './http/routes/index'
 import { logger } from '../utils/logging/loger';
 import { errorHandler } from './http/middlewares/errorHandler';
-
+import { env } from '../Infrastructure/config/env';
 
 const app = express();
 

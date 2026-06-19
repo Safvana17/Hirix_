@@ -8,6 +8,7 @@ export const connectDB = async () => {
         logger.info('Database connected')
     } catch (error) {
         logger.error({Error: error}, 'Database connection failed')
+        console.log(" database connection failed", error)
         process.exit(1)
     }
 }
