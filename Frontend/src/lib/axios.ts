@@ -19,6 +19,7 @@ export const setLogoutHandler = (handler: () => void) => {
 // }
 
 const getCsrfToken = () => {
+    console.log('cookies: ', document.cookie)
     const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
     return match ? match[1] : null;
 };
