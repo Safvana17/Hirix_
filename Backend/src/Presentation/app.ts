@@ -19,7 +19,8 @@ app.use(cors({
         'http://localhost:5173',
     ],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization", "x-csrf-token"]
+    allowedHeaders: ["Content-Type", "Authorization", "x-csrf-token", "X-CSRF-TOKEN"],
+    exposedHeaders: ['x-csrf-token', "X-CSRF-TOKEN"]
 }));
 app.use(express.json());
 app.use(cookieParser())

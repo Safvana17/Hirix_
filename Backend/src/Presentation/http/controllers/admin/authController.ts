@@ -35,7 +35,7 @@ export class AdminAuthController {
                 httpOnly: false,
                 sameSite: "none",
                 secure: true,
-                path:"/"
+                path:"/",
             })            
         return sendSuccess(res, statusCode.OK, authMessages.success.ADMIN_LOGIN_SUCCESS, admin)
     })
