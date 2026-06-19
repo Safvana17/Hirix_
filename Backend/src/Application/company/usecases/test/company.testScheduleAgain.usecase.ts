@@ -14,6 +14,7 @@ import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterf
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
 import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules, WarningRules } from "../../../../Domain/valueObjects/test.rules";
+import { env } from "../../../../Infrastructure/config/env";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
@@ -217,7 +218,7 @@ export class CompanyScheduleTestAgainUsecase implements ICompanyScheduleTestAgai
                     testName: savedTest.name,
                     startTime: savedTest.startTime.toLocaleString(),
                     endTime: savedTest.endTime.toLocaleString(),
-                    testLink: `http://localhost:5173/candidate/test/${token}`,
+                    testLink: `${env.FRONTEND_URL}/candidate/test/${token}`,
                     instructions: [
                         "Do not switch tabs.",
                         "Do not copy or paste.",

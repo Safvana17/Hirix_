@@ -11,6 +11,7 @@ import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterf
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
 import { AutoSaveRules, BehaviorRules, NavigationRules, ProctoringRules, TestRules, TimingRules, WarningRules } from "../../../../Domain/valueObjects/test.rules";
+import { env } from "../../../../Infrastructure/config/env";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
@@ -169,7 +170,7 @@ export class CompanyEditTestUsecase implements ICompanyEditTestUsecase{
                     variables: {
                         companyName: company.getName(),
                         testName: test.name,
-                        testLink: `http://localhost:5173/candidate/test/${token}`,
+                        testLink: `${env.FRONTEND_URL}/candidate/test/${token}`,
                         startTime: test.startTime.toLocaleString(),
                         endTime: test.endTime.toLocaleString(),
                         role: jobRole.name,

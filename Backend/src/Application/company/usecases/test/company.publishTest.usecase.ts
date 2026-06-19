@@ -10,6 +10,7 @@ import { ISubscriptionRepository } from "../../../../Domain/repositoryInterface/
 import { ISubscriptionPlanRepository } from "../../../../Domain/repositoryInterface/iSubscriptionPlan.repository";
 import { ITestRepository } from "../../../../Domain/repositoryInterface/iTest.repository";
 import { ITestCandidateRepository } from "../../../../Domain/repositoryInterface/iTestCandidate.repository";
+import { env } from "../../../../Infrastructure/config/env";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
 import { JobRoleMessages } from "../../../../Shared/constsnts/messages/jobRolesMessages";
 import { subscriptionPlanMessages } from "../../../../Shared/constsnts/messages/subscriptionPlanMessages";
@@ -102,7 +103,7 @@ export class CompanyPublishTestUsecase implements ICompanyPublishTestUsecase {
                 candidate.candidateTestStatus = CandidateTestStatus.INVITED
 
                 const savedCandidate = await this._testCandidateRepository.update(candidate.id, candidate)
-                const testLink = `http://localhost:5173/candidate/test/${token}`
+                const testLink = `${env.FRONTEND_URL}/candidate/test/${token}`
 
                 return {
                     candidate: savedCandidate,

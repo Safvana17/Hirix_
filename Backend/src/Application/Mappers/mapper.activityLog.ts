@@ -21,10 +21,10 @@ export class ActivityLogMapper {
 
     static mapToPersistance(entity: ActivityLogEntity){
         return {
-            actorId: new Types.ObjectId(entity.actorId),
+            actorId: entity.actorId ? new Types.ObjectId(entity.actorId) : null,
             actorType: entity.actorType,
             action: entity.action,
-            targetId: new Types.ObjectId(entity.targetId),
+            targetId: entity.targetId ? new Types.ObjectId(entity.targetId): null,
             targetType: entity.targetType ,
             title: entity.title
         }
