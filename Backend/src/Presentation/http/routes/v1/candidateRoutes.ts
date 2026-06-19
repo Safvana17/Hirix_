@@ -30,7 +30,7 @@ router.patch(ROUTES.CANDIDATE.SUBSCRIPTION.MARK_FAILURE, authHandler(iTokenServi
 router.get(ROUTES.CANDIDATE.SUBSCRIPTION.GET_BILLING_HISTORY, authHandler(iTokenService), validate(PaymnetQuerySchema, 'query'), iCandidateSubscriptionController.getBillingHistory)
 router.patch(ROUTES.CANDIDATE.SUBSCRIPTION.CANCEL, authHandler(iTokenService), verifyCsrf, validate(CancelSubscriptionSchema, 'params'), iCandidateSubscriptionController.cancelSubscription)
 router.get(ROUTES.CANDIDATE.SUBSCRIPTION.INVOICE, authHandler(iTokenService), validate(GetInvoiceSchema, 'params'), iCandidateSubscriptionController.getInvoice)
-router.post(ROUTES.CANDIDATE.SUBSCRIPTION.START_TRIAL, authHandler(iTokenService), validate(startTrialSchema, 'params'), iCandidateSubscriptionController.startTrial)
+router.post(ROUTES.CANDIDATE.SUBSCRIPTION.START_TRIAL, authHandler(iTokenService), verifyCsrf, validate(startTrialSchema, 'params'), iCandidateSubscriptionController.startTrial)
 
 //notifications
 router.get(ROUTES.COMMON.GET_NOTIFICATIONS, authHandler(iTokenService), iUnifiedSettingsController.getNotification)
@@ -57,7 +57,7 @@ router.get(ROUTES.CANDIDATE.ANALYTICS.TEST_HISTORY, authHandler(iTokenService), 
 //settings
 router.put(ROUTES.CANDIDATE.SETTINGS.CHANGE_PASSWORD, authHandler(iTokenService), verifyCsrf, validate(changePasswordSchema, 'body'), iCandidateSettingsController.changePassword)
 router.get(ROUTES.CANDIDATE.SETTINGS.INTERVIEW_HISTORY, authHandler(iTokenService), verifyCsrf, validate(PaymnetQuerySchema, 'query'), iCandidateSettingsController.interviewHistory)
-router.put(ROUTES.CANDIDATE.SETTINGS.PROFILE, authHandler(iTokenService), validate(candidateProfileSchema, 'body'), iCandidateSettingsController.updateProfile)
+router.put(ROUTES.CANDIDATE.SETTINGS.PROFILE, authHandler(iTokenService), verifyCsrf, validate(candidateProfileSchema, 'body'), iCandidateSettingsController.updateProfile)
 router.get(ROUTES.CANDIDATE.SETTINGS.PROFILE, authHandler(iTokenService), iCandidateSettingsController.getProfile)
 
 export default router

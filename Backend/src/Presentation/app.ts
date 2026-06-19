@@ -15,9 +15,7 @@ app.use(
 )
 
 app.use(cors({
-    origin: [
-        'http://localhost:5173',
-    ],
+    origin: env.CLIENT_URL.split(','),
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "x-csrf-token", "X-CSRF-TOKEN"],
     exposedHeaders: ['x-csrf-token', "X-CSRF-TOKEN"]
