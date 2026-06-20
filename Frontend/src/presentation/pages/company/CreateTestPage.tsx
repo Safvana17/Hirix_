@@ -69,12 +69,20 @@ const CreateTestPage: React.FC = () => {
                     return
                 }
                 if(mode === 'create'){
-                    await dispatch(createTest(formData)).unwrap()
+                    await dispatch(createTest({
+                        ...formData,
+                        startTime: new Date(formData.startTime).toISOString(),
+                        endTime: new Date(formData.endTime).toISOString()
+                    })).unwrap()
                     toast.success('Test created successfully')
                     navigate(ROUTES.COMPANY.CREATE_TEST_SUCCESS)
                 }
                 if(mode === 'reschedule' && id){
-                    await dispatch(scheduleAgainTest({data: formData, id})).unwrap()
+                    await dispatch(scheduleAgainTest({data: {
+                        ...formData,
+                        startTime: new Date(formData.startTime).toISOString(),
+                        endTime: new Date(formData.endTime).toISOString()
+                    }, id})).unwrap()
                     toast.success('Test Scheduled again successfully')
                     navigate(ROUTES.COMPANY.TEST)
                 }
@@ -93,7 +101,11 @@ const CreateTestPage: React.FC = () => {
                 toast.error('Validation failed')
                 return
             }
-            await dispatch(createTest(formData)).unwrap()
+            await dispatch(createTest({
+                ...formData,
+                startTime: new Date(formData.startTime).toISOString(),
+                endTime: new Date(formData.endTime).toISOString()
+            })).unwrap()
             toast.success('Test draft created successfully')
             navigate(ROUTES.COMPANY.TEST)
         } catch (error) {
