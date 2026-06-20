@@ -51,14 +51,14 @@ export class UnifiedAuthController {
                 path: '/'
             })
 
-            res.cookie("XSRF-TOKEN", tokens.csrfToken, {
-                httpOnly: false,
-                sameSite: "none",
-                secure: true,
-                path:"/"
-            })            
+            // res.cookie("XSRF-TOKEN", tokens.csrfToken, {
+            //     httpOnly: false,
+            //     sameSite: "none",
+            //     secure: true,
+            //     path:"/"
+            // })            
 
-            return sendSuccess(res, statusCode.OK, authMessages.success.TOKEN_REFRESHED, tokens.csrfToken)
+            return sendSuccess(res, statusCode.OK, authMessages.success.TOKEN_REFRESHED)
     })
     logout = asyncHandler(async (req: Request, res: Response) => {
             const accessToken = req.cookies.accessToken
