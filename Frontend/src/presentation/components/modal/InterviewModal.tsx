@@ -39,8 +39,8 @@ const createEmptyFormData = (): ScheduleInterviewPayload => ({
   testId: "",
   jobRoleId: "",
   round: 1,
-  startTime: new Date(),
-  endTime: new Date(),
+  startTime: "",
+  endTime: "",
 });
 
 const buildFormData = (
@@ -60,31 +60,27 @@ const buildFormData = (
       testId: initialData.testId || "",
       jobRoleId: initialData.jobRoleId || "",
       round: initialData.round || 1,
-      startTime: initialData.scheduledStartTime
-        ? new Date(initialData.scheduledStartTime)
-        : new Date(),
-      endTime: initialData.scheduledEndTime
-        ? new Date(initialData.scheduledEndTime)
-        : new Date(),
+      startTime: initialData.scheduledStartTime || '',
+      endTime: initialData.scheduledEndTime || '',
     };
   }
 
   return {
     ...createEmptyFormData(),
     ...defaultData,
-    startTime: defaultData?.startTime
-      ? new Date(defaultData.startTime)
-      : new Date(),
-    endTime: defaultData?.endTime
-      ? new Date(defaultData.endTime)
-      : new Date(),
   };
 };
 
-const formatDateTimeLocal = (date: Date) => {
-  const d = new Date(date);
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-  return d.toISOString().slice(0, 16);
+const formatDateTimeLocal = (value: string) => {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  const offset = date.getTimezoneOffset();
+
+  return new Date(date.getTime() - offset * 60000)
+    .toISOString()
+    .slice(0,16);
 };
 
 const InterviewModal: React.FC<InterviewModalProps> = (props) => {
@@ -166,8 +162,12 @@ const InterviewModalForm: React.FC<InterviewModalFormProps> = ({
   const handleSubmit = async () => {
     try {
       if (!validate()) return;
-
-      await onSave(formData);
+      const payload = {
+        ...formData,
+        startTime: new Date(formData.startTime).toISOString(),
+        endTime: new Date(formData.endTime).toISOString(),
+      };
+      await onSave(payload);
       onClose();
     } catch (error) {
       toast.error(
@@ -288,7 +288,7 @@ const InterviewModalForm: React.FC<InterviewModalFormProps> = ({
               InputLabelProps={{ shrink: true }}
               InputProps={{ readOnly: isViewMode }}
               onChange={(e) =>
-                handleChange("startTime", new Date(e.target.value))
+                handleChange("startTime", e.target.value)
               }
             />
           </Grid>
@@ -302,7 +302,7 @@ const InterviewModalForm: React.FC<InterviewModalFormProps> = ({
               InputLabelProps={{ shrink: true }}
               InputProps={{ readOnly: isViewMode }}
               onChange={(e) =>
-                handleChange("endTime", new Date(e.target.value))
+                handleChange("endTime", e.target.value)
               }
               error={Boolean(localError.endTime)}
               helperText={localError.endTime}

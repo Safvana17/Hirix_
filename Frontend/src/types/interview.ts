@@ -27,8 +27,8 @@ export interface Interview {
     jobRoleId: string
     companyId: string
     round: number
-    scheduledStartTime: Date
-    scheduledEndTime: Date
+    scheduledStartTime: string
+    scheduledEndTime: string
     interviewStatus: InterviewStatus
     result?: InterviewResult
     feedback?: string
@@ -65,8 +65,8 @@ export interface ScheduleInterviewPayload {
     testId: string
     jobRoleId: string
     round: number
-    startTime: Date
-    endTime: Date
+    startTime: string
+    endTime: string
 }
 
 export interface GetAllInterviewsParams {
