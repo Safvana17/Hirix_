@@ -17,6 +17,12 @@ export class CandidateSaveSnapshotUsecase implements ICandidateSaveSnapshotUseca
         if(!candidate){
             throw new AppError(TestMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
+        if(!request.clientSessionToken){
+            throw new AppError(TestMessages.error.UNAUTHORIZED, statusCode.UNAUTHORIZED)
+        }
+        if(candidate.sessionToken !== request.clientSessionToken){
+            throw new AppError(TestMessages.error.SESSION_TOKEN_MISMATCHING, statusCode.FORBIDDEN)
+        }
         const test = await this._testRepository.findById(candidate.testId)
         if(!test){
             throw new AppError(TestMessages.error.TEST_NOT_FOUND, statusCode.NOT_FOUND)

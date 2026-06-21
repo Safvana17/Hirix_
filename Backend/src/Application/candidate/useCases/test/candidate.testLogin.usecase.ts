@@ -26,7 +26,9 @@ export class CandidateTestLoginUsecase implements ICandidateTestLoginUsecase {
         if(candidate.email !== request.email){
             throw new AppError(TestMessages.error.WRONG_EMAIL, statusCode.BAD_REQUEST)
         }
-        
+        if(!candidate.canLogin()){
+            throw new AppError(TestMessages.error.TEST_HAS_ALREADY_STARTED, statusCode.FORBIDDEN)
+        }
         const test = await this._testRepository.findById(candidate.testId)
         if(!test){
             throw new AppError(TestMessages.error.TEST_NOT_FOUND, statusCode.NOT_FOUND)
@@ -39,6 +41,8 @@ export class CandidateTestLoginUsecase implements ICandidateTestLoginUsecase {
         if(!jobRole){
             throw new AppError(JobRoleMessages.error.JOBROLE_NOT_FOUND, statusCode.NOT_FOUND)
         }
+        const sessionToken = crypto.randomUUID()
+        candidate.sessionToken = sessionToken
         candidate.name = request.name
         candidate.candidateTestStatus = CandidateTestStatus.VERIFIED
         await this._testCandidateRepository.update(candidate.id, candidate)

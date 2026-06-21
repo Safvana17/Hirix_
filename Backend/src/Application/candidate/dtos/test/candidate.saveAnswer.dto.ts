@@ -15,6 +15,7 @@ export interface CandidateAnswerDTO {
 }
 export interface CandidateSaveAnswerInputDTO{
     token: string
+    clientSessionToken?: string
     answer: CandidateAnswerDTO[]
     warningCount: number
 }

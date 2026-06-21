@@ -1,5 +1,6 @@
 export interface CandidateGenerateSnapshotUrlInputDTO {
     token: string
+    clientSessionToken?: string
     fileName: string
     contentType: string
 }

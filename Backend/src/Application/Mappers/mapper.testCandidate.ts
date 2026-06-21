@@ -49,6 +49,7 @@ export class TestCandidateMapper {
             order: option.order
         }))
         testCandidate.questionOrder = doc.questionOrder
+        testCandidate.sessionToken = doc.sessionToken
 
         return testCandidate
     }
@@ -95,7 +96,8 @@ export class TestCandidateMapper {
             mcqOptionOrder: entity.mcqOptionsOrder?.map((option) => ({
                 questionId: new Types.ObjectId(option.questionId),
                 order: option.order
-            }))
+            })),
+            sessionToken: entity.sessionToken
 
         }
     }

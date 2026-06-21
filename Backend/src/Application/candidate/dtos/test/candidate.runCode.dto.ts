@@ -3,6 +3,7 @@ import { CodingLanguage } from "../../../../Domain/enums/Test"
 
 export interface CandidateRunCodeInputDTO {
     token: string
+    clientSessionToken?: string
     questionId: string
     language: CodingLanguage
     sourceCode: string

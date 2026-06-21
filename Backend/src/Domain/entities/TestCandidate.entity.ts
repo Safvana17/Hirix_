@@ -36,6 +36,7 @@ export class TestCandidateEntity {
     evaluatedAt?: Date
     currentInterviewRound?: number
     lastInterviewId?: string
+    sessionToken?: string
 
     constructor(
         id: string,
@@ -75,5 +76,19 @@ export class TestCandidateEntity {
         this.startedAt = startedAt
         this.submittedAt = submittedAt
         this.evaluatedAt = evaluatedAt
+    }
+
+    public canStart(): boolean {
+        return this.candidateTestStatus === CandidateTestStatus.VERIFIED
+    }
+
+    public canLogin(): boolean {
+        return this.candidateTestStatus === CandidateTestStatus.INVITED
+    }
+
+    public hasValidSession(incomingSessionToken: string | undefined): boolean {
+        if(this.candidateTestStatus !== CandidateTestStatus.VERIFIED && this.candidateTestStatus !== CandidateTestStatus.IN_PROGRESS) return false
+        // if(this.candidateTestStatus !== CandidateTestStatus.IN_PROGRESS ) return false
+        return this.sessionToken === incomingSessionToken
     }
 }

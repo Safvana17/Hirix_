@@ -5,6 +5,7 @@ import { TestRules } from "../../../../Domain/valueObjects/test.rules"
 
 export interface CandidateStartTestInputDTO {
     token: string
+    clientSessionToken: string
 }
 
 export interface CandidateStartTestOutputDTO {

@@ -23,6 +23,12 @@ export class CandidateSubmitTestUsecase implements ICandidateSubmitTestUsecase{
         if(!candidate){
             throw new AppError(TestMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
+        if(!request.clientSessionToken){
+            throw new AppError(TestMessages.error.UNAUTHORIZED, statusCode.UNAUTHORIZED)
+        }
+        if(candidate.sessionToken !== request.clientSessionToken){
+            throw new AppError(TestMessages.error.SESSION_TOKEN_MISMATCHING, statusCode.FORBIDDEN)
+        }
 
         if(candidate.candidateTestStatus !== CandidateTestStatus.IN_PROGRESS){
             throw new AppError(TestMessages.error.SUBMIT_TEST_NOT_ALLOWED, statusCode.BAD_REQUEST)

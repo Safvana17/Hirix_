@@ -15,6 +15,7 @@ export interface CandidateSubmitAnswerDTO {
 }
 export interface CandidateSubmitTestInputDTO{
     token: string
+    clientSessionToken?: string
     answer: CandidateSubmitAnswerDTO[]
     warningCount: number
 }

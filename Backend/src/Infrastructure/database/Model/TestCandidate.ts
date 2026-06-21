@@ -59,6 +59,7 @@ export interface ITestCandidate extends Document {
     evaluatedAt: Date
     currentInterviewRound: number
     lastInterviewId: Types.ObjectId
+    sessionToken: string
 }
 
 const CodingAnswerSchema: Schema<ICodingAnswer> = new Schema({
@@ -230,6 +231,9 @@ const TestCandidateSchema: Schema<ITestCandidate> = new Schema({
     lastInterviewId:{
         type: Types.ObjectId,
         ref: "Interview"
+    },
+    sessionToken: {
+        type: String
     }
 }, {
     timestamps: true

@@ -1,3 +1,4 @@
+import { CandidateTestStatus } from "../../../../Domain/enums/Test";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { IJobRepository } from "../../../../Domain/repositoryInterface/iJobRoles.repository";
@@ -22,6 +23,10 @@ export class CandidateGetTestByTokenUsecase implements ICandidateGetTestByTokenU
             throw new AppError(TestMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
+        // if(!candidate.canStart()){
+        //     throw new AppError(TestMessages.error.TEST_HAS_ALREADY_STARTED, statusCode.FORBIDDEN)
+        // }
+        
         const test = await this._testRepository.findById(candidate.testId)
         if(!test){
             throw new AppError(TestMessages.error.TEST_NOT_FOUND, statusCode.NOT_FOUND)
@@ -35,6 +40,12 @@ export class CandidateGetTestByTokenUsecase implements ICandidateGetTestByTokenU
         if(!jobRole){
             throw new AppError(TestMessages.error.JOB_ROLE_NOT_FOUND, statusCode.NOT_FOUND)
         }
+        if( candidate.candidateTestStatus === CandidateTestStatus.VERIFIED || candidate.candidateTestStatus === CandidateTestStatus.IN_PROGRESS) {
+            if(!candidate.hasValidSession(request.clientSessionToken)){
+                throw new AppError(TestMessages.error.MULTIPLE_ACCESS_DETECTED, statusCode.FORBIDDEN)
+            }
+        }
+        
         return {
             test: {
                 id: test.id,

@@ -35,5 +35,9 @@ export const TestMessages = {
         CANNOT_RESCHEDULT_CANDIDATE: 'Cannot reschedult test for this candidate',
         DUPLICATE_CANDIDATE_EMAIL: 'Duplicate candidate email',
         SNAPSHOT_COUNT_EXCEEDED: 'Snap shot count exceeded',
+        TEST_HAS_ALREADY_STARTED: 'Test has been already started or completed',
+        MULTIPLE_ACCESS_DETECTED: 'Multiple access for this test detected',
+        SESSION_TOKEN_MISMATCHING: 'Session token is not matching',
+        UNAUTHORIZED: 'Unauthorized',
     }
 }

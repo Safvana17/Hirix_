@@ -35,7 +35,8 @@ export class CandidatetestController {
 
     getTestByToken = asyncHandler(async(req: Request, res: Response) => {
         const { token } = req.validatedParams as TestTokenParams
-        const {test, candidate}  = await this._getTestByToken.execute({token})
+        const clientSessionToken = req.cookies.testSession
+        const {test, candidate}  = await this._getTestByToken.execute({token, clientSessionToken})
         logger.info(test, 'from controller')
         return sendSuccess(res, statusCode.OK, '', {test, candidate})
     })
@@ -43,25 +44,35 @@ export class CandidatetestController {
     candidateLogin = asyncHandler(async(req: Request, res: Response) => {
         const { token } = req.validatedParams as TestTokenParams
         const {test, candidate} = await this._candidateLogin.execute({token, ...req.body})
+        const maxAge = new Date(test.endTime).getTime() - Date.now()
+        res.cookie('testSession', candidate.sessionToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: maxAge > 0 ? maxAge : 0
+        })
         return sendSuccess(res, statusCode.OK, '', {test, candidate})
     })
 
     startTest = asyncHandler(async(req: Request, res: Response) => {
         const {token} = req.validatedParams as TestTokenParams
+        const clientSessionToken = req.cookies.testSession
         logger.info(token)
-        const  {test, candidate} = await this._startTest.execute({token})
+        const  {test, candidate} = await this._startTest.execute({token, clientSessionToken})
         return sendSuccess(res, statusCode.OK, '', { test, candidate })
     })
 
     runCode = asyncHandler(async(req: Request, res: Response) => {
         const { token } = req.validatedParams as TestTokenParams
-        const { feedback } = await this._runCode.execute({token, ...req.body})
+        const clientSessionToken = req.cookies.testSession
+        const { feedback } = await this._runCode.execute({token, clientSessionToken, ...req.body})
         return sendSuccess(res, statusCode.OK, '', {feedback})
     })
 
     submittest = asyncHandler(async(req: Request, res: Response) => {
         const { token } = req.validatedParams as TestTokenParams
-        await this._submitTest.execute({token, ...req.body})
+        const clientSessionToken = req.cookies.testSession
+        await this._submitTest.execute({token, clientSessionToken, ...req.body})
         return sendSuccess(res, statusCode.OK, '')
     })
 
@@ -85,7 +96,8 @@ export class CandidatetestController {
 
     saveAnswers = asyncHandler(async(req: Request, res: Response) => {
         const { token } = req.validatedParams as TestTokenParams
-        await this._saveAnswer.execute({token, ...req.body})
+        const clientSessionToken = req.cookies.testSession
+        await this._saveAnswer.execute({token, clientSessionToken, ...req.body})
         return sendSuccess(res, statusCode.OK, '')
     })
 
@@ -97,13 +109,15 @@ export class CandidatetestController {
 
     generateUrl = asyncHandler( async (req: Request, res: Response) => {
         const { token } = req.validatedParams as TestTokenParams
-        const { uploadUrl, key} = await this._generateSnapshotUrl.execute({token, ...req.body})
+        const clientSessionToken = req.cookies.testSession
+        const { uploadUrl, key} = await this._generateSnapshotUrl.execute({token, clientSessionToken, ...req.body})
         return sendSuccess(res, statusCode.OK, '', {uploadUrl, key})
     })
 
     saveSnapshot = asyncHandler ( async (req: Request, res: Response) => {
         const { token } = req.validatedParams as TestTokenParams
-        await this._saveSnapshot.execute({token, key: req.body.key})
+        const clientSessionToken = req.cookies.testSession
+        await this._saveSnapshot.execute({token, clientSessionToken, key: req.body.key})
         return sendSuccess(res, statusCode.OK, '')
     })
 }

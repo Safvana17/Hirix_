@@ -17,6 +17,12 @@ export class CandidateGenerateSnapshotUrlUsecase implements ICandidateGenereateS
         if(!candidate){
             throw new AppError(TestMessages.error.CANDIDATE_NOT_FOUND, statusCode.NOT_FOUND)
         }
+        if(!request.clientSessionToken){
+            throw new AppError(TestMessages.error.UNAUTHORIZED, statusCode.UNAUTHORIZED)
+        }
+        if(candidate.sessionToken !== request.clientSessionToken){
+            throw new AppError(TestMessages.error.SESSION_TOKEN_MISMATCHING, statusCode.FORBIDDEN)
+        }
         const { uploadUrl, key } = await this._s3Service.generateUploadUrl({
             folder: "candidate-snapshots",
             fileName: request.fileName,
