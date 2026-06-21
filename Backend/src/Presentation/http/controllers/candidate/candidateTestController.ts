@@ -48,7 +48,7 @@ export class CandidatetestController {
         res.cookie('testSession', candidate.sessionToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
+            sameSite: 'none',
             maxAge: maxAge > 0 ? maxAge : 0
         })
         return sendSuccess(res, statusCode.OK, '', {test, candidate})
