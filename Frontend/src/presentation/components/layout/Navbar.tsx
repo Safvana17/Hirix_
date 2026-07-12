@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import HirixLogo from '../../../assets/images/Logo.jpeg'
+import HirixLogo from '../../../assets/images/Logo.jpg'
 
 const Navbar: React.FC= () => {
   return (

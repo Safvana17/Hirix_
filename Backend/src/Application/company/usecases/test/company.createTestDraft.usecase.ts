@@ -75,6 +75,10 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
             throw new AppError(TestMessages.error.CANNOT_CREATE_TEST_FOR_THIS_ROLE, statusCode.BAD_REQUEST)
         }
 
+        if(request.startTime < new Date()){
+            throw new AppError(TestMessages.error.INVALID_START_TIME, statusCode.BAD_REQUEST)
+        }
+
         if(request.startTime >= request.endTime) {
             throw new AppError(TestMessages.error.INVALID_END_TIME, statusCode.BAD_REQUEST)
         }

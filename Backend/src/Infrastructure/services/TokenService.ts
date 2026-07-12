@@ -72,6 +72,7 @@ export class TokenService implements ITokenService {
         }
         return jwt.verify(token, accessSecret) as AccessTokenPayload
     }
+    
     verifyResetTokenForForgotPassword(token: string): ResetTokenPayload {
         const resetTokenSecret = jwtConfig.resetTokenForForgotPassword.secret
         const decoded =  jwt.verify(token, resetTokenSecret) as ResetTokenPayload

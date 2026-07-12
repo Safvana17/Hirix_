@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../redux/store";
 import { Check } from "@mui/icons-material";
-import HirixLogo from '../../../assets/images/Logo.jpeg'
+import HirixLogo from '../../../assets/images/Logo.jpg'
 import { confirmPayment, makePayment, markFailure } from "../../../redux/slices/features/subscription/subscriptionSlice";
 
 

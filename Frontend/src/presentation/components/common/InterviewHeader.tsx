@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography} from '@mui/material';
 // import { Code2 } from 'lucide-react';
-import Logo from '../../../assets/images/Logo.jpeg'
+import Logo from '../../../assets/images/Logo.jpg'
 
 interface InterviewHeaderProps {
   companyName: string;

@@ -1,5 +1,5 @@
 import React from 'react'
-import HirixLogo from '../../assets/images/Logo.jpeg'
+import HirixLogo from '../../assets/images/Logo.jpg'
 
 interface AuthLayoutProps {
   children: React.ReactNode

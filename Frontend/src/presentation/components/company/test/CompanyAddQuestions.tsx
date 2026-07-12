@@ -114,7 +114,7 @@ const CompanyAddQuestions: React.FC<CompanyAddQuestionProps> = ({ data, updateDa
     <>
       <Box
         sx={{
-          backgroundColor: '#E6DECF',
+          
           borderRadius: 3,
           p: { xs: 2, md: 4 },
         }}

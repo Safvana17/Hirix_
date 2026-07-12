@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import HirixLogo from '../../../assets/images/Logo.jpeg'
+import HirixLogo from '../../../assets/images/Logo.jpg'
 import { LogOut, ChevronDown, Star, User } from 'lucide-react'
 import { FaUserCircle } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'

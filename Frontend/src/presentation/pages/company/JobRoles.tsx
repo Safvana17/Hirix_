@@ -12,10 +12,11 @@ import { useDebounce } from '../../../hooks/useDebounce'
 import ConfirmationModal from '../../components/modal/ConfirmationModal'
 import DataTable from '../../components/ui/DataTable'
 import type { Column } from '../../../types/table'
+import { useNavigate } from 'react-router-dom'
 
 
 const JobRoles: React.FC= () => {
-
+    const navigate =useNavigate()
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -57,6 +58,10 @@ const JobRoles: React.FC= () => {
         setSelectedJobRole(null)
         setIsModalOpen(true)
     }
+
+  const handleCreateTest = () => {
+    navigate("/company/test/create")
+  }
 
     const handleViewJobRole = (item: JobRole) => {
         setModalMode('view')
@@ -196,10 +201,14 @@ const JobRoles: React.FC= () => {
   return (
     <InternalLayout title='Job Roles' subTitle='Manage your open positions and requirements' sidebarItems={companySidebarItems}>
         <div>
-            <div className='flex justify-end mb-5'>
+            <div className='flex justify-end mb-5 gap-2'>
                 <button onClick={handleCreateJobRole} disabled={featureLocked} className={`bg-[#795003] rounded-xl font-bold text-white p-3 flex items-center gap-2 disabled:bg-[#E6DECF]`}>
                     <Plus className='w-4 h-4' />
                     Add Job Role
+                </button>
+                <button onClick={handleCreateTest} disabled={featureLocked} className={`bg-[#021A30] rounded-xl font-bold text-white p-3 flex items-center gap-2 disabled:bg-[#E6DECF]`}>
+                    <Plus className='w-4 h-4' />
+                    Create Test
                 </button>
             </div>
             <div className="bg-white p-7 rounded-3xl border border-gray-100 shadow-sm mb-3">

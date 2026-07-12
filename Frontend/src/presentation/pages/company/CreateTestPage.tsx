@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Stepper, Step, StepLabel, Button, Typography, Paper } from '@mui/material';
+import { Box, Stepper, Step, StepLabel, Button, Paper } from '@mui/material';
 import type { AppDispatch, RootState } from '../../../redux/store';
 import CompanyTestBasicInfo from '../../components/company/test/CompanyTestBasicInfo';
 import { createTest, getTestById, scheduleAgainTest } from '../../../redux/slices/features/test/companyTestSlice';
@@ -14,6 +14,8 @@ import toast from 'react-hot-toast';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
 import { createTestValidator } from '../../../lib/validation/testValidation';
+import InternalLayout from '../../layouts/InternalLayout';
+import { companySidebarItems } from '../../../constants/sidebarItems';
 
 
 
@@ -117,10 +119,11 @@ const CreateTestPage: React.FC = () => {
     }
 
     return (
-        <Box sx={{ p: 4, backgroundColor: '#E6DECF', minHeight: '100vh' }}>
-             <Typography variant="h5" fontWeight="bold" mb={4}>{mode === 'create' ? 'Create Assessment' : 'Reschedule Assessment'}</Typography>
+        <InternalLayout title={mode === 'create' ? 'Create Assessment' : 'Reschedule Assessment'} sidebarItems={companySidebarItems} subTitle=''>
+        <Box sx={{ p: 4, minHeight: '100vh' }}>
+             {/* <Typography variant="h5" fontWeight="bold" mb={4}>{mode === 'create' ? 'Create Assessment' : 'Reschedule Assessment'}</Typography> */}
             
-            <Paper elevation={0} sx={{ p: 4, backgroundColor: '#E6DECF' }}>
+            <Paper elevation={0} sx={{ p: 4 }}>
                 <Stepper
                     activeStep={currentStep}
                     alternativeLabel
@@ -200,6 +203,7 @@ const CreateTestPage: React.FC = () => {
                 </Box>
             </Paper> 
         </Box>
+        </InternalLayout>
     );
 };
 
