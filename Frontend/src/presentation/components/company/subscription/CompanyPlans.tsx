@@ -1,13 +1,13 @@
 import React from 'react'
 import { Box, Card, Pagination, Stack, Typography } from '@mui/material'
 import { Check, Close } from '@mui/icons-material'
-import type { CurrentPlan, SubscriptionPlan } from '../../../types/subscription'
+import type { CurrentPlan, SubscriptionPlan } from '../../../../types/subscription'
 import { useDispatch, useSelector } from 'react-redux'
-import type { AppDispatch, RootState } from '../../../redux/store'
+import type { AppDispatch, RootState } from '../../../../redux/store'
 import toast from 'react-hot-toast'
-import { changeSubscription, getCurrentPlan, startFreeTrial } from '../../../redux/slices/features/subscription/subscriptionSlice'
+import { changeSubscription, getCurrentPlan, startFreeTrial } from '../../../../redux/slices/features/subscription/subscriptionSlice'
 import { useNavigate } from 'react-router-dom'
-import { ROUTES } from '../../../constants/routes'
+import { ROUTES } from '../../../../constants/routes'
 
 interface CompanyPlansProps {
     plans: SubscriptionPlan[]

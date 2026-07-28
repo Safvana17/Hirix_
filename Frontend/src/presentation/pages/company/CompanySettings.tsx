@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import InternalLayout from '../../layouts/InternalLayout'
 import { companySidebarItems } from '../../../constants/sidebarItems'
-import ProfileTab from '../../components/company/ProfileTab'
+import ProfileTab from '../../components/company/settings/ProfileTab'
 import { useNavigate } from 'react-router-dom'
-import DeleteAccount from '../../components/company/DeleteAccount'
-import NotificationTab from '../../components/company/NotificationTab'
+import DeleteAccount from '../../components/company/settings/DeleteAccount'
+import NotificationTab from '../../components/company/settings/NotificationTab'
 
 
 type TabType = 'profile'| 'notifications'| 'change-Password'| 'delete-Account'

@@ -12,7 +12,6 @@ const RoleRoute: React.FC<RoleRouteProps>= ({children, allowedRoles}) => {
   
     const {user, isAuthenticated, loading } = useAuth()
 
-    console.log('from role route: ', loading, isAuthenticated, user)
  
     if (loading) {
         return (
@@ -26,8 +25,6 @@ const RoleRoute: React.FC<RoleRouteProps>= ({children, allowedRoles}) => {
     }
 
     if(!user || !allowedRoles.includes(user.role)){
-        console.log('user from role route: ', user)
-        console.log('moving to home page')
         return <Navigate to='/' replace />
     }
     if(user.role === ROLES.COMPANY && !user.isProfileUpdated && location.pathname !== '/company/settings'){

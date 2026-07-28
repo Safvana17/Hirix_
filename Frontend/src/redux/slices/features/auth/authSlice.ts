@@ -46,8 +46,6 @@ export const loginUser = createAsyncThunk<
             return rejectWithValue('Invalid login response')
         }
         const csrfToken = response.data.data.csrfToken
-        console.log("response from candidate login", response.data.data)
-        console.log("csrf token", csrfToken)
         return {user, role, csrfToken}
     } catch (error) {
        const err = error as AxiosError<{ message: string }>
@@ -60,10 +58,8 @@ export const adminLogin = createAsyncThunk <
 >('admin/login', async({email, password}, {rejectWithValue}) => {
     try {
         const response = await api.post(API_ROUTES.ADMIN.LOGIN,{email, password})
-
-        console.log('response: ', response.data)
         const admin = response.data.data.admin
-        console.log("admin: ", admin)
+
         if(!admin){
             return rejectWithValue('Invalid response')
         }
@@ -114,8 +110,6 @@ export const getMe = createAsyncThunk <
 
             try {
                 const response = await api.get(API_ROUTES.AUTH.ME)
-
-                console.log('from get me: ', response.data)
                 const user = response.data.data
 
                 if(!user){

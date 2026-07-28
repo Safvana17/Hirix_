@@ -77,6 +77,9 @@ export class CompanyScheduleTestAgainUsecase implements ICompanyScheduleTestAgai
             throw new AppError(JobRoleMessages.error.JOBROLE_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
+        if(request.startTime < new Date()){
+            throw new AppError(TestMessages.error.INVALID_START_TIME, statusCode.BAD_REQUEST)
+        }
         if(request.startTime >= request.endTime) {
             throw new AppError(TestMessages.error.INVALID_END_TIME, statusCode.BAD_REQUEST)
         }

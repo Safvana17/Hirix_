@@ -58,13 +58,7 @@ getAllCategoryParams | undefined,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        // const data = response.data.data
 
-        // return {
-        //     categories: data.categories.map((q: Category) => q),
-        //     totalCount: data.totalCount,
-        //     totalPages: data.totalPages
-        // }
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>

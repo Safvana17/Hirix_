@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Box, Button, LinearProgress, Typography } from '@mui/material'
-import type { CurrentPlan } from '../../../types/subscription'
-import ConfirmationModal from '../modal/ConfirmationModal'
+import type { CurrentPlan } from '../../../../types/subscription'
+import ConfirmationModal from '../../modal/ConfirmationModal'
 import { useDispatch } from 'react-redux'
-import type { AppDispatch } from '../../../redux/store'
-import { cancelSubscription } from '../../../redux/slices/features/subscription/subscriptionSlice'
+import type { AppDispatch } from '../../../../redux/store'
+import { cancelSubscription } from '../../../../redux/slices/features/subscription/subscriptionSlice'
 import toast from 'react-hot-toast'
-import type { UserRole } from '../../../constants/role'
+import type { UserRole } from '../../../../constants/role'
 
 interface CurrentPlanCardProps {
     currentPlan: CurrentPlan | null

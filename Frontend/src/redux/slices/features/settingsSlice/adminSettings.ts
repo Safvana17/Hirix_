@@ -71,12 +71,12 @@ GetAllTemplatesResponse,
 {rejectValue: string}
 >('settings/getAllTemplate', async({params}, {rejectWithValue}) => {
     try {
-        console.log('from slice: ', createEmailTemplate)
+
         const response = await api.get(API_ROUTES.ADMIN.EMAIL_TEMPLATE.GET_ALL, {params})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('from slice: ', response.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -90,7 +90,7 @@ EmailTemplate,
 {rejectValue: string}
 >('settings/editTemplate', async({data, id}, {rejectWithValue}) => {
     try {
-        console.log('from slice data: ', data)
+
         const response = await api.put(API_ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT(id), data)
         if(!response.data.success){
             return rejectWithValue('Invalid response')
@@ -108,7 +108,7 @@ UpdateTemplateStatusPayload,
 {rejectValue: string}
 >('settings/updateTemplateStatus', async({id, status}, {rejectWithValue}) => {
     try {
-        console.log('status: ', status)
+
         const response = await api.patch(API_ROUTES.ADMIN.EMAIL_TEMPLATE.EDIT(id), {status})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
@@ -126,7 +126,7 @@ void,
 {rejectValue: string}
 >('settings/deleteTemplate', async({id}, {rejectWithValue}) => {
     try {
-        console.log('status: ', status)
+
         const response = await api.delete(API_ROUTES.ADMIN.EMAIL_TEMPLATE.DELETE(id))
         if(!response.data.success){
             return rejectWithValue('Invalid response')
@@ -161,12 +161,12 @@ GetAllNotificationRuleResponse,
 {rejectValue: string}
 >('settings/getAllRules', async({params}, {rejectWithValue}) => {
     try {
-        console.log('from slice: ', createEmailTemplate)
+
         const response = await api.get(API_ROUTES.ADMIN.NOTIFICATION_RULE.GET_ALL, {params})
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('from slice rule: ', response.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -214,12 +214,12 @@ Notification[],
 {rejectValue: string}
 >('settings/getMyNotification', async({role}, {rejectWithValue}) => {
     try {
-        console.log('from slice: ', createEmailTemplate)
+
         const response = await api.get(API_ROUTES.COMMON.NOTIFICATION.GET_NOTIFICATIONS(role))
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('from slice rule: ', response.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>

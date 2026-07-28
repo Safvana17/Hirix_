@@ -1,6 +1,6 @@
 
 export interface FileUpload {
-    originalName?: string
+    originalname?: string
     mimetype?: string
     size?: number
     buffer?: Buffer

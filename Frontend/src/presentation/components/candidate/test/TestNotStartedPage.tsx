@@ -6,9 +6,10 @@ import { ROUTES } from '../../../../constants/routes'
 
 interface TestNotStartedPageProps {
     test: CandidateTest | null
+    onCountdownEnd: () => void
 }
 
-const TestNotStartedPage: React.FC<TestNotStartedPageProps> = ({ test }) => {
+const TestNotStartedPage: React.FC<TestNotStartedPageProps> = ({ test, onCountdownEnd }) => {
     const navigate = useNavigate()
     const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(test?.startTime))
 
@@ -19,6 +20,17 @@ const TestNotStartedPage: React.FC<TestNotStartedPageProps> = ({ test }) => {
 
         return () => clearInterval(interval)
     }, [test?.startTime])
+
+    useEffect(() => {
+        if(
+            timeLeft.hours === "00" &&
+            timeLeft.minutes === "00" &&
+            timeLeft.seconds === "00"
+        ) {
+            onCountdownEnd()
+        }
+    }, [timeLeft, onCountdownEnd])
+
 
     return (
         <Box

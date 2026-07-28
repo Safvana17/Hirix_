@@ -16,12 +16,13 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, value, on
   const questionType = question.type.toLowerCase()
 
   if (questionType === "mcq") {
-    return <McqQuestion question={question} value={value} onChange={onChange} />
+    return <McqQuestion key={question.id} question={question} value={value} onChange={onChange} />
   }
 
   if (questionType === "descriptive") {
     return (
       <DescriptiveQuestion
+      key={question.id}
         question={question}
         value={value}
         onChange={onChange}
@@ -31,7 +32,7 @@ const QuestionRenderer: React.FC<QuestionRendererProps> = ({ question, value, on
 
   if (questionType === "coding") {
     return (
-      <CodingQuestion question={question} value={value} onChange={onChange} />
+      <CodingQuestion key={question.id} question={question} value={value} onChange={onChange} />
     )
   }
 

@@ -11,8 +11,6 @@ const PublicRoute: React.FC<PublicRouteProps>= ({children}) => {
 
     const {user, isAuthenticated, loading} = useAuth()
 
-    console.log('from public route: ', loading, isAuthenticated, user)
-
     if(loading){
         return (
             <div className="flex h-screen items-center justify-center bg-[#f5f0e8]">
@@ -23,15 +21,12 @@ const PublicRoute: React.FC<PublicRouteProps>= ({children}) => {
     if(isAuthenticated && user){
         
         if(user?.role === ROLES.ADMIN){ 
-            console.log('moving to admin')
             return <Navigate to={`/admin/dashboard`} replace />
         }
         if(user?.role === ROLES.CANDIDATE){
-            console.log('moving to cndidat')
              return <Navigate to={`/candidate/dashboard`} replace />
         }
         if(user?.role=== ROLES.COMPANY) {
-            console.log('moving to compny')
             return <Navigate to={`/company/dashboard`} replace />
         }
     }

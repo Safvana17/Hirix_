@@ -50,7 +50,7 @@ const CompanyInterviews: React.FC = () => {
         navigate(`/interview/${interview.roomId}/${interview.interviewerToken}`)
     }
     const handleInterviewSubmit = async(data: ScheduleInterviewPayload) => {
-        console.log('data: ', data)
+
     try {
         if(interviewModalMode === 'create'){ 
             await dispatch(scheduleInterview({data})).unwrap()

@@ -158,7 +158,7 @@ SelectedTest,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('data: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -267,7 +267,7 @@ Snapshots[],
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log("snapshots:", response.data.data.snapshots)
+
         return response.data.data.snapshots
     } catch (error) {
         const err = error as AxiosError<{message: string, code?: string}>

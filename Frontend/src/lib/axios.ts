@@ -11,27 +11,12 @@ export const setLogoutHandler = (handler: () => void) => {
     logoutHandler = handler
 }
 
-// const getCsrfToken = () => {
-//     return document.cookie
-//        .split("; ")
-//        .find((row) => row.startsWith("XSRF-TOKEN="))
-//        ?.split("=")[1]
-// }
-
-// const getCsrfToken = () => {
-//     console.log('cookies: ', document.cookie)
-//     const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
-//     return match ? match[1] : null;
-// };
 
 const api = axios.create({
     baseURL: BACKEND_URL,
     withCredentials: true,
-    // xsrfCookieName: "XSRF-TOKEN",
-    // xsrfHeaderName: "x-csrf-token",
 })
 
-console.log('api: ', api)
 
 let isRefreshing = false
 
@@ -53,12 +38,11 @@ const processQueue = (error: unknown) => {
 
 api.interceptors.request.use((config) => {
     const csrfToken = localStorage.getItem("csrfToken")
-    console.log("CSRF TOKEN FROM BROWSER:", csrfToken);
 
     if(csrfToken){
         config.headers["x-csrf-token"] = csrfToken
     }
-    console.log("FINAL HEADERS:", config.headers);
+
     return config
 })
 

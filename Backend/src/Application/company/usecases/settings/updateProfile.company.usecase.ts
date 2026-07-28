@@ -1,5 +1,7 @@
+import { CompanyCertificate } from "../../../../Domain/entities/Company.entity";
 import { NotificationEvents } from "../../../../Domain/enums/notification";
 import userRole from "../../../../Domain/enums/userRole.enum";
+import { UserStatus } from "../../../../Domain/enums/userStatus.enum";
 import { AppError } from "../../../../Domain/errors/app.error";
 import ICompanyRepository from "../../../../Domain/repositoryInterface/iCompany.repository";
 import { authMessages } from "../../../../Shared/constsnts/messages/authMessages";
@@ -18,28 +20,92 @@ export class UpdateCompanyProfileUsecase implements ICompanyUpdateProfileUsecase
     ) {}
 
     async execute(request: UpdateCompanyProfileInputDTO): Promise<UpdateCompanyProfileOutputDTO> {
+
+        console.log("request:", request)
         const company = await this._companyRepository.findById(request.id)
         if(!company){
             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        if(request.certificateType === 'GST' && !request.certificateNumber){
-            throw new AppError(settingsMessages.error.GST_NUMBER_REQUIRED, statusCode.BAD_REQUEST)
-        }
-
-        // let certificateUrl = company.certificate;
-
-        // if (request.certificateFile) {
-        // certificateUrl = `http://localhost:4000/uploads/${request.certificateFile.filename}`;
-        // }
+        const prevCertifcates = company.certificates ?? []
+        const existingCertificateMap = new Map(prevCertifcates.map(cert => [cert._id, cert]))
 
         const folder = 'documents'
-        if(request.certificateFile){
-            const key = await this._s3Service.uploadFile(folder, request.certificateFile.buffer!, request.certificateFile.originalName!, request.certificateFile.mimetype!)
-            company.certificateContentType = request.certificateFile.mimetype
-            company.certificateFileName = request.certificateFile.originalName
-            company.certificateKey = key
-            // company.certificateUrl = request.certificateFile.
+        const certificates: CompanyCertificate[] = []
+        if(request.certificates?.length){
+            // for(const certificate of request.certificates ) {
+            //     const existing = certificate.id ? existingCertificateMap.get(certificate.id) : undefined
+            //     if(certificate.certificateType === 'GST' && !certificate.certificateNumber){
+            //         throw new AppError(settingsMessages.error.GST_NUMBER_REQUIRED, statusCode.BAD_REQUEST)
+            //     }
+            //     let key = existing?.key ?? ""
+            //     let fileName = existing?.fileName ??  ""
+            //     let contentType = existing?.contentType ?? ""
+            //     let url = existing?.url ?? ""
+
+            //     if(certificate.certificateFile){
+            //         if(existing?.key){
+            //             await this._s3Service.deleteFile(existing.key)
+            //         }
+            //         key = await this._s3Service.uploadFile(folder, certificate.certificateFile.buffer!, certificate.certificateFile.originalname!, certificate.certificateFile.mimetype!)
+            //         url = await this._s3Service.generateViewUrl(key)
+            //         fileName = certificate.certificateFile.originalname!
+            //         contentType = certificate.certificateFile.mimetype!
+            //     }
+            //     certificates.push({
+            //         type: certificate.certificateType,
+            //         number: certificate.certificateNumber ?? "",
+            //         key,
+            //         url,
+            //         fileName: fileName,
+            //         contentType: contentType
+            //     })
+            // }
+
+for (const certificate of request.certificates) {
+  const existing = certificate.id
+    ? existingCertificateMap.get(certificate.id)
+    : certificate.key
+      ? prevCertifcates.find(c => c.key === certificate.key)
+      : undefined
+
+  let key = existing?.key ?? certificate.key ?? ""
+  let fileName = existing?.fileName ?? certificate.fileName ?? ""
+  let contentType = existing?.contentType ?? certificate.contentType ?? ""
+  let url = existing?.url ?? ""
+
+  if (certificate.certificateFile) {
+    if (existing?.key) await this._s3Service.deleteFile(existing.key)
+    key = await  this._s3Service.uploadFile(folder, certificate.certificateFile.buffer!, certificate.certificateFile.originalname!, certificate.certificateFile.mimetype!)
+    url = await this._s3Service.generateViewUrl(key)
+    fileName = certificate.certificateFile.originalname!
+    contentType = certificate.certificateFile.mimetype!
+  }
+
+const cert: CompanyCertificate = {
+  type: certificate.certificateType,
+  number: certificate.certificateNumber ?? "",
+  key,
+  url,
+  fileName,
+  contentType,
+};
+
+if (certificate.id) {
+  cert._id = certificate.id;
+} else if (existing?._id) {
+  cert._id = existing._id;
+}
+
+certificates.push(cert);
+}
+        }
+
+        const deletedCertificates = prevCertifcates.filter((prev) => !certificates.some(cert => cert.key === prev.key))
+        for (const cert of deletedCertificates) {
+            if (cert.key) {
+                await this._s3Service.deleteFile(cert.key)
+            }
         }
         company.setName(request.name!)
         company.legalName = request.legalName
@@ -57,8 +123,9 @@ export class UpdateCompanyProfileUsecase implements ICompanyUpdateProfileUsecase
         company.primaryContactName = request.primaryContactName
         company.billingEmail = request.billingEmail
         company.isProfileUpdated = true
-        company.certificateType = request.certificateType
-        company.certificateNumber = request.certificateNumber
+        company.certificates = certificates
+        company.isAdminVerified = false
+        company.status = UserStatus.PENDING
 
         
         const updatedCompany = await this._companyRepository.update(company.getId(), company)
@@ -78,6 +145,7 @@ export class UpdateCompanyProfileUsecase implements ICompanyUpdateProfileUsecase
                 companyId: updatedCompany.id
             }
         })
+
         return {
             company: updatedCompany
         }

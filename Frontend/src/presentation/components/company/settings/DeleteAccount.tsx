@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import ConfirmationModal from '../modal/ConfirmationModal'
+import ConfirmationModal from '../../modal/ConfirmationModal'
 import { useDispatch, useSelector } from 'react-redux'
-import type { AppDispatch, RootState } from '../../../redux/store'
-import { deleteAccount } from '../../../redux/slices/features/settingsSlice/companySettingsSlice'
+import type { AppDispatch, RootState } from '../../../../redux/store'
+import { deleteAccount } from '../../../../redux/slices/features/settingsSlice/companySettingsSlice'
 import toast from 'react-hot-toast'
-import { deleteAccountSchema } from '../../../lib/validation/settingsValidator'
+import { deleteAccountSchema } from '../../../../lib/validation/settingsValidator'
 import { ZodError } from 'zod'
-import { logoutUser } from '../../../redux/slices/features/auth/authSlice'
+import { logoutUser } from '../../../../redux/slices/features/auth/authSlice'
 
 const deleteReasons = [
   { value: 'TOO_EXPENSIVE', label: 'Platform is too expensive' },

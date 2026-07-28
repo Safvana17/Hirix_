@@ -83,20 +83,10 @@ export class CompanyCreateTestDraftUsecase implements ICompanyCreateTestDraftUse
             throw new AppError(TestMessages.error.INVALID_END_TIME, statusCode.BAD_REQUEST)
         }
 
-        // if(!request.questions || request.questions.length === 0){
-        //     throw new AppError(TestMessages.error.QUESTIONS_REQUIRED, statusCode.BAD_REQUEST)
-        // }
-
-        // if(!request.candidates || request.candidates.length === 0){
-        //     throw new AppError(TestMessages.error.CANDIDATES_REQUIRED, statusCode.BAD_REQUEST)
-        // }
-
         if( request.candidates && candidateLimit != null && request.candidates.length > candidateLimit){
             throw new AppError(TestMessages.error.TEST_CANDIDATES_COUNT_EXCEEDED, statusCode.BAD_REQUEST)
         }
-
-        // let rules
-        // if(request.rules){
+        
         const rules = request.rules 
             ? new TestRules(
                 new TimingRules(

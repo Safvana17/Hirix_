@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
@@ -123,6 +123,14 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
       }
     })
 
+    useEffect(() => {
+  console.log("TestQuestion mounted");
+
+  return () => {
+    console.log("TestQuestion unmounted");
+  };
+}, []);
+
     const answeredQuestionIds = useMemo(() => {
         return Object.keys(runTime.answers).filter((questionId) => {
           const answer = runTime.answers[questionId]
@@ -167,6 +175,10 @@ const getTestSummary = () => {
         await runTime.saveAnswers()
       }
       setCurrentQuestionIndex(index)
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
     }
 
     const handleNext = async () => {
@@ -176,6 +188,10 @@ const getTestSummary = () => {
         }
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prev) => prev + 1)
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            })
         }
     }
 
@@ -190,6 +206,10 @@ const getTestSummary = () => {
         }
         if (currentQuestionIndex > 0) {
           setCurrentQuestionIndex((prev) => prev - 1)
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            })
         }
       }
     }

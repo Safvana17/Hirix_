@@ -19,7 +19,7 @@ const router = Express.Router()
 
 //settings
 router.get(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), iCompanySettingsController.getCompanyProfile)
-router.put(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), verifyCsrf,certificateUpload.single('certificateFile'), validate(updateProfileSchema, 'body'), iCompanySettingsController.updateProfile)
+router.put(ROUTES.COMPANY.SETTINGS.PROFILE, authHandler(iTokenService), verifyCsrf, certificateUpload.any(), validate(updateProfileSchema, 'body'), iCompanySettingsController.updateProfile)
 router.put(ROUTES.COMPANY.SETTINGS.PROFILE_IMAGE, authHandler(iTokenService), verifyCsrf, imageUpload.single('profileLogo'), iCompanySettingsController.uploadProfileImage)
 router.put(ROUTES.COMPANY.SETTINGS.PASSWORD, authHandler(iTokenService),verifyCsrf, validate(changePasswordSchema, 'body'), iCompanySettingsController.changePassword)
 router.put(ROUTES.COMPANY.SETTINGS.ACCOUNT, authHandler(iTokenService), verifyCsrf, validate(deleteAccountSchema, 'body'), iCompanySettingsController.deleteAccount)

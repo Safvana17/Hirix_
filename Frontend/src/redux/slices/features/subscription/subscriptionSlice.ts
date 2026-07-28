@@ -73,7 +73,7 @@ CurrentPlan,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('current plan from slice',response.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -198,8 +198,7 @@ Blob,
         const response = await api.get(API_ROUTES.COMMON.SUBSCRIPTION.INVOICE(id, role), {
             responseType: 'blob'
         })
-        console.log('response', response)
-        console.log('pdf', response.data)
+
         return response.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>

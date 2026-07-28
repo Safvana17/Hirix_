@@ -1,86 +1,86 @@
 import { z } from 'zod'
 import { CandidateType } from '../../types/candidate'
 
+
 export const updateProfileSchema = z.object({
-  // id: z.string().regex(/^[0-9a-fA-F]{24}$/),
   name: z
     .string()
     .trim()
-    .min(2, 'Name must be at least 2 characters')
-    .max(30, 'Name must be at most 30 characters'),
+    .min(2, "Name must be at least 2 characters")
+    .max(30, "Name must be at most 30 characters"),
 
   legalName: z
     .string()
     .trim()
-    .min(2, 'Legal name must be at least 2 characters')
-    .max(50, 'Legal name must be at most 50 characters')
-    .regex(/^[a-zA-Z ]+$/, 'Only letters and spaces allowed')
+    .min(2, "Legal name must be at least 2 characters")
+    .max(50, "Legal name must be at most 50 characters")
+    .regex(/^[a-zA-Z ]+$/, "Only letters and spaces allowed")
     .optional(),
 
-  domain: z
-    .string()
-    .trim()
-    .optional(),
+  domain: z.string().trim().optional(),
 
   website: z
     .string()
     .trim()
-    .url('Invalid URL')
+    .url("Invalid URL")
     .optional(),
 
   teamSize: z
     .number()
-    .min(1, 'Team size must be at least 1'),
+    .min(1, "Team size must be at least 1"),
 
   about: z
     .string()
     .trim()
-    .max(500, 'About must be under 500 characters')
+    .max(500, "About must be under 500 characters")
     .optional(),
 
   phoneNumber: z
     .string()
     .trim()
-    .regex(/^[0-9]{10}$/, 'Phone must be 10 digits')
+    .regex(/^[0-9]{10}$/, "Phone must be 10 digits")
     .optional(),
 
   streetName: z.string().trim().optional(),
-  country: z.string().trim().min(1, 'Country is required'),
-  state: z.string().trim().min(1, 'state is required'),
-  city: z.string().trim().min(1, 'city is required'),
+
+  country: z
+    .string()
+    .trim()
+    .min(1, "Country is required"),
+
+  state: z
+    .string()
+    .trim()
+    .min(1, "State is required"),
+
+  city: z
+    .string()
+    .trim()
+    .min(1, "City is required"),
 
   pinCode: z
     .string()
     .trim()
-    .regex(/^[0-9]{6}$/, 'Pin code must be 6 digits')
+    .regex(/^[0-9]{6}$/, "Pin code must be 6 digits")
     .optional(),
 
-  primaryContactName: z.string().trim().min(1, 'Primary contact name is required'),
+  primaryContactName: z
+    .string()
+    .trim()
+    .min(1, "Primary contact name is required"),
 
   email: z
     .string()
     .trim()
-    .email('Invalid email')
+    .email("Invalid email")
     .optional(),
 
   billingEmail: z
     .string()
     .trim()
-    .email('Invalid email')
+    .email("Invalid email")
     .optional(),
-  certificateType: z.enum(['GST', 'COI'], {message: 'Select document type'}),
-  certificateNumber: z.string().optional(),
-  certificate: z.string().optional()
-})
-.refine((data) => {
-  if(data.certificateType === 'GST'){
-    return !!data.certificateNumber
-  }
-  return true
-}, {
-  message: 'GST number is required',
-  path: ['certificateNumber']
-})
+});
 
 export const changePasswordSchema = z.object({
   oldPassword: z

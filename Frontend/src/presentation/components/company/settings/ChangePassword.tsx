@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import AuthLayout from '../../layouts/AuthLayout'
-import changePassswordImage from '../../../assets/images/changePassword.jpg'
+import AuthLayout from '../../../layouts/AuthLayout'
+import changePassswordImage from '../../../../assets/images/changePassword.jpg'
 import { useDispatch, useSelector } from 'react-redux'
-import type { AppDispatch, RootState } from '../../../redux/store'
+import type { AppDispatch, RootState } from '../../../../redux/store'
 import toast from 'react-hot-toast'
-import { changePasswordSchema } from '../../../lib/validation/settingsValidator'
+import { changePasswordSchema } from '../../../../lib/validation/settingsValidator'
 import { ZodError } from 'zod'
-import { changePassword } from '../../../redux/slices/features/settingsSlice/candidateSettingsSlice'
+import { changePassword } from '../../../../redux/slices/features/settingsSlice/companySettingsSlice'
 
 
 

@@ -48,8 +48,6 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
     }
   }
 
-  // console.log("question", question)
-
   return (
     <Box>
       <QuestionText question={question} />
@@ -130,27 +128,7 @@ const CodingQuestion: React.FC<CommonQuestionProps> = ({ question, value, onChan
            }}       
         />
       </Box>
-      {/* <TextField
-        fullWidth
-        multiline
-        minRows={5}
-        value={customInput}
-        placeholder="Custom input..."
-        onChange={(e) => setCustomInput(e.target.value)}
-        sx={{
-          mt: 3,
-          "& .MuiOutlinedInput-root": {
-            borderRadius: 3,
-            bgcolor: "#0B1120",
-            color: "#E5E7EB",
-            fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-            fontSize: 14,
-          },
-          "& textarea": {
-            color: "#E5E7EB",
-          },
-        }}
-      /> */}
+
       <Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>
         <Button
           type="button"

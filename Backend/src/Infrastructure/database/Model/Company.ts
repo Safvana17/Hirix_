@@ -1,6 +1,7 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import userRole from "../../../Domain/enums/userRole.enum";
 import { UserStatus } from "../../../Domain/enums/userStatus.enum";
+import { CompanyCertificate } from "../../../Domain/entities/Company.entity";
 
 
 export interface ICompany extends Document {
@@ -12,12 +13,13 @@ export interface ICompany extends Document {
     role: userRole;
     status: UserStatus;
     isAdminVerified: boolean;
-    certificateType: 'GST' | 'COI';
-    certificateNumber: string;
-    certificateUrl: string;
-    certificateKey: string;
-    certificateFileName: string
-    certificateContentType: string
+    // certificateType: 'GST' | 'COI';
+    // certificateNumber: string;
+    // certificateUrl: string;
+    // certificateKey: string;
+    // certificateFileName: string
+    // certificateContentType: string
+    certificates: CompanyCertificate[]
     googleId: string;
     isBlocked: boolean;
     profileLogo: string;
@@ -79,25 +81,44 @@ const companySchema: Schema<ICompany> = new Schema({
         type: Boolean,
         default: false
     },
-    certificateType: {
-        type: String,
-        default: 'GST'
-    },
-    certificateNumber: {
-        type: String
-    },
-    certificateUrl: {
-        type: String
-    },
-    certificateKey: {
-        type: String
-    },
-    certificateFileName: {
-        type: String
-    },
-    certificateContentType: {
-        type: String
-    },
+    certificates: [{
+        type: {
+            type: String,
+            enum: ['GST', 'COI'],
+            required: true
+        },
+        number: {
+            type: String,
+            required: true
+        },
+        url: String,
+        key: String,
+        fileName: String,
+        contentType: String,
+        uploadedAt: {
+            type: Date,
+            default: Date.now()
+        }
+    }],
+    // certificateType: {
+    //     type: String,
+    //     default: 'GST'
+    // },
+    // certificateNumber: {
+    //     type: String
+    // },
+    // certificateUrl: {
+    //     type: String
+    // },
+    // certificateKey: {
+    //     type: String
+    // },
+    // certificateFileName: {
+    //     type: String
+    // },
+    // certificateContentType: {
+    //     type: String
+    // },
     isBlocked: {
        type: Boolean,
        default: false

@@ -6,7 +6,7 @@ export class ActivityLogMapper {
     static mapToEntity(doc: IActivityLog): ActivityLogEntity {
         const log = new ActivityLogEntity(
             doc._id.toString(),
-            doc.actorId.toString(),
+            doc.actorId?.toString(),
             doc.actorType,
             doc.action,
             doc.targetId.toString(),

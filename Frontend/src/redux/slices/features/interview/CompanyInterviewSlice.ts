@@ -65,7 +65,7 @@ GetAllInterviewsResponse,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-console.log('interview: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -226,7 +226,6 @@ InterviewCodeRunnerResponse,
             return rejectWithValue("Invalid response")
         }
 
-        console.log('from run code slice', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>

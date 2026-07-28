@@ -65,16 +65,13 @@ getAllQuestionsResponse,
         }
         const data = response.data.data
 
-        console.log('from slice,', data)
         return {
             questions: data.questions.map((q: Question) => q),
             totalCount: data.totalCount,
             totalPages: data.totalPages
         }
     } catch (error) {
-        console.log("ERROR OCCURRED:", error)
         const err = error as AxiosError<{message: string, code?: string}>
-        console.log("err: ", err.response?.data.code)
         return rejectWithValue({
             message: err.response?.data.message || 'Failed to get all questions',
             code: err.response?.data.code
@@ -126,7 +123,6 @@ Question[],
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('response from slice: ', response)
         return response.data.data
 
     } catch (error) {

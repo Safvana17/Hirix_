@@ -1,4 +1,4 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { IS3Service } from "../../Application/interface/service/IS3Service";
 
@@ -53,5 +53,16 @@ export class S3Service implements IS3Service {
         }))
         return fileKey
     }
+
+    async deleteFile(key: string): Promise<void> {
+        await this.s3Client.send(
+            new DeleteObjectCommand({
+                Bucket: this.bucketName,
+                Key: key
+            })
+        )
+    }
+
+
 
 }

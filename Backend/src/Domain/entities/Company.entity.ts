@@ -2,10 +2,19 @@ import userRole from "../enums/userRole.enum";
 import { UserStatus } from "../enums/userStatus.enum";
 import UserEntity from "./User.entity";
 
+
+export interface CompanyCertificate {
+    _id?: string
+    type: 'GST' | 'COI'
+    number: string
+    url: string
+    key: string
+    fileName: string
+    contentType: string
+    uploadedAt?: Date
+}
+
 export default class CompanyEntity extends UserEntity{
-    // profileLogoKey?: string;
-    // profileLogoFileName?: string;
-    // profileLogoContentType?: string
     profileLogo?: string
     
     legalName?: string;
@@ -14,12 +23,7 @@ export default class CompanyEntity extends UserEntity{
     teamSize?: number;
     about?: string;
 
-    certificateType?: 'GST' | 'COI';
-    certificateNumber?: string;
-    certificateUrl?: string;
-    certificateKey?: string;
-    certificateFileName?: string
-    certificateContentType?: string
+    certificates: CompanyCertificate[] = []
 
     phoneNumber?: string;
     streetName?: string;

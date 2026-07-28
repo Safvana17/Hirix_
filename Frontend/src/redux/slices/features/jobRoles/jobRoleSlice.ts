@@ -40,9 +40,7 @@ createJobRolePayload,
 >('company/createJobRole', async(createJobRolePayload, {rejectWithValue}) => {
     try {
         const response = await api.post(API_ROUTES.COMPANY.JOB_ROLE, createJobRolePayload)
-        // if(!response.data.success){
-        //     return rejectWithValue({message: "Invalid response"})
-        // }
+
         return response.data.data
     } catch (error) {
        const err = error as AxiosError<{message: string, code: string}>

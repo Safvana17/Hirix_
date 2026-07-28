@@ -52,6 +52,10 @@ export function useTestRunTime ({
         answerRef.current = answers
     }, [answers])
 
+    useEffect(() => {
+    console.log("useTestRunTime initialized");
+}, []);
+
     const saveAnswers = useCallback( async () => {
         if(!isDirtyRef.current) return
         if(isSavingRef.current) return

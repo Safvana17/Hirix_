@@ -43,10 +43,7 @@ const AdminCompanyDetailPage: React.FC = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const dispatch = useDispatch<AppDispatch>()
-
-  const { selectedCompany } = useSelector(
-    (state: RootState) => state.userSlice
-  )
+  const { selectedCompany, loading } = useSelector( (state: RootState) => state.userSlice)
   const [isReasonModalOpen, setIsReasonModalOpen] = useState(false)
   const [rejectReason, setRejectReason] = useState<string>('')
 
@@ -127,6 +124,13 @@ const AdminCompanyDetailPage: React.FC = () => {
           <p>Loading company details...</p>
         </div>
       </InternalLayout>
+    )
+  }
+  if(loading){
+    return (
+      <div className="flex h-screen items-center justify-center bg-[#f5f0e8]">
+        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-[#6B4705]"></div>
+      </div>
     )
   }
   return (
@@ -215,7 +219,6 @@ const AdminCompanyDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* STATUS */}
       <div className="mb-6">
         <SummeryCard
           label="Status"
@@ -262,40 +265,74 @@ const AdminCompanyDetailPage: React.FC = () => {
           </div>
         </Card>
 
-        <Card title='Certificates'>
-          <div className='grid grid-cols-2 gap-5'>
-            <Field label='Certificate Type' value={selectedCompany.certificateType} />
-            <Field label='Certificate Number' value={selectedCompany.certificateNumber} />
-            {selectedCompany?.certificateFile && (
-              <div className="mt-6">
-                <div className="mt-2 flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-green-100 p-2 rounded-lg">
-                      <File className='w-3 h-3' />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-800">
-                        Uploaded Document
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Click below to view
-                      </p>
-                    </div>
+<Card title="Certificates">
+  {selectedCompany.certificates?.length ? (
+    <div className="space-y-5">
+      {selectedCompany.certificates.map((cert, index) => (
+        <div
+          key={index}
+          className="rounded-xl border border-gray-200 bg-gray-50 p-5"
+        >
+          <div className="mb-4">
+            <h3 className="font-semibold text-gray-700">
+              Certificate #{index + 1}
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Field
+              label="Certificate Type"
+              value={cert.certificateType}
+            />
+
+            <Field
+              label="Certificate Number"
+              value={cert.certificateNumber}
+            />
+          </div>
+
+          {cert.certificateUrl && (
+            <div className="mt-5">
+              <p className="text-xs text-gray-500 mb-2">
+                Uploaded Document
+              </p>
+
+              <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-lg bg-green-100 p-2">
+                    <File className="h-5 w-5 text-green-700" />
                   </div>
 
-                  <a
-                    href={selectedCompany.certificateFile}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-600 hover:underline font-medium"
-                  >
-                    View
-                  </a>
+                  <div>
+                    <p className="font-medium text-gray-800">
+                      Certificate File
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Uploaded successfully
+                    </p>
+                  </div>
                 </div>
+
+                <a
+                  href={cert.certificateUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md bg-[#6B4705] px-4 py-2 text-sm font-medium text-white hover:bg-[#4F3503]"
+                >
+                  View
+                </a>
               </div>
-            )}
-          </div>
-        </Card>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div className="rounded-lg border border-dashed border-gray-300 py-8 text-center text-gray-500">
+      No certificates uploaded.
+    </div>
+  )}
+</Card>
 
         <Card title="Contact">
           <div className="grid grid-cols-2 gap-5">
@@ -323,63 +360,59 @@ const AdminCompanyDetailPage: React.FC = () => {
         message={modalConfig.message}
         type={modalConfig.type}
       />
+      {isReasonModalOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-lg">
+            <h2 className="text-lg font-semibold mb-4 text-gray-800">
+              Enter Rejection Reason
+            </h2>
 
-{isReasonModalOpen && (
-  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-    <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-lg">
-      <h2 className="text-lg font-semibold mb-4 text-gray-800">
-        Enter Rejection Reason
-      </h2>
+            <textarea
+              className="w-full border rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+              rows={4}
+              placeholder="Type reason..."
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+            />
 
-      <textarea
-        className="w-full border rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
-        rows={4}
-        placeholder="Type reason..."
-        value={rejectReason}
-        onChange={(e) => setRejectReason(e.target.value)}
-      />
+            <div className="flex justify-end gap-3 mt-5">
+              <button
+                onClick={() => {
+                  setIsReasonModalOpen(false)
+                  setRejectReason('')
+                }}
+                className="px-4 py-2 rounded-md border text-gray-600"
+              >
+                Cancel
+              </button>
 
-      <div className="flex justify-end gap-3 mt-5">
-        <button
-          onClick={() => {
-            setIsReasonModalOpen(false)
-            setRejectReason('')
-          }}
-          className="px-4 py-2 rounded-md border text-gray-600"
-        >
-          Cancel
-        </button>
-
-        <button
-          onClick={() => {
-            if (!rejectReason.trim()) return
-
-            setIsReasonModalOpen(false)
-
-            // OPEN CONFIRMATION MODAL WITH REASON
-            openModal({
-              title: 'Confirm Rejection',
-              message: `Are you sure you want to reject?\n\nReason:\n${rejectReason}`,
-              type: 'danger',
-              onConfirm: () => {
-                dispatch(rejectCompany({
-                  id: id!,
-                  reason: rejectReason.trim(),
-                  action: 'REJECT'
-                }))
-                setRejectReason('')
-                closeModal()
-              }
-            })
-          }}
-          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
-        >
-          Continue
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+              <button
+                onClick={() => {
+                  if (!rejectReason.trim()) return
+                  setIsReasonModalOpen(false)
+                  openModal({
+                    title: 'Confirm Rejection',
+                    message: `Are you sure you want to reject?\n\nReason:\n${rejectReason}`,
+                    type: 'danger',
+                    onConfirm: () => {
+                      dispatch(rejectCompany({
+                        id: id!,
+                        reason: rejectReason.trim(),
+                        action: 'REJECT'
+                      }))
+                      setRejectReason('')
+                      closeModal()
+                    }
+                  })
+                }}
+                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </InternalLayout>
   )
 }

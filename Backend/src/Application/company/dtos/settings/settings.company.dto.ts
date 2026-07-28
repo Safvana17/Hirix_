@@ -1,6 +1,18 @@
 import CompanyEntity from "../../../../Domain/entities/Company.entity"
 import { FileUpload } from '../../../../Shared/types/fileUpload.type'
 
+export interface CompanyCertificateDTO {
+    id?: string
+    key?: string
+    fileName?: string
+    contentType?: string
+    certificateType: 'GST' | 'COI'
+    certificateNumber: string
+    certificateFile?: FileUpload
+    certificateUrl?: string
+}
+
+
 export interface UpdateCompanyProfileInputDTO {
   id: string
   name?: string
@@ -19,10 +31,7 @@ export interface UpdateCompanyProfileInputDTO {
   primaryContactName?: string
   primaryContactEmail?: string
   billingEmail?: string
-  certificateType: 'GST' | 'COI'
-  certificateNumber?: string
-  certificateFile?: FileUpload
-
+  certificates?: CompanyCertificateDTO[]
 }
 
 export interface UpdateCompanyProfileOutputDTO {
@@ -51,9 +60,7 @@ export interface getCompanyProfileOutputDTO {
   primaryContactName?: string
   primaryContactEmail?: string
   billingEmail?: string
-  certificateType?: 'GST' | 'COI'
-  certificateNumber?: string
-  certificateFile?: string
+  certificates?: CompanyCertificateDTO[]
 }
 
 export interface UploadProfileImageInputDTO {

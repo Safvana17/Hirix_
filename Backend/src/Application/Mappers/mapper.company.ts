@@ -1,4 +1,4 @@
-import CompanyEntity from "../../Domain/entities/Company.entity";
+import CompanyEntity, { CompanyCertificate } from "../../Domain/entities/Company.entity";
 import { ICompany } from "../../Infrastructure/database/Model/Company";
 
 export class CompanyMapper {
@@ -35,12 +35,22 @@ export class CompanyMapper {
         // company.profileLogoKey = doc.profileLogoKey
         // company.profileLogoContentType = doc.profileLogoContentType
         // company.profileLogoFileName = doc.profileLogoFileName
-        company.certificateType = doc.certificateType
-        company.certificateUrl = doc.certificateUrl
-        company.certificateFileName = doc.certificateFileName
-        company.certificateKey = doc.certificateKey
-        company.certificateContentType = doc.certificateContentType
-        company.certificateNumber = doc.certificateNumber
+        // company.certificateType = doc.certificateType
+        // company.certificateUrl = doc.certificateUrl
+        // company.certificateFileName = doc.certificateFileName
+        // company.certificateKey = doc.certificateKey
+        // company.certificateContentType = doc.certificateContentType
+        // company.certificateNumber = doc.certificateNumber
+        company.certificates = (doc.certificates ?? []).map((cert: CompanyCertificate) => ({
+  _id: cert._id?.toString() ?? cert._id ?? "",
+  type: cert.type,
+  number: cert.number,
+  key: cert.key ?? "",
+  url: cert.url ?? "",
+  fileName: cert.fileName ?? "",
+  contentType: cert.contentType ?? "",
+  uploadedAt: cert.uploadedAt,
+}))
         company.deletedAt = doc.deletedAt
         company.deleteFeedback = doc.deleteFeedback
         company.deleteReason = doc.deleteReason
@@ -79,12 +89,13 @@ export class CompanyMapper {
             // profileLogoFileName: entity.profileLogoFileName,
             // profileLogoContentType: entity.profileLogoContentType,
             isProfileUpdated: entity.isProfileUpdated,
-            certificateType: entity.certificateType,
-            certificateUrl: entity.certificateUrl,
-            certificateKey: entity.certificateKey,
-            certificateFileName: entity.certificateFileName,
-            certificateContentType: entity.certificateContentType,
-            certificateNumber: entity.certificateNumber,
+            // certificateType: entity.certificateType,
+            // certificateUrl: entity.certificateUrl,
+            // certificateKey: entity.certificateKey,
+            // certificateFileName: entity.certificateFileName,
+            // certificateContentType: entity.certificateContentType,
+            // certificateNumber: entity.certificateNumber,
+            certificates: entity.certificates,
             isDeleted: entity.isDeleted,
             deletedAt: entity.deletedAt,
             deleteReason: entity.deleteReason,

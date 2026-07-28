@@ -3,58 +3,92 @@ import { DeleteReason } from '../../../Domain/enums/deleteReason'
 import userRole from '../../../Domain/enums/userRole.enum'
 import { CandidateType } from '../../../Domain/enums/candidate'
 
+
+const certificateSchema = z
+  .object({
+    id: z.string().trim().optional(),
+    key: z.string().trim().optional(),
+    fileName: z.string().trim().optional(),
+    contentType: z.string().trim().optional(),
+    certificateType: z.enum(["GST", "COI"]),
+    certificateNumber: z.string().trim().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (
+      data.certificateType === "GST" &&
+      (!data.certificateNumber || data.certificateNumber.length !== 15)
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "GST number must be 15 characters",
+        path: ["certificateNumber"],
+      });
+    }
+
+    if (
+      data.certificateType === "COI" &&
+      !data.certificateNumber
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Certificate number is required",
+        path: ["certificateNumber"],
+      });
+    }
+  });
+
 export const updateProfileSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, 'Name must be at least 2 characters')
-    .max(30, 'Name must be at most 30 characters')
+    .min(2, "Name must be at least 2 characters")
+    .max(30, "Name must be at most 30 characters")
     .optional(),
 
   legalName: z
     .string()
     .trim()
-    .min(2, 'Legal name must be at least 2 characters')
-    .max(50, 'Legal name must be at most 50 characters')
-    .regex(/^[a-zA-Z ]+$/, 'Only letters and spaces allowed')
+    .min(2, "Legal name must be at least 2 characters")
+    .max(50, "Legal name must be at most 50 characters")
+    .regex(/^[a-zA-Z ]+$/, "Only letters and spaces allowed")
     .optional(),
 
-  domain: z
-    .string()
-    .trim()
-    .optional(),
+  domain: z.string().trim().optional(),
 
   website: z
     .string()
     .trim()
-    .url('Invalid URL')
+    .url("Invalid URL")
     .optional(),
 
-  teamSize: z
-    .coerce.number()
-    .min(1, 'Team size must be at least 1'),
+  teamSize: z.coerce
+    .number()
+    .min(1, "Team size must be at least 1"),
 
   about: z
     .string()
     .trim()
-    .max(500, 'About must be under 500 characters')
+    .max(500, "About must be under 500 characters")
     .optional(),
 
   phoneNumber: z
     .string()
     .trim()
-    .regex(/^[0-9]{10}$/, 'Phone must be 10 digits')
+    .regex(/^[0-9]{10}$/, "Phone must be 10 digits")
     .optional(),
 
   streetName: z.string().trim().optional(),
+
   country: z.string().trim().optional(),
+
   state: z.string().trim().optional(),
+
   city: z.string().trim().optional(),
 
   pinCode: z
     .string()
     .trim()
-    .regex(/^[0-9]{6}$/, 'Pin code must be 6 digits')
+    .regex(/^[0-9]{6}$/, "Pin code must be 6 digits")
     .optional(),
 
   primaryContactName: z.string().trim().optional(),
@@ -62,26 +96,19 @@ export const updateProfileSchema = z.object({
   primaryContactEmail: z
     .string()
     .trim()
-    .email('Invalid email')
+    .email("Invalid email")
     .optional(),
 
   billingEmail: z
     .string()
     .trim()
-    .email('Invalid email')
+    .email("Invalid email")
     .optional(),
-  certificateType: z.enum(['GST', 'COI']),
-  certificateNumber: z.string().trim().optional(),
-})
-.refine((data) => {
-  if(data.certificateType === 'GST'){
-    return !!data.certificateNumber && data.certificateNumber?.length === 15
-  }
-  return true
-},{
-  message: 'Invalid GST number',
-  path: ["certificateNumber"]
-})
+
+  certificates: z
+    .array(certificateSchema)
+    .min(1, "At least one certificate is required"),
+});
 
 export const getCompanySchema = z.object({
   id: z.string().regex(/^[0-9a-fA-F]{24}$/),

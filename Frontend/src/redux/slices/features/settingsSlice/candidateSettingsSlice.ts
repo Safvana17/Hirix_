@@ -60,7 +60,7 @@ InterviewHistoryResponse,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('response: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -97,7 +97,7 @@ CandidateProfileForm,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('candidate', response.data.data)
+
         return response.data.data
     } catch (error) {
        const err = error as AxiosError<{message: string}>

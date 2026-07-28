@@ -41,7 +41,7 @@ getAllPracticeQuestionsResponse,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('response from slice: ', response)
+
         return {
             questions: response.data.data.practiceQuestions.map((q:Question) => q),
             totalCount: response.data.data.totalCount,
@@ -117,7 +117,7 @@ string,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('explanation from slice: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>

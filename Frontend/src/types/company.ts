@@ -9,6 +9,29 @@ export interface Company {
     status: 'active' | 'blocked' | 'rejected' | 'pending' | ""
 }
 
+export interface Certificate {
+    id?: string
+    key?: string
+    fileName?: string
+    contentType?: string
+
+    certificateType: "GST" | "COI"
+    certificateNumber: string
+    certificateFile: File | null
+    fileUrl?: string
+}
+
+export interface CompanyCertificates {
+  id?: string
+  certificateType: 'GST' | 'COI'
+  certificateNumber: string
+  certificateUrl?: string
+  key?: string
+  fileName?: string
+  contentType?: string
+}
+
+
 export interface CompanySettings extends Company {
   legalName?: string
   profileLogo?: string
@@ -21,13 +44,14 @@ export interface CompanySettings extends Company {
   country?: string
   state?: string
   city?: string
-  pinCode?: string
+  pinCode?: string      
   primaryContactName?: string
   billingEmail?: string
-  certificateType?: 'GST' | 'COI';
-  certificateNumber: string;
-  certificateFile: string;
-  certificateVerified: boolean;
+  certificates: CompanyCertificates[]
+  // certificateType?: 'GST' | 'COI';
+  // certificateNumber: string;
+  // certificateFile: string;
+  // certificateVerified: boolean;
   subscriptionPlan?: string
   maxCandidates?: number
   maxTestPerMonth?: string

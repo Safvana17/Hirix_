@@ -149,6 +149,7 @@ export const getCompanyDetail = createAsyncThunk<
      if(!response){
          return rejectWithValue('Invalid response')
      }
+     console.log("selected company: ", response.data.data)
      return { company: response.data.data}
    } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -232,6 +233,7 @@ const userSlice = createSlice({
           .addCase(approveCompany.fulfilled, (state, action) => {
             state.loading = false
             const {id, status} = action.payload
+
             const company = state.companies.find(c => c.id === id)
             if(company){
                 company.status = status

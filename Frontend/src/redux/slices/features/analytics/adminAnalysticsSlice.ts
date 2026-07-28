@@ -101,7 +101,6 @@ RevenueTrendMonth[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('response: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -119,7 +118,6 @@ RevenueTrendPlan[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        //console.log('response: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -137,7 +135,7 @@ PaymentHistoryResponse,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('response: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -173,7 +171,6 @@ TestActivityTrend[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('test: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -191,7 +188,7 @@ SubscriptionDistribution[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('response distribution: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -209,7 +206,7 @@ void,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('company: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -227,7 +224,7 @@ TestActivityTrend[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('test: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -245,7 +242,7 @@ CandidateStatusDistribution[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('status: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -281,7 +278,7 @@ TestHistoryResponse,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('response: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -299,7 +296,7 @@ TestLogResponse,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('response: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -317,7 +314,7 @@ CandidateParticipationTrend[],
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('response: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -335,7 +332,7 @@ void,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('response: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -353,7 +350,7 @@ RecentActivityResponse,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        // console.log('response: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -371,7 +368,7 @@ RecentActivityResponse,
         if(!response.data.success){
             return rejectWithValue("Invalid response")
         }
-        console.log('response: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>

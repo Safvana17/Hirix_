@@ -26,10 +26,13 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
         if(company.profileLogo){
            url = await this._s3Service.generateViewUrl(company.profileLogo)
         }
-        let documentUrl
-        if(company.certificateKey){
-            documentUrl = await this._s3Service.generateViewUrl(company.certificateKey)
-        }
+        const certificates = await Promise.all(
+            company.certificates.map( async (certificate) => ({
+                certificateType: certificate.type,
+                certificateNumber: certificate.number,
+                certificateUrl: certificate.key ? await this._s3Service.generateViewUrl(certificate.key) : ""
+            }))
+        )
         return {
             id: company.getId(),
             name: company.getName(),
@@ -50,9 +53,7 @@ export class AdminGetCompanyUsecase implements IAdminGetCompanyUsecase{
             country: company.country,
             city: company.city,
             billingEmail: company.billingEmail,
-            certificateType: company.certificateType,
-            certificateNumber: company.certificateNumber,
-            certificateFile: documentUrl,
+            certificates: certificates
         }
     }
 }

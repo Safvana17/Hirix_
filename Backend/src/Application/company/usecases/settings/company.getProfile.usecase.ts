@@ -20,14 +20,26 @@ export class GetCompanyProfileUsecase implements IGetCompanyProfileUsecase{
             throw new AppError(authMessages.error.COMPANY_NOT_FOUND, statusCode.NOT_FOUND)
         }
 
-        let imageurl
+        let imageurl 
         if(company.profileLogo){
             imageurl = await this._s3Service.generateViewUrl(company.profileLogo)
         }
-        let documentUrl
-        if(company.certificateKey){
-            documentUrl = await this._s3Service.generateViewUrl(company.certificateKey)
-        }
+        // let documentUrl = []
+        // for(const cetificate of company.certificates){
+        //     if(cetificate.key){
+        //         let url = await this._s3Service.generateViewUrl(cetificate.key)
+        //         documentUrl.push(url)
+        //     }
+        // }
+
+        const certificates = await Promise.all(
+            company.certificates.map( async (certificate) => ({
+                id: certificate._id,
+                certificateType: certificate.type,
+                certificateNumber: certificate.number,
+                certificateUrl: certificate.url
+            }))
+        )
 
         return {
             id: company.id,
@@ -47,9 +59,7 @@ export class GetCompanyProfileUsecase implements IGetCompanyProfileUsecase{
             pinCode: company.pinCode,
             primaryContactName: company.primaryContactName,
             billingEmail: company.billingEmail,
-            certificateType: company.certificateType,
-            certificateNumber: company.certificateNumber,
-            certificateFile: documentUrl    
+            certificates: certificates   
         }
     }
 }

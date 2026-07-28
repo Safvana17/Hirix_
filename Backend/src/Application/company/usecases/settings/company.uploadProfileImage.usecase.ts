@@ -22,7 +22,7 @@ export class UploadCompanyProfileImageUsecase implements IUploadCompanyProfileIm
 
         const file = request.file
         const folder = 'profileLogo'
-        const key = await this._s3Service.uploadFile(folder, file.buffer!, file.originalName!, file.mimetype!)
+        const key = await this._s3Service.uploadFile(folder, file.buffer!, file.originalname!, file.mimetype!)
         
         
         // company.profileLogoKey = key

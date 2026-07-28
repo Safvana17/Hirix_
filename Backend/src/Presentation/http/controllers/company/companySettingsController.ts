@@ -15,6 +15,7 @@ import { IConfirmRestoreAccountUsecase } from "../../../../Application/company/i
 import { env } from "../../../../Infrastructure/config/env";
 import { sendSuccess } from "../../utils/apiResponse";
 import { asyncHandler } from "../../../../utils/asyncHandler";
+import { CompanyCertificateDTO } from "../../../../Application/company/dtos/settings/settings.company.dto";
 
 
 export class CompanySettingsController {
@@ -34,16 +35,52 @@ export class CompanySettingsController {
         const companyId = Array.isArray(req.params.id)
             ? req.params.id[0]
             : req.params.id    
-        const file = req.file   
-        const certificateFile: FileUpload = {
-            originalName: file?.originalname,
-            buffer: file?.buffer,
-            size: file?.size,
-            mimetype: file?.mimetype
+        const files = req.files as Express.Multer.File[]
+        console.log("====== MULTER FILES ======");
+console.log(
+  files.map(file => ({
+    fieldname: file.fieldname,
+    originalname: file.originalname
+  }))
+);
+
+console.log("FILES FIELDNAMES");
+files.forEach(file => {
+    console.log(file.fieldname, file.originalname);
+});
+        console.log("body",req.body)
+        console.log("files", req.files)
+const certificates = req.body.certificates.map(
+    (cert: CompanyCertificateDTO, index: number) => {
+
+        console.log("Searching for:", `certificates[${index}][certificateFile]`);
+
+        return {
+            id: cert.id,
+            certificateType: cert.certificateType,
+            certificateNumber: cert.certificateNumber,
+            key: cert.key,
+            certificateFile: files.find(file =>
+                file.fieldname === `certificates[${index}][certificateFile]`
+            )
         }
-        console.log('controller', certificateFile)     
-        const updatedCompany = await this._updateCompanyProfileUsecase.execute({id: companyId, certificateFile , ...req.body})
-        return sendSuccess(res, statusCode.OK, settingsMessages.success.COMPANY_PROFILE_UPDATED, {updatedCompany})
+    }
+);
+
+        
+
+        console.log("====== MAPPED CERTIFICATES ======");
+console.log(certificates, { depth: null });
+       
+            // originalName: file?.originalname,
+            // buffer: file?.buffer,
+            // size: file?.size,
+            // mimetype: file?.mimetype
+        
+        console.log('controller', certificates)
+        // console.log(" body: ", req.body)     
+        const updatedCompany = await this._updateCompanyProfileUsecase.execute({id: companyId, ...req.body, certificates})
+        return sendSuccess(res, statusCode.OK, settingsMessages.success.COMPANY_PROFILE_UPDATED, updatedCompany.company)
     })
 
     getCompanyProfile = asyncHandler(async (req: Request, res: Response) => {
@@ -65,7 +102,7 @@ export class CompanySettingsController {
         }
         console.log('multer type: ', multerFile)
         const file: FileUpload = {
-            originalName: multerFile.originalname,
+            originalname: multerFile.originalname,
             mimetype: multerFile.mimetype,
             size: multerFile.size,
             buffer: multerFile.buffer

@@ -45,7 +45,7 @@ export const updateProfile = createAsyncThunk<
          return rejectWithValue('Invalid response')
      }
  
-     return {company: response.data.data.updatedCompany}
+     return {company: response.data.data}
    } catch (error) {
        const err = error as AxiosError<{message: string}>
        return rejectWithValue(err.response?.data?.message || 'Failed to update company profile')       
@@ -62,6 +62,7 @@ export const getCompanyProfile = createAsyncThunk<
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
+
         return {company: response.data.data}
     } catch (error) {
        const err = error as AxiosError<{message: string}>
@@ -157,11 +158,6 @@ restoreAccountPayload,
     if(!response.data.success){
       return rejectWithValue('Invalid Response')
     }
-
-    // return {
-    //   email: response.data.company.email,
-    //   name: response.data.company.name
-    // }
 
     return response.data.data.company
   } catch (error) {

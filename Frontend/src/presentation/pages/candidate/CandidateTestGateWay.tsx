@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import type { AppDispatch, RootState } from '../../../redux/store'
@@ -16,7 +16,21 @@ import TestTerminatedPage from '../../components/candidate/test/TestTerminated'
 const CandidateTestGateway: React.FC = () => {
     const { token } = useParams()
     const dispatch = useDispatch<AppDispatch>()
+    const [refresh, setRefresh] = useState(false)
     const { test, loading, candidate } = useSelector((state: RootState) => state.candidateTest )
+    // const [now, setNow] = useState(0);
+
+    // useEffect(() => {
+    //     if (!test) return;
+
+    //     setNow(Date.now())
+
+    //     const interval = setInterval(() => {
+    //         setNow(Date.now());
+    //     }, 1000);
+
+    //     return () => clearInterval(interval);
+    // }, [test]);
 
     useEffect(() => {
         if (token && !test && !candidate) {
@@ -27,6 +41,7 @@ const CandidateTestGateway: React.FC = () => {
     const step: CandidateTestGateStep = useMemo(() => {
         if (loading || !test || !candidate) return 'LOADING'
         const now = new Date()
+        // const current = new Date(now)
         const startTime = new Date(test.startTime)
         const endTime = new Date(test.endTime)
         if (now < startTime) return 'NOT_STARTED'
@@ -51,14 +66,14 @@ const CandidateTestGateway: React.FC = () => {
                 return 'READY'
                 
         }
-    }, [loading, test, candidate])
+    }, [loading, test, candidate, refresh])
 
-        if(!test || !candidate){
+    if(!test || !candidate){
         console.log('not found')
         return
     }
     if(step === 'NOT_STARTED'){
-        return <TestNotStartedPage test={test} />
+        return <TestNotStartedPage test={test} onCountdownEnd={() => setRefresh(prev => !prev)}/>
     }
     if(step === 'EXPIRED'){
         return <TestExpiredPage test={test} />

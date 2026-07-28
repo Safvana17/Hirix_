@@ -16,7 +16,7 @@ export interface IActivityLog extends Document {
 const activityLogSchema: Schema<IActivityLog> = new Schema({
     actorId: {
         type: Types.ObjectId,
-        required: true
+        // required: true
     },
     actorType: {
         type: String,

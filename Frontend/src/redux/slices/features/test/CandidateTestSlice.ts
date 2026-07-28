@@ -36,7 +36,6 @@ TestCandidateResponse,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('from slice: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -213,7 +212,7 @@ UploadSnpshotResponse,
         if(!response.data.success){
             return rejectWithValue('Invalid response')
         }
-        console.log('generated url: ', response.data.data)
+
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -234,7 +233,6 @@ void,
         
         }
         
-        console.log('saved url: ', response.data.data)
         return response.data.data
     } catch (error) {
         const err = error as AxiosError<{message: string}>
@@ -335,19 +333,10 @@ const candidateTestSlice = createSlice({
             state.loading = false
             state.error = action.payload || 'Failed to get categories'
         })
-        // .addCase(saveAnswer.pending, (state) => {
-        //     // state.loading = true
-        // })
-        // .addCase(saveAnswer.fulfilled, (state) => {
-        //     state.loading = false
-        // })
         .addCase(saveAnswer.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to submit test'
         })
-        // .addCase(updateWarningCount.pending, (state) => {
-        //     state.loading = true
-        // })
         .addCase(updateWarningCount.fulfilled, (state, action) => {
             state.loading = false
             state.warningCount = action.payload
@@ -356,21 +345,9 @@ const candidateTestSlice = createSlice({
             state.loading = false
             state.error = action.payload || 'Failed to update warning count'
         })
-        .addCase(generateSnapshotUrl.pending, (state) => {
-            state.loading = true
-        })
-        .addCase(generateSnapshotUrl.fulfilled, (state) => {
-            state.loading = false
-        })
         .addCase(generateSnapshotUrl.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload || 'Failed to generate url'
-        })
-        .addCase(saveCandidateSnapshot.pending, (state) => {
-            state.loading = true
-        })
-        .addCase(saveCandidateSnapshot.fulfilled, (state) => {
-            state.loading = false
         })
         .addCase(saveCandidateSnapshot.rejected, (state, action) => {
             state.loading = false
