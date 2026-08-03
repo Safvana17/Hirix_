@@ -30,7 +30,8 @@ export class CompanyGetAllInterviewsUsecase implements ICompanyGetAllInterviewsU
                 testId: d.testId,
                 jobRoleId: d.jobRoleId,
                 roomId: d.roomId,
-                interviewerToken: d.interviewerToken
+                interviewerToken: d.interviewerToken,
+                selectionStatus: d.selectionStatus
             })),
             totalCount,
             totalPages

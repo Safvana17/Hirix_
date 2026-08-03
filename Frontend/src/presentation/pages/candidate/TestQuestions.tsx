@@ -36,6 +36,7 @@ const TestQuestion: React.FC <TestQuestionsProps> = ({test, candidate}) => {
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
     const uploadSnapshorRef = useRef(false)
+    const mainRef = useRef<HTMLDivElement>(null);
 
     const runTime = useTestRunTime({
       test,
@@ -175,7 +176,7 @@ const getTestSummary = () => {
         await runTime.saveAnswers()
       }
       setCurrentQuestionIndex(index)
-      window.scrollTo({
+      mainRef.current?.scrollTo({
         top: 0,
         behavior: 'smooth'
       })
@@ -188,7 +189,7 @@ const getTestSummary = () => {
         }
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prev) => prev + 1)
-            window.scrollTo({
+            mainRef.current?.scrollTo({
               top: 0,
               behavior: 'smooth'
             })
@@ -206,7 +207,7 @@ const getTestSummary = () => {
         }
         if (currentQuestionIndex > 0) {
           setCurrentQuestionIndex((prev) => prev - 1)
-            window.scrollTo({
+            mainRef.current?.scrollTo({
               top: 0,
               behavior: 'smooth'
             })
@@ -233,6 +234,7 @@ const getTestSummary = () => {
         )}
         <Box sx={{ display: 'flex', height: 'calc(100vh - 108px)'}} >
           <Box
+            ref={mainRef}
             component="main"
             sx={{
               flex: 1,

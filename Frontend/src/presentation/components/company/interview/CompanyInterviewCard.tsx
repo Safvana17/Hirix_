@@ -280,8 +280,10 @@ console.log('from card', interview)
               </Button>
             )}
 
-            {isCompleted && !interview.hasNextRound &&
-              interview.result === 'SELECTED' && (
+            {isCompleted &&
+              !interview.hasNextRound &&
+              interview.result === 'SELECTED' &&
+              interview.selectionStatus !== 'OFFER_SENT' &&  (
                 <>
                   <Button
                     variant="contained"
@@ -341,6 +343,19 @@ console.log('from card', interview)
           alignItems="flex-end"
           gap={1.5}
         >
+
+          {isCompleted &&
+            interview.selectionStatus === 'OFFER_SENT' && (
+              <Chip
+                label="Offer Sent"
+                sx={{
+                  backgroundColor: '#2E7D32',
+                  color: '#fff',
+                  fontWeight: 700,
+                }}
+              />
+          )}
+          {interview.selectionStatus !== 'OFFER_SENT' && (
           <Chip
             label={interview.interviewStatus}
             sx={{
@@ -351,6 +366,8 @@ console.log('from card', interview)
               fontWeight: 700,
             }}
           />
+          )}
+          
 
           <Button
             variant="outlined"

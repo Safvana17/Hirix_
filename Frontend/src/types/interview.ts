@@ -96,6 +96,7 @@ export interface InterviewDTO {
     jobRoleId: string
     roomId: string
     interviewerToken: string
+    selectionStatus: CandidateSelectionStatus
 }
 
 export interface GetAllInterviewsResponse {

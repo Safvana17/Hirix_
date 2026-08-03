@@ -194,6 +194,7 @@ const InterviewDetailsPage: React.FC = () => {
           </>
         )}
 
+        {selectedInterview?.candidateStatus !== 'OFFER_SENT' && (
         <Stack
           direction="row"
           spacing={2}
@@ -244,6 +245,7 @@ const InterviewDetailsPage: React.FC = () => {
             </>
           )}
         </Stack>
+        )}
       </Paper>
     </InternalLayout>
   )

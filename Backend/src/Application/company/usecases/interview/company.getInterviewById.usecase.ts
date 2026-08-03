@@ -36,7 +36,7 @@ export class CompanyGetInterviewByIdUsecase implements ICompanyGetInterviewByIdU
                 candidateEmail: interview.candidateEmail,
                 candidateName: interview.candidateName,
                 interviewerEmail: interview.interviewerEmail,
-                interviewerName: interview.interviewerEmail,
+                interviewerName: interview.interviewerName,
                 startTime: interview.scheduledStartTime.toISOString(),
                 endTime: interview.scheduledEndTime.toISOString(),
                 interviewResult: interview.result ?? InterviewResult.PENDING,

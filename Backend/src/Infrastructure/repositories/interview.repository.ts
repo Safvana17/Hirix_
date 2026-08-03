@@ -59,82 +59,71 @@ export class InterviewRepository extends BaseRepository<InterviewEntity, IInterv
         //     totalCount,
         //     totalPages
         // }
-const document = await this._model.aggregate([
-  {
-    $match: filter
-  }
-])
-
-console.log('documents:', document.length)
         const documents = await this._model.aggregate([
-            {
-                $match: filter
+        {
+            $match: filter
+        },
+        {
+            $lookup: {
+            from: "interviews",
+            let: {
+                testCandidateId: "$testCandidateId",
+                currentRound: "$round"
             },
-            {
-                $lookup: {
-                    from: 'interviews',
-                    let: {
-                        testCandidateId: '$testCandidateId',
-                        currentRound: '$round',
-                        companyId: '$companyId'
-                    },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: [
-                                        {
-                                            $eq: [
-                                                '$testCandidateId',
-                                                '$$testCandidateId'
-                                            ]
-                                        },
-                                        {
-                                            $eq: [
-                                                '$round',
-                                                {
-                                                   $add: ['$$currentRound', 1] 
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            $limit: 1
-                        }
-                    ],
-                    as: 'nextRound'
-                }
-            },
-            {
-                $addFields: {
-                    hasNextRound: {
-                        $gt: [
-                            {$size: '$nextRound'},
-                            0
-                        ]
+            pipeline: [
+                {
+                $match: {
+                    $expr: {
+                    $and: [
+                        { $eq: ["$testCandidateId", "$$testCandidateId"] },
+                        { $eq: ["$round", { $add: ["$$currentRound", 1] }] }
+                    ]
                     }
                 }
-            },
-            {
-                $project: {
-                    nextRound: 0
-                }
-            },
-            {
-                $sort: {
-                    createdAt: -1
-                }
-            },
-            {
-                $skip: skip
-            },
-            {
-                $limit: query.limit
+                },
+                { $limit: 1 }
+            ],
+            as: "nextRound"
             }
-        ])
+        },
+        {
+            $lookup: {
+            from: "testcandidates",
+            localField: "testCandidateId",
+            foreignField: "_id",
+            as: "testCandidate"
+            }
+        },
+        {
+            $unwind: {
+            path: "$testCandidate",
+            preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $addFields: {
+            hasNextRound: {
+                $gt: [{ $size: "$nextRound" }, 0]
+            },
+            selectionStatus: "$testCandidate.selectionStatus"
+            }
+        },
+        {
+            $project: {
+            nextRound: 0,
+            testCandidate: 0
+            }
+        },
+        {
+            $sort: { createdAt: -1 }
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: query.limit
+        }
+        ]);
 
         const totalCount = await this._model.countDocuments(filter)
         const totalPages = Math.ceil(totalCount/query.limit)
